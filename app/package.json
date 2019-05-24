@@ -1,0 +1,85 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@rescripts/cli": "0.0.10",
+    "@rescripts/rescript-env": "0.0.10",
+    "axios": "^0.18.0",
+    "dotenv": "^7.0.0",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^6.0.1",
+    "react-router-dom": "^5.0.0",
+    "react-scripts": "2.1.8",
+    "redux": "^4.0.1",
+    "redux-persist": "^5.10.0",
+    "redux-thunk": "^2.3.0",
+    "scandit-sdk": "^4.2.0",
+    "socket.io-client": "^2.2.0",
+    "styled-components": "^4.2.0",
+    "xlsx": "^0.14.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "rescripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "postinstall": "electron-builder install-app-deps",
+    "preelectron-pack": "npm run build",
+    "electron-pack": "build -w"
+  },
+  "homepage": "./",
+  "main": "public/electron.js",
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "build": {
+    "appId": "qlnx",
+    "productName": "Quan Li",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "NSIS",
+      "icon": "build/icon.ico"
+    }
+  },
+  "devDependencies": {
+    "electron": "^4.1.1",
+    "electron-builder": "^20.39.0",
+    "electron-prebuilt": "^1.4.13",
+    "tslint": "^5.15.0",
+    "typescript": "^3.4.3"
+  }
+}

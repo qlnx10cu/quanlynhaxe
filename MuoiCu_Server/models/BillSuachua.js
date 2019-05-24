@@ -1,0 +1,79 @@
+const query = require('../lib/db')
+
+class BillChan {
+    static getNameTable() {
+        return "chitiethoadonsuachua";
+    }
+    static getColmun(param) {
+        if (param) {
+            let tmp = ['mahoadon', 'tenphutungvacongviec', 'maphutung', 'dongia', 'nhacungcap', 'soluongphutung', 'tiencong', 'tongtien', 'manvsuachua'];
+            return tmp.filter(e => Object.keys(param).includes(e));
+        }
+        return "`mahoadon`,`tenphutungvacongviec`,`maphutung`,`dongia`,`nhacungcap`,`soluongphutung`,`tiencong`,`tongtien`,`manvsuachua`";
+    }
+    static getLike(k) {
+        return false;
+    }
+    static getSelect(tb) {
+        return `${tb}.tenphutungvacongviec,${tb}.maphutung,${tb}.soluongphutung,${tb}.tiencong,${tb}.tongtien,${tb}.manvsuachua`;
+    }
+    static getParam(param) {
+        let tmp = ['mahoadon', 'tenphutungvacongviec', 'maphutung', 'dongia', 'nhacungcap', 'soluongphutung', 'tiencong', 'tongtien', 'manvsuachua'];
+        let arr = Object.keys(param).filter(e => tmp.includes(e)).map(e => param[e])
+        return arr;
+    }
+    static getArrayParam(param) {
+        let tmp = ['mahoadon', 'tenphutungvacongviec', 'maphutung', 'dongia', 'nhacungcap', 'soluongphutung', 'tiencong', 'tongtien', 'manvsuachua'];
+        let obj = {};
+        let arr = Object.keys(param).filter(e => tmp.includes(e));
+        arr.forEach(e => {
+            obj[e] = param[e];
+        });
+        return obj;
+    }
+    static async delete(param) {
+        let sql = "update hoadon set tranthai=2 where mahoadon= ?";
+        var res = await query(sql, param);
+        console.log(res);
+    }
+    static async getChitiet(param) {
+        let sql = "select * from hoadon where mahoadon= ?";
+        var result = [];
+        var res = await query(sql, param);
+        if (!res)
+            return null;
+        sql = "select * from khachhang where ma = ?";
+        var resKH = await query(sql, [res[0].makh]);
+        result=Object.assign(res[0], resKH[0]);
+        sql = "select * from chitiethoadonsuachua where mahoadon = ? ";
+        res = await query(sql, param);
+        result["chitiet"] = res;
+        return result;
+    }
+    static getDuplicate() {
+        return "";
+    }
+    static async deleteMahoaDon(param) {
+        var sql = "DELETE FROM chitiethoadonsuachua WHERE mahoadon= ?";
+        var res = await query(sql, param);
+        return res;
+    }
+    static async giamSoLuongPhuTung(param) {
+        var sql = "update chitiethoadonsuachua ct left join phutung pt on pt.maphutung=ct.maphutung " +
+            " set pt.soluongtonkho=pt.soluongtonkho-ct.soluongphutung " +
+            " where mahoadon=? AND ct.maphutung IS NOT NULL AND ct.maphutung !='' ";
+        var res = await query(sql, [param]);
+        return res;
+
+    }
+    static async tangSoLuongPhuTung(param) {
+        var sql = "update chitiethoadonsuachua ct left join phutung pt on pt.maphutung=ct.maphutung " +
+            " set pt.soluongtonkho=pt.soluongtonkho+ct.soluongphutung " +
+            " where mahoadon=? AND ct.maphutung IS NOT NULL AND ct.maphutung !='' ";
+        var res = await query(sql, [param]);
+        return res;
+
+    }
+}
+
+module.exports = BillChan;

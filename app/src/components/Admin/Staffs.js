@@ -31,7 +31,11 @@ const Staffs = (props) => {
     // };
     const handleButtonSearch = () => {
         var arr=[]
-        arr = listStaffTemp.filter(e => e.ten.toLowerCase().includes(searchValue.toLowerCase()));
+        arr = listStaffTemp.filter(e =>{
+            var s=e.ten.toLowerCase().includes(searchValue.toLowerCase());
+            var k=String(e.ma).toLowerCase().includes(searchValue.toLowerCase());
+            return s||k;
+        } );
         setListStaff(arr);
     };
     const _handleKeyPress=(e)=> {
@@ -75,7 +79,8 @@ const Staffs = (props) => {
                         <th></th>
                     </tr>
 
-                    {listStaff.map((item, index) => (
+                    {listStaff.filter(e=>e.ten!='root').map((item, index) => (
+                        
                         <tr key={index}>
                             <td>{item.ma}</td>
                             <td>{item.ten}</td>

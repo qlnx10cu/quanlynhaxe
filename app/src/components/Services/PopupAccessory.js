@@ -10,7 +10,7 @@ const PopupAccessory = (props) => {
     let mTenCongViec = lib.handleInput("");
     let [mMaPhuTung, setMaPhuTung] = useState("");
     let mDonGia = lib.handleInput("");
-    let mSoLuong = lib.handleInput(0);
+    let mSoLuong = lib.handleInput(1);
     let mTonKho=lib.handleInput(0);
     let mTienCong = lib.handleInput(0);
     let [listGiaDichVu, setListGiaDichVu] = useState([]);
@@ -36,6 +36,8 @@ const PopupAccessory = (props) => {
             }
             else {
                 SliceTop20(product);
+                mTenCongViec.setValue("");
+                mTonKho.setValue("");
             }
         }
     };

@@ -158,7 +158,7 @@ const RepairedBill = (props) => {
     }
 
     const setNhanVienSuaChua = (lbs, values) => {
-        let nv = lbs.find(i => i.ma === Number.parseInt(values))
+        let nv = lbs.find(i => i.ma === values)
         if (nv) {
             tennhanvien.setValue(nv.ten);
         }
@@ -179,17 +179,46 @@ const RepairedBill = (props) => {
     }
 
     const handleSaveBill = () => {
+        var data = getData()
+        if (data == null)
+            return;
+        SaveBill(props.token, data).then(Response => {
+            props.deleteBillProduct();
+            props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon });
+            alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.data.mahoadon);
+            props.history.goBack();
+        }).catch(err => {
+            alert(err)
+            console.log(err);
+        })
+
+    }
+    const HuyHoaDon = () => {
+
+        HuyThanhToan(props.token, mMaHoaDon).then(res => {
+            props.socket.emit("release", { maban: maban - 1, mahoadon: "" });
+            setMaHoaDon("");
+            alert('Hủy đã thành công');
+            window.location.href = '/services';
+        }).catch(err => {
+            alert("Lỗi thanh toán")
+        })
+    }
+    const getData = () => {
+        if (!biensoxe || biensoxe == "" || biensoxe == undefined) {
+            alert('Vui lòng điền biển số xe');
+            return null;
+        }
         if (!mMaNVSuaChua.value || mMaNVSuaChua.value == "") {
             alert('Vui lòng điền nhân viên sữa chữa');
-            return;
+            return null;
         }
-
+        if (!listNhanVienSuaChua.find(e => e.ma == mMaNVSuaChua.value)) {
+            alert('Nhân viên sữa chữa không tồn tại');
+            return null;
+        }
         var tong = 0;
         var listProduct = [];
-        if (props.listBillProduct.length === 0) {
-            alert("Phiếu Sửa Chữa Rỗng");
-            return;
-        }
         for (let i = 0; i < props.listBillProduct.length; i++) {
             tong = tong + props.listBillProduct[i].tongtien;
             let temp = {
@@ -206,6 +235,11 @@ const RepairedBill = (props) => {
         var data = {
             manvsuachua: mMaNVSuaChua.value,
             tenkh: mCustomerName.value,
+            sodienthoai: mPhone.value,
+            diachi: mAddress.value,
+            loaixe: mLoaiXe.value,
+            somay: mSoMay.value,
+            sokhung: mSoKhung.value,
             makh: mMaKH.value && mMaKH.value != '' ? mMaKH.value : null,
             tongtien: tong,
             biensoxe: biensoxe,
@@ -215,67 +249,31 @@ const RepairedBill = (props) => {
             tuvansuachua: mTuVan.value,
             sokm: mSoKM.value
         }
-        SaveBill(props.token, data).then(Response => {
-            props.deleteBillProduct();
-            props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon });
-            alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.data.mahoadon);
-            props.history.goBack();
-        }).catch(err => {
-            alert(JSON.stringify(err.response.data))
-        })
-
-    }
-    const HuyHoaDon = () => {
-        HuyThanhToan(props.token, mMaHoaDon).then(res => {
-            props.socket.emit("release", { maban: maban - 1, mahoadon: "" });
-            setMaHoaDon("");
-            alert('Hủy đã thành công');
-            window.location.href='/services';
-        })
-            .catch(err => {
-                alert("Lỗi thanh toán")
-            })
+        return data
     }
     const thanhToanHoaDon = () => {
-        ThanhToan(props.token, mMaHoaDon).then(res => {
-            props.socket.emit("release", { maban: maban - 1, mahoadon: "" });
-            setMaHoaDon("");
-            props.history.goBack();
-        })
-            .catch(err => {
+        var data = getData();
+        if (data == null)
+            return;
+        data.mahoadon = mMaHoaDon;
+        UpdateBill(props.token, data).then(res => {
+            ThanhToan(props.token, mMaHoaDon).then(res => {
+                props.socket.emit("release", { maban: maban - 1, mahoadon: "" });
+                setMaHoaDon("");
+                exportBill()
+                props.history.goBack();
+            }).catch(err => {
                 alert("Lỗi thanh toán")
             })
+        }).catch(err => {
+            alert("Lỗi thanh toán")
+        })
     }
     const UpdateHoaDon = () => {
-        var tong = 0;
-        var listProduct = [];
-        if (props.listBillProduct.length === 0) {
-            alert("Phiếu Sửa Chữa Rỗng");
+        var data = getData();
+        if (data == null)
             return;
-        }
-        for (let i = 0; i < props.listBillProduct.length; i++) {
-            tong = tong + props.listBillProduct[i].tongtien;
-            let temp = {
-                tenphutungvacongviec: props.listBillProduct[i].tenphutungvacongviec,
-                maphutung: props.listBillProduct[i].maphutung,
-                soluongphutung: props.listBillProduct[i].soluongphutung,
-                tiencong: props.listBillProduct[i].tiencong,
-                dongia: props.listBillProduct[i].dongia,
-                manvsuachua: mMaNVSuaChua.value,
-                tongtien: props.listBillProduct[i].tongtien
-            }
-            listProduct.push(temp);
-        }
-        var data = {
-            mahoadon: mMaHoaDon,
-            tenkh: mCustomerName.value,
-            makh: mMaKH.value,
-            tongtien: tong,
-            biensoxe: biensoxe,
-            chitiet: listProduct,
-            manv: props.info.ma
-        }
-
+        data.mahoadon = mMaHoaDon;
         UpdateBill(props.token, data).then(res => {
             alert("Update hóa đơn thành công");
         }).catch(err => {
@@ -308,7 +306,7 @@ const RepairedBill = (props) => {
                     <label>Biển số xe: </label>
                     <Input autocomplete="off" list="bien_so" name="bien_so" value={biensoxe} onChange={(e) => {
                         searchBienSoXe(e.target.value);
-                    }} />
+                    }} readOnly={isUpdateBill != 0} />
                     <datalist id="bien_so">
                         {listBienSo.map((item, index) => (
                             <option key={index} value={item.biensoxe} >{item.ten}</option>
@@ -364,11 +362,11 @@ const RepairedBill = (props) => {
 
             <DivFlexRow style={{ marginTop: 5, marginBottom: 5, justifyContent: 'space-between', alignItems: 'center' }}>
                 <label>Bảng giá phụ tùng: </label>
-                {isUpdateBill === 0 ? <div></div> :
+                {/* {isUpdateBill === 0 ? <div></div> :
                     <Button onClick={exportBill}>
                         Export
                 </Button>
-                }
+                } */}
                 <Button onClick={() => setShowCuaHangNgoai(true)}>
                     Thêm của hàng ngoài
                 </Button>

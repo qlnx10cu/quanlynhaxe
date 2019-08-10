@@ -14,33 +14,43 @@ const PopupNewCuaHangNgoai = (props) => {
         setTenPhuTung(values);
         let item = null;
         item = props.listCuaHangNgoai.find(function (e) {
-            return (e.tenphutung.toLowerCase().includes(values.toLowerCase()));
+            return (e.tenphutung.toLowerCase() === values.toLowerCase());
         });
 
         if (item) {
             setNhaCungCap(item.nhacungcap);
             setDonGia(item.dongia);
-            setSoLuong(1);
-        };
+        }
+        else {
+            setNhaCungCap("");
+            setDonGia(0);
+        }
     };
 
     const handleAdd = () => {
-        if (nhacungcap === "" || tenphutung === "" || dongia === 0 || soluong === 0) {
+        if (!dongia || !nhacungcap || !soluong || nhacungcap === "" || tenphutung === "" || dongia === 0 || soluong === 0) {
             alert("Chưa nhập dữ liệu đầy đủ.");
-        } else {
-            let newData = {
-                tencongviec: tenphutung,
-                maphutung: "",
-                dongia: dongia,
-                soluong: soluong,
-                chietkhau: chietkhau,
-                tongtien: dongia * soluong * ((100 - chietkhau) / 100),
-                nhacungcap: nhacungcap
-            };
-            props.addItemToHangNgoai(newData);
-            clearData();
-            props.onCloseClick();
+            return;
         }
+        if (!props.listCuaHangNgoai.find(e => e.tenphutung === tenphutung)) {
+            alert("Không tìm thấy mã phụ tùng");
+            return;
+        }
+
+        if (!chietkhau||!Number.isInteger(chietkhau))
+            chietkhau = 0;
+        let newData = {
+            tencongviec: tenphutung,
+            maphutung: "",
+            dongia: parseInt(dongia),
+            soluong: parseInt(soluong),
+            chietkhau: parseInt(chietkhau),
+            tongtien: parseInt(dongia) * parseInt(soluong) * ((100 - parseInt(chietkhau)) / 100),
+            nhacungcap: nhacungcap
+        };
+        props.addItemToHangNgoai(newData);
+        clearData();
+        props.onCloseClick();
     };
 
     const clearData = () => {
@@ -101,7 +111,7 @@ const PopupNewCuaHangNgoai = (props) => {
 
                 <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: 'flex-end' }}>
                     <label>Tổng tiền: <span
-                        style={{ fontWeight: 'bold' }}>{((parseInt(dongia) || 0) * (100 - (parseInt(chietkhau) || 0)))/100 * (parseInt(soluong) || 0)} VND</span></label>
+                        style={{ fontWeight: 'bold' }}>{((parseInt(dongia) || 0) * (100 - (parseInt(chietkhau) || 0))) / 100 * (parseInt(soluong) || 0)} VND</span></label>
                 </DivFlexRow>
 
                 <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: 'flex-end' }}>

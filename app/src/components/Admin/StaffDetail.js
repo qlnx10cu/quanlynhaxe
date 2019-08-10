@@ -1,66 +1,90 @@
 import React, { useState, useEffect } from 'react'
-import { Modal, ModalContent, CloseButton, DivFlexRow, Button, DivFlexColumn, Input,Select } from '../../styles'
+import { Modal, ModalContent, CloseButton, DivFlexRow, Button, DivFlexColumn, Input, Select } from '../../styles'
 // import { showNoti } from '../../../Actions/Notification';
- import {AddStaff, UpdateStaff} from '../../API/Staffs'
- import { connect } from 'react-redux'
+import { AddStaff, UpdateStaff } from '../../API/Staffs'
+import { connect } from 'react-redux'
 
 const StaffDetail = (props) => {
 
     let [isUpload, setUpload] = useState(false);
-    let [mStaffName,setStaffName] = useState("");
-    let [mCMND,setCMND] = useState("");
-    let [mSDT,setSDT] = useState("");
-    let [mEmail,setEmail] = useState("");
-    let [mUserName,setUserName] = useState("");
-    let [mPassword,setPassword] = useState("");
-    let [mRole,setRole] = useState("Dịch Vụ");    
+    let [mStaffName, setStaffName] = useState("");
+    let [mCMND, setCMND] = useState("");
+    let [mSDT, setSDT] = useState("");
+    let [mEmail, setEmail] = useState("");
+    let [mUserName, setUserName] = useState("");
+    let [mPassword, setPassword] = useState("");
+    let [mRole, setRole] = useState("Dịch Vụ");
     let item = props.editItem;
     useEffect(() => {
-        if(item){
+        if (item) {
             setStaffName(item.ten);
-        setCMND(item.cmnd);
-        setSDT(item.sdt);
-        setEmail(item.gmail);
-        setRole(item.chucvu);
-        setUserName(item.username);
+            setCMND(item.cmnd);
+            setSDT(item.sdt);
+            setEmail(item.gmail);
+            setRole(item.chucvu);
+            setUserName(item.username);
         }
-    },[item])
-
+    }, [item])
+    const check = (loai) => {
+        var format = /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+        if (!mStaffName || mStaffName.length == 0)
+            return 'Tên nhân viên không được để trống';
+        if(loai)
+            return "";
+        if (!mUserName || mUserName.length == 0)
+            return 'Tài khoản không được để trống';
+        if (!mPassword || mPassword.length == 0)
+            return 'Mật khẩu không được để trống';
+        if (mPassword.length < 6)
+            return 'Mật khẩu phải có độ dài 6 kí tự';
+        return "";
+    }
     const handleButtonSave = () => {
-        var data={
-            ten:mStaffName,
-            cmnd:mCMND,
-            sdt:mSDT,
-            gmail:mEmail,
-            username:mUserName,
-            password:mPassword,
-            chucvu:mRole
+        var kt = check(0);
+        if (kt != "") {
+            alert(kt);
+            return;
+        }
+        var data = {
+            ma:mUserName,
+            ten: mStaffName,
+            cmnd: mCMND,
+            sdt: mSDT,
+            gmail: mEmail,
+            username: mUserName,
+            password: mPassword,
+            chucvu: mRole
         }
         setUpload(true);
-        AddStaff(props.token,data).then(Response=>{
+        AddStaff(props.token, data).then(Response => {
             setUpload(false);
             props.onCloseClick();
-        }).catch(err=>{
+        }).catch(err => {
             setUpload(false);
-            alert("Tạo tài khoản thất bại \n\n Error:"+ err.response.data.error.message);
+            alert("Tạo nhân viên thất bại \n\n Error:" + err.response.data.error.message);
         });
     };
 
     const handleButtonUpdate = () => {
-        var data={
-            ten:mStaffName,
-            cmnd:mCMND,
-            sdt:mSDT,
-            gmail:mEmail,
-            chucvu:mRole
+        var kt = check(1);
+        if (kt != "") {
+            alert(kt);
+            return;
+        }
+        var data = {
+            ten: mStaffName,
+            cmnd: mCMND,
+            sdt: mSDT,
+            gmail: mEmail,
+            chucvu: mRole
         }
         setUpload(true);
-        UpdateStaff(props.token,data, item.ma).then(Response=>{
+        UpdateStaff(props.token, data, item.ma).then(Response => {
             setUpload(false);
             props.onCloseClick();
-        }).catch(err=>{
+        }).catch(err => {
             setUpload(false);
-            alert("Tạo tài khoản thất bại \n\n Error:"+ err.response.data.error.message);
+            alert("Cập nhập nhân viên thất bại \n\n Error:" + err.response.data.error.message);
         });
     };
 
@@ -93,13 +117,13 @@ const StaffDetail = (props) => {
                         {
                             !item && <React.Fragment>
                                 <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
-                            Username
+                                    Tên Đăng Nhập
                                 <Input width='auto' value={mUserName} onChange={(e) => setUserName(e.target.value)} />
-                        </DivFlexColumn>
-                        <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
-                            Password
+                                </DivFlexColumn>
+                                <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
+                                    Mật khẩu
                                 <Input type="Password" width='auto' value={mPassword} onChange={(e) => setPassword(e.target.value)} />
-                        </DivFlexColumn>
+                                </DivFlexColumn>
                             </React.Fragment>
                         }
                         <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
@@ -113,16 +137,16 @@ const StaffDetail = (props) => {
                     </DivFlexColumn>
                 </DivFlexRow>
                 <DivFlexRow style={{ justifyContent: 'flex-end' }}>
-                   {
-                       !item &&  <Button width='100px'onClick={() => handleButtonSave()}>
-                       {isUpload ? <i className="fas fa-spinner fa-spin"></i> : "Lưu"}
-                   </Button>
-                   }
-                   {
-                       item &&  <Button width='100px'onClick={() => handleButtonUpdate()}>
-                       {isUpload ? <i className="fas fa-spinner fa-spin"></i> : "Cập nhật"}
-                   </Button>
-                   }
+                    {
+                        !item && <Button width='100px' onClick={() => handleButtonSave()}>
+                            {isUpload ? <i className="fas fa-spinner fa-spin"></i> : "Lưu"}
+                        </Button>
+                    }
+                    {
+                        item && <Button width='100px' onClick={() => handleButtonUpdate()}>
+                            {isUpload ? <i className="fas fa-spinner fa-spin"></i> : "Cập nhật"}
+                        </Button>
+                    }
                 </DivFlexRow>
             </ModalContent>
         </Modal>

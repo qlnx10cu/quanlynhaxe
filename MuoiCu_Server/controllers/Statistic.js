@@ -3,6 +3,7 @@ const Statistic = require("../models/Statistic");
 const XLSX = require('xlsx');
 const librespone = require("../lib/respone");
 const BillLe = require("../models/BillLe");
+const billchan = require("../models/BillSuachua");
 
 
 
@@ -30,13 +31,71 @@ module.exports = {
 
             var workbook = XLSX.readFile(__dirname + '/excel/mauphutung.xlsx');
             var sheet_name_list = workbook.Sheets[workbook.SheetNames[0]];
-            let tmp = resulft.filter(e => e.loaihoadon === 1);
             var wb = XLSX.utils.book_new();
+
+            //Bill tổng
+            {
+                let tmp = resulft.filter(e => e.loaihoadon === 1);
+                var ws = { ...sheet_name_list };
+                var k = 3;
+                var cc = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+                var ci = 1;
+                var data = [];
+                var dataLe = [];
+                var dataChan = [];
+
+                let arr = tmp.map(e => BillLe.getChitietHungTrang(e.mahoadon));
+                let _result = await Promise.all(arr);
+                dataLe = _result.reduce((returnData, cur) => {
+                    return [...returnData, ...cur.chitiet]
+                }, [])
+
+
+                let tmpChan = resulft.filter(e => e.loaihoadon === 0);
+                arr = tmpChan.map(e => billchan.getChitietHungTrang(e.mahoadon));
+                let _resultChan = await Promise.all(arr);
+                dataChan = _resultChan.reduce((returnData, cur) => {
+                    return [...returnData, ...cur.chitiet]
+                }, [])
+                data = [...dataLe, ...dataChan];
+
+                data = data.reduce((returnData, cur) => {
+                    if (returnData[cur.maphutung]) {
+                        if (cur.loaihoadon === 1)
+                            returnData[cur.maphutung]['soluong'] += cur.soluong;
+                        else
+                            returnData[cur.maphutung]['soluong'] += cur.soluongphutung;
+                        return returnData;
+                    }
+                    returnData[cur.maphutung] = cur;
+                    return returnData
+                }, {})
+
+                data = Object.keys(data).map((e, index) => ({ STT: index + 1, maphutung: data[e].maphutung, ten: data[e].tenphutung, soluong: data[e].soluong, vitri: '', dongia: data[e].dongia, chuaVAT: null, VAT: null, tongtien: data[e].dongia * data[e].soluong }));
+
+                let i = 7;
+                var tam = [];
+                var tam2 = [];
+                data.forEach(e => {
+
+                    Object.keys(e).forEach((k, j) => {
+                        ws[`${cc[j]}${i}`] = {
+                            t: 's',
+                            v: e[k],
+                            w: e[k],
+                            r: e[k]
+                        }
+                    })
+                    i++;
+                })
+                ws["!ref"] = `A1:K${i}`;
+                XLSX.utils.book_append_sheet(wb, ws, 'tong');
+            }
 
             //Bill le
             {
+                let tmp = resulft.filter(e => e.loaihoadon === 1);
                 var ws = { ...sheet_name_list };
-
                 var k = 3;
                 var cc = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
                 var ci = 1;
@@ -75,8 +134,55 @@ module.exports = {
                 XLSX.utils.book_append_sheet(wb, ws, 'billel');
             }
 
+            //Bill chan
+            {
+                let tmp = resulft.filter(e => e.loaihoadon === 0);
+                var ws = { ...sheet_name_list };
+
+                var k = 3;
+                var cc = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+                var ci = 1;
+                var data = [];
+
+                let arr = tmp.map(e => billchan.getChitietHungTrang(e.mahoadon));
+                let _result = await Promise.all(arr);
+                _result = _result.reduce((returnData, cur) => {
+                    return [...returnData, ...cur.chitiet]
+                }, [])
+                data = _result.reduce((returnData, cur) => {
+                    if (returnData[cur.maphutung]) {
+                        returnData[cur.maphutung]['soluongphutung'] += cur.soluongphutung;
+                        return returnData;
+                    }
+                    returnData[cur.maphutung] = cur;
+                    return returnData
+                }, {})
+                data = Object.keys(data).map((e, index) => ({
+                    STT: index + 1, maphutung: data[e].maphutung, ten: data[e].tenphutung, soluongphutung: data[e].soluongphutung, vitri: '',
+                    dongia: data[e].dongia, chuaVAT: null, VAT: null, tongtien: data[e].dongia * data[e].soluongphutung
+                }));
+                let i = 7;
+                var tam = [];
+                var tam2 = [];
+                data.forEach(e => {
+
+                    Object.keys(e).forEach((k, j) => {
+                        ws[`${cc[j]}${i}`] = {
+                            t: 's',
+                            v: e[k],
+                            w: e[k],
+                            r: e[k]
+                        }
+                    })
+                    i++;
+                })
+                ws["!ref"] = `A1:K${i}`;
+                XLSX.utils.book_append_sheet(wb, ws, 'billsuachua');
+            }
+
             //le ngoai
             {
+                let tmp = resulft.filter(e => e.loaihoadon === 1);
                 var ws = { ...sheet_name_list };
 
                 var k = 3;
@@ -90,11 +196,11 @@ module.exports = {
                     return [...returnData, ...cur.chitiet]
                 }, [])
                 data = _result.reduce((returnData, cur) => {
-                    if (returnData[cur.tenphutung+cur.nhacungcap]) {
-                        returnData[cur.tenphutung+cur.nhacungcap]['soluong'] += cur.soluong;
+                    if (returnData[cur.tenphutung + cur.nhacungcap]) {
+                        returnData[cur.tenphutung + cur.nhacungcap]['soluong'] += cur.soluong;
                         return returnData;
                     }
-                    returnData[cur.tenphutung+cur.nhacungcap] = cur;
+                    returnData[cur.tenphutung + cur.nhacungcap] = cur;
                     return returnData
                 }, {})
                 data = Object.keys(data).map((e, index) => ({ STT: index + 1, maphutung: data[e].maphutung, ten: data[e].tenphutung, soluong: data[e].soluong, vitri: '', dongia: data[e].dongia, chuaVAT: null, VAT: null, tongtien: data[e].dongia * data[e].soluong }));
@@ -165,7 +271,10 @@ module.exports = {
                 param.start = new Date();
             let resulft = await Statistic.getBangCongEmployee(param);
 
-            var workbook = XLSX.readFile(__dirname + '/excel/maubaocao.xlsx');
+            var workbook = XLSX.readFile(__dirname + '/excel/maubaocao.xlsx', {
+                type: 'binary',
+                cellDates: true, cellStyles: true, 
+            });
             var sheet_name_list = workbook.Sheets[workbook.SheetNames[0]];
             var ws = { ...sheet_name_list };
 
@@ -223,8 +332,8 @@ module.exports = {
             XLSX.utils.book_append_sheet(wb, ws, 'export');
             res.setHeader('Content-disposition', 'attachment; filename=filecong.xlsx');
             res.setHeader('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
-            res.send(new Buffer(wbout));
+            var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+            res.send(new Buffer(wbout,'binary'));
         } catch (error) {
             librespone.error(req, res, error.message);
         }
@@ -242,7 +351,11 @@ module.exports = {
             else
                 param.end = new Date();
             let resulft = await Statistic.getBangCongEmployee(param);
-            var workbook = XLSX.readFile(__dirname + '/excel/mauphutung.xlsx');
+            var workbook = XLSX.readFile(__dirname + '/excel/mauphutung.xlsx', {
+                type: 'binary',
+                cellDates: true, cellStyles: true, 
+            });
+
             var sheet_name_list = workbook.Sheets[workbook.SheetNames[0]];
 
 

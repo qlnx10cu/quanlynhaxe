@@ -29,7 +29,7 @@ class Account {
     static async findByUsername(Username) {
         if (!Username)
             return null;
-        let sql = `SELECT * FROM nhanvien where taikhoan='${Username}'`;
+        let sql = `SELECT * FROM nhanvien where username='${Username}'`;
         console.log(sql);
         let res = await query(sql);
         console.log('rows', res);

@@ -6,7 +6,7 @@ class BillLe {
     }
     static getColmun(param) {
         if (param) {
-            let tmp = ['mahoadon', 'maphutung','tenphutung','dongia','soluong', 'ghichu', 'chietkhau','nhacungcap'];
+            let tmp = ['mahoadon', 'maphutung', 'tenphutung', 'dongia', 'soluong', 'ghichu', 'chietkhau', 'nhacungcap'];
             return tmp.filter(e => Object.keys(param).includes(e));
         }
         return "`mahoadon`,`maphutung`,`tenphutung`,`dongia`,`soluong`,`ghichu`,`chietkhau`,`nhacungcap`";
@@ -18,12 +18,12 @@ class BillLe {
         return `${tb}.maphutung,${tb}.tenphutung,${tb}.dongia,${tb}.soluong,${tb}.ghichu,${tb}.chietkhau,${tb.nhacungcap}`;
     }
     static getParam(param) {
-        let tmp = ['maphutung', 'tenphutung','dongia','soluong', 'ghichu', 'chietkhau','nhacungcap'];
+        let tmp = ['maphutung', 'tenphutung', 'dongia', 'soluong', 'ghichu', 'chietkhau', 'nhacungcap'];
         let arr = Object.keys(param).filter(e => tmp.includes(e)).map(e => param[e])
         return arr;
     }
     static getArrayParam(param) {
-        let tmp = ['maphutung','tenphutung','dongia', 'soluong', 'ghichu', 'chietkhau','nhacungcap'];
+        let tmp = ['maphutung', 'tenphutung', 'dongia', 'soluong', 'ghichu', 'chietkhau', 'nhacungcap'];
         let obj = {};
         let arr = Object.keys(param).filter(e => tmp.includes(e));
         arr.forEach(e => {
@@ -42,9 +42,11 @@ class BillLe {
         return result;
     }
     static async getChitietHungTrang(param) {
-        let sql = "select * from hoadon where mahoadon= ?";
+        let sql = "select * from hoadon where mahoadon= ? and trangthai!=2 and loaihoadon=1";
         var result = [];
         var res = await query(sql, param);
+        if (!res || res.count == 0)
+            return [];
         result = res[0];
         sql = "select * from chitiethoadonle ct where ct.mahoadon=?  AND maphutung!=''";
         res = await query(sql, param);
@@ -67,7 +69,7 @@ class BillLe {
     static async giamSoLuongPhuTung(bill) {
         for (var i in bill) {
             var sql = " UPDATE phutung SET soluongtonkho = soluongtonkho - ? WHERE maphutung = ? ";
-            var res = await query(sql,[bill[i].soluong,bill[i].maphutung]);
+            var res = await query(sql, [bill[i].soluong, bill[i].maphutung]);
         }
         return {};
     }

@@ -83,19 +83,23 @@ class Abstract {
         return res;
     }
     static async update(ClassTable, paramSetValue, paramWhere) {
-        if (!paramSetValue || !paramWhere && !paramSetValue)
+        if (!paramSetValue || (!paramWhere && !paramSetValue))
+            return null;
+        var colSet = ClassTable.getArrayParam(paramSetValue);
+        var colWhere = ClassTable.getArrayParam(paramWhere);
+        if (!colSet || (!colWhere && !colSet))
             return null;
         let set = '';
         let param = [];
-        for (var k in paramSetValue) {
+        for (var k in colSet) {
             set = set + k + ' = ? ,';
             param.push(paramSetValue[k]);
         }
         set = set.substr(0, set.length - 1);
         let where = ' 1=? ';
         param.push(1);
-        if (paramWhere) {
-            for (var k in paramWhere) {
+        if (colWhere) {
+            for (var k in colWhere) {
                 where = where + " AND " + k + ' = ? ';
                 param.push(paramWhere[k]);
             }

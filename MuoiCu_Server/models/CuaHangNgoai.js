@@ -18,6 +18,20 @@ class Salary {
     static getDuplicate() {
         return "";
     }
+    static getParam(param) {
+        let tmp = ['tenphutung', 'nhacungcap','dongia','ghichu'];
+        let arr = Object.keys(param).filter(e => tmp.includes(e)).map(e => param[e])
+        return arr;
+    }
+    static getArrayParam(param) {
+        let tmp = ['tenphutung', 'nhacungcap','dongia','ghichu'];
+        let obj = {};
+        let arr = Object.keys(param).filter(e => tmp.includes(e));
+        arr.forEach(e => {
+            obj[e] = param[e];
+        });
+        return obj;
+    }
 }
 
 module.exports = Salary;

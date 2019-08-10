@@ -18,6 +18,7 @@ function query(query, param) {
             } else {
                 connection.query(query, (error, rows) => {
                     connection.release();
+                console.log(error);
                     if (error) return reject(error);
                     return resolve(rows);
                 })

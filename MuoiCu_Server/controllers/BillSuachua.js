@@ -35,13 +35,44 @@ module.exports = {
     },
     add: async function (req, res, next) {
         try {
-            var mahoadon = 'MHD-' + new Date().getTime();
+            if (!req.body.biensoxe) {
+                librespone.error(req, res, "Không có biển số xe");
+                return;
+            }
+
+            var str = new Date().getTime().toString();
+            var mahoadon = 'NPX-' + str.substr(0, str.length - 1);
+            var data = {};
+            data.sodienthoai = req.body.sodienthoai;
+            data.diachi = req.body.diachi;
+            data.loaixe = req.body.loaixe;
+            data.sokhung = req.body.sokhung;
+            data.somay = req.body.somay;
+            data.biensoxe = req.body.biensoxe;
+            data.ten = req.body.tenkh;
+            var makh = req.body.makh;
+            if (!makh) {
+                let r = await Abstract.add(Customer, data);
+                makh = r.insertId;
+                console.log(r.insertId);
+                if (!r || r == null) {
+                    librespone.error(req, res, "Kiểm tra lại thông tin khách hàng");
+                    return;
+                }
+            } else {
+                let r = await Abstract.update(Customer, data, { ma: makh });
+                if (!r || r == null) {
+                    librespone.error(req, res, "Kiểm tra lại thông tin khách hàng");
+                    return;
+                }
+            }
             let {
                 chitiet,
                 ...conlai
             } = req.body;
             var bodybill = conlai;
             var detailbill = chitiet;
+            bodybill['makh'] = makh
             bodybill['trangthai'] = 0;
             bodybill['loaihoadon'] = 0;
             bodybill['mahoadon'] = mahoadon;
@@ -51,7 +82,8 @@ module.exports = {
                 detailbill[k]['mahoadon'] = mahoadon;
             }
             let resulft = await Abstract.add(Bill, bodybill);
-            resulft = await Abstract.addMutil(BillSuachua, detailbill);
+            if (detailbill.length != 0)
+                resulft = await Abstract.addMutil(BillSuachua, detailbill);
             res.json({ "mahoadon": mahoadon });
         } catch (error) {
             librespone.error(req, res, error.message);
@@ -59,6 +91,14 @@ module.exports = {
     },
     update: async function (req, res, next) {
         try {
+            if (!req.body.mahoadon) {
+                librespone.error(req, res, "Không tồn tại mã hóa đơn");
+                return;
+            }
+            if (!req.body.biensoxe || !req.body.makh) {
+                librespone.error(req, res, "Không có biển số xe");
+                return;
+            }
             let {
                 mahoadon,
                 chitiet,
@@ -76,7 +116,8 @@ module.exports = {
                 var paramHoaDon = { mahoadon: mahoadon };
                 let resulft = await Abstract.update(Bill, bodybill, paramHoaDon);
                 await BillSuachua.deleteMahoaDon(mahoadon);
-                resulft = await Abstract.addMutil(BillSuachua, detailbill);
+                if (detailbill.length != 0)
+                    resulft = await Abstract.addMutil(BillSuachua, detailbill);
                 res.json({ "mahoadon": mahoadon });
             }
             else
@@ -151,7 +192,6 @@ module.exports = {
     //         type: 'binary',
     //         cellDates: true, cellStyles: true, rowStyles: true, rowDates: true,bookVBA:true,cellFormula:true,
     //         codepage:true,cellFormula:true,cellNF:true,cellHTML:true,cellText:true,dateNF:true,
-
     //     });
     //     var sheet_name_list = workbook.Sheets[workbook.SheetNames[0]];
     //     var ws_data = await BillSuachua.getChitiet(req.params.mahoadon);

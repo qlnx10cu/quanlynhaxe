@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react'
-import {Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButton} from '../../styles'
+import React, { useState, useEffect } from 'react'
+import { Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButton } from '../../styles'
 import lib from '../../lib'
-import {connect} from 'react-redux'
-import {getAllProduct} from '../../actions/Product';
+import { connect } from 'react-redux'
+import { getAllProduct } from '../../actions/Product';
 
 const PopupNewProduct = (props) => {
 
@@ -27,33 +27,54 @@ const PopupNewProduct = (props) => {
             );
         });
         if (product.length !== 0) {
-            if (product.length === 1&&product[0].maphutung===values) {
+            if (product.length === 1 && product[0].maphutung === values) {
                 setMaPhuTung(product[0].maphutung);
                 mTenCongViec.setValue(product[0].tentiengviet);
                 mDonGia.setValue(product[0].giaban_le);
                 mTonKho.setValue(product[0].soluongtonkho);
             } else {
                 SliceTop20(product);
+                mTenCongViec.setValue("");
+                mDonGia.setValue(0);
+                mTonKho.setValue(0);
             }
+        }
+        else {
+            mTenCongViec.setValue("");
+            mDonGia.setValue(0);
+            mTonKho.setValue(0);
         }
     };
 
     const handleAdd = () => {
-        if (mTenCongViec.value === "" || mMaPhuTung.value === "" || mDonGia.value === 0 || mSoLuong.value === 0) {
-            alert("Chưa nhập dữ liệu đầy đủ.");
-        } else {
-            let newData = {
-                tencongviec: mTenCongViec.value,
-                maphutung: mMaPhuTung,
-                dongia: mDonGia.value,
-                soluong: mSoLuong.value,
-                chietkhau: chietkhau,
-                tongtien: mDonGia.value * mSoLuong.value * ( (100 - chietkhau) / 100),
-                nhacungcap:'Trung Trang'
-            };
-            props.addItemToProduct(newData);
-            props.onCloseClick();
+        console.log(Number.isInteger(parseInt(mSoLuong.value)))
+        if (!mSoLuong.value || mSoLuong.value === 0) {
+            alert("Phải nhập số lượng");
+            return;
         }
+
+        if (mTenCongViec.value === "" || mMaPhuTung.value === "" || mDonGia.value === 0) {
+            alert("Chưa nhập mã phụ tùng");
+            return;
+        }
+
+        if (!props.listProduct.find(e => e.maphutung == mMaPhuTung)) {
+            alert("Không tìm thấy mã phụ tùng");
+            return;
+        }
+        if (!chietkhau)
+            chietkhau = 0;
+        let newData = {
+            tencongviec: mTenCongViec.value,
+            maphutung: mMaPhuTung,
+            dongia: mDonGia.value,
+            soluong: mSoLuong.value,
+            chietkhau: chietkhau,
+            tongtien: mDonGia.value * mSoLuong.value * ((100 - chietkhau) / 100),
+            nhacungcap: 'Trung Trang'
+        };
+        props.addItemToProduct(newData);
+        props.onCloseClick();
     };
 
     useEffect(() => {
@@ -74,26 +95,27 @@ const PopupNewProduct = (props) => {
     }, [props.isShowing, props.listProduct]);
 
     const SliceTop20 = (list) => {
-        setDataList(list.slice(0, 20));
+        var arr = list.filter(e => e.soluongtonkho > 0);
+        setDataList(arr.slice(0, 20));
     };
 
     return (
         <Modal className={props.isShowing ? "active" : ""}>
             <ModalContent>
                 <DivFlexRow>
-                    <DivFlexColumn style={{flex: 1}}>
+                    <DivFlexColumn style={{ flex: 1 }}>
                         <label>Tên phụ tùng </label>
                         <Input readOnly {...mTenCongViec} />
                     </DivFlexColumn>
-                    <DivFlexColumn style={{flex: 1, marginLeft: 15}}>
+                    <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Mã phụ tùng: </label>
                         <Input list="browsers" name="browser" value={mMaPhuTung} onChange={(e) => {
                             searchMaPhuTung(e.target.value);
-                        }}/>
+                        }} />
                         <datalist id="browsers">
                             {mDataList.map((item, index) => (
                                 <option disabled={item.soluongtonkho === 0} key={index}
-                                        value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
+                                    value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
                             ))}
                         </datalist>
 
@@ -101,11 +123,11 @@ const PopupNewProduct = (props) => {
                 </DivFlexRow>
 
                 <DivFlexRow>
-                    <DivFlexColumn style={{flex: 1}}>
+                    <DivFlexColumn style={{ flex: 1 }}>
                         <label>Đơn giá: </label>
                         <Input readOnly {...mDonGia} />
                     </DivFlexColumn>
-                    <DivFlexColumn style={{flex: 1, marginLeft: 15}}>
+                    <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Số lượng: </label>
                         <Input type="Number" max={mTonKho.value} min={1} {...mSoLuong} />
                     </DivFlexColumn>
@@ -113,17 +135,17 @@ const PopupNewProduct = (props) => {
 
                 <DivFlexColumn>
                     <label>Chiết khấu: </label>
-                    <Input type="Number" min={0} max={100} value={chietkhau} onChange={(e) => {setChietkhau(e.target.value)}} />
+                    <Input type="Number" min={0} max={100} value={chietkhau} onChange={(e) => { setChietkhau(e.target.value) }} />
                 </DivFlexColumn>
 
-                <DivFlexRow style={{marginTop: 10, fontSize: 20, justifyContent: 'flex-end'}}>
+                <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: 'flex-end' }}>
                     <label>Tổng tiền: <span
-                        style={{fontWeight: 'bold'}}>{(parseInt(mDonGia.value) || 0) * (parseInt(mSoLuong.value) || 0) + (parseInt(mTienCong.value) || 0)} VND</span></label>
+                        style={{ fontWeight: 'bold' }}>{(parseInt(mDonGia.value) || 0) * (parseInt(mSoLuong.value) || 0) + (parseInt(mTienCong.value) || 0)} VND</span></label>
                 </DivFlexRow>
 
-                <DivFlexRow style={{marginTop: 10, fontSize: 20, justifyContent: 'flex-end'}}>
+                <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: 'flex-end' }}>
                     <Button onClick={handleAdd}>Thêm</Button>
-                    <DelButton style={{marginLeft: 10}} onClick={() => props.onCloseClick()}>Hủy</DelButton>
+                    <DelButton style={{ marginLeft: 10 }} onClick={() => props.onCloseClick()}>Hủy</DelButton>
                 </DivFlexRow>
 
             </ModalContent>

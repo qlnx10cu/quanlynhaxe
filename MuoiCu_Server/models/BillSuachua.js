@@ -32,19 +32,19 @@ class BillChan {
         return obj;
     }
     static async delete(param) {
-        let sql = "update hoadon set tranthai=2 where mahoadon= ?";
+        let sql = "update hoadon set trangthai=2 where mahoadon= ?";
         var res = await query(sql, param);
         console.log(res);
     }
     static async getChitiet(param) {
-        let sql = "select * from hoadon where mahoadon= ?";
+        let sql = "select * from hoadon where mahoadon= ? and trangthai!=2";
         var result = [];
         var res = await query(sql, param);
         if (!res)
             return null;
         sql = "select * from khachhang where ma = ?";
         var resKH = await query(sql, [res[0].makh]);
-        result=Object.assign(res[0], resKH[0]);
+        result = Object.assign(res[0], resKH[0]);
         sql = "select * from chitiethoadonsuachua where mahoadon = ? ";
         res = await query(sql, param);
         result["chitiet"] = res;
@@ -57,6 +57,23 @@ class BillChan {
         var sql = "DELETE FROM chitiethoadonsuachua WHERE mahoadon= ?";
         var res = await query(sql, param);
         return res;
+    }
+    static async getChitietHungTrang(param) {
+        try {
+            let sql = "select * from hoadon where mahoadon= ? and trangthai!=2";
+            var result = [];
+            var res = await query(sql, param);
+            if (!res||res.count==0)
+                return [];
+            result = res[0];
+            sql = "select * from chitiethoadonsuachua ct where ct.mahoadon=?  AND maphutung!=''";
+            res = await query(sql, param);
+            console.log(res);
+            result["chitiet"] = res;
+            return result;
+        } catch (e) {
+            return [];
+        }
     }
     static async giamSoLuongPhuTung(param) {
         var sql = "update chitiethoadonsuachua ct left join phutung pt on pt.maphutung=ct.maphutung " +

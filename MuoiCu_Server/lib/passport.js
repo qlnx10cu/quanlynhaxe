@@ -12,6 +12,8 @@ const LocalStrategy = new Strategy({
 }, async function (Username, Password, done) {
     try {
         let account = await Account.findByUsername(Username);
+        console.log(Username);
+
         if (!account) {
             let error = new Error();
             error.name = 'NOTEXISTACCOUNT';

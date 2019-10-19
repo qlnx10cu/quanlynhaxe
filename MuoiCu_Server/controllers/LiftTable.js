@@ -1,8 +1,5 @@
 var liftTable = [];
 for (var i = 0; i < 12; i++)
-    if (i == 1) {
-        liftTable[i] = { "trangthai": 2, "mahoadon": "MHD-1555611753584" };
-    } else
     liftTable[i] = { "trangthai": 0, "mahoadon": "" };
 module.exports = function (io) {
     io.on('connection', function (socket) {

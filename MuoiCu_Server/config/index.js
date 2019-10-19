@@ -1,7 +1,7 @@
 module.exports = {
     database: {
-        username: process.env.USERNAME,
-        password: process.env.PASSWORD,
+        username: 'root',
+        password: '',
         database: process.env.DATABASE,
         host: process.env.HOST,
         limit: process.env.LIMIT

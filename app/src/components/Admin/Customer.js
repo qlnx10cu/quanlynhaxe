@@ -88,11 +88,11 @@ const Customer = (props) => {
                                 <Button onClick={() => {
                                     setShowHistoryCustomer(true);
                                     setEditItem(item);
-                                }} ><i className="fas fa-cog"></i></Button>
+                                }} >Chi tiết</Button>
                                 <Button onClick={() => {
                                     setShowCustomerDetail(true);
                                     setEditItem(item);
-                                }} style={{ marginLeft: 5 }}><i className="fas fa-cog"></i></Button>
+                                }} style={{ marginLeft: 5 }}>Cập nhật</Button>
                                 <DelButton onClick={() => {
                                     DeleteCustomer(props.token, item.ma).then().catch(err => {
                                         console.log('Xoa that bai');

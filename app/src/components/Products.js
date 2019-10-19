@@ -51,7 +51,7 @@ function readFile(file, token) {
                 chitiet: [],
             };
             for (let k in workbook.SheetNames) {
-                if (k === "0") {
+                if (k === "2") {
                     const wsname = workbook.SheetNames[k];
                     const ws = workbook.Sheets[wsname];
                     var K = ws['!ref'].split(':')[1];
@@ -97,7 +97,7 @@ function readFile(file, token) {
                     }
                 }
 
-                if (k === "1") {
+                if (k === "3") {
 
                     const wsname = workbook.SheetNames[k];
                     const ws = workbook.Sheets[wsname];
@@ -151,7 +151,7 @@ function readFile(file, token) {
                 }
 
 
-                if (k === "2") {
+                if (k === "4") {
 
                     const wsname = workbook.SheetNames[k];
                     const ws = workbook.Sheets[wsname];

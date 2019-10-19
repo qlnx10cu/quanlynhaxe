@@ -23,6 +23,9 @@ const RepairedBill = (props) => {
     let [biensoxe, setBienSoXe] = useState("");
     let [isShowHistoryCustomer, setShowHistoryCustomer] = useState(false);
     let [isShowNewBill, setShowNewBill] = useState(false);
+    let [isDisableEditInfo, setDisableEditInfo] = useState(false);
+    let [isUpdated, setUpdated] = useState(true);
+
     let [isShowCuaHangNgoai, setShowCuaHangNgoai] = useState(false);
 
     let [listBienSo, setListBienSo] = useState([]);
@@ -122,7 +125,7 @@ const RepairedBill = (props) => {
     const setCustomer = (lbs, values) => {
         let customer = lbs.find(function (item) {
             return item.biensoxe === values;
-        })
+        });
         if (customer !== undefined) {
             mCustomerName.setValue(customer.ten);
             mPhone.setValue(customer.sodienthoai);
@@ -131,6 +134,7 @@ const RepairedBill = (props) => {
             mSoKhung.setValue(customer.sokhung);
             mSoMay.setValue(customer.somay);
             mLoaiXe.setValue(customer.loaixe);
+            setDisableEditInfo(true);
         }
         else {
             mCustomerName.setValue("");
@@ -140,8 +144,9 @@ const RepairedBill = (props) => {
             mSoKhung.setValue("");
             mSoMay.setValue("");
             mLoaiXe.setValue("");
+            setDisableEditInfo(false);
         }
-    }
+    };
 
     const searchBienSoXe = (values) => {
 
@@ -158,13 +163,13 @@ const RepairedBill = (props) => {
     }
 
     const setNhanVienSuaChua = (lbs, values) => {
-        let nv = lbs.find(i => i.ma === values)
+        let nv = lbs.find(i => i.ma.toString() === values.toString());
         if (nv) {
             tennhanvien.setValue(nv.ten);
         }
         else
             tennhanvien.setValue("");
-    }
+    };
     const searchNhanVienSuaChua = (values) => {
         mMaNVSuaChua.setValue(values);
         if (!listNhanVienSuaChua || listNhanVienSuaChua.length == 0) {
@@ -176,7 +181,7 @@ const RepairedBill = (props) => {
         else
             setNhanVienSuaChua(listNhanVienSuaChua, values);
 
-    }
+    };
 
     const handleSaveBill = () => {
         var data = getData()
@@ -276,6 +281,7 @@ const RepairedBill = (props) => {
         data.mahoadon = mMaHoaDon;
         UpdateBill(props.token, data).then(res => {
             alert("Update hóa đơn thành công");
+            setUpdated(true);
         }).catch(err => {
             alert("Lỗi thanh toán")
         })
@@ -315,35 +321,35 @@ const RepairedBill = (props) => {
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Tên khách hàng: </label>
-                    <Input autocomplete="off" {...mCustomerName} />
+                    <Input disabled={isDisableEditInfo} autocomplete="off" {...mCustomerName} />
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Số điện thoại: </label>
-                    <Input autocomplete="off" {...mPhone} pattern="[0-9]{10}" />
+                    <Input disabled={isDisableEditInfo} autocomplete="off" {...mPhone} pattern="[0-9]{10}" />
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Địa chỉ: </label>
-                    <Input autocomplete="off" {...mAddress} />
+                    <Input disabled={isDisableEditInfo} autocomplete="off" {...mAddress} />
                 </DivFlexColumn>
             </DivFlexRow>
             <DivFlexRow style={{ alignItems: 'center' }}>
                 <DivFlexColumn>
                     <label>Loại xe: </label>
-                    <Input autocomplete="off" {...mLoaiXe} />
+                    <Input disabled={isDisableEditInfo} autocomplete="off" {...mLoaiXe} />
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Số khung: </label>
-                    <Input autocomplete="off" {...mSoKhung} />
+                    <Input disabled={isDisableEditInfo} autocomplete="off" {...mSoKhung} />
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Số máy: </label>
-                    <Input autocomplete="off" {...mSoMay} />
+                    <Input disabled={isDisableEditInfo} autocomplete="off" {...mSoMay} />
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Số km: </label>
-                    <Input autocomplete="off" {...mSoKM} type="Number" max={999999} min={0} />
+                    <Input disabled={isDisableEditInfo} autocomplete="off" {...mSoKM} type="Number" max={999999} min={0} />
                 </DivFlexColumn>
-                <Button onClick={() => setShowHistoryCustomer(true)} style={{ marginLeft: 20, marginTop: 10 }}>
+                <Button disabled={!isDisableEditInfo} onClick={() => setShowHistoryCustomer(true)} style={{ marginLeft: 20, marginTop: 10 }}>
                     Chi tiết
                 </Button>
             </DivFlexRow>
@@ -367,10 +373,16 @@ const RepairedBill = (props) => {
                         Export
                 </Button>
                 } */}
-                <Button onClick={() => setShowCuaHangNgoai(true)}>
+                <Button onClick={() => {
+                    setShowCuaHangNgoai(true);
+                    setUpdated(false)
+                }}>
                     Thêm của hàng ngoài
                 </Button>
-                <Button onClick={() => setShowNewBill(true)}>
+                <Button onClick={() => {
+                    setShowNewBill(true)
+                    setUpdated(false)
+                }}>
                     Thêm mới
                 </Button>
             </DivFlexRow>
@@ -401,6 +413,7 @@ const RepairedBill = (props) => {
                             <td>
                                 <DelButton onClick={() => {
                                     props.deleteItemBillProduct(item.key);
+                                    setUpdated(false);
                                 }}>
                                     <i className="far fa-trash-alt"></i>
                                 </DelButton>
@@ -419,12 +432,12 @@ const RepairedBill = (props) => {
                     </Button>
                     :
                     <DivFlexRow>
-                        <Button onClick={UpdateHoaDon}>
+                        {!isUpdated &&(<Button onClick={UpdateHoaDon}>
                             Update
-                        </Button>
-                        <Button onClick={thanhToanHoaDon}>
+                        </Button>)}
+                        {isUpdated && <Button onClick={thanhToanHoaDon}>
                             Thanh toán
-                        </Button>
+                        </Button>}
                         <DelButton style={{ marginLeft: 15 }} onClick={HuyHoaDon}>
                             Hủy
                         </DelButton>

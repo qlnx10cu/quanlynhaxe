@@ -14,6 +14,8 @@ const PopupNonBH = (props) => {
     let mNote = lib.handleInput("");
     let mSoLuongTonKho = lib.handleInput(0);
     let loai = (props && props.item) ? true : false;
+    let chucvu = props.chucvu;
+
     // useEffect(() => {
     //     if(item){
     //         mMaPhuTung.setValue(item.maphutung);
@@ -169,7 +171,7 @@ const PopupNonBH = (props) => {
                 <DivFlexRow >
                     <DivFlexColumn style={{ flex: 1 }}>
                         <label>Số lượng tồn kho </label>
-                        <Input type="number" min={0} {...mSoLuongTonKho} />
+                        <Input type="number" min={0} {...mSoLuongTonKho} disabled={!chucvu || chucvu != "Admin"}/>
                     </DivFlexColumn>
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Ghi chú </label>

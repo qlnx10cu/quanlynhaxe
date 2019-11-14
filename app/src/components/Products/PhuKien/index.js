@@ -56,6 +56,12 @@ const PhuKien = (props) => {
     let [page, setPage] = useState(0);
     let [item, setItem] = useState({});
 
+    let chucvu=null;
+    
+    if(props.info&&props.info.chucvu){
+        chucvu=props.info.chucvu
+    }
+
     useEffect(() => {
         if(props.listPhuKien) {
             tachList(props.listPhuKien)
@@ -177,6 +183,7 @@ const PhuKien = (props) => {
 
 const mapState = (state) => ({
    listPhuKien: state.Product.listPhuKien,
+   info: state.Authenticate.info
 });
 
 export default connect(mapState)(PhuKien);

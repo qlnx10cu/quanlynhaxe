@@ -48,7 +48,12 @@ const DauNhot = (props) => {
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
     let [itemData, setItem] =useState(null);
-
+    let chucvu=null;
+    
+    if(props.info&&props.info.chucvu){
+        chucvu=props.info.chucvu
+    }
+    
 
     useEffect(() => {
         if (props.listDauNhot) {
@@ -173,6 +178,7 @@ const DauNhot = (props) => {
 const mapState = (state) => ({
     token: state.Authenticate.token,
     listDauNhot: state.Product.listDauNhot,
+    info: state.Authenticate.info
 });
 
 export default connect(mapState, null)(DauNhot);

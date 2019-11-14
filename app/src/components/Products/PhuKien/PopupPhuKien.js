@@ -17,6 +17,8 @@ const PopupPhuKien = (props) => {
     let item = props.item;
     let mModel = lib.handleInput("");
     let mColor = lib.handleInput("#FFFFFF");
+    let chucvu = props.chucvu;
+
     useEffect(() => {
         if (item && item.maphutung) {
             GetDetailPhuKien(props.token, item.maphutung).then(res => {
@@ -182,7 +184,7 @@ const PopupPhuKien = (props) => {
                 <DivFlexRow >
                     <DivFlexColumn style={{ flex: 1 }}>
                         <label>Số lượng tồn kho </label>
-                        <Input type="number" min={0} {...mSoLuongTonKho} />
+                        <Input type="number" min={0} {...mSoLuongTonKho} disabled={!chucvu || chucvu != "Admin"} />
                     </DivFlexColumn>
 
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>

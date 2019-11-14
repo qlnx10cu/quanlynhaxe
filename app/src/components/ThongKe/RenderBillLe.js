@@ -64,10 +64,12 @@ const RenderBillLe = ({
                 </DivFlexRow>
                 <RenderTableBill list={data.chitiet} />
                 <DivFlexColumn style={{ marginTop: 10 }}>
+                    <label><i> *Quý khách vui lỏng đổi trả trong 24h, kể từ khi mua hàng</i></label>
+                </DivFlexColumn>
+                <DivFlexColumn style={{ marginTop: 10 ,alignItems: 'center'}}>
                     <label>Tổng tiền:
                     <font size="4" ><b> {data.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</b></font>
                     </label>
-                    <label><i> *Quý khách vui lỏng đổi trả trong 24h, kể từ khi mua hàng</i></label>
                 </DivFlexColumn>
             </React.Fragment>}
         </div>

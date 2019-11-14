@@ -35,7 +35,9 @@ const ThongKe = (props) => {
             alert("Lỗi hủy hóa đpm7")
         })
     }
-
+    const UpdateHoaDon = (maHoaDon, loai) => {
+        console.log("loai:", loai, maHoaDon)
+    }
     const handleLayDanhSach = () => {
         setLoading(true)
         let start = moment(dateStart).format("YYYY/MM/DD");
@@ -98,13 +100,15 @@ const ThongKe = (props) => {
                                 <td>{moment(item.ngaythanhtoan).format("hh:mm DD/MM/YYYY")}</td>
                                 <td>{item.loaihoadon === 0 ? "Sửa chữa" : "Bán lẻ"}</td>
                                 <td>
-
+                                    <Button onClick={() => {
+                                        UpdateHoaDon(item.mahoadon, item.loaihoadon)
+                                    }}>Thay đổi</Button>
                                     <Button onClick={() => {
                                         setMaHoaDon(item.mahoadon)
                                         setShowing(true);
                                         setLoaiHoaDon(item.loaihoadon);
                                     }}>Chi tiết</Button>
-                                    <DelButton style={{ marginLeft: 15 }} onClick={()=>{HuyHoaDon(item.mahoadon); handleLayDanhSach()}}>
+                                    <DelButton style={{ marginLeft: 15 }} onClick={() => { HuyHoaDon(item.mahoadon); handleLayDanhSach() }}>
                                         Hủy</DelButton>
                                 </td>
                             </tr>

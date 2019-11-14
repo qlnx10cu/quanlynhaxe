@@ -45,7 +45,7 @@ const RenderBillChan = ({
 }) => {
     const exportBill = () => {
         window.open(
-            `${HOST}/billsuachua/mahoadon/${data.mahoadon}/export`,
+            `${HOST}/billsuachua/mahoadon/${data.mahoadon}/exportbill`,
             '_blank' // <- This is what makes it open in a new window.
         );
     }

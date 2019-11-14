@@ -41,7 +41,7 @@ module.exports = {
             }
 
             var str = new Date().getTime().toString();
-            var mahoadon = 'NPX-' + str.substr(0, str.length - 1);
+            var mahoadon = 'PT-' + str.substr(str.length - 8, str.length - 7);
             var data = {};
             data.sodienthoai = req.body.sodienthoai;
             data.diachi = req.body.diachi;

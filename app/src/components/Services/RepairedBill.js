@@ -102,7 +102,7 @@ const RepairedBill = (props) => {
 
     const exportBill = () => {
         window.open(
-            `${HOST}/billsuachua/mahoadon/${mMaHoaDon}/export`,
+            `${HOST}/billsuachua/mahoadon/${mMaHoaDon}/exportbill`,
             '_blank' // <- This is what makes it open in a new window.
         );
     }

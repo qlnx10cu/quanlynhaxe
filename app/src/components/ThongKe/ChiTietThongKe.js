@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, ModalContent, Table, CloseButton} from '../../styles'
+import { Modal, ModalContent, Table, CloseButton } from '../../styles'
 import { GetBillBanLeByMaHoaDon, GetBillSuaChuaByMaHoaDon } from '../../API/Bill'
 import RenderBillLe from './RenderBillLe'
 import RenderBillChan from './RenderBillChan'
@@ -7,8 +7,7 @@ import RenderBillChan from './RenderBillChan'
 const RenderChiTietNhanVien = ({ staff }) => {
     return (
         <React.Fragment>
-            <h3> Nhân viên ban hang : {staff ?staff.ten:<h3></h3>}</h3>
-            
+            <h3> Nhân viên bán hàng : {staff ? staff.ten : <h3></h3>}</h3>
         </React.Fragment>
     )
 }
@@ -59,8 +58,8 @@ const ChiTietThongKe = (props) => {
                     <h2> </h2>
                 </div>
                 <h3 style={{ textAlign: 'center' }}>HEAD TRUNG TRANG</h3>
-		<h4 style={{ textAlign: 'center' }}>612/31B Tran Hung Dao, phuong Binh Khanh, TP Long Xuyen, An Giang</h4>
-		<h5 style={{ textAlign: 'center' }}> Ban hang: 02963 603 828 - Phu tung: 02963 603 826 - Dich vu: 02963 957 669</h5>
+                <h4 style={{ textAlign: 'center' }}>612/31B Trần Hưng Đạo, phường Bình Khánh, TP Long Xuyên, An Giang</h4>
+                <h5 style={{ textAlign: 'center' }}> Bán hàng: 02963 603 828 - Phụ tùng: 02963 603 826 - Dịch vụ: 02963 957 669</h5>
                 <RenderChiTietNhanVien staff={staff} />
                 <h3 style={{ marginTop: 10 }}>Thông tin bill</h3>
                 {

@@ -163,11 +163,17 @@ const PopupPhuTung = (props) => {
 
 
                 <DivFlexRow >
-                    <DivFlexColumn style={{ flex: 1 }}>
-                        <label>Số lượng tồn kho </label>
-                        <Input type="number" min={0} {...mSoLuongTonKho} />
-                    </DivFlexColumn>
-
+                    {chucvu && chucvu == "Admin" ?
+                        <DivFlexColumn style={{ flex: 1 }}>
+                            <label>Số lượng tồn kho </label>
+                            <Input type="number" min={0} {...mSoLuongTonKho} />
+                        </DivFlexColumn>
+                        :
+                        <DivFlexColumn style={{ flex: 1 }}>
+                            <label>Số lượng tồn kho </label>
+                            <Input type="number" min={0} {...mSoLuongTonKho} />
+                        </DivFlexColumn>
+                    }
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Model</label>
                         <Input {...mModel} />

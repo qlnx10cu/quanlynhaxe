@@ -60,6 +60,7 @@ const PhuTung = (props) => {
     let [searchValue, setSearchValue] = useState("");
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
+    let chucvu=null;
 
     const handleButtonSearch = () => {
         let search = "";
@@ -74,8 +75,11 @@ const PhuTung = (props) => {
         });
         tachList(list);
     };
-    console.log("pro",props.info)
-    console.log(props.info.chucvu)
+
+    if(props.info&&props.info.chucvu){
+        chucvu=props.info.chucvu
+    }
+    
 
     const _handleKeyPress = (e) => {
         if (e.key === 'Enter') {
@@ -179,6 +183,7 @@ const PhuTung = (props) => {
                 </tbody>
             </Table>
             <PopupPhuTung
+                chucvu={chucvu}
                 item={itemEdit}
                 isShowing={isShowing}
                 listPhuTung={props.listPhuTung}

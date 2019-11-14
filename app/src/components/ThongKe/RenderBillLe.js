@@ -26,8 +26,8 @@ const RenderTableBill = ({ list }) => {
                             <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>{item.soluong}</td>
                             <td>{item.chietkhau}</td>
-                            <td>{item.nhacungcap?item.nhacungcap:"Trung Trang"}</td>
-                            <td>{(item.soluong * (item.dongia-item.dongia*item.chietkhau/100)).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td>{item.nhacungcap ? item.nhacungcap : "Trung Trang"}</td>
+                            <td>{(item.soluong * (item.dongia - item.dongia * item.chietkhau / 100)).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                         </tr>
 
                     ))}
@@ -57,19 +57,17 @@ const RenderBillLe = ({
                         <label>Ngày thanh toán: </label>
                         <Input readOnly value={moment(data.ngayban).format("hh:mm DD/MM/YYYY")} />
                     </DivFlexColumn>
-		<DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Ma hoa don: </label>
+                    <DivFlexColumn style={{ marginLeft: 20 }}>
+                        <label>Mã Hóa Đơn: </label>
                         <Input readOnly value={data.mahoadon} />
                     </DivFlexColumn>
                 </DivFlexRow>
                 <RenderTableBill list={data.chitiet} />
-		<DivFlexColumn style={{ marginTop: 10}}>
+                <DivFlexColumn style={{ marginTop: 10 }}>
                     <label>Tổng tiền:
                     <font size="4" ><b> {data.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</b></font>
-			 </label>
-                      <label><i>
-			*Quy khach vui long doi tra trong 24h ke tu khi mua hang
-			</i></label>
+                    </label>
+                    <label><i> *Quý khách vui lỏng đổi trả trong 24h, kể từ khi mua hàng</i></label>
                 </DivFlexColumn>
             </React.Fragment>}
         </div>

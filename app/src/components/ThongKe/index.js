@@ -36,7 +36,20 @@ const ThongKe = (props) => {
         })
     }
     const UpdateHoaDon = (maHoaDon, loai) => {
-        console.log("loai:", loai, maHoaDon)
+        if (loai == 0) {
+            // let url = `${HOST}/statistic/bill/export?start=${start}&end=${end}&trangthai=1`;
+            // window.open(
+            //     url,
+            //     '_blank' // <- This is what makes it open in a new window.
+            // );
+        }
+        if (loai == 1) {
+            let url = `${HOST}/banle?mahoadon=${maHoaDon}`;
+            window.open(
+                url,
+                '_blank' // <- This is what makes it open in a new window.
+            );
+        }
     }
     const handleLayDanhSach = () => {
         setLoading(true)
@@ -100,9 +113,9 @@ const ThongKe = (props) => {
                                 <td>{moment(item.ngaythanhtoan).format("hh:mm DD/MM/YYYY")}</td>
                                 <td>{item.loaihoadon === 0 ? "Sửa chữa" : "Bán lẻ"}</td>
                                 <td>
-                                    <Button onClick={() => {
+                                    {/* <Button onClick={() => {
                                         UpdateHoaDon(item.mahoadon, item.loaihoadon)
-                                    }}>Thay đổi</Button>
+                                    }}>Thay đổi</Button> */}
                                     <Button onClick={() => {
                                         setMaHoaDon(item.mahoadon)
                                         setShowing(true);

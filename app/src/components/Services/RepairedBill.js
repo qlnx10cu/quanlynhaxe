@@ -432,12 +432,12 @@ const RepairedBill = (props) => {
                     </Button>
                     :
                     <DivFlexRow>
-                        {!isUpdated &&(<Button onClick={UpdateHoaDon}>
+                       <Button onClick={UpdateHoaDon}>
                             Update
-                        </Button>)}
-                        {isUpdated && <Button onClick={thanhToanHoaDon}>
+                        </Button>
+                       <Button onClick={thanhToanHoaDon}>
                             Thanh toán
-                        </Button>}
+                        </Button>
                         <DelButton style={{ marginLeft: 15 }} onClick={HuyHoaDon}>
                             Hủy
                         </DelButton>

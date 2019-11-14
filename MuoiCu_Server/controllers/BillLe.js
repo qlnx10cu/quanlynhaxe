@@ -31,7 +31,7 @@ module.exports = {
     add: async function (req, res, next) {
         try {
             var str = new Date().getTime().toString();
-            var mahoadon = 'NPX-' + str.substr(0, str.length - 1);
+            var mahoadon = 'PT-' + str.substr(str.length - 8, str.length - 7);
             let {
                 chitiet,
                 ...conlai

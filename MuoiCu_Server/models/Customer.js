@@ -29,7 +29,7 @@ class Customer {
         return arr;
     }
     static getArrayParam(param) {
-        let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay'];
+        let tmp = ['ten', 'sodienthoai', 'diachi',  'loaixe', 'sokhung', 'somay'];
         let obj = {};
         let arr = Object.keys(param).filter(e => tmp.includes(e));
         arr.forEach(e => {

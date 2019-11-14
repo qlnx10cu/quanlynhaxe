@@ -7,31 +7,8 @@ import RenderBillChan from './RenderBillChan'
 const RenderChiTietNhanVien = ({ staff }) => {
     return (
         <React.Fragment>
-            <h3>Thông tin nhân viên xuất bill</h3>
-            {staff ?
-                <Table>
-                    <tbody>
-                        <tr>
-                            <th>Mã Nhân Viên</th>
-                            <th>Tên Nhân Viên</th>
-                            <th>Số CMND</th>
-                            <th>Số điện thoại</th>
-                            <th>Email</th>
-                            <th>Chức vụ</th>
-                        </tr>
-
-                        <tr>
-                            <td>{staff.ma}</td>
-                            <td>{staff.ten}</td>
-                            <td>{staff.cmnd}</td>
-                            <td>{staff.sdt}</td>
-                            <td>{staff.gmail}</td>
-                            <td>{staff.chucvu}</td>
-                        </tr>
-                    </tbody>
-                </Table> :
-                <h3 style={{ textAlign: 'center' }}>Không lấy được danh sách nhân viên</h3>
-            }
+            <h3> Nhân viên ban hang : {staff ?staff.ten:<h3></h3>}</h3>
+            
         </React.Fragment>
     )
 }
@@ -81,7 +58,9 @@ const ChiTietThongKe = (props) => {
                     <CloseButton onClick={() => props.onCloseClick()}>&times;</CloseButton>
                     <h2> </h2>
                 </div>
-                <h3 style={{ textAlign: 'center' }}>Chi tiết ({props.mahoadon})</h3>
+                <h3 style={{ textAlign: 'center' }}>HEAD TRUNG TRANG</h3>
+		<h4 style={{ textAlign: 'center' }}>612/31B Tran Hung Dao, phuong Binh Khanh, TP Long Xuyen, An Giang</h4>
+		<h5 style={{ textAlign: 'center' }}> Ban hang: 02963 603 828 - Phu tung: 02963 603 826 - Dich vu: 02963 957 669</h5>
                 <RenderChiTietNhanVien staff={staff} />
                 <h3 style={{ marginTop: 10 }}>Thông tin bill</h3>
                 {

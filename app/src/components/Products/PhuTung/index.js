@@ -74,8 +74,8 @@ const PhuTung = (props) => {
         });
         tachList(list);
     };
-    
-    console.log(props.chucvu)
+    console.log("pro",props.info)
+    console.log(props.info.chucvu)
 
     const _handleKeyPress = (e) => {
         if (e.key === 'Enter') {
@@ -192,6 +192,7 @@ const PhuTung = (props) => {
 
 const mapState = (state) => ({
     listPhuTung: state.Product.listPhuTung,
+    info: state.Authenticate.info
 });
 
 export default connect(mapState)(PhuTung);

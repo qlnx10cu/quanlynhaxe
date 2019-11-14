@@ -32,7 +32,7 @@ const Home = (props) => {
         <Router>
             <ToolBar socket={socket}/>
             <BaseContainer>
-                {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Dịch Vụ") && <Route exact path="/products" component={LoadingComponent(Products)}/>}
+                {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Dịch Vụ") && <Route exact path="/products" component={LoadingComponent(() =><Products {...props}/>)} />}
                 {props.info!=null && props.info.chucvu==="Admin" && <Route path="/staffs" component={LoadingComponent(Staffs)}/>}
                 {props.info!=null && props.info.chucvu==="Admin" && <Route path="/repairPrice" component={LoadingComponent(RepairPrice)}/>}
                 {props.info!=null && props.info.chucvu==="Admin" &&  <Route path="/customer" component={LoadingComponent(Customer)}/>}

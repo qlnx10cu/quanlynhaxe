@@ -74,6 +74,8 @@ const PhuTung = (props) => {
         });
         tachList(list);
     };
+    
+    console.log(props.info)
 
     const _handleKeyPress = (e) => {
         if (e.key === 'Enter') {

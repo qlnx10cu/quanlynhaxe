@@ -116,9 +116,9 @@ const ThongKe = (props) => {
                                 <td>{moment(item.ngaythanhtoan).format("hh:mm DD/MM/YYYY")}</td>
                                 <td>{item.loaihoadon === 0 ? "Sửa chữa" : "Bán lẻ"}</td>
                                 <td>
-                                    {/* <Button onClick={() => {
+                                    <Button onClick={() => {
                                         UpdateHoaDon(item.mahoadon, item.loaihoadon)
-                                    }}>Thay đổi</Button> */}
+                                    }}>Thay đổi</Button>
                                     <Button onClick={() => {
                                         setMaHoaDon(item.mahoadon)
                                         setShowing(true);

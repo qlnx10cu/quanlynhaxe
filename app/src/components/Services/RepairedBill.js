@@ -291,7 +291,7 @@ const RepairedBill = (props) => {
         // item.soluong = e.target.value;
         let newItem = props.listBillProduct[index];
         newItem.soluong = e.target.value;
-        let newProduct = [...props.listBillProduct.slice(0,index),newItem,...props.listBillProduct.slice(index+1,mProducts.lenght)];
+        let newProduct = [...props.listBillProduct.slice(0,index),newItem,...props.listBillProduct.slice(index+1,props.listBillProduct.lenght)];
         props.setListBillProduct(newProduct);
     }
     return (

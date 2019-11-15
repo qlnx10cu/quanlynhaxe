@@ -120,7 +120,6 @@ const BanLe = (props) => {
         let newItem = mProducts[index];
         newItem.soluong = e.target.value;
         let newProduct = [...mProducts.slice(0,index),newItem,...mProducts.slice(index+1,mProducts.lenght)];
-        console.log(newProduct);
         setProducts(newProduct);
     }
 

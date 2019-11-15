@@ -32,6 +32,7 @@ const Customer = (props) => {
     const handleButtonSearch = () => {
         var arr = []
         arr = listCustomerTemp.filter(e => e.ten.toLowerCase().includes(searchValue.toLowerCase()));
+        arr = arr.concat(listCustomer.filter(e => e.biensoxe.toLowerCase().includes(searchValue.toLowerCase())));
         setlistCustomer(arr);
     };
     const _handleKeyPress = (e) => {

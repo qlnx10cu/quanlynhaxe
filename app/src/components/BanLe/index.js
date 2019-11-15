@@ -117,8 +117,9 @@ const BanLe = (props) => {
 
     const handleChangeSL = (e, index) => {
         // item.soluong = e.target.value;
-        let newProduct = mProducts;
-        newProduct[index].soluong = e.target.value;
+        let newItem = mProducts[index];
+        newItem.soluong = e.target.value;
+        let newProduct = [...mProducts.slice(0,index),newItem,...mProducts.slice(index+1,mProducts.lenght)];
         console.log(newProduct);
         setProducts(newProduct);
     }

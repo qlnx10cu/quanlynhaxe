@@ -170,7 +170,7 @@ const BanLe = (props) => {
                             <td>{item.tencongviec}</td>
                             <td>{item.maphutung}</td>
                             <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td><input type="number" onChange={() => this.handleChangeSL(e,item)} value={item.soluong} min="1"/></td>
+                            <td><input type="number" onChange={(e) => this.handleChangeSL(e,item)} value={item.soluong} min="1"/></td>
                             <td>{item.nhacungcap ? item.nhacungcap : "Trung Trang"}</td>
                             <td>{item.chietkhau} %</td>
                             <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>

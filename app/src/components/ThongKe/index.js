@@ -88,12 +88,15 @@ const ThongKe = (props) => {
                     <label style={{ marginLeft: 10 }}>Kết thúc</label>
                     <Input type="date" value={dateEnd} style={{ marginLeft: 10 }} onChange={(e) => setDateEnd(e.target.value)} />
                 </DivFlexRow>
-                <Button onClick={isLoading ? () => { } : handleExport}>
-                    {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Export"}
-                </Button>
-                <Button onClick={isLoading ? () => { } : handleLayDanhSach}>
-                    {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Lấy danh sách"}
-                </Button>
+                <DivFlexRow>
+                    <Button onClick={isLoading ? () => { } : handleExport}>
+                        {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Export"}
+                    </Button>
+                    <Button onClick={isLoading ? () => { } : handleLayDanhSach} style={{marginLeft: 10}}>
+                        {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Lấy danh sách"}
+                    </Button>
+                </DivFlexRow>
+
             </DivFlexRow>
             <Table style={{ marginTop: 15 }}>
                 <tbody>

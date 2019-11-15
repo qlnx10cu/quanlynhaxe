@@ -119,6 +119,7 @@ const BanLe = (props) => {
         // item.soluong = e.target.value;
         let newProduct = mProducts;
         newProduct[index].soluong = e.target.value;
+        console.log(newProduct);
         setProducts(newProduct);
     }
 

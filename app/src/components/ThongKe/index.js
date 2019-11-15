@@ -92,7 +92,7 @@ const ThongKe = (props) => {
                     <Button onClick={isLoading ? () => { } : handleExport}>
                         {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Export"}
                     </Button>
-                    <Button onClick={isLoading ? () => { } : handleLayDanhSach} style={{marginLeft: 10}}>
+                    <Button onClick={isLoading ? () => { } : handleLayDanhSach} style={{ marginLeft: 10 }}>
                         {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Lấy danh sách"}
                     </Button>
                 </DivFlexRow>
@@ -119,7 +119,7 @@ const ThongKe = (props) => {
                                     <Button onClick={() => {
                                         UpdateHoaDon(item.mahoadon, item.loaihoadon)
                                     }}>Thay đổi</Button>
-                                    <Button onClick={() => {
+                                    <Button style={{ marginLeft: 15 }} onClick={() => {
                                         setMaHoaDon(item.mahoadon)
                                         setShowing(true);
                                         setLoaiHoaDon(item.loaihoadon);

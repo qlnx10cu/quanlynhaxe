@@ -163,11 +163,11 @@ const BanLe = (props) => {
                             <td>{index + 1}</td>
                             <td>{item.tencongviec}</td>
                             <td>{item.maphutung}</td>
-                            <td>{item.dongia}</td>
+                            <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>{item.soluong}</td>
                             <td>{item.nhacungcap ? item.nhacungcap : "Trung Trang"}</td>
                             <td>{item.chietkhau} %</td>
-                            <td>{item.tongtien}</td>
+                            <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>
                                 <DelButton onClick={() => {
                                     deleteProduct(item);

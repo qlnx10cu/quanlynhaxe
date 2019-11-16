@@ -46,16 +46,17 @@ const BanLe = (props) => {
         }
         else {
             let tmp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length);
-            console.log(tmp)
+            console.log("sd", tmp)
             if (tmp == "" || tmp.length != 9) {
                 loai = 0;
             }
             else {
-            console.log(mahoadonUpdate)
+                console.log("sds", mahoadonUpdate)
                 mahoadonUpdate = tmp;
                 loai = 1;
             }
         }
+        console.log(loai)
 
     });
 
@@ -161,8 +162,8 @@ const BanLe = (props) => {
 
     return (
         <div>
-            {loai&&<h1 style={{ textAlign: "center" }}> Hóa đơn {mahoadonUpdate}</h1>}
-            {!loai&&<h1 style={{ textAlign: "center" }}> Hóa đơn bán lẻ</h1>}
+            {loai == 1 && <h1 style={{ textAlign: "center" }}> Hóa đơn {mahoadonUpdate}</h1>}
+            {loai != 0 && <h1 style={{ textAlign: "center" }}> Hóa đơn bán lẻ</h1>}
             <DivFlexRow>
                 <DivFlexColumn>
                     <label>Tên khách hàng: </label>

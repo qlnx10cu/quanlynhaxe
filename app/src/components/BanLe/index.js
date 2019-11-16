@@ -119,11 +119,11 @@ const BanLe = (props) => {
         // item.soluong = e.target.value;
         let newItem = mProducts[index];
         newItem.soluong = e.target.value;
-        let tongTien=mTongTien - item.tongtien;
-        newItem.tongtien= newItem.dongia* newItem.soluong * ((100 - newItemchietkhau) / 100)
+        let tongTien=mTongTien - newItem.tongtien;
+        newItem.tongtien= newItem.dongia* newItem.soluong * ((100 - newItem.chietkhau) / 100)
         let newProduct = [...mProducts.slice(0,index),newItem,...mProducts.slice(index+1,mProducts.lenght)];
         setProducts(newProduct);
-        setTongTien(tongTien + item.tongtien);
+        setTongTien(tongTien + newItem.tongtien);
     }
 
     return (

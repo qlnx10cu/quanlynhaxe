@@ -40,11 +40,12 @@ const ThongKe = (props) => {
             alert("Chức năng đang thực hiện");
         }
         if (loai == 1) {
-            let url = `/banle/${maHoaDon}`;
-            window.open(
-                url,
-                '_blank' // <- This is what makes it open in a new window.
-            );
+            alert("Chức năng đang thực hiện");
+            // let url = `/banle/${maHoaDon}`;
+            // window.open(
+            //     url,
+            //     '_blank' // <- This is what makes it open in a new window.
+            // );
         }
     }
     const handleLayDanhSach = () => {

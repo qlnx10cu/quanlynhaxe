@@ -126,6 +126,18 @@ const BanLe = (props) => {
         setTongTien(tongTien + newItem.tongtien);
     }
 
+
+    const handleChangeChieuKhau = (e, index) => {
+        // item.soluong = e.target.value;
+        let newItem = mProducts[index];
+        newItem.chietkhau = e.target.value;
+        let tongTien=mTongTien - newItem.tongtien;
+        newItem.tongtien= newItem.dongia* newItem.soluong * ((100 - newItem.chietkhau) / 100)
+        let newProduct = [...mProducts.slice(0,index),newItem,...mProducts.slice(index+1,mProducts.lenght)];
+        setProducts(newProduct);
+        setTongTien(tongTien + newItem.tongtien);
+    }
+
     return (
         <div>
             <h1 style={{ textAlign: "center" }}>Hóa đơn bán lẻ</h1>
@@ -159,11 +171,11 @@ const BanLe = (props) => {
                         <th>STT</th>
                         <th>Tên phụ tùng</th>
                         <th>Mã phụ tùng</th>
-                        <th>Đơn giá</th>
+                        <th>Đơn giá (VND)</th>
                         <th>SL</th>
                         <th>Nhà Cung Cấp</th>
-                        <th>Chiết khấu</th>
-                        <th>Tổng tiền</th>
+                        <th>Chiết khấu (%)</th>
+                        <th>Tổng tiền (VND)</th>
                         <th><i className="far fa-trash-alt" /></th>
                     </tr>
 
@@ -175,7 +187,7 @@ const BanLe = (props) => {
                             <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td><input type="number" onChange={(e) => handleChangeSL(e,index)} value={mProducts[index].soluong} min="1"/></td>
                             <td>{item.nhacungcap ? item.nhacungcap : "Trung Trang"}</td>
-                            <td>{item.chietkhau} %</td>
+                            <td><input type="number" onChange={(e) => handleChangeChieuKhau(e,index)} value={mProducts[index].chietkhau} min="0"/></td>
                             <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>
                                 <DelButton onClick={() => {

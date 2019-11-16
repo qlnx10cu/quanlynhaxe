@@ -286,6 +286,26 @@ const RepairedBill = (props) => {
             alert("Lỗi thanh toán")
         })
     }
+
+    const handleChangeSL = (e, index) => {
+        // item.soluong = e.target.value;
+        let newItem = props.listBillProduct[index];
+        newItem.soluongphutung = e.target.value;
+        newItem.tongtien= newItem.dongia* newItem.soluongphutung+item.tiencong;
+        let newProduct = [...props.listBillProduct[index].slice(0,index),newItem,...props.listBillProduct[index].slice(index+1,props.listBillProduct[index].lenght)];
+        setListBillProduct(newProduct);
+    }
+
+
+    const handleChangeTienCong = (e, index) => {
+        // item.soluong = e.target.value;
+        let newItem = props.listBillProduct[index];
+        newItem.tiencong = e.target.value;
+        newItem.tongtien= newItem.dongia* newItem.soluongphutung+item.tiencong;
+        let newProduct = [...props.listBillProduct[index].slice(0,index),newItem,...props.listBillProduct[index].slice(index+1,props.listBillProduct[index].lenght)];
+        setListBillProduct(newProduct);
+    }
+
     return (
         <div>
             <h1 style={{ textAlign: "center" }}>Phiếu sửa chữa (Bàn số: {maban})</h1>
@@ -406,9 +426,9 @@ const RepairedBill = (props) => {
                             <td>{item.tenphutungvacongviec}</td>
                             <td>{item.maphutung}</td>
                             <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td>{item.soluongphutung}</td>
+                            <td><input type="number" onChange={(e) => handleChangeSL(e,index)} value={props.listBillProduct[index].soluongphutung} min="1"/></td>
                             <td>{(item.dongia * item.soluongphutung).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td>{item.tiencong.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td><input type="number" onChange={(e) => handleChangeTienCong(e,index)} value={props.listBillProduct[index].tiencong} min="0"/></td>
                             <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>
                                 <DelButton onClick={() => {

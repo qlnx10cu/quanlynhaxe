@@ -21,8 +21,8 @@ const BanLe = (props) => {
     let [listCuaHangNgoai, setCuaHangNgoai] = useState([]);
     let [mTongTien, setTongTien] = useState(0);
     let [listCustomer, setListCustomer] = useState([]);
-    let loai = 0;
-    let mahoadonUpdate = ""
+    let [loai, setLoai] = useState(false);
+    let [mahoadonUpdate, setmahoadonUpdate] = useState("");
 
     useEffect(() => {
         clearAll();
@@ -42,21 +42,18 @@ const BanLe = (props) => {
         if (pathname.endsWith("/"))
             pathname = pathname.substring(0, pathname.length - 1);
         if (pathname.endsWith("/banle")) {
-            loai = 0;
+            setLoai(false)
         }
         else {
             let tmp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length);
-            console.log("sd", tmp)
             if (tmp == "" || tmp.length != 9) {
-                loai = 0;
+                setLoai(false)
             }
             else {
-                console.log("sds", mahoadonUpdate)
-                mahoadonUpdate = tmp;
-                loai = 1;
+                setmahoadonUpdate(tmp)
+                setLoai(true)
             }
         }
-        console.log(loai)
 
     });
 
@@ -162,8 +159,8 @@ const BanLe = (props) => {
 
     return (
         <div>
-            {loai == 1 && <h1 style={{ textAlign: "center" }}> Hóa đơn {mahoadonUpdate}</h1>}
-            {loai != 0 && <h1 style={{ textAlign: "center" }}> Hóa đơn bán lẻ</h1>}
+            {loai && <h1 style={{ textAlign: "center" }}> Hóa đơn {mahoadonUpdate}</h1>}
+            {!loai && <h1 style={{ textAlign: "center" }}> Hóa đơn bán lẻ</h1>}
             <DivFlexRow>
                 <DivFlexColumn>
                     <label>Tên khách hàng: </label>

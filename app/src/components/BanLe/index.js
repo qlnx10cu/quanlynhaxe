@@ -21,7 +21,8 @@ const BanLe = (props) => {
     let [listCuaHangNgoai, setCuaHangNgoai] = useState([]);
     let [mTongTien, setTongTien] = useState(0);
     let [listCustomer, setListCustomer] = useState([]);
-
+    let loai = 0;
+    let mahoadonUpdate = ""
 
     useEffect(() => {
         clearAll();
@@ -35,6 +36,26 @@ const BanLe = (props) => {
                 alert("Không thể lấy danh sách khách hàng")
             })
     }, [])
+
+    useEffect(() => {
+        let pathname = window.location.href;
+        if (pathname.endsWith("/"))
+            pathname = pathname.substring(0, pathname.length - 1);
+        if (pathname.endsWith("/banle")) {
+            loai = 0;
+        }
+        else {
+            let tmp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length);
+            if (tmp == "" || tmp.length != 9) {
+                loai = 0;
+            }
+            else {
+                mahoadonUpdate = tmp;
+                loai = 1;
+            }
+        }
+
+    });
 
     const clearAll = () => {
         setTongTien(0);
@@ -82,14 +103,14 @@ const BanLe = (props) => {
 
     const deleteProduct = (it) => {
         setTongTien(mTongTien - it.tongtien);
-        if (it.maphutung&&it.maphutung!=='') {
+        if (it.maphutung && it.maphutung !== '') {
             setProducts(mProducts.filter(function (item) {
                 return item.maphutung !== it.maphutung;
             }))
         }
-        else{
+        else {
             setProducts(mProducts.filter(function (item) {
-                return ! (item.tencongviec === it.tencongviec&&item.nhacungcap===it.nhacungcap);
+                return !(item.tencongviec === it.tencongviec && item.nhacungcap === it.nhacungcap);
             }))
         }
 
@@ -116,31 +137,29 @@ const BanLe = (props) => {
     };
 
     const handleChangeSL = (e, index) => {
-        // item.soluong = e.target.value;
         let newItem = mProducts[index];
         newItem.soluong = e.target.value;
-        let tongTien=mTongTien - newItem.tongtien;
-        newItem.tongtien= newItem.dongia* newItem.soluong * ((100 - newItem.chietkhau) / 100)
-        let newProduct = [...mProducts.slice(0,index),newItem,...mProducts.slice(index+1,mProducts.lenght)];
+        let tongTien = mTongTien - newItem.tongtien;
+        newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
+        let newProduct = [...mProducts.slice(0, index), newItem, ...mProducts.slice(index + 1, mProducts.lenght)];
         setProducts(newProduct);
         setTongTien(tongTien + newItem.tongtien);
     }
 
 
     const handleChangeChieuKhau = (e, index) => {
-        // item.soluong = e.target.value;
         let newItem = mProducts[index];
         newItem.chietkhau = e.target.value;
-        let tongTien=mTongTien - newItem.tongtien;
-        newItem.tongtien= newItem.dongia* newItem.soluong * ((100 - newItem.chietkhau) / 100)
-        let newProduct = [...mProducts.slice(0,index),newItem,...mProducts.slice(index+1,mProducts.lenght)];
+        let tongTien = mTongTien - newItem.tongtien;
+        newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
+        let newProduct = [...mProducts.slice(0, index), newItem, ...mProducts.slice(index + 1, mProducts.lenght)];
         setProducts(newProduct);
         setTongTien(tongTien + newItem.tongtien);
     }
 
     return (
         <div>
-            <h1 style={{ textAlign: "center" }}>Hóa đơn bán lẻ</h1>
+            {loai}?{<h1 style={{ textAlign: "center" }}> Hóa đơn {mahoadonUpdate}</h1>}:{<h1 style={{ textAlign: "center" }}> Hóa đơn bán lẻ</h1>}
             <DivFlexRow>
                 <DivFlexColumn>
                     <label>Tên khách hàng: </label>
@@ -185,9 +204,9 @@ const BanLe = (props) => {
                             <td>{item.tencongviec}</td>
                             <td>{item.maphutung}</td>
                             <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td><input type="number" onChange={(e) => handleChangeSL(e,index)} value={mProducts[index].soluong} min="1"/></td>
+                            <td><input type="number" onChange={(e) => handleChangeSL(e, index)} value={mProducts[index].soluong} min="1" /></td>
                             <td>{item.nhacungcap ? item.nhacungcap : "Trung Trang"}</td>
-                            <td><input type="number" onChange={(e) => handleChangeChieuKhau(e,index)} value={mProducts[index].chietkhau} min="0"/></td>
+                            <td><input type="number" onChange={(e) => handleChangeChieuKhau(e, index)} value={mProducts[index].chietkhau} min="0" /></td>
                             <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>
                                 <DelButton onClick={() => {

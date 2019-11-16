@@ -44,7 +44,7 @@ const ThongKe = (props) => {
             // );
         }
         if (loai == 1) {
-            let url = `${HOST}/banle?mahoadon=${maHoaDon}`;
+            let url = `/banle/${maHoaDon}`;
             window.open(
                 url,
                 '_blank' // <- This is what makes it open in a new window.

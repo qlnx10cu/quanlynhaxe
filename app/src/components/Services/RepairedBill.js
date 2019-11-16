@@ -291,10 +291,9 @@ const RepairedBill = (props) => {
         // item.soluong = e.target.value;
         let newItem = props.listBillProduct[index];
         newItem.soluongphutung = e.target.value;
-        newItem.tongtien= newItem.dongia* newItem.soluongphutung+newItem.tiencong;
-        let newProduct=[...props.listBillProduct]
-        newProduct[index]=newItem;
-        // let newProduct = [...props.listBillProduct[index].slice(0,index),newItem,...props.listBillProduct[index].slice(index+1,props.listBillProduct[index].lenght)];
+        newItem.tongtien = newItem.dongia * newItem.soluongphutung + newItem.tiencong;
+        let newProduct = [...props.listBillProduct]
+        newProduct = [...newProduct[index].slice(0, index), newItem, ...newProduct[index].slice(index + 1, newProduct[index].lenght)];
         setListBillProduct(newProduct);
     }
 
@@ -303,10 +302,9 @@ const RepairedBill = (props) => {
         // item.soluong = e.target.value;
         let newItem = props.listBillProduct[index];
         newItem.tiencong = e.target.value;
-        newItem.tongtien= newItem.dongia* newItem.soluongphutung+newItem.tiencong;
-        let newProduct=[...props.listBillProduct]
-        newProduct[index]=newItem;
-        // let newProduct = [...props.listBillProduct[index].slice(0,index),newItem,...props.listBillProduct[index].slice(index+1,props.listBillProduct[index].lenght)];
+        newItem.tongtien = newItem.dongia * newItem.soluongphutung + newItem.tiencong;
+        let newProduct = [...props.listBillProduct]
+        newProduct = [...newProduct[index].slice(0, index), newItem, ...newProduct[index].slice(index + 1, newProduct[index].lenght)];
         setListBillProduct(newProduct);
     }
 
@@ -430,9 +428,9 @@ const RepairedBill = (props) => {
                             <td>{item.tenphutungvacongviec}</td>
                             <td>{item.maphutung}</td>
                             <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td><input type="number" onChange={(e) => handleChangeSL(e,index)} value={props.listBillProduct[index].soluongphutung} min="1"/></td>
+                            <td><input type="number" onChange={(e) => handleChangeSL(e, index)} value={props.listBillProduct[index].soluongphutung} min="1" /></td>
                             <td>{(item.dongia * item.soluongphutung).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td><input type="number" onChange={(e) => handleChangeTienCong(e,index)} value={props.listBillProduct[index].tiencong} min="0"/></td>
+                            <td><input type="number" onChange={(e) => handleChangeTienCong(e, index)} value={props.listBillProduct[index].tiencong} min="0" /></td>
                             <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>
                                 <DelButton onClick={() => {
@@ -456,10 +454,10 @@ const RepairedBill = (props) => {
                     </Button>
                     :
                     <DivFlexRow>
-                       <Button onClick={UpdateHoaDon}>
+                        <Button onClick={UpdateHoaDon}>
                             Update
                         </Button>
-                       <Button onClick={thanhToanHoaDon}>
+                        <Button onClick={thanhToanHoaDon}>
                             Thanh toán
                         </Button>
                         <DelButton style={{ marginLeft: 15 }} onClick={HuyHoaDon}>

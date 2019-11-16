@@ -7,6 +7,7 @@ import { SaveBillBanLe } from '../../API/Bill'
 import { GetlistCustomer } from '../../API/Customer'
 import { connect } from 'react-redux'
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
+import { GetBillBanLeByMaHoaDon, GetBillSuaChuaByMaHoaDon } from '../../API/Bill'
 
 
 

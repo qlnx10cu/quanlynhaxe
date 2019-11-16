@@ -4,6 +4,7 @@ import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton } from '../.
 import PopupNewProduct from './PopupNewProduct'
 import PopupNewCuaHangNgoai from './PopupNewCuaHangNgoai'
 import { SaveBillBanLe } from '../../API/Bill'
+import { UpdateBillBanLe } from '../../API/Bill'
 import { GetlistCustomer } from '../../API/Customer'
 import { connect } from 'react-redux'
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
@@ -60,7 +61,15 @@ const BanLe = (props) => {
     });
     const getBill = (mahoadon) => {
         GetBillBanLeByMaHoaDon(props.token, mahoadon).then(res => {
-            console.log(res)
+            let data = res.data;
+            if (data.makh) {
+                setMaKhachHang(data.makh)
+            }
+            if (data.tenkh) {
+                mCustomerName.setValue(data.tenkh)
+            }
+            setTongTien(tongtien);
+            setProducts(data.chitiet)
         }).catch(err => {
             alert("Không lấy được chi tiết hóa đơn:" + mahoadon);
         })
@@ -74,8 +83,42 @@ const BanLe = (props) => {
         setMaKhachHang("");
     }
 
-
     const handleSaveBill = () => {
+
+        if (mTongTien === 0) {
+            alert("Chưa có sản phẩm nào.")
+            return;
+        }
+
+        let chitiet = mProducts.map(function (item) {
+            return {
+                maphutung: item.maphutung,
+                tenphutung: item.tencongviec,
+                dongia: item.dongia,
+                soluong: item.soluong,
+                chietkhau: item.chietkhau,
+                nhacungcap: item.nhacungcap,
+            }
+        })
+
+        let data = {
+            mahoadon: mahoadonUpdate,
+            manv: props.info.ma,
+            tenkh: mCustomerName.value,
+            tongtien: mTongTien,
+            chitiet: chitiet,
+        }
+        alert("Chức năng đang thực hiện");
+
+        // UpdateBillBanLe(props.token, data).then(res => {
+        //     alert('Thành công. ');
+        // })
+        //     .catch(err => {
+        //         alert("Không xuất được hóa đơn.");
+        //     })
+    }
+
+    const handleAddBill = () => {
 
         if (mTongTien === 0) {
             alert("Chưa có sản phẩm nào.")
@@ -235,12 +278,12 @@ const BanLe = (props) => {
             </DivFlexRow>
             <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
                 <label></label>
-                <Button onClick={() => {
+                {loai && <Button onClick={() => {
                     handleSaveBill();
-
-                }}>
-                    Lưu
-                </Button>
+                }}>Thay đổi</Button>}
+                {!loai && <Button onClick={() => {
+                    handleAddBill();
+                }}>Lưu</Button>}
             </DivFlexRow>
             <PopupNewProduct
                 isShowing={isShowNewProduct}

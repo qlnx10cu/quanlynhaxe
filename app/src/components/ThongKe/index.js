@@ -37,11 +37,7 @@ const ThongKe = (props) => {
     }
     const UpdateHoaDon = (maHoaDon, loai) => {
         if (loai == 0) {
-            // let url = `${HOST}/statistic/bill/export?start=${start}&end=${end}&trangthai=1`;
-            // window.open(
-            //     url,
-            //     '_blank' // <- This is what makes it open in a new window.
-            // );
+            alert("Chức năng đang thực hiện");
         }
         if (loai == 1) {
             let url = `/banle/${maHoaDon}`;

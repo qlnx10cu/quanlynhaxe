@@ -4,6 +4,7 @@ export const REQUEST_LIST_PRODUCT = 'REQUEST_LIST_PRODUCT';
 export const REQUEST_LIST_PRODUCT_SUCCESS = 'REQUEST_LIST_PRODUCT_SUCCESS';
 export const REQUEST_LIST_PRODUCT_FAILER = 'REQUEST_LIST_PRODUCT_FAILER';
 export const ADD_BILL_PRODUCT = 'ADD_BILL_PRODUCT';
+export const UPDATE_BILL_PRODUCT = 'UPDATE_BILL_PRODUCT';
 export const DELETE_BILL_PRODUCT = 'DELETE_BILL_PRODUCT';
 export const DELETE_ITEM_BILL_PRODUCT = 'DELETE_ITEM_BILL_PRODUCT';
 export const SET_LIST_PRODUCT = 'SET_LIST_PRODUCT';
@@ -35,6 +36,14 @@ export const addBillProduct = (data) => (dispatch) => {
         data: data,
     })
 }
+export const updateBillProduct = (data,index) => (dispatch) => {
+    dispatch({
+        type: UPDATE_BILL_PRODUCT,
+        data: data,
+        index:index
+    })
+}
+
 export const deleteBillProduct = () => (dispatch) => {
     dispatch({
         type: DELETE_BILL_PRODUCT,

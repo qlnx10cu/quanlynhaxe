@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { UpdateBill, SaveBill, ThanhToan, HuyThanhToan, GetBillSuaChuaByMaHoaDon } from '../../API/Bill'
 import { GetlistCustomer } from '../../API/Customer'
 import { GetListNVSuaChua } from '../../API/Staffs'
-import { deleteBillProduct, deleteItemBillProduct, setListBillProduct } from '../../actions/Product';
+import { deleteBillProduct, deleteItemBillProduct, setListBillProduct, updateBillProduct } from '../../actions/Product';
 import { withRouter } from 'react-router-dom'
 import PopupBillCHN from './PopupBillCHN';
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
@@ -290,18 +290,20 @@ const RepairedBill = (props) => {
     const handleChangeSL = (e, index) => {
         let newItem = props.listBillProduct[index];
         newItem.soluongphutung = e.target.value;
-        newItem.tongtien= newItem.dongia* newItem.soluongphutung+newItem.tiencong;
-        let newProduct = [...props.listBillProduct.slice(0,index),newItem,...props.listBillProduct.slice(index+1,props.listBillProduct.lenght)];
-        setListBillProduct(newProduct);
+        newItem.tongtien = newItem.dongia * newItem.soluongphutung + newItem.tiencong;
+        updateBillProduct(newItem, index)
+        // let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
+        // setListBillProduct(newProduct);
     }
 
 
     const handleChangeTienCong = (e, index) => {
         let newItem = props.listBillProduct[index];
         newItem.tiencong = e.target.value;
-        newItem.tongtien= newItem.dongia* newItem.soluongphutung+newItem.tiencong;
-        let newProduct = [...props.listBillProduct.slice(0,index),newItem,...props.listBillProduct.slice(index+1,props.listBillProduct.lenght)];
-        setListBillProduct(newProduct);
+        newItem.tongtien = newItem.dongia * newItem.soluongphutung + newItem.tiencong;
+        updateBillProduct(newItem, index)
+        // let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
+        // setListBillProduct(newProduct);
     }
 
     return (
@@ -424,9 +426,9 @@ const RepairedBill = (props) => {
                             <td>{item.tenphutungvacongviec}</td>
                             <td>{item.maphutung}</td>
                             <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td><input type="number" onChange={(e) => handleChangeSL(e,index)} value={props.listBillProduct[index].soluongphutung} min="1"/></td>
+                            <td><input type="number" onChange={(e) => handleChangeSL(e, index)} value={props.listBillProduct[index].soluongphutung} min="1" /></td>
                             <td>{(item.dongia * item.soluongphutung).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td><input type="number" onChange={(e) => handleChangeTienCong(e,index)} value={props.listBillProduct[index].tiencong} min="0"/></td>
+                            <td><input type="number" onChange={(e) => handleChangeTienCong(e, index)} value={props.listBillProduct[index].tiencong} min="0" /></td>
                             <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>
                                 <DelButton onClick={() => {
@@ -450,10 +452,10 @@ const RepairedBill = (props) => {
                     </Button>
                     :
                     <DivFlexRow>
-                       <Button onClick={UpdateHoaDon}>
+                        <Button onClick={UpdateHoaDon}>
                             Update
                         </Button>
-                       <Button onClick={thanhToanHoaDon}>
+                        <Button onClick={thanhToanHoaDon}>
                             Thanh toán
                         </Button>
                         <DelButton style={{ marginLeft: 15 }} onClick={HuyHoaDon}>
@@ -481,7 +483,7 @@ const mapDispatch = (dispatch) => ({
     deleteBillProduct: () => { dispatch(deleteBillProduct()) },
     deleteItemBillProduct: (key) => { dispatch(deleteItemBillProduct(key)) },
     setListBillProduct: (arr) => { dispatch(setListBillProduct(arr)) },
-
+    updateBillProduct: (data, index) => { dispatch(updateBillProduct(data, index)) }
 })
 export default withRouter(connect(mapState, mapDispatch)(RepairedBill));
 // export default RepairedBill;

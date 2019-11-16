@@ -68,7 +68,7 @@ const BanLe = (props) => {
             if (data.tenkh) {
                 mCustomerName.setValue(data.tenkh)
             }
-            setTongTien(tongtien);
+            setTongTien(data.tongtien);
             setProducts(data.chitiet)
         }).catch(err => {
             alert("Không lấy được chi tiết hóa đơn:" + mahoadon);

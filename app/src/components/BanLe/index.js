@@ -52,11 +52,18 @@ const BanLe = (props) => {
             else {
                 setmahoadonUpdate(tmp)
                 setLoai(true)
+                getBill(tmp)
             }
         }
 
     });
-
+    const getBill = (mahoadon) => {
+        GetBillBanLeByMaHoaDon(props.token, mahoadon).then(res => {
+            console.log(res)
+        }).catch(err => {
+            alert("Không lấy được chi tiết hóa đơn:" + mahoadon);
+        })
+    }
     const clearAll = () => {
         setTongTien(0);
         setProducts([]);

@@ -292,9 +292,10 @@ const RepairedBill = (props) => {
         let newItem = props.listBillProduct[index];
         newItem.soluongphutung = e.target.value;
         newItem.tongtien= newItem.dongia* newItem.soluongphutung+newItem.tiencong;
-        props.listBillProduct[index]=newItem;
+        let newProduct=[...props.listBillProduct]
+        newProduct[index]=newItem;
         // let newProduct = [...props.listBillProduct[index].slice(0,index),newItem,...props.listBillProduct[index].slice(index+1,props.listBillProduct[index].lenght)];
-        setListBillProduct(props.listBillProduct);
+        setListBillProduct(newProduct);
     }
 
 
@@ -303,9 +304,10 @@ const RepairedBill = (props) => {
         let newItem = props.listBillProduct[index];
         newItem.tiencong = e.target.value;
         newItem.tongtien= newItem.dongia* newItem.soluongphutung+newItem.tiencong;
-        props.listBillProduct[index]=newItem;
+        let newProduct=[...props.listBillProduct]
+        newProduct[index]=newItem;
         // let newProduct = [...props.listBillProduct[index].slice(0,index),newItem,...props.listBillProduct[index].slice(index+1,props.listBillProduct[index].lenght)];
-        setListBillProduct(props.listBillProduct);
+        setListBillProduct(newProduct);
     }
 
     return (

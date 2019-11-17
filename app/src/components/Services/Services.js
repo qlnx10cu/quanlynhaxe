@@ -70,7 +70,8 @@ const CRepairItem = (props) => {
         if (window.confirm("Bạn có chắc muốn thu hồi")) {
             props.socket.emit('release', {
                 maban: props.STT - 1,
-                mahoadon: ""
+                mahoadon: "",
+                biensoxe:"",
             })
         }
     }
@@ -79,7 +80,7 @@ const CRepairItem = (props) => {
         <RepairItem className={mIsWorking === 0 ? "" : mIsWorking === 1 ? "dangnhap" : "working"}>
             <div className="STT">{props.STT}</div>
             <img alt="img repair" src={ImgRepair} />
-            <span>{mIsWorking === 2 ? `Sửa chữa ${props.item && props.item.mahoadon}` : mIsWorking === 1 ? "Đang nhập thông tin" : "Trống"}</span>
+            <span>{mIsWorking === 2 ? `Sửa chữa ${props.item && props.item.biensoxe} (${props.item && props.item.mahoadon})` : mIsWorking === 1 ? "Đang nhập thông tin" : "Trống"}</span>
             <DivFlexRow>
                 {mIsWorking === 2 ? <Button style={{ marginTop: 10, color: "black" }} onClick={handleXemThongTin}>
                     Thông tin
@@ -117,7 +118,8 @@ const Services = (props) => {
     const select = (stt, mahoadon, cb) => {
         props.socket.emit('select', {
             maban: stt - 1,
-            mahoadon: ""
+            mahoadon: "",
+            biensoxe:"",
         })
         props.socket.on('lifttable', async data => {
             await setLiftTable(data);
@@ -127,7 +129,8 @@ const Services = (props) => {
     const release = (stt) => {
         props.socket.emit('release', {
             maban: stt - 1,
-            mahoadon: ""
+            mahoadon: "",
+            biensoxe:"",
         })
     };
     useEffect(() => {

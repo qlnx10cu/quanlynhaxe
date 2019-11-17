@@ -187,9 +187,10 @@ const RepairedBill = (props) => {
         var data = getData()
         if (data == null)
             return;
+        var bsx = data.biensoxe;
         SaveBill(props.token, data).then(Response => {
             props.deleteBillProduct();
-            props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon });
+            props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon, biensoxe: bsx });
             alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.data.mahoadon);
             props.history.goBack();
         }).catch(err => {
@@ -201,7 +202,7 @@ const RepairedBill = (props) => {
     const HuyHoaDon = () => {
 
         HuyThanhToan(props.token, mMaHoaDon).then(res => {
-            props.socket.emit("release", { maban: maban - 1, mahoadon: "" });
+            props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
             setMaHoaDon("");
             alert('Hủy đã thành công');
             window.location.href = '/services';
@@ -263,7 +264,7 @@ const RepairedBill = (props) => {
         data.mahoadon = mMaHoaDon;
         UpdateBill(props.token, data).then(res => {
             ThanhToan(props.token, mMaHoaDon).then(res => {
-                props.socket.emit("release", { maban: maban - 1, mahoadon: "" });
+                props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
                 setMaHoaDon("");
                 exportBill()
                 props.history.goBack();

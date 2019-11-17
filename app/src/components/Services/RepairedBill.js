@@ -200,15 +200,16 @@ const RepairedBill = (props) => {
 
     }
     const HuyHoaDon = () => {
-
-        HuyThanhToan(props.token, mMaHoaDon).then(res => {
-            props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
-            setMaHoaDon("");
-            alert('Hủy đã thành công');
-            window.location.href = '/services';
-        }).catch(err => {
-            alert("Lỗi thanh toán")
-        })
+        if (window.confirm("Bạn chắc muốn hủy hóa đơn này") == true) {
+            HuyThanhToan(props.token, mMaHoaDon).then(res => {
+                props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
+                setMaHoaDon("");
+                alert('Hủy đã thành công');
+                window.location.href = '/services';
+            }).catch(err => {
+                alert("Lỗi thanh toán")
+            })
+        }
     }
     const getData = () => {
         if (!biensoxe || biensoxe == "" || biensoxe == undefined) {
@@ -302,7 +303,6 @@ const RepairedBill = (props) => {
 
     const handleChangeTienCong = (e, index) => {
         let newItem = props.listBillProduct[index];
-        console.log(e, e.target.value)
         if (e.target.value)
             newItem.tiencong = parseInt(e.target.value);
         else
@@ -379,8 +379,6 @@ const RepairedBill = (props) => {
                     Chi tiết
                 </Button>
             </DivFlexRow>
-
-
             <DivFlexRow style={{ alignItems: 'center' }}>
                 <DivFlexColumn>
                     <label>Yêu cầu khách hàng: </label>

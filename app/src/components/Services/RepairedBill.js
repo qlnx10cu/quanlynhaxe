@@ -290,21 +290,26 @@ const RepairedBill = (props) => {
 
     const handleChangeSL = (e, index) => {
         let newItem = props.listBillProduct[index];
-        newItem.soluongphutung = e.target.value;
-        newItem.tongtien = newItem.dongia * newItem.soluongphutung + newItem.tiencong;
-        updateBillProduct(newItem, index)
-        // let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
-        // setListBillProduct(newProduct);
+        if (e.target.value)
+            newItem.soluongphutung = parseInt(e.target.value);
+        else
+            newItem.soluongphutung = 1;
+        newItem.tongtien = parseInt(newItem.dongia) * parseInt(newItem.soluongphutung) + parseInt(newItem.tiencong);
+        let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
+        props.setListBillProduct(newProduct);
     }
 
 
     const handleChangeTienCong = (e, index) => {
         let newItem = props.listBillProduct[index];
-        newItem.tiencong = e.target.value;
-        newItem.tongtien = newItem.dongia * newItem.soluongphutung + newItem.tiencong;
-        updateBillProduct(newItem, index)
-        // let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
-        // setListBillProduct(newProduct);
+        console.log(e, e.target.value)
+        if (e.target.value)
+            newItem.tiencong = parseInt(e.target.value);
+        else
+            newItem.tiencong = 0;
+        newItem.tongtien = parseInt(newItem.dongia) * parseInt(newItem.soluongphutung) + parseInt(newItem.tiencong);
+        let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
+        props.setListBillProduct(newProduct);
     }
 
     return (
@@ -456,7 +461,7 @@ const RepairedBill = (props) => {
                         <Button onClick={UpdateHoaDon}>
                             Update
                         </Button>
-                        <Button onClick={thanhToanHoaDon}>
+                        <Button style={{ marginLeft: 15 }} onClick={thanhToanHoaDon}>
                             Thanh toán
                         </Button>
                         <DelButton style={{ marginLeft: 15 }} onClick={HuyHoaDon}>

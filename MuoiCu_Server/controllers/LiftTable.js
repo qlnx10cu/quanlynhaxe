@@ -1,6 +1,6 @@
 var liftTable = [];
 for (var i = 0; i < 12; i++)
-    liftTable[i] = { "trangthai": 0, "mahoadon": "" };
+    liftTable[i] = { "trangthai": 0, "mahoadon": "", "biensxe": "" };
 module.exports = function (io) {
     io.on('connection', function (socket) {
 
@@ -14,6 +14,7 @@ module.exports = function (io) {
             try {
                 let index = Number.parseInt(data.maban);
                 liftTable[index].mahoadon = data.mahoadon;
+                liftTable[index].biensoxe = data.biensoxe;
                 liftTable[index].trangthai = 1;
                 socket.emit('lifttable', liftTable);
                 socket.broadcast.emit('lifttableFull', liftTable);
@@ -24,6 +25,7 @@ module.exports = function (io) {
             try {
                 let index = Number.parseInt(data.maban);
                 liftTable[index].mahoadon = data.mahoadon;
+                liftTable[index].biensoxe = data.biensoxe;
                 liftTable[index].trangthai = 2;
                 socket.emit('lifttable', liftTable);
                 socket.broadcast.emit('lifttableFull', liftTable);
@@ -35,6 +37,7 @@ module.exports = function (io) {
                 let index = Number.parseInt(data.maban);
                 liftTable[index].trangthai = 0;
                 liftTable[index].mahoadon = "";
+                liftTable[index].biensoxe = "";
                 socket.emit('lifttableFull', liftTable);
                 socket.broadcast.emit('lifttableFull', liftTable);
                 socket.broadcast.emit('lifttableBill', liftTable);

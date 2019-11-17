@@ -33,6 +33,7 @@ const PopupAccessory = (props) => {
                 mTenCongViec.setValue(product[0].tentiengviet);
                 mDonGia.setValue(product[0].giaban_le);
                 mTonKho.setValue(product[0].soluongtonkho);
+                mSoLuong.setValue(1);
             }
             else {
                 SliceTop20(product);

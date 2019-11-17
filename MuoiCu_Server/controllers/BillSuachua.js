@@ -51,6 +51,8 @@ module.exports = {
             data.biensoxe = req.body.biensoxe;
             data.ten = req.body.tenkh;
             var makh = req.body.makh;
+            console.log("ma khd",makh);
+
             if (!makh) {
                 let r = await Abstract.add(Customer, data);
                 makh = r.insertId;

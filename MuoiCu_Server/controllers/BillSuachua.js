@@ -51,7 +51,7 @@ module.exports = {
             data.biensoxe = req.body.biensoxe;
             data.ten = req.body.tenkh;
             var makh = req.body.makh;
-            console.log("ma khd",makh);
+            console.log("ma khd", makh);
 
             if (!makh) {
                 let r = await Abstract.add(Customer, data);
@@ -62,7 +62,7 @@ module.exports = {
                     return;
                 }
             } else {
-                let r = await Abstract.update(Customer, data, { ma: makh });
+                let r = await Abstract.update(Customer, data, { ma: makh, biensoxe: data.biensoxe });
                 if (!r || r == null) {
                     librespone.error(req, res, "Kiểm tra lại thông tin khách hàng");
                     return;

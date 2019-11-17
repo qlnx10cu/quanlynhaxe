@@ -121,7 +121,9 @@ const ThongKe = (props) => {
                                         setShowing(true);
                                         setLoaiHoaDon(item.loaihoadon);
                                     }}>Chi tiết</Button>
-                                    <DelButton style={{ marginLeft: 15 }} onClick={() => { HuyHoaDon(item.mahoadon); handleLayDanhSach() }}>
+                                    <DelButton style={{ marginLeft: 15 }} onClick={() => {
+                                        if (window.confirm("Bạn chắc muốn hủy") == true) { HuyHoaDon(item.mahoadon); handleLayDanhSach() }
+                                    }}>
                                         Hủy</DelButton>
                                 </td>
                             </tr>

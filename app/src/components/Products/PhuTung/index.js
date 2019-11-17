@@ -1,28 +1,30 @@
-import React, {useState, useEffect} from 'react';
-import {ProductContainer, DivFlexRow, Button, Table, DelButton, Input} from '../../../styles'
+import React, { useState, useEffect } from 'react';
+import { ProductContainer, DivFlexRow, Button, Table, DelButton, Input } from '../../../styles'
 import PopupPhuTung from './PopupPhuTung'
-import { DelPhuTung} from '../../../API/PhuTungAPI'
+import { DelPhuTung } from '../../../API/PhuTungAPI'
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import _ from 'lodash'
 
 const PhuTungItem = ({
-                         item,
-                         token,
-                         getList = () => {
-                         },
-                         setShowing,
-                         setItemEdit,
-                     }) => {
+    item,
+    token,
+    getList = () => {
+    },
+    setShowing,
+    setItemEdit,
+}) => {
 
     const handleDelClick = () => {
-        DelPhuTung(token, item.maphutung).then(res => {
-            alert("Xóa thành công.");
-            getList();
-        })
-            .catch(err => {
-                alert("Không xóa được. @@")
+        if (window.confirm("Bạn chắc muốn hủy") == true) {
+            DelPhuTung(token, item.maphutung).then(res => {
+                alert("Xóa thành công.");
+                getList();
             })
+                .catch(err => {
+                    alert("Không xóa được. @@")
+                })
+        }
     };
 
     return (
@@ -40,10 +42,10 @@ const PhuTungItem = ({
                         setItemEdit(item)
                     }
                     }>
-                        <i className="fas fa-cog"/>
+                        <i className="fas fa-cog" />
                     </Button>
-                    <DelButton onClick={handleDelClick} style={{marginLeft: 5}}>
-                        <i className="far fa-trash-alt"/>
+                    <DelButton onClick={handleDelClick} style={{ marginLeft: 5 }}>
+                        <i className="far fa-trash-alt" />
                     </DelButton>
                 </DivFlexRow>
             </td>
@@ -60,22 +62,22 @@ const PhuTung = (props) => {
     let [searchValue, setSearchValue] = useState("");
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
-    let chucvu=null;
-    
-    if(props.info&&props.info.chucvu){
-        chucvu=props.info.chucvu
+    let chucvu = null;
+
+    if (props.info && props.info.chucvu) {
+        chucvu = props.info.chucvu
     }
-    
+
     const handleButtonSearch = () => {
         let search = "";
-        if(searchValue === "") {
+        if (searchValue === "") {
             search = "ALL"
         }
         else {
-            search= searchValue;
+            search = searchValue;
         }
-        let list = props.listPhuTung.filter(function(item){
-            return (checkHasRender(search,item));
+        let list = props.listPhuTung.filter(function (item) {
+            return (checkHasRender(search, item));
         });
         tachList(list);
     };
@@ -124,19 +126,19 @@ const PhuTung = (props) => {
     return (
 
         <ProductContainer className={props.isActive ? "active" : ""}>
-            <DivFlexRow style={{justifyContent: 'space-between'}}>
+            <DivFlexRow style={{ justifyContent: 'space-between' }}>
                 <h3>Danh sách phụ tùng</h3>
-                <Button onClick={() => {setShowing(true);setItemEdit(null)}}>Thêm mới</Button>
+                <Button onClick={() => { setShowing(true); setItemEdit(null) }}>Thêm mới</Button>
             </DivFlexRow>
-            <DivFlexRow style={{alignItems: 'center', justifyContent: 'space-between', marginTop: 5, marginBottom: 15}}>
-                <DivFlexRow style={{alignItems: 'center'}}>
-                    <Input onKeyPress={_handleKeyPress} style={{width: 250, marginRight: 15}}
-                           onChange={(e) => setSearchValue(e.target.value)}/>
+            <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginTop: 5, marginBottom: 15 }}>
+                <DivFlexRow style={{ alignItems: 'center' }}>
+                    <Input onKeyPress={_handleKeyPress} style={{ width: 250, marginRight: 15 }}
+                        onChange={(e) => setSearchValue(e.target.value)} />
                     <Button onClick={() => {
                         handleButtonSearch();
                     }}>
                         Tìm Kiếm
-                        <i className="fas fa-search"/>
+                        <i className="fas fa-search" />
                     </Button>
                 </DivFlexRow>
 
@@ -144,40 +146,40 @@ const PhuTung = (props) => {
                     <Button onClick={handlePrevPage}>
                         Trang trước
                     </Button>
-                    <Button style={{marginLeft: 15}} onClick={handleNextPage}>
+                    <Button style={{ marginLeft: 15 }} onClick={handleNextPage}>
                         Trang Sau
                     </Button>
                 </DivFlexRow>
 
             </DivFlexRow>
-            <Table style={{marginTop: 15}}>
+            <Table style={{ marginTop: 15 }}>
                 <tbody>
 
-                <tr>
-                    <th>Mã phụ tùng</th>
+                    <tr>
+                        <th>Mã phụ tùng</th>
 
-                    <th>Tên tiếng việt</th>
-                    <th>Giá nhập</th>
-                    <th>Giá bán lẻ</th>
-                    <th>Vị trí</th>
-                    <th>Số lượng <br/> tồn kho</th>
-                    <th>Sửa/Xóa</th>
-                </tr>
+                        <th>Tên tiếng việt</th>
+                        <th>Giá nhập</th>
+                        <th>Giá bán lẻ</th>
+                        <th>Vị trí</th>
+                        <th>Số lượng <br /> tồn kho</th>
+                        <th>Sửa/Xóa</th>
+                    </tr>
 
-                {
-                    mArrPhuTung[page] && mArrPhuTung[page].map(item => (
-                        <PhuTungItem
-                            item={item}
-                            key={item.ma}
-                            getList={() => {
-                            }}
-                            setShowing={setShowing}
-                            setItemEdit={
-                                setItemEdit
-                            }
-                        />
-                    ))
-                }
+                    {
+                        mArrPhuTung[page] && mArrPhuTung[page].map(item => (
+                            <PhuTungItem
+                                item={item}
+                                key={item.ma}
+                                getList={() => {
+                                }}
+                                setShowing={setShowing}
+                                setItemEdit={
+                                    setItemEdit
+                                }
+                            />
+                        ))
+                    }
 
                 </tbody>
             </Table>
@@ -186,7 +188,7 @@ const PhuTung = (props) => {
                 item={itemEdit}
                 isShowing={isShowing}
                 listPhuTung={props.listPhuTung}
-                onCloseClick={() => {setShowing(false);setItemEdit(null)}}
+                onCloseClick={() => { setShowing(false); setItemEdit(null) }}
                 getList={() => {
                 }}
             />

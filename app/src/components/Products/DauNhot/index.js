@@ -1,14 +1,15 @@
-import React, { useState,useEffect } from 'react';
-import { ProductContainer, DivFlexRow, Button, Table, DelButton,Input } from '../../../styles'
+import React, { useState, useEffect } from 'react';
+import { ProductContainer, DivFlexRow, Button, Table, DelButton, Input } from '../../../styles'
 import PopupDauNhot from './PopupDauNhot';
-import {DelDauNhot } from '../../../API/DauNhotAPI'
+import { DelDauNhot } from '../../../API/DauNhotAPI'
 import { connect } from 'react-redux'
 import _ from "lodash";
 
-const DauNhotItem = ({item,
-    token,cb,
-    getList}) => {
-        const handleDelClick = () => {
+const DauNhotItem = ({ item,
+    token, cb,
+    getList }) => {
+    const handleDelClick = () => {
+        if (window.confirm("Bạn chắc muốn hủy") == true) {
             DelDauNhot(token, item.maphutung).then(res => {
                 alert("Xóa thành công.");
                 getList();
@@ -17,10 +18,11 @@ const DauNhotItem = ({item,
                     alert("Không xóa được. @@")
                 })
         }
-        const handleUpdateClick = () => {
-            console.log(item);
-            cb(item);
-        }
+    }
+    const handleUpdateClick = () => {
+        console.log(item);
+        cb(item);
+    }
     return (
         <tr>
             <td>{item.maphutung}</td>
@@ -32,7 +34,7 @@ const DauNhotItem = ({item,
             <td>{item.vitri}</td>
             <td>{item.soluongtonkho}</td>
             <td>
-                <Button   onClick={handleUpdateClick} ><i className="fas fa-cog"></i></Button>
+                <Button onClick={handleUpdateClick} ><i className="fas fa-cog"></i></Button>
                 <DelButton onClick={handleDelClick} style={{ marginLeft: 5 }}><i className="far fa-trash-alt"></i></DelButton>
             </td>
         </tr>
@@ -47,13 +49,13 @@ const DauNhot = (props) => {
     let [searchValue, setSearchValue] = useState("");
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
-    let [itemData, setItem] =useState(null);
-    let chucvu=null;
-    
-    if(props.info&&props.info.chucvu){
-        chucvu=props.info.chucvu
+    let [itemData, setItem] = useState(null);
+    let chucvu = null;
+
+    if (props.info && props.info.chucvu) {
+        chucvu = props.info.chucvu
     }
-    
+
 
     useEffect(() => {
         if (props.listDauNhot) {
@@ -64,22 +66,22 @@ const DauNhot = (props) => {
 
     const handleButtonSearch = () => {
         let search = "";
-        if(searchValue === "") {
+        if (searchValue === "") {
             search = "ALL"
         }
         else {
-            search= searchValue;
+            search = searchValue;
         }
-        let list = props.listDauNhot.filter(function(item){
-            return (checkHasRender(search,item));
+        let list = props.listDauNhot.filter(function (item) {
+            return (checkHasRender(search, item));
         });
         tachList(list);
     };
-    const _handleKeyPress=(e)=> {
+    const _handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-          handleButtonSearch();
+            handleButtonSearch();
         }
-      };
+    };
 
     const tachList = (list) => {
         let tmp = _.chunk(list, 150);
@@ -103,7 +105,7 @@ const DauNhot = (props) => {
         }
         setPage(newPage);
     };
-    const handleUpdate=(itemData)=>{
+    const handleUpdate = (itemData) => {
         console.log('data')
         setItem(itemData);
         setShowing(true);
@@ -117,17 +119,17 @@ const DauNhot = (props) => {
         <ProductContainer className={props.isActive ? "active" : ""}>
             <DivFlexRow style={{ justifyContent: 'space-between' }}>
                 <h3>Danh sách dầu nhớt</h3>
-                <Button onClick={() => {setShowing(true);setItem(null)}}>Thêm mới</Button>
+                <Button onClick={() => { setShowing(true); setItem(null) }}>Thêm mới</Button>
             </DivFlexRow>
-            <DivFlexRow style={{alignItems: 'center', justifyContent: 'space-between', marginTop: 5, marginBottom: 15}}>
-                <DivFlexRow style={{alignItems: 'center'}}>
-                    <Input onKeyPress={_handleKeyPress} style={{width: 250, marginRight: 15}}
-                           onChange={(e) => setSearchValue(e.target.value)}/>
+            <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginTop: 5, marginBottom: 15 }}>
+                <DivFlexRow style={{ alignItems: 'center' }}>
+                    <Input onKeyPress={_handleKeyPress} style={{ width: 250, marginRight: 15 }}
+                        onChange={(e) => setSearchValue(e.target.value)} />
                     <Button onClick={() => {
                         handleButtonSearch();
                     }}>
                         Tìm Kiếm
-                        <i className="fas fa-search"/>
+                        <i className="fas fa-search" />
                     </Button>
                 </DivFlexRow>
 
@@ -135,7 +137,7 @@ const DauNhot = (props) => {
                     <Button onClick={handlePrevPage}>
                         Trang trước
                     </Button>
-                    <Button style={{marginLeft: 15}} onClick={handleNextPage}>
+                    <Button style={{ marginLeft: 15 }} onClick={handleNextPage}>
                         Trang Sau
                     </Button>
                 </DivFlexRow>
@@ -150,27 +152,27 @@ const DauNhot = (props) => {
                         <th>Giá nhập</th>
                         <th>Giá bán lẻ</th>
                         <th>Vị trí</th>
-                        <th>Số lượng <br/> tồn kho</th>
+                        <th>Số lượng <br /> tồn kho</th>
                         <th>Sửa/Xóa</th>
                     </tr>
-                   {
+                    {
                         mArrDauNhot[page] && mArrDauNhot[page].map(item => (
                             <DauNhotItem
                                 item={item}
                                 key={item.ma}
                                 cb={handleUpdate}
-                                getList={() => {}}
+                                getList={() => { }}
                             />
                         ))
-                   }
+                    }
                 </tbody>
             </Table>
 
-            <PopupDauNhot 
+            <PopupDauNhot
                 isShowing={isShowing} item={itemData}
-                onCloseClick={() => {setShowing(false);setItem(null)}}
-                getList={() => {}}
-                />
+                onCloseClick={() => { setShowing(false); setItem(null) }}
+                getList={() => { }}
+            />
 
         </ProductContainer>
     );

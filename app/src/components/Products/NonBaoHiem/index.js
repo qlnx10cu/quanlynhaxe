@@ -13,13 +13,15 @@ const NonItem = ({
     getList
 }) => {
     const handleDelClick = () => {
-        DelNonBaoHiem(token, item.maphutung).then(res => {
-            alert("Xóa thành công.");
-            getList();
-        })
-            .catch(err => {
-                alert("Không xóa được. @@")
+        if (window.confirm("Bạn chắc muốn hủy") == true) {
+            DelNonBaoHiem(token, item.maphutung).then(res => {
+                alert("Xóa thành công.");
+                getList();
             })
+                .catch(err => {
+                    alert("Không xóa được. @@")
+                })
+        }
     };
     return (
         <tr>
@@ -55,12 +57,12 @@ const NonBaoHiem = (props) => {
     let [searchValue, setSearchValue] = useState("");
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
-    let chucvu=null;
-    
-    if(props.info&&props.info.chucvu){
-        chucvu=props.info.chucvu
+    let chucvu = null;
+
+    if (props.info && props.info.chucvu) {
+        chucvu = props.info.chucvu
     }
-    
+
     useEffect(() => {
         if (props.listMuBaoHiem) {
             tachList(props.listMuBaoHiem);

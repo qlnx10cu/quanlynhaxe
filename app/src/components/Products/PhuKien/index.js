@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ProductContainer, DivFlexRow, Button, Table, DelButton ,Input} from '../../../styles'
+import { ProductContainer, DivFlexRow, Button, Table, DelButton, Input } from '../../../styles'
 import PopupPhuKien from './PopupPhuKien';
-import { DelPhuKien} from '../../../API/PhuKiemAPI'
-import {connect} from 'react-redux'
+import { DelPhuKien } from '../../../API/PhuKiemAPI'
+import { connect } from 'react-redux'
 import _ from "lodash";
 
 const PhuKienItem = ({
@@ -13,13 +13,15 @@ const PhuKienItem = ({
     setItem
 }) => {
     const handleDelItem = () => {
-        DelPhuKien(token, item.maphutung).then(res => {
-            alert("Xóa thành công.");
-            getList();
-        })
-            .catch(err => {
-                alert("Không xóa được. @@");
+        if (window.confirm("Bạn chắc muốn hủy") == true) {
+            DelPhuKien(token, item.maphutung).then(res => {
+                alert("Xóa thành công.");
+                getList();
             })
+                .catch(err => {
+                    alert("Không xóa được. @@");
+                })
+        }
     };
 
     return (
@@ -56,37 +58,37 @@ const PhuKien = (props) => {
     let [page, setPage] = useState(0);
     let [item, setItem] = useState({});
 
-    let chucvu=null;
-    
-    if(props.info&&props.info.chucvu){
-        chucvu=props.info.chucvu
+    let chucvu = null;
+
+    if (props.info && props.info.chucvu) {
+        chucvu = props.info.chucvu
     }
 
     useEffect(() => {
-        if(props.listPhuKien) {
+        if (props.listPhuKien) {
             tachList(props.listPhuKien)
         }
     }, [props.listPhuKien]);
 
     const handleButtonSearch = () => {
         let search = "";
-        if(searchValue === "") {
+        if (searchValue === "") {
             search = "ALL"
         }
         else {
-            search= searchValue;
+            search = searchValue;
         }
-        let list = props.listPhuKien.filter(function(item){
-            return (checkHasRender(search,item));
+        let list = props.listPhuKien.filter(function (item) {
+            return (checkHasRender(search, item));
         });
         tachList(list);
     };
 
-    const _handleKeyPress=(e)=> {
+    const _handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-          handleButtonSearch();
+            handleButtonSearch();
         }
-      };
+    };
 
     const handleNextPage = () => {
         let newPage = page + 1;
@@ -122,15 +124,15 @@ const PhuKien = (props) => {
                 <h3>Danh sách phụ tùng</h3>
                 <Button onClick={() => setShowing(true)}>Thêm mới</Button>
             </DivFlexRow>
-            <DivFlexRow style={{alignItems: 'center', justifyContent: 'space-between', marginTop: 5, marginBottom: 15}}>
-                <DivFlexRow style={{alignItems: 'center'}}>
-                    <Input onKeyPress={_handleKeyPress} style={{width: 250, marginRight: 15}}
-                           onChange={(e) => setSearchValue(e.target.value)}/>
+            <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginTop: 5, marginBottom: 15 }}>
+                <DivFlexRow style={{ alignItems: 'center' }}>
+                    <Input onKeyPress={_handleKeyPress} style={{ width: 250, marginRight: 15 }}
+                        onChange={(e) => setSearchValue(e.target.value)} />
                     <Button onClick={() => {
                         handleButtonSearch();
                     }}>
                         Tìm Kiếm
-                        <i className="fas fa-search"/>
+                        <i className="fas fa-search" />
                     </Button>
                 </DivFlexRow>
 
@@ -138,7 +140,7 @@ const PhuKien = (props) => {
                     <Button onClick={handlePrevPage}>
                         Trang trước
                     </Button>
-                    <Button style={{marginLeft: 15}} onClick={handleNextPage}>
+                    <Button style={{ marginLeft: 15 }} onClick={handleNextPage}>
                         Trang Sau
                     </Button>
                 </DivFlexRow>
@@ -175,15 +177,15 @@ const PhuKien = (props) => {
                 isShowing={isShowing}
                 item={item}
                 onCloseClick={() => setShowing(false)}
-                getList={() => {}}
+                getList={() => { }}
             />
         </ProductContainer>
     );
 };
 
 const mapState = (state) => ({
-   listPhuKien: state.Product.listPhuKien,
-   info: state.Authenticate.info
+    listPhuKien: state.Product.listPhuKien,
+    info: state.Authenticate.info
 });
 
 export default connect(mapState)(PhuKien);

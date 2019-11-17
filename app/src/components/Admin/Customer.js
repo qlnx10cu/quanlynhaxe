@@ -9,7 +9,7 @@ const Customer = (props) => {
     let [editItem, setEditItem] = useState(null);
     let [isShowCustomerDetail, setShowCustomerDetail] = useState(false);
     let [isShowHistoryCustomer, setShowHistoryCustomer] = useState(false);
-    
+
     var [listCustomer, setlistCustomer] = useState([]);
     var [listCustomerTemp, setlistCustomerTemp] = useState([]);
     var [searchValue, setSearchValue] = useState("");
@@ -31,7 +31,7 @@ const Customer = (props) => {
     // };
     const handleButtonSearch = () => {
         var arr = []
-        arr = listCustomerTemp.filter(e => e.ten.toLowerCase().includes(searchValue.toLowerCase()) || e.biensoxe.toLowerCase().includes(searchValue.toLowerCase() ));
+        arr = listCustomerTemp.filter(e => e.ten.toLowerCase().includes(searchValue.toLowerCase()) || e.biensoxe.toLowerCase().includes(searchValue.toLowerCase()));
         setlistCustomer(arr);
     };
     const _handleKeyPress = (e) => {
@@ -94,10 +94,12 @@ const Customer = (props) => {
                                     setEditItem(item);
                                 }} style={{ marginLeft: 5 }}>Cập nhật</Button>
                                 <DelButton onClick={() => {
-                                    DeleteCustomer(props.token, item.ma).then().catch(err => {
-                                        console.log('Xoa that bai');
-                                    });
-                                    getlistCustomer();
+                                    if (window.confirm("Bạn chắc muốn hủy") == true) {
+                                        DeleteCustomer(props.token, item.ma).then().catch(err => {
+                                            console.log('Xoa that bai');
+                                        });
+                                        getlistCustomer();
+                                    }
                                 }} style={{ marginLeft: 5 }}><i className="far fa-trash-alt"></i></DelButton>
                             </td>
                         </tr>
@@ -120,7 +122,7 @@ const Customer = (props) => {
                 setShowHistoryCustomer(false)
                 setEditItem(null);
             }
-            } ma={editItem&&editItem.ma?editItem.ma:null} />
+            } ma={editItem && editItem.ma ? editItem.ma : null} />
 
 
 

@@ -89,11 +89,13 @@ const RepairPrice = (props) => {
                                     <td>
                                         <Button onClick={() => { handleButtonEdit(item) }} ><i className="fas fa-cog"></i></Button>
                                         <DelButton onClick={() => {
-                                            DelSalary(props.token, item.ma).then(response => {
-                                                GetListSalary(props.token).then(response => {
-                                                    setListSalary(response.data);
+                                            if (window.confirm("Bạn chắc muốn hủy") == true) {
+                                                DelSalary(props.token, item.ma).then(response => {
+                                                    GetListSalary(props.token).then(response => {
+                                                        setListSalary(response.data);
+                                                    })
                                                 })
-                                            })
+                                            }
 
                                         }} style={{ marginLeft: 5 }}><i className="far fa-trash-alt"></i></DelButton>
                                     </td>

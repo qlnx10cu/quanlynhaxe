@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { UpdateBill, SaveBill, ThanhToan, HuyThanhToan, GetBillSuaChuaByMaHoaDon } from '../../API/Bill'
 import { GetlistCustomer } from '../../API/Customer'
 import { GetListNVSuaChua } from '../../API/Staffs'
-import { deleteBillProduct, deleteItemBillProduct, setListBillProduct, updateBillProduct } from '../../actions/Product';
+import { deleteBillProduct, deleteItemBillProduct, setListBillProduct, updateBillProduct, REQUEST_LIST_PRODUCT } from '../../actions/Product';
 import { withRouter } from 'react-router-dom'
 import PopupBillCHN from './PopupBillCHN';
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
@@ -59,6 +59,21 @@ const RepairedBill = (props) => {
 
     useEffect(() => {
         let pathname = window.location.href;
+        if (pathname.endsWith("/"))
+            pathname = pathname.substring(0, pathname.length - 1);
+         if (pathname.indexOf("services/repairedbill/updatebill") !== -1) {
+            let tmp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length);
+            if (tmp == "" || tmp.length != 9) {
+                alert("Đường dẫn không đúng");
+                window.location.href="/thongke";
+                return;
+            } 
+            setUpdateBill(3);
+            setMaHoaDon(tmp)
+            showHoaDon(tmp);
+            return;
+        }
+
         let tmp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length);
         let mb = Number.parseInt(tmp) - 1;
         setMaban(mb + 1);
@@ -314,7 +329,10 @@ const RepairedBill = (props) => {
 
     return (
         <div>
-            <h1 style={{ textAlign: "center" }}>Phiếu sửa chữa (Bàn số: {maban})</h1>
+             {isUpdateBill === 0 ?
+            <h1 style={{ textAlign: "center" }}>Phiếu sửa chữa (Bàn số: {maban})</h1>:
+            <h1 style={{ textAlign: "center" }}>Phiếu sửa chữa (Mã Hóa Đơn: {mMaHoaDon})</h1>}
+
             <DivFlexRow style={{ alignItems: 'center' }}>
                 <DivFlexColumn>
                     <label>Nhân viên sửa chữa: </label>
@@ -459,12 +477,12 @@ const RepairedBill = (props) => {
                         <Button onClick={UpdateHoaDon}>
                             Update
                         </Button>
-                        <Button style={{ marginLeft: 15 }} onClick={thanhToanHoaDon}>
+                        {isUpdateBill != 3 &&<Button style={{ marginLeft: 15 }} onClick={thanhToanHoaDon}>
                             Thanh toán
-                        </Button>
-                        <DelButton style={{ marginLeft: 15 }} onClick={HuyHoaDon}>
+                        </Button>}
+                        {isUpdateBill != 3 &&<DelButton style={{ marginLeft: 15 }} onClick={HuyHoaDon}>
                             Hủy
-                        </DelButton>
+                        </DelButton>}
                     </DivFlexRow>
                 }
             </DivFlexRow>

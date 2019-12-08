@@ -85,7 +85,7 @@ module.exports = {
             } = req.body;
             let resulft = await AbstractTwo.getList(Bill, BillLe, { mahoadon: req.body.mahoadon });
             let check = await Abstract.getOne(Bill, { mahoadon: mahoadon });
-            if (resulft&& check && check.trangthai == 1) {
+            if (resulft&& check) {
                 var bodybill = conlai;
                 bodybill['ngaysuachua'] = new Date();
                 var detailbill = chitiet;

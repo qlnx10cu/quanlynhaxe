@@ -86,6 +86,7 @@ module.exports = {
             let resulft = await Abstract.add(Bill, bodybill);
             if (detailbill.length != 0)
                 resulft = await Abstract.addMutil(BillSuachua, detailbill);
+                giamSoLuongPhuTung(mahoadon);
             res.json({ "mahoadon": mahoadon });
         } catch (error) {
             librespone.error(req, res, error.message);
@@ -136,7 +137,7 @@ module.exports = {
 
 
             let check = await Abstract.getOne(Bill, { mahoadon: mahoadon });
-            if (check && check.trangthai == 0) {
+            if (check) {
                 var bodybill = conlai;
                 bodybill['ngaysuachua'] = new Date();
                 var detailbill = chitiet;
@@ -144,11 +145,13 @@ module.exports = {
                     detailbill[k]['mahoadon'] = mahoadon;
                 }
                 var paramHoaDon = { mahoadon: mahoadon };
+                await BillSuachua.tangSoLuongPhuTung(mahoadon);
                 let resulft = await Abstract.update(Bill, bodybill, paramHoaDon);
                 await BillSuachua.deleteMahoaDon(mahoadon);
                 if (detailbill.length != 0)
                     resulft = await Abstract.addMutil(BillSuachua, detailbill);
-                res.json({ "mahoadon": mahoadon });
+                    await BillSuachua.giamSoLuongPhuTung(mahoadon);
+                    res.json({ "mahoadon": mahoadon });
             } else
                 librespone.error(req, res, 'Không update được hóa đơn');
 

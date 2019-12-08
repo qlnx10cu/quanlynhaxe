@@ -37,7 +37,11 @@ const ThongKe = (props) => {
     }
     const UpdateHoaDon = (maHoaDon, loai) => {
         if (loai == 0) {
-            alert("Chức năng đang thực hiện");
+            let url = `/services/repairedbill/updatebill/${maHoaDon}`;
+            window.open(
+                url,
+                '_blank' // <- This is what makes it open in a new window.
+            );
         }
         if (loai == 1) {
             let url = `/banle/${maHoaDon}`;

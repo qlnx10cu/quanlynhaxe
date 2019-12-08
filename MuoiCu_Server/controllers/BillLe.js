@@ -85,7 +85,7 @@ module.exports = {
             } = req.body;
 
             let check = await Abstract.getOne(Bill, { mahoadon: mahoadon });
-            if (check && check.trangthai == 0) {
+            if (check && check.trangthai == 1) {
                 var bodybill = conlai;
                 bodybill['ngaysuachua'] = new Date();
                 var detailbill = chitiet;

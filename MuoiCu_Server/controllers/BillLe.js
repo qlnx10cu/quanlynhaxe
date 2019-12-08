@@ -83,6 +83,7 @@ module.exports = {
                 chitiet,
                 ...conlai
             } = req.body;
+            console.log(req.body)
             let resulft = await AbstractTwo.getList(Bill, BillLe, { mahoadon: mahoadon });
             console.log(resulft);
             let check = await Abstract.getOne(Bill, { mahoadon: mahoadon });

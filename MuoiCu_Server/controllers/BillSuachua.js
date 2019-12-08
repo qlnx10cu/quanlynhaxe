@@ -107,6 +107,34 @@ module.exports = {
                 ...conlai
             } = req.body;
 
+            var data = {};
+            data.sodienthoai = req.body.sodienthoai;
+            data.diachi = req.body.diachi;
+            data.loaixe = req.body.loaixe;
+            data.sokhung = req.body.sokhung;
+            data.somay = req.body.somay;
+            data.biensoxe = req.body.biensoxe;
+            data.ten = req.body.tenkh;
+            var makh = req.body.makh;
+            console.log("ma khd", makh);
+
+            if (!makh) {
+                let r = await Abstract.add(Customer, data);
+                makh = r.insertId;
+                console.log(r.insertId);
+                if (!r || r == null) {
+                    librespone.error(req, res, "Kiểm tra lại thông tin khách hàng");
+                    return;
+                }
+            } else {
+                let r = await Abstract.update(Customer, data, { ma: makh, biensoxe: data.biensoxe });
+                if (!r || r == null) {
+                    librespone.error(req, res, "Kiểm tra lại thông tin khách hàng");
+                    return;
+                }
+            }
+
+
             let check = await Abstract.getOne(Bill, { mahoadon: mahoadon });
             if (check && check.trangthai == 0) {
                 var bodybill = conlai;

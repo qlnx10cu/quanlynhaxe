@@ -15,7 +15,7 @@ class BillLe {
         return false;
     }
     static getSelect(tb) {
-        return `${tb}.maphutung,${tb}.tenphutung,${tb}.dongia,${tb}.soluong,${tb}.ghichu,${tb}.chietkhau,${tb.nhacungcap}`;
+        return `${tb}.maphutung,${tb}.tenphutung,${tb}.dongia,${tb}.soluong,${tb}.ghichu,${tb}.chietkhau,${tb}.nhacungcap`;
     }
     static getParam(param) {
         let tmp = ['maphutung', 'tenphutung', 'dongia', 'soluong', 'ghichu', 'chietkhau', 'nhacungcap'];

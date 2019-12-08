@@ -134,7 +134,7 @@ const RepairedBill = (props) => {
             mSoKhung.setValue(customer.sokhung);
             mSoMay.setValue(customer.somay);
             mLoaiXe.setValue(customer.loaixe);
-            setDisableEditInfo(true);
+            setDisableEditInfo(false);
         }
         else {
             mCustomerName.setValue("");
@@ -144,7 +144,7 @@ const RepairedBill = (props) => {
             mSoKhung.setValue("");
             mSoMay.setValue("");
             mLoaiXe.setValue("");
-            setDisableEditInfo(true);
+            setDisableEditInfo(false);
         }
     };
 

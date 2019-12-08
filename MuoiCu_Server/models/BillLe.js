@@ -73,6 +73,20 @@ class BillLe {
         }
         return {};
     }
+
+    static async tangSoLuongPhuTung(bill) {
+        for (var i in bill) {
+            var sql = " UPDATE phutung SET soluongtonkho = soluongtonkho + ? WHERE maphutung = ? ";
+            var res = await query(sql, [bill[i].soluong, bill[i].maphutung]);
+        }
+        return {};
+    }
+
+    static async deleteMahoaDon(param) {
+        var sql = "DELETE FROM chitiethoadonle WHERE mahoadon= ?";
+        var res = await query(sql, param);
+        return res;
+    }
 }
 
 module.exports = BillLe;

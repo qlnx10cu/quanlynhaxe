@@ -83,7 +83,8 @@ module.exports = {
                 chitiet,
                 ...conlai
             } = req.body;
-
+            let resulft = await AbstractTwo.getList(Bill, BillLe, { mahoadon: mahoadon });
+            console.log(resulft);
             let check = await Abstract.getOne(Bill, { mahoadon: mahoadon });
             if (check && check.trangthai == 1) {
                 var bodybill = conlai;
@@ -93,10 +94,14 @@ module.exports = {
                     detailbill[k]['mahoadon'] = mahoadon;
                 }
                 var paramHoaDon = { mahoadon: mahoadon };
+
+                // await BillLe.tangSoLuongPhuTung(mahoadon);
                 let resulft = await Abstract.update(Bill, bodybill, paramHoaDon);
                 await BillLe.deleteMahoaDon(mahoadon);
-                if (detailbill.length != 0)
+                if (detailbill.length != 0){
                     resulft = await Abstract.addMutil(BillLe, detailbill);
+                    await BillLe.giamSoLuongPhuTung(detailbill);
+                }
                 res.json({ "mahoadon": mahoadon });
             } else
                 librespone.error(req, res, 'Không update được hóa đơn');

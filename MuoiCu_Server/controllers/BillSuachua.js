@@ -86,7 +86,7 @@ module.exports = {
             let resulft = await Abstract.add(Bill, bodybill);
             if (detailbill.length != 0)
                 resulft = await Abstract.addMutil(BillSuachua, detailbill);
-                giamSoLuongPhuTung(mahoadon);
+                await BillSuachua.giamSoLuongPhuTung(mahoadon);
             res.json({ "mahoadon": mahoadon });
         } catch (error) {
             librespone.error(req, res, error.message);

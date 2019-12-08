@@ -336,7 +336,7 @@ const RepairedBill = (props) => {
             <DivFlexRow style={{ alignItems: 'center' }}>
                 <DivFlexColumn>
                     <label>Nhân viên sửa chữa: </label>
-                    <Input autocomplete="off" list="nv_suachua" name="nv_suachua" value={mMaNVSuaChua.value} onChange={(e) => {
+                    <Input autocomplete="off" readOnly={isUpdateBill != 0} list="nv_suachua" name="nv_suachua" value={mMaNVSuaChua.value} onChange={(e) => {
                         searchNhanVienSuaChua(e.target.value);
                     }} />
                     <datalist id="nv_suachua">
@@ -348,7 +348,7 @@ const RepairedBill = (props) => {
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Tên nhân viên sửa chữa: </label>
-                    <Input autocomplete="off" {...tennhanvien} />
+                    <Input  readOnly={true} autocomplete="off" {...tennhanvien} />
                 </DivFlexColumn>
             </DivFlexRow>
             <DivFlexRow style={{ alignItems: 'center' }}>

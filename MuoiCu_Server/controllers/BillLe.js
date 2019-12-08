@@ -2,6 +2,8 @@ const Bill = require("../models/Bill");
 const BillLe = require("../models/BillLe");
 const AbstractTwo = require("../models/AbstractTwo");
 const Abstract = require('../models/Abstract');
+const librespone = require("../lib/respone");
+
 module.exports = {
     getList: async function (req, res, next) {
         try {
@@ -72,9 +74,33 @@ module.exports = {
     },
     update: async function (req, res, next) {
         try {
-            var param = Object.assign(req.params, req.query);
-            let resulft = await Abstract.add(Bill, req.body, req.params);
-            res.json(resulft);
+            if (!req.body.mahoadon) {
+                librespone.error(req, res, "Không tồn tại mã hóa đơn");
+                return;
+            }
+            let {
+                mahoadon,
+                chitiet,
+                ...conlai
+            } = req.body;
+
+            let check = await Abstract.getOne(Bill, { mahoadon: mahoadon });
+            if (check && check.trangthai == 0) {
+                var bodybill = conlai;
+                bodybill['ngaysuachua'] = new Date();
+                var detailbill = chitiet;
+                for (var k in detailbill) {
+                    detailbill[k]['mahoadon'] = mahoadon;
+                }
+                var paramHoaDon = { mahoadon: mahoadon };
+                let resulft = await Abstract.update(Bill, bodybill, paramHoaDon);
+                await BillLe.deleteMahoaDon(mahoadon);
+                if (detailbill.length != 0)
+                    resulft = await Abstract.addMutil(BillLe, detailbill);
+                res.json({ "mahoadon": mahoadon });
+            } else
+                librespone.error(req, res, 'Không update được hóa đơn');
+
         } catch (error) {
             res.status(400).json({
                 error: {

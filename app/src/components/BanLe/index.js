@@ -58,7 +58,7 @@ const BanLe = (props) => {
             }
         }
 
-    });
+    }, []);
     const getBill = (mahoadon) => {
         GetBillBanLeByMaHoaDon(props.token, mahoadon).then(res => {
             let data = res.data;
@@ -68,10 +68,19 @@ const BanLe = (props) => {
             if (data.tenkh) {
                 mCustomerName.setValue(data.tenkh)
             }
+            var chitiet=[...data.chitiet]
+            for(var k in chitiet){
+                var newItem=chitiet[k];
+                newItem.tencongviec=newItem.tenphutung
+                newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
+            }
+            console.log("day data",data);
             setTongTien(data.tongtien);
-            setProducts(data.chitiet)
+            setProducts(chitiet)
+
         }).catch(err => {
             alert("Không lấy được chi tiết hóa đơn:" + mahoadon);
+            window.location.href="/thongke";
         })
     }
     const clearAll = () => {
@@ -108,14 +117,14 @@ const BanLe = (props) => {
             tongtien: mTongTien,
             chitiet: chitiet,
         }
-        alert("Chức năng đang thực hiện");
 
-        // UpdateBillBanLe(props.token, data).then(res => {
-        //     alert('Thành công. ');
-        // })
-        //     .catch(err => {
-        //         alert("Không xuất được hóa đơn.");
-        //     })
+        UpdateBillBanLe(props.token, data).then(res => {
+            alert('Thành công. ');
+            window.location.href="/thongke";
+        })
+            .catch(err => {
+                alert("Không xuất được hóa đơn.");
+            })
     }
 
     const handleAddBill = () => {

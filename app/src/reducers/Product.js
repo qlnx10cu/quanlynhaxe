@@ -5,6 +5,7 @@ import {
     UPDATE_BILL_PRODUCT,
     DELETE_BILL_PRODUCT,
     DELETE_ITEM_BILL_PRODUCT,
+    DELETE_ITEM_BILL_PRODUCT_MA,
     SET_LIST_PRODUCT
 } from '../actions/Product'
 
@@ -72,8 +73,21 @@ export default (state = initState , action) => {
             }
         }
         case DELETE_ITEM_BILL_PRODUCT: {
+            console.log("action",action.data);
             var temp =state.listBillProduct.filter(function(item){
                 return item.key !== action.data;
+            });
+            console.log(temp);
+            return {
+                ...state,
+                listBillProduct:temp
+            }
+        }
+        case DELETE_ITEM_BILL_PRODUCT_MA: {
+            console.log("action",action.data);
+            var temp =state.listBillProduct.filter(function(item){
+                console.log("set tiem",item.ma,action.data);
+                return item.ma !== action.data;
             });
             console.log(temp);
             return {

@@ -7,6 +7,7 @@ export const ADD_BILL_PRODUCT = 'ADD_BILL_PRODUCT';
 export const UPDATE_BILL_PRODUCT = 'UPDATE_BILL_PRODUCT';
 export const DELETE_BILL_PRODUCT = 'DELETE_BILL_PRODUCT';
 export const DELETE_ITEM_BILL_PRODUCT = 'DELETE_ITEM_BILL_PRODUCT';
+export const DELETE_ITEM_BILL_PRODUCT_MA = 'DELETE_ITEM_BILL_PRODUCT_MA';
 export const SET_LIST_PRODUCT = 'SET_LIST_PRODUCT';
 
 export const GET_LIST_CHN_SUCCESS = 'GET_LIST_CHN_SUCCESS';
@@ -50,8 +51,17 @@ export const deleteBillProduct = () => (dispatch) => {
     })
 }
 export const deleteItemBillProduct = (key) => (dispatch) => {
+    console.log(key)
     dispatch({
         type: DELETE_ITEM_BILL_PRODUCT,
+        data: key
+    })
+}
+
+export const deleteItemBillProductMa = (key) => (dispatch) => {
+    console.log(key)
+    dispatch({
+        type: DELETE_ITEM_BILL_PRODUCT_MA,
         data: key
     })
 }

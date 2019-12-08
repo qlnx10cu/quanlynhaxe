@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { UpdateBill, SaveBill, ThanhToan, HuyThanhToan, GetBillSuaChuaByMaHoaDon } from '../../API/Bill'
 import { GetlistCustomer } from '../../API/Customer'
 import { GetListNVSuaChua } from '../../API/Staffs'
-import { deleteBillProduct, deleteItemBillProduct, setListBillProduct, updateBillProduct, REQUEST_LIST_PRODUCT } from '../../actions/Product';
+import { deleteBillProduct, deleteItemBillProduct, setListBillProduct, updateBillProduct, REQUEST_LIST_PRODUCT, deleteItemBillProductMa } from '../../actions/Product';
 import { withRouter } from 'react-router-dom'
 import PopupBillCHN from './PopupBillCHN';
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
@@ -225,6 +225,14 @@ const RepairedBill = (props) => {
                 alert("Lỗi thanh toán")
             })
         }
+    }
+
+    const DelItem = (item) => {
+        if(isUpdateBill!==0)
+            props.deleteItemBillProductMa(item.ma);
+        else
+            props.deleteItemBillProduct(item.key);
+        setUpdated(false);
     }
     const getData = () => {
         if (!biensoxe || biensoxe == "" || biensoxe == undefined) {
@@ -454,8 +462,7 @@ const RepairedBill = (props) => {
                             <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>
                                 <DelButton onClick={() => {
-                                    props.deleteItemBillProduct(item.key);
-                                    setUpdated(false);
+                                   DelItem(item)
                                 }}>
                                     <i className="far fa-trash-alt"></i>
                                 </DelButton>
@@ -478,7 +485,7 @@ const RepairedBill = (props) => {
                             Update
                         </Button>
                         {isUpdateBill != 3 &&<Button style={{ marginLeft: 15 }} onClick={thanhToanHoaDon}>
-                            Thanh toán
+                        Update và Thanh toán
                         </Button>}
                         {isUpdateBill != 3 &&<DelButton style={{ marginLeft: 15 }} onClick={HuyHoaDon}>
                             Hủy
@@ -503,7 +510,8 @@ const mapState = (state) => ({
 })
 const mapDispatch = (dispatch) => ({
     deleteBillProduct: () => { dispatch(deleteBillProduct()) },
-    deleteItemBillProduct: (key) => { dispatch(deleteItemBillProduct(key)) },
+    deleteItemBillProduct: (key) => { console.log(key); dispatch(deleteItemBillProduct(key)) },
+    deleteItemBillProductMa: (key) => { console.log(key); dispatch(deleteItemBillProductMa(key)) },
     setListBillProduct: (arr) => { dispatch(setListBillProduct(arr)) },
     updateBillProduct: (data, index) => { dispatch(updateBillProduct(data, index)) }
 })

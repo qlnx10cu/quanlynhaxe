@@ -83,12 +83,9 @@ module.exports = {
                 chitiet,
                 ...conlai
             } = req.body;
-            console.log(req.body)
             let resulft = await AbstractTwo.getList(Bill, BillLe, { mahoadon: req.body.mahoadon });
-            console.log("va day truoc");
-            console.log(resulft);
             let check = await Abstract.getOne(Bill, { mahoadon: mahoadon });
-            if (check && check.trangthai == 1) {
+            if (resulft&& check && check.trangthai == 1) {
                 var bodybill = conlai;
                 bodybill['ngaysuachua'] = new Date();
                 var detailbill = chitiet;
@@ -97,10 +94,10 @@ module.exports = {
                 }
                 var paramHoaDon = { mahoadon: mahoadon };
 
-                // await BillLe.tangSoLuongPhuTung(mahoadon);
                 let resulft = await Abstract.update(Bill, bodybill, paramHoaDon);
                 await BillLe.deleteMahoaDon(mahoadon);
                 if (detailbill.length != 0){
+                    await BillLe.tangSoLuongPhuTung(resulft);
                     resulft = await Abstract.addMutil(BillLe, detailbill);
                     await BillLe.giamSoLuongPhuTung(detailbill);
                 }

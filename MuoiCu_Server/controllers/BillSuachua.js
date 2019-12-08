@@ -8,7 +8,7 @@ const librespone = require("../lib/respone");
 
 module.exports = {
 
-    getList: async function (req, res, next) {
+    getList: async function(req, res, next) {
         try {
             let resulft = await AbstractTwo.getList(Bill, BillSuachua, req.query);
             res.json(resulft);
@@ -16,7 +16,7 @@ module.exports = {
             librespone.error(req, res, error.message);
         }
     },
-    getChitiet: async function (req, res, next) {
+    getChitiet: async function(req, res, next) {
         try {
             let resulft = await BillSuachua.getChitiet(req.params.mahoadon);
             res.json(resulft);
@@ -24,7 +24,7 @@ module.exports = {
             librespone.error(req, res, error.message);
         }
     },
-    getByMa: async function (req, res, next) {
+    getByMa: async function(req, res, next) {
         try {
             var param = Object.assign(req.params, req.query);
             let resulft = await AbstractTwo.getList(Bill, BillSuachua, param);
@@ -33,7 +33,7 @@ module.exports = {
             librespone.error(req, res, error.message);
         }
     },
-    add: async function (req, res, next) {
+    add: async function(req, res, next) {
         try {
             if (!req.body.biensoxe) {
                 librespone.error(req, res, "Không có biển số xe");
@@ -41,7 +41,7 @@ module.exports = {
             }
 
             var str = new Date().getTime().toString();
-            var mahoadon = 'PT-' + str.substr(str.length - 8, str.length - 7);
+            var mahoadon = 'DV-' + str.substr(str.length - 8, str.length - 7);
             var data = {};
             data.sodienthoai = req.body.sodienthoai;
             data.diachi = req.body.diachi;
@@ -91,7 +91,7 @@ module.exports = {
             librespone.error(req, res, error.message);
         }
     },
-    update: async function (req, res, next) {
+    update: async function(req, res, next) {
         try {
             if (!req.body.mahoadon) {
                 librespone.error(req, res, "Không tồn tại mã hóa đơn");
@@ -121,15 +121,14 @@ module.exports = {
                 if (detailbill.length != 0)
                     resulft = await Abstract.addMutil(BillSuachua, detailbill);
                 res.json({ "mahoadon": mahoadon });
-            }
-            else
+            } else
                 librespone.error(req, res, 'Không update được hóa đơn');
 
         } catch (error) {
             librespone.error(req, res, error.message);
         }
     },
-    delete: async function (req, res, next) {
+    delete: async function(req, res, next) {
         try {
             let resulft = await BillSuachua.delete(req.params.ma);
             res.json(resulft);
@@ -137,7 +136,7 @@ module.exports = {
             librespone.error(req, res, error.message);
         }
     },
-    export: async function (req, res, next) {
+    export: async function(req, res, next) {
         try {
             var ws_data = await Abstract.getOne(Bill, req.params);
             console.log(ws_data);
@@ -177,7 +176,7 @@ module.exports = {
             })
         }
     },
-    exportBill: async function (req, res, next) {
+    exportBill: async function(req, res, next) {
         var ws_data = await BillSuachua.getChitiet(req.params.mahoadon);
         console.log(ws_data);
         ws_data['tongtienpt'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.soluongphutung * cur.dongia, 0);
@@ -268,4 +267,4 @@ module.exports = {
     //     tongtientong: 123123213
     // })
     // },
-} 
+}

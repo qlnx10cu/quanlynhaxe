@@ -144,7 +144,7 @@ const RepairedBill = (props) => {
             mSoKhung.setValue("");
             mSoMay.setValue("");
             mLoaiXe.setValue("");
-            setDisableEditInfo(false);
+            setDisableEditInfo(true);
         }
     };
 

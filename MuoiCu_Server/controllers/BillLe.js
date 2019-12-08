@@ -84,7 +84,8 @@ module.exports = {
                 ...conlai
             } = req.body;
             console.log(req.body)
-            let resulft = await AbstractTwo.getList(Bill, BillLe, { mahoadon: mahoadon });
+            let resulft = await AbstractTwo.getList(Bill, BillLe, { mahoadon: req.body.mahoadon });
+            console.log("va day truoc");
             console.log(resulft);
             let check = await Abstract.getOne(Bill, { mahoadon: mahoadon });
             if (check && check.trangthai == 1) {

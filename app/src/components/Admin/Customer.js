@@ -31,7 +31,7 @@ const Customer = (props) => {
     // };
     const handleButtonSearch = () => {
         var arr = []
-        arr = listCustomerTemp.filter(e => e.ten.toLowerCase().includes(searchValue.toLowerCase()) || e.biensoxe.toLowerCase().includes(searchValue.toLowerCase()));
+        arr = listCustomerTemp.filter(e => e.ten.toLowerCase().includes(searchValue.toLowerCase()) || e.biensoxe.toLowerCase().includes(searchValue.toLowerCase())  || e.sodienthoai.toLowerCase().includes(searchValue.toLowerCase()) );
         setlistCustomer(arr);
     };
     const _handleKeyPress = (e) => {

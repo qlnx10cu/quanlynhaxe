@@ -86,6 +86,7 @@
       top: 260px;
       left: 970px;
     }
+
     .yeucaukhachhang {
       position: absolute;
       top: 416px;
@@ -102,88 +103,92 @@
       position: absolute;
     }
 
+    .row-ten {
+      text-transform: lowercase;
+    }
+
     .row-0 {
-      top: calc(747px + 0px);
+      top: calc(740px + 0px);
     }
 
     .row-1 {
-      top: calc(747px + 26px);
+      top: calc(740px + 28px);
     }
 
     .row-2 {
-      top: calc(747px + 2 * 26px);
+      top: calc(740px + 2 * 28px);
     }
 
     .row-3 {
-      top: calc(747px + 3 * 26px);
+      top: calc(740px + 3 * 28px);
     }
 
     .row-4 {
-      top: calc(747px + 4 * 26px);
+      top: calc(740px + 4 * 28px);
     }
 
     .row-5 {
-      top: calc(747px + 5 * 26px);
+      top: calc(740px + 5 * 28px);
     }
 
     .row-6 {
-      top: calc(747px + 6 * 26px);
+      top: calc(740px + 6 * 28px);
     }
 
     .row-7 {
-      top: calc(747px + 7 * 26px);
+      top: calc(740px + 7 * 28px);
     }
 
     .row-8 {
-      top: calc(747px + 8 * 26px);
+      top: calc(740px + 8 * 28px);
     }
 
     .row-9 {
-      top: calc(747px + 9 * 26px);
+      top: calc(740px + 9 * 28px);
     }
 
     .row-10 {
-      top: calc(747px + 10 * 26px);
+      top: calc(740px + 10 * 28px);
     }
 
     .row-11 {
-      top: calc(747px + 11 * 26px);
+      top: calc(740px + 11 * 28px);
     }
 
     .row-12 {
-      top: calc(747px + 12 * 26px);
+      top: calc(740px + 12 * 28px);
     }
 
     .row-13 {
-      top: calc(747px + 13 * 26px);
+      top: calc(740px + 13 * 28px);
     }
 
     .row-14 {
-      top: calc(747px + 14 * 26px);
+      top: calc(740px + 14 * 28px);
     }
 
     .row-15 {
-      top: calc(747px + 15 * 26px);
+      top: calc(740px + 15 * 28px);
     }
 
     .row-16 {
-      top: calc(747px + 16 * 26px);
+      top: calc(740px + 16 * 28px);
     }
 
     .row-17 {
-      top: calc(747px + 17 * 26px);
+      top: calc(740px + 17 * 28px);
     }
 
     .row-18 {
-      top: calc(747px + 18 * 26px);
+      top: calc(740px + 18 * 28px);
     }
 
     .row-19 {
-      top: calc(747px + 19 * 26px);
+      top: calc(740px + 19 * 28px);
     }
 
     .row-20 {
-      top: calc(747px + 555px);
+      top: calc(740px + 560px);
     }
 
     .ten {
@@ -191,10 +196,11 @@
       max-width: 181px;
       min-width: 181px;
       text-align: left;
+      font-size: 13px;
     }
 
     .mapt {
-      left: 342px;
+      left: 350px;
       max-width: 175px;
       min-width: 175px;
       text-align: left;
@@ -251,12 +257,12 @@
   <div class="sokm">{{sokm}}</div>
   <div class="ngayban">{{ngayban}}</div>
   <div class="ngaythanhtoan">{{ngaythanhtoan}}</div>
-  
+
   <div class="yeucaukhachhang">{{yeucaukhachhang}}</div>
   <div class="tuvansuachua">{{tuvansuachua}}</div>
 
   {{#each chitiet}}
-  <div class="cell ten row-{{@index}}">{{tenphutungvacongviec}}</div>
+  <div class="cell ten row-{{@index}} row-ten">{{tenphutungvacongviec}}</div>
   <div class="cell mapt row-{{@index}}">{{maphutung}}</div>
   <div class="cell dongia row-{{@index}}">{{dongia}}</div>
   <div class="cell sl row-{{@index}}">{{soluongphutung}}</div>

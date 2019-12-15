@@ -9,6 +9,8 @@ import { HuyThanhToan } from '../../API/Bill'
 import { HOST } from '../../Config'
 import { connect } from 'react-redux'
 
+const oneDay = 1000*3600*24;
+
 const ThongKe = (props) => {
 
     let [dateStart, setDateStart] = useState(moment().format("YYYY-MM-DD"));
@@ -106,6 +108,7 @@ const ThongKe = (props) => {
                         <th>Ngày thanh toán</th>
                         <th>Loại hóa đơn</th>
                         <th><i className="fas fa-info"></i></th>
+                        <th><i className="fas fa-info"></i></th>
                     </tr>
 
                     {
@@ -116,9 +119,6 @@ const ThongKe = (props) => {
                                 <td>{moment(item.ngaythanhtoan).format("hh:mm DD/MM/YYYY")}</td>
                                 <td>{item.loaihoadon === 0 ? "Sửa chữa" : "Bán lẻ"}</td>
                                 <td>
-                                    <Button onClick={() => {
-                                        UpdateHoaDon(item.mahoadon, item.loaihoadon)
-                                    }}>Thay đổi</Button>
                                     <Button style={{ marginLeft: 15 }} onClick={() => {
                                         setMaHoaDon(item.mahoadon)
                                         setShowing(true);
@@ -128,6 +128,12 @@ const ThongKe = (props) => {
                                         if (window.confirm("Bạn chắc muốn hủy") == true) { HuyHoaDon(item.mahoadon); handleLayDanhSach() }
                                     }}>
                                         Hủy</DelButton>
+                                </td>
+                                <td>
+                                {(moment().valueOf() - moment(item.ngaythanhtoan).valueOf()) <= oneDay ? 
+                                    <Button onClick={() => {
+                                        UpdateHoaDon(item.mahoadon, item.loaihoadon)
+                                    }}>Thay đổi</Button> : null}
                                 </td>
                             </tr>
                         ))

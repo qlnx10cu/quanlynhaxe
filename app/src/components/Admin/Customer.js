@@ -118,7 +118,7 @@ const Customer = (props) => {
             }
             } editItem={editItem} />
 
-            <HistoryCustomer isShowing={isShowHistoryCustomer} onCloseClick={() => {
+            <HistoryCustomer token={props.token} isShowing={isShowHistoryCustomer} onCloseClick={() => {
                 setShowHistoryCustomer(false)
                 setEditItem(null);
             }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Modal, ModalContent, CloseButton, DivFlexRow, Button, DivFlexColumn, Input, Table } from '../../styles'
 // import { showNoti } from '../../../Actions/Notification';
 import { GetCustomerDetail } from '../../API/Customer'
+import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
 
 import { connect } from 'react-redux'
 import moment from 'moment';
@@ -9,6 +10,9 @@ import moment from 'moment';
 
 
 const RenderTableDetail = ({ list }) => {
+
+    let [isShowChitiet, setShowChitiet] = useState(false);
+    let [mMaHoaDon, setMaHoaDon] = useState("");
 
     return (
         <React.Fragment>
@@ -20,6 +24,7 @@ const RenderTableDetail = ({ list }) => {
                         <th>Mã Hóa Đơn</th>
                         <th>Yêu cầu khách hàng</th>
                         <th>Tư vấn sữa chữa</th>
+                        <th></th>
                     </tr>
 
                     {list && list.map((item, index) => (
@@ -29,11 +34,23 @@ const RenderTableDetail = ({ list }) => {
                             <td>{item.mahoadon}</td>
                             <td>{item.yeucaukhachhang}</td>
                             <td>{item.tuvansuachua}</td>
+                            <td><Button onClick={() => {
+                                    setShowChitiet(true);
+                                    setMaHoaDon(item.mahoadon);
+                                }} >Chi tiết</Button>
+                            </td>
                         </tr>
 
                     ))}
 
                 </tbody>
+            <ChiTietThongKe
+                isShowing={isShowChitiet}
+                onCloseClick={() => {setShowChitiet(false);setMaHoaDon("")}}
+                mahoadon={mMaHoaDon}
+                token={""}
+                loaihoadon={0}
+            />
             </Table>
         </React.Fragment>
     )

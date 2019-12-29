@@ -18,21 +18,38 @@ const PopupBillCHN = (props) => {
         setTenPhuTung(values);
         let item = null;
         item = props.listCuaHangNgoai.find(function (e) {
-            return (e.tenphutung.toLowerCase().includes(values.toLowerCase()));
+            return (e.tenphutung.toLowerCase() === values.toLowerCase());
         });
 
         if (item) {
             setNhaCungCap(item.nhacungcap);
             setDonGia(item.dongia);
             setSoLuong(1);
-        };
+        }else{
+            setNhaCungCap("");
+            setDonGia(0);
+            setSoLuong(1);
+        }
     };
 
     const handleAdd = () => {
-        if (nhacungcap === "" || tenphutung === "" || dongia === 0 || soluong === 0) {
-            alert("Chưa nhập dữ liệu đầy đủ.");
+        if (tenphutung === "") {
+            alert("Phải có tên phụ tùng");
             return;
         }
+
+        if(!dongia || dongia<0)
+        {
+            alert("Đơn giá phải >= 0");
+            return;
+        }
+
+        if(!soluong || soluong<=0)
+        {
+            alert("Số  lượng phải > 0");
+            return;
+        }
+
         var data = {
             key: props.listBillProduct.length + 1,
             tenphutungvacongviec: tenphutung,
@@ -69,7 +86,7 @@ const PopupBillCHN = (props) => {
                 <DivFlexRow>
                     <DivFlexColumn style={{ flex: 1 }}>
                         <label>Nhà Cung Cấp </label>
-                        <Input readOnly value={nhacungcap} onChange={(e) => setNhaCungCap(e.target.value)} />
+                        <Input value={nhacungcap} onChange={(e) => setNhaCungCap(e.target.value)} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Tên phụ tùng: </label>
@@ -89,7 +106,7 @@ const PopupBillCHN = (props) => {
                 <DivFlexRow>
                     <DivFlexColumn style={{ flex: 1 }}>
                         <label>Đơn giá: </label>
-                        <Input readOnly type={"Number"} value={dongia} onChange={(e) => setDonGia(e.target.value)} />
+                        <Input type={"Number"} value={dongia} onChange={(e) => setDonGia(e.target.value)} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
 

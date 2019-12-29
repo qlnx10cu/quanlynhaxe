@@ -289,6 +289,23 @@ const RepairedBill = (props) => {
             }
             listProduct.push(temp);
         }
+
+        for(var i=0;i<listProduct.length;i++)
+        {
+            var item=listProduct[i];
+            if(item.soluongphutung<=0){
+                alert("Phụ tùng :"+item.tenphutungvacongviec+" có số lượng <= 0");
+                return null;
+            }
+            if(item.dongia<0){
+                alert("Phụ tùng :"+item.tenphutungvacongviec+" có đơn giá < 0");
+                return null;
+            }
+            if(item.tiencong<0){
+                alert("Phụ tùng :"+item.tenphutungvacongviec+" có tiền công < 0");
+                return null;
+            }
+        }
         var data = {
             manvsuachua: mMaNVSuaChua.value,
             tenkh: mCustomerName.value,
@@ -509,18 +526,34 @@ const RepairedBill = (props) => {
             <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
                 <label></label>
                 {isUpdateBill === 0 ?
-                    <Button onClick={() => { handleSaveBill(); }}>
+                    <Button onClick={() => { 
+                        if (window.confirm("Bạn chắc muốn lưu")){
+                        handleSaveBill();
+                        }
+                         }}>
                         Lưu
                     </Button>
                     :
                     <DivFlexRow>
-                        <Button onClick={UpdateHoaDon}>
+                        <Button onClick={()=>{
+                            if (window.confirm("Bạn chắc muốn thay đổi")){
+                                UpdateHoaDon();
+                            }
+                        }}>
                             Update
                         </Button>
-                        {isUpdateBill != 3 &&<Button style={{ marginLeft: 15 }} onClick={thanhToanHoaDon}>
+                        {isUpdateBill != 3 &&<Button style={{ marginLeft: 15 }} onClick={()=>{
+                            if (window.confirm("Bạn chắc muốn update và thanh toán")){
+                                 thanhToanHoaDon()
+                            }
+                        }}>
                         Update và Thanh toán
                         </Button>}
-                        {isUpdateBill != 3 &&<DelButton style={{ marginLeft: 15 }} onClick={HuyHoaDon}>
+                        {isUpdateBill != 3 &&<DelButton style={{ marginLeft: 15 }} onClick={()=>{
+                            if (window.confirm("Bạn chắc muốn Hủy hóa đợn")){
+                            HuyHoaDon();
+                            }
+                        }}>
                             Hủy
                         </DelButton>}
                     </DivFlexRow>

@@ -9,6 +9,7 @@ import { GetlistCustomer } from '../../API/Customer'
 import { connect } from 'react-redux'
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
 import { GetBillBanLeByMaHoaDon, GetBillSuaChuaByMaHoaDon } from '../../API/Bill'
+import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
 
 
 
@@ -25,6 +26,11 @@ const BanLe = (props) => {
     let [listCustomer, setListCustomer] = useState([]);
     let [loai, setLoai] = useState(false);
     let [mahoadonUpdate, setmahoadonUpdate] = useState("");
+
+
+    let [isShowChitiet, setShowChitiet] = useState(false);
+    let [mMaHoaDon, setMaHoaDon] = useState("");
+
 
     useEffect(() => {
         clearAll();
@@ -92,6 +98,15 @@ const BanLe = (props) => {
         setMaKhachHang("");
     }
 
+    const tinhTongTien=(chitiet)=>{
+        var tongtien=0;
+        for(var i=0;i<chitiet.length;i++){
+            var item=chitiet[i];
+            tongtien+= item.dongia * item.soluong * ((100 - item.chietkhau) / 100)
+        }
+        return tongtien
+    }
+    
     const handleSaveBill = () => {
 
         if (mTongTien === 0) {
@@ -110,11 +125,29 @@ const BanLe = (props) => {
             }
         })
 
+        for(var i=0;i<chitiet.length;i++){
+            var item=chitiet[i];
+            if(item.dongia<0){
+                alert("Ma: "+item.maphutung+" SP: "+item.tenphutung+" co don gia < 0")
+                return;
+            }
+            if(item.soluong<0){
+                alert("Ma: "+item.maphutung+" SP: "+item.tenphutung+" co soluong < 0")
+                return;
+            }
+            if(item.chietkhau<0||item.chietkhau>100){
+                alert("Ma: "+item.maphutung+" SP: "+item.tenphutung+" co chietkhau < 0% or > 100%")
+                return;
+            }
+        }
+ 
+
+        var tongtien=tinhTongTien(chitiet)
         let data = {
             mahoadon: mahoadonUpdate,
             manv: props.info.ma,
             tenkh: mCustomerName.value,
-            tongtien: mTongTien,
+            tongtien: tongtien,
             chitiet: chitiet,
         }
 
@@ -128,7 +161,6 @@ const BanLe = (props) => {
     }
 
     const handleAddBill = () => {
-
         if (mTongTien === 0) {
             alert("Chưa có sản phẩm nào.")
             return;
@@ -145,16 +177,35 @@ const BanLe = (props) => {
             }
         })
 
+        for(var i=0;i<chitiet.length;i++){
+            var item=chitiet[i];
+            if(item.dongia<0){
+                alert(" SP: "+item.tenphutung+" co don gia < 0")
+                return;
+            }
+            if(item.soluong<0){
+                alert(" SP: "+item.tenphutung+" co soluong < 0")
+                return;
+            }
+            if(item.chietkhau<0||item.chietkhau>100){
+                alert(" SP: "+item.tenphutung+" co chietkhau < 0% or > 100%")
+                return;
+            }
+        }
+ 
+        var tongtien=tinhTongTien(chitiet)
+
         let data = {
             manv: props.info.ma,
             tenkh: mCustomerName.value,
-            tongtien: mTongTien,
+            tongtien: tongtien,
             chitiet: chitiet,
         }
 
         SaveBillBanLe(props.token, data).then(res => {
             clearAll();
-            alert('Thành công. ' + res.data.mahoadon);
+            setMaHoaDon(res.data.mahoadon);
+            setShowChitiet(true);
         })
             .catch(err => {
                 alert("Không xuất được hóa đơn.");
@@ -203,7 +254,7 @@ const BanLe = (props) => {
         newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
         let newProduct = [...mProducts.slice(0, index), newItem, ...mProducts.slice(index + 1, mProducts.lenght)];
         setProducts(newProduct);
-        setTongTien(tongTien + newItem.tongtien);
+        setTongTien(tinhTongTien(newProduct));
     }
 
 
@@ -214,7 +265,7 @@ const BanLe = (props) => {
         newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
         let newProduct = [...mProducts.slice(0, index), newItem, ...mProducts.slice(index + 1, mProducts.lenght)];
         setProducts(newProduct);
-        setTongTien(tongTien + newItem.tongtien);
+        setTongTien(tinhTongTien(newProduct));
     }
 
     return (
@@ -267,7 +318,7 @@ const BanLe = (props) => {
                             <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td><input type="number" onChange={(e) => handleChangeSL(e, index)} value={mProducts[index].soluong} min="1" /></td>
                             <td>{item.nhacungcap ? item.nhacungcap : "Trung Trang"}</td>
-                            <td><input type="number" onChange={(e) => handleChangeChieuKhau(e, index)} value={mProducts[index].chietkhau} min="0" /></td>
+                            <td><input type="number" max={100} onChange={(e) => handleChangeChieuKhau(e, index)} value={mProducts[index].chietkhau} min="0" /></td>
                             <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>
                                 <DelButton onClick={() => {
@@ -283,15 +334,19 @@ const BanLe = (props) => {
                 </tbody>
             </Table>
             <DivFlexRow style={{ justifyContent: 'flex-end' }}>
-                <h3>Tổng tiền: {mTongTien} VND</h3>
+                <h3>Tổng tiền: {mTongTien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</h3>
             </DivFlexRow>
             <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
                 <label></label>
                 {loai && <Button onClick={() => {
-                    handleSaveBill();
+                            if (window.confirm("Bạn chắc muốn thay đổi")){
+                                handleSaveBill();
+                            }
                 }}>Thay đổi</Button>}
                 {!loai && <Button onClick={() => {
+                    if (window.confirm("Bạn chắc muốn thanh toán")){
                     handleAddBill();
+                }
                 }}>Lưu</Button>}
             </DivFlexRow>
             <PopupNewProduct
@@ -304,6 +359,13 @@ const BanLe = (props) => {
                 onCloseClick={() => setNewCuaHangNgoai(false)}
                 listCuaHangNgoai={listCuaHangNgoai}
                 addItemToHangNgoai={(item) => addItemToProduct(item)}
+            />
+            <ChiTietThongKe
+                isShowing={isShowChitiet}
+                onCloseClick={() => {setShowChitiet(false);setMaHoaDon("")}}
+                mahoadon={mMaHoaDon}
+                token={props.token}
+                loaihoadon={1}
             />
         </div>
     );

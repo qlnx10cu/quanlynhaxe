@@ -3,6 +3,7 @@ import { Modal, ModalContent, Table, CloseButton } from '../../styles'
 import { GetBillBanLeByMaHoaDon, GetBillSuaChuaByMaHoaDon } from '../../API/Bill'
 import RenderBillLe from './RenderBillLe'
 import RenderBillChan from './RenderBillChan'
+import { GetListStaff } from '../../API/Staffs'
 
 const RenderChiTietNhanVien = ({ staff }) => {
     return (
@@ -42,12 +43,29 @@ const ChiTietThongKe = (props) => {
         }
     }, [props.isShowing])
 
+
+    const CallApiGetListStaff = (manv) => {
+        GetListStaff(props.token).then(res => {
+            let staff = null;
+            var listStaff=res.data
+            staff = listStaff.find(function (item) {
+                return item.ma === manv
+            })
+            setStaff(staff)
+        }).catch(err => {
+            })
+    }
+
     const getStaff = (manv) => {
+        if(props.listStaff==null){
+            CallApiGetListStaff(manv)
+        }else{
         let staff = null;
         staff = props.listStaff.find(function (item) {
             return item.ma === manv
         })
         setStaff(staff)
+    }
     }
 
     return (

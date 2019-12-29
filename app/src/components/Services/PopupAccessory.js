@@ -54,14 +54,31 @@ const PopupAccessory = (props) => {
     };
    
     const handleAdd = () => {
-        if (mTenCongViec.value===""){
-            alert("Tên Phụ Tùng/Công Việc Không Được Để Trống!")
+        if (!mMaPhuTung|| mMaPhuTung === "") {
+            alert("Chưa nhập mã phụ tùng");
             return;
         }
-        if (mMaPhuTung!=="" && parseInt(mSoLuong.value)===0){
-            alert("Mời Chọn Số Lượng!")
+
+        if (!props.listProduct.find(e => e.maphutung == mMaPhuTung)) {
+            alert("Không tìm thấy mã phụ tùng");
             return;
         }
+
+        if(!mTenCongViec||mTenCongViec.value === "" ||!mDonGia || !mDonGia.value || mDonGia.value<0){
+            alert("phụ tùng không hợp lệ");
+            return;
+        }
+
+        if (!mSoLuong.value || mSoLuong.value < 0) {
+            alert("Phải nhập số lượng");
+            return;
+        }
+        if(mSoLuong.value>mTonKho.value){
+            alert("Số lượng lón hơn tồn kho hiện tai");
+            return;
+        }
+
+
         var data={
             key:props.listBillProduct.length+1,
             tenphutungvacongviec:mTenCongViec.value,

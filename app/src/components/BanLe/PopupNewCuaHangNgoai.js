@@ -28,17 +28,30 @@ const PopupNewCuaHangNgoai = (props) => {
     };
 
     const handleAdd = () => {
-        if (!dongia || !nhacungcap || !soluong || nhacungcap === "" || tenphutung === "" || dongia === 0 || soluong === 0) {
-            alert("Chưa nhập dữ liệu đầy đủ.");
+
+        if (!chietkhau)
+            chietkhau = 0;
+
+        if (tenphutung === "") {
+            alert("Phải có tên phụ tùng.");
             return;
         }
-        if (!props.listCuaHangNgoai.find(e => e.tenphutung === tenphutung)) {
-            alert("Không tìm thấy mã phụ tùng");
+ 
+        if (!soluong || soluong <= 0) {
+            alert("số lượng phải >= 0");
             return;
         }
 
-        if (!chietkhau||parseInt(chietkhau)<0)
-            chietkhau = 0;
+        if (!dongia || dongia < 0) {
+            alert("Đợn gía phải > 0");
+            return;
+        }
+
+        if (chietkhau < 0 || chietkhau>100) {
+            alert("Chiết khấu không hợp lệ");
+            return;
+        }
+
         let newData = {
             tencongviec: tenphutung,
             maphutung: "",
@@ -74,7 +87,7 @@ const PopupNewCuaHangNgoai = (props) => {
                 <DivFlexRow>
                     <DivFlexColumn style={{ flex: 1 }}>
                         <label>Nhà Cung Cấp </label>
-                        <Input readOnly value={nhacungcap} onChange={(e) => setNhaCungCap(e.target.value)} />
+                        <Input value={nhacungcap} onChange={(e) => setNhaCungCap(e.target.value)} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Tên phụ tùng: </label>
@@ -94,7 +107,7 @@ const PopupNewCuaHangNgoai = (props) => {
                 <DivFlexRow>
                     <DivFlexColumn style={{ flex: 1 }}>
                         <label>Đơn giá: </label>
-                        <Input readOnly type={"Number"} value={dongia} onChange={(e) => setDonGia(e.target.value)} />
+                        <Input type={"Number"} value={dongia} onChange={(e) => setDonGia(e.target.value)} min={0} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Chiết khấu: </label>
@@ -105,7 +118,7 @@ const PopupNewCuaHangNgoai = (props) => {
                 <DivFlexRow>
                     <DivFlexColumn style={{ flex: 1 }}>
                         <label>Số lượng: </label>
-                        <Input value={soluong} onChange={(e) => setSoLuong(e.target.value)} type={"Number"} />
+                        <Input value={soluong} onChange={(e) => setSoLuong(e.target.value)} type={"Number"} min={1} />
                     </DivFlexColumn>
                 </DivFlexRow>
 

@@ -47,13 +47,8 @@ const PopupNewProduct = (props) => {
     };
 
     const handleAdd = () => {
-        console.log(Number.isInteger(parseInt(mSoLuong.value)))
-        if (!mSoLuong.value || mSoLuong.value === 0) {
-            alert("Phải nhập số lượng");
-            return;
-        }
 
-        if (mTenCongViec.value === "" || mMaPhuTung.value === "" || mDonGia.value === 0) {
+        if (!mMaPhuTung||mMaPhuTung === "") {
             alert("Chưa nhập mã phụ tùng");
             return;
         }
@@ -62,8 +57,25 @@ const PopupNewProduct = (props) => {
             alert("Không tìm thấy mã phụ tùng");
             return;
         }
+
+        if(!mTenCongViec||mTenCongViec.value === "" ||!mDonGia || !mDonGia.value || mDonGia.value<0){
+            alert("phụ tùng không hợp lệ");
+            return;
+        }
+
         if (!chietkhau)
             chietkhau = 0;
+
+        if (!mSoLuong.value || mSoLuong.value <= 0) {
+            alert("Phải nhập số lượng");
+            return;
+        }
+
+        if (chietkhau < 0 || chietkhau>100) {
+            alert("Chiết khấu không hợp lệ");
+            return;
+        }
+
         let newData = {
             tencongviec: mTenCongViec.value,
             maphutung: mMaPhuTung,
@@ -140,7 +152,7 @@ const PopupNewProduct = (props) => {
 
                 <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: 'flex-end' }}>
                     <label>Tổng tiền: <span
-                        style={{ fontWeight: 'bold' }}>{(parseInt(mDonGia.value) || 0) * (parseInt(mSoLuong.value) || 0) + (parseInt(mTienCong.value) || 0)} VND</span></label>
+                        style={{ fontWeight: 'bold' }}>{(parseInt(mDonGia.value) || 0) * (parseInt(mSoLuong.value) || 0) * (100 - (parseInt(chietkhau)||0))/100} VND</span></label>
                 </DivFlexRow>
 
                 <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: 'flex-end' }}>

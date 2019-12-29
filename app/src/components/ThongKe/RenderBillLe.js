@@ -41,6 +41,11 @@ const RenderTableBill = ({ list }) => {
 const RenderBillLe = ({
     data
 }) => {
+
+    const exportBill = () => {
+        window.print();
+    }
+
     return (
         <div>
             {data && <React.Fragment>
@@ -60,6 +65,11 @@ const RenderBillLe = ({
                     <DivFlexColumn style={{ marginLeft: 20 }}>
                         <label>Mã Hóa Đơn: </label>
                         <Input readOnly value={data.mahoadon} />
+                    </DivFlexColumn>
+                    <DivFlexColumn>
+                            <Button onClick={exportBill} style={{ marginLeft: 20 ,marginTop:10}}>
+                                Print
+                            </Button>
                     </DivFlexColumn>
                 </DivFlexRow>
                 <RenderTableBill list={data.chitiet} />

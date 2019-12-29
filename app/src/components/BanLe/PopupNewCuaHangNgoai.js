@@ -37,14 +37,14 @@ const PopupNewCuaHangNgoai = (props) => {
             return;
         }
 
-        if (!chietkhau||!Number.isInteger(chietkhau))
+        if (!chietkhau||parseInt(chietkhau)<0)
             chietkhau = 0;
         let newData = {
             tencongviec: tenphutung,
             maphutung: "",
             dongia: parseInt(dongia),
             soluong: parseInt(soluong),
-            chietkhau: parseInt(chietkhau),
+            chietkhau: chietkhau,
             tongtien: parseInt(dongia) * parseInt(soluong) * ((100 - parseInt(chietkhau)) / 100),
             nhacungcap: nhacungcap
         };

@@ -1,5 +1,5 @@
 import React, { } from 'react';
-import { DivFlexRow, DivFlexColumn, Table, Input } from '../../styles'
+import { DivFlexRow, DivFlexColumn, Table, Input,Button } from '../../styles'
 import moment from 'moment';
 
 const RenderTableBill = ({ list }) => {

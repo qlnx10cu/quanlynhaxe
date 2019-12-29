@@ -21,13 +21,13 @@ const RenderTableBill = ({ list }) => {
                     {list && list.map((item, index) => (
                         <tr key={index}>
                             <td>{index + 1}</td>
-                            <td>{item.tenphutung}</td>
+                            <td  style={{textAlign: "left"}}>{item.tenphutung}</td>
                             <td>{item.maphutung}</td>
-                            <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td>{item.soluong}</td>
-                            <td>{item.chietkhau}</td>
-                            <td>{item.nhacungcap ? item.nhacungcap : "Trung Trang"}</td>
-                            <td>{(item.soluong * (item.dongia - item.dongia * item.chietkhau / 100)).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td style={{textAlign: "right"}}>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td style={{textAlign: "right"}}>{item.soluong}</td>
+                            <td style={{textAlign: "right"}}>{item.chietkhau}%</td>
+                            <td style={{textAlign: "right"}}>{item.nhacungcap ? item.nhacungcap : "Trung Trang"}</td>
+                            <td style={{textAlign: "right"}}>{(item.soluong * (item.dongia - item.dongia * item.chietkhau / 100)).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                         </tr>
 
                     ))}

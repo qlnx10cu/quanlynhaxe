@@ -8,8 +8,8 @@ const bodyParser = require('body-parser');
 const path = require('path')
 const hbs = require('express-handlebars').create({
   helpers: {
-    tinhtien: function (a, b) {
-      return a * b;
+    log: function(a){
+      console.log("item",a)
     }
   }
 });

@@ -23,13 +23,13 @@ const RenderTableBill = ({ list }) => {
                     {list && list.map((item, index) => (
                         <tr key={index}>
                             <td>{index + 1}</td>
-                            <td>{item.tenphutungvacongviec}</td>
+                            <td style={{textAlign: "left"}}>{item.tenphutungvacongviec}</td>
                             <td>{item.maphutung}</td>
-                            <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td>{item.soluongphutung}</td>
-                            <td>{(item.dongia * item.soluongphutung).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td>{item.tiencong && item.tiencong.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td>{item.tongtien && item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td style={{textAlign: "right"}}>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td style={{textAlign: "right"}}>{item.soluongphutung}</td>
+                            <td style={{textAlign: "right"}}>{(item.dongia * item.soluongphutung).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td style={{textAlign: "right"}}>{item.tiencong && item.tiencong.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td style={{textAlign: "right"}}>{item.tongtien && item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                         </tr>
 
                     ))}

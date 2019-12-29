@@ -13,6 +13,32 @@ import { withRouter } from 'react-router-dom'
 import PopupBillCHN from './PopupBillCHN';
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
 
+const listLoaiXe = [
+    "Airblade",
+    "Blade",
+    "CBR",
+    "Click ",
+    "Cub",
+    "Dream",
+    "Future",
+    "Lead",
+    "MSX",
+    "PCX",
+    "PS",
+    "SH",
+    "SH mode",
+    "Sonic",
+    "Super Cub",
+    "Super Dream",
+    "Vario",
+    "Vision",
+    "Wave",
+    "Wave Alpha",
+    "Wave RSX",
+    "Winner",
+    "Khác",
+]
+
 const RepairedBill = (props) => {
 
     let mCustomerName = lib.handleInput("");
@@ -20,6 +46,7 @@ const RepairedBill = (props) => {
     let mAddress = lib.handleInput("");
     let mMaKH = lib.handleInput("");
     let mMaNVSuaChua = lib.handleInput("");
+    let mTenLoaiXe = lib.handleInput("");
     let [biensoxe, setBienSoXe] = useState("");
     let [isShowHistoryCustomer, setShowHistoryCustomer] = useState(false);
     let [isShowNewBill, setShowNewBill] = useState(false);
@@ -387,7 +414,13 @@ const RepairedBill = (props) => {
             <DivFlexRow style={{ alignItems: 'center' }}>
                 <DivFlexColumn>
                     <label>Loại xe: </label>
-                    <Input disabled={isDisableEditInfo} autocomplete="off" {...mLoaiXe} />
+                    <Input autocomplete="off" list="loai_xe" name="loai_xe" readOnly={isUpdateBill != 0} {...mTenLoaiXe} />
+                    <datalist id="loai_xe">
+                        {listLoaiXe.map((item, index) => (
+                            <option key={index} value={item} >{item}</option>
+                        ))}
+                    </datalist>
+
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Số khung: </label>

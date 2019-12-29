@@ -89,14 +89,19 @@
 
     .yeucaukhachhang {
       position: absolute;
-      top: 416px;
-      left: 135px;
+      top: 387px;
+      left: 132px;
+      max-width: 460px;
+      min-width: 460px;
     }
 
     .tuvansuachua {
       position: absolute;
-      top: 416px;
-      left: 635px;
+      top: 385px;
+      left: 632px;
+      max-width: 420px;
+      min-width: 420px;
+
     }
 
     .cell {
@@ -207,10 +212,10 @@
     }
 
     .dongia {
-      left: 518px;
+      left: 500px;
       max-width: 145px;
       min-width: 145px;
-      text-align: center;
+      text-align: right;
     }
 
     .sl {
@@ -221,24 +226,24 @@
     }
 
     .tienpt {
-      left: 702px;
+      left: 710px;
       min-width: 150px;
       max-width: 150px;
-      text-align: center;
+      text-align: right;
     }
 
     .tiencong {
-      left: 878px;
+      left: 882px;
       min-width: 160px;
-      max-width: 100px;
-      text-align: center;
+      max-width: 150px;
+      text-align: right;
     }
 
     .tong {
       left: 1067px;
       min-width: 160px;
       max-width: 160px;
-      text-align: center;
+      text-align: right;
     }
   </style>
 </head>
@@ -276,8 +281,22 @@
 
   <div class="cell row-20 tienpt">{{tongtienpt}}</div>
   <div class="cell row-20 tiencong">{{tongtiencong}}</div>
-  <div class="cell row-20 tong">{{tongtientong}}</div>
+  <div class="cell row-20 tong">{{tongtongtien}}</div>
 
+  <script>
+    function format_momey(name) {
+      var list = document.getElementsByClassName(name);
+      for (var i = 0; i < list.length; i++) {
+        list[i].innerHTML = parseInt(list[i].innerHTML).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })
+      }
+    }
+    format_momey("dongia");
+    format_momey("tienpt");
+    format_momey("tiencong");
+    format_momey("tong");
+
+
+  </script>
 </body>
 
 </html>

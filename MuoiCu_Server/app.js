@@ -8,6 +8,9 @@ const bodyParser = require('body-parser');
 const path = require('path')
 const hbs = require('express-handlebars').create({
   helpers: {
+    format_tien: function(a){
+      return a.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })
+    },
     log: function(a){
       console.log("item",a)
     }

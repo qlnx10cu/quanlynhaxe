@@ -20,6 +20,8 @@ const LocalStrategy = new Strategy({
             error.message = `${Username} không tồn tại.`
             return done(error);
         }
+        console.log("password:"+Password)
+        console.log("hash:"+new Encrypt(Password).hash())
         let compare = await Encrypt.compare(Password, account.password);
         if (!compare) {
             let error = new Error();

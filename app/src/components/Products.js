@@ -51,12 +51,12 @@ function readFile(file, token) {
                 chitiet: [],
             };
             for (let k in workbook.SheetNames) {
-                if (k === "2") {
+                if(k!="0") continue;
+                if (k == "0") {
                     const wsname = workbook.SheetNames[k];
                     const ws = workbook.Sheets[wsname];
                     var K = ws['!ref'].split(':')[1];
                     var vitriK = parseInt(K.substring(1, K.length));
-                    vitriK = 4479;
                     for (var i = 7; i <= vitriK; i++) {
                         let data = {
                             maphutung: "",
@@ -86,12 +86,12 @@ function readFile(file, token) {
                             data.vitri = ws["E" + i].w;
                         if (ws["F" + i] && ws["F" + i] !== null)
                             data.model = ws["F" + i].v;
-                        if (ws["M" + i] && ws["M" + i] !== null)
-                            data.giaban_head = ws["M" + i].v;
-                        if (ws["N" + i] && ws["N" + i] !== null)
-                            data.giaban_le = ws["N" + i].v;
-                        // if (ws["O" + i] && ws["O" + i] !== null)
-                        //     data.ngaycapnhat = new Date();
+                        if (ws["H" + i] && ws["H" + i] !== null)
+                            data.giaban_head = ws["H" + i].v;
+                        if (ws["G" + i] && ws["G" + i] !== null)
+                            data.giaban_le = ws["G" + i].v;
+                        if (ws["I" + i] && ws["I" + i] !== null)
+                            data.ngaycapnhat = "01/01/2020";
                         dataSend.chitiet.push(data);
 
                     }
@@ -325,7 +325,7 @@ const Products = (props) => {
                             <ButtonChooseFile style={{ marginRight: 30 }}>
                                 <input type="file"
                                     multiple
-                                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                    accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                     onChange={(e) => handleChoseFile(e)} />
                                 Import +
                         </ButtonChooseFile>

@@ -86,10 +86,10 @@ function readFile(file, token) {
                             data.vitri = ws["E" + i].w;
                         if (ws["F" + i] && ws["F" + i] !== null)
                             data.model = ws["F" + i].v;
-                        if (ws["H" + i] && ws["H" + i] !== null)
-                            data.giaban_head = ws["H" + i].v;
                         if (ws["G" + i] && ws["G" + i] !== null)
-                            data.giaban_le = ws["G" + i].v;
+                            data.giaban_head = ws["G" + i].v;
+                        if (ws["H" + i] && ws["H" + i] !== null)
+                            data.giaban_le = ws["H" + i].v;
                         if (ws["I" + i] && ws["I" + i] !== null)
                             data.ngaycapnhat = "01/01/2020";
                         dataSend.chitiet.push(data);

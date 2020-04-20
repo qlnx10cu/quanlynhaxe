@@ -19,7 +19,7 @@ function createWindow() {
     mainWindow.setMenu(null);
     let startUrl;
     if(process.env.NODE_ENV !== 'production')
-        startUrl = 'http://localhost:80/login'
+        startUrl = 'http://localhost:3000/login'
     else startUrl = url.format({
         pathname: path.join(__dirname, '/../build/index.html'),
         protocol: 'file:',

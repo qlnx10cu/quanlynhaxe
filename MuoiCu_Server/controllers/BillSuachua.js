@@ -191,8 +191,7 @@ module.exports = {
             });
             var buffer = await page.pdf({
                 format: 'A4',
-                scale: 0.58
-
+                pageRanges: "1-1"
             });
             let fileName = 'hoadon' + req.params.mahoadon + '.pdf';
             res.setHeader('Content-disposition', 'inline; filename=' + fileName);

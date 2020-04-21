@@ -33,9 +33,9 @@ const Home = (props) => {
             <ToolBar socket={socket}/>
             <BaseContainer>
                 {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Dịch Vụ") && <Route exact path="/products" component={LoadingComponent(() =><Products chucvu={props.info.chucvu} {...props}/>)} />}
-                {props.info!=null && props.info.chucvu==="Admin" && <Route path="/staffs" component={LoadingComponent(Staffs)}/>}
-                {props.info!=null && props.info.chucvu==="Admin" && <Route path="/repairPrice" component={LoadingComponent(RepairPrice)}/>}
-                {props.info!=null && props.info.chucvu==="Admin" &&  <Route path="/customer" component={LoadingComponent(Customer)}/>}
+                {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Dịch Vụ") && <Route path="/staffs" component={LoadingComponent(Staffs)}/>}
+                {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Dịch Vụ") && <Route path="/repairPrice" component={LoadingComponent(RepairPrice)}/>}
+                {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Dịch Vụ") &&  <Route path="/customer" component={LoadingComponent(Customer)}/>}
                 
                 
                 <Route exact path="/services" component={LoadingComponent(() =><Services socket={socket} {...props}/>)}/>

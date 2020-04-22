@@ -11,6 +11,7 @@ import { GetFileExportProduct, ImportPhuTung, ImportMuBH, ImportPhuKien } from '
 import XLSX from 'xlsx';
 import { setLoading } from "../actions/App";
 import { getAllProduct } from "../actions/Product";
+import moment from 'moment';
 
 const PHU_TUNG = "PHU_TUNG";
 const PHU_KIEN = "PHU_KIEN";
@@ -38,6 +39,19 @@ const Select = styled.select`
 //     str = str.trim();
 //     return str;
 // }
+function stringToDate(_date,_format,_delimiter)
+{
+            var formatLowerCase=_format.toLowerCase();
+            var formatItems=formatLowerCase.split(_delimiter);
+            var dateItems=_date.split(_delimiter);
+            var monthIndex=formatItems.indexOf("mm");
+            var dayIndex=formatItems.indexOf("dd");
+            var yearIndex=formatItems.indexOf("yyyy");
+            var month=parseInt(dateItems[monthIndex]);
+            month-=1;
+            var formatedDate = new Date(dateItems[yearIndex],month,dateItems[dayIndex]);
+            return formatedDate;
+}
 
 function readFile(file, token) {
     return new Promise((resolve, reject) => {
@@ -51,13 +65,13 @@ function readFile(file, token) {
                 chitiet: [],
             };
             for (let k in workbook.SheetNames) {
-                if(k!="0") continue;
-                if (k == "0") {
+                if (k != "1") continue;
+                if (k == "1") {
                     const wsname = workbook.SheetNames[k];
                     const ws = workbook.Sheets[wsname];
                     var K = ws['!ref'].split(':')[1];
                     var vitriK = parseInt(K.substring(1, K.length));
-                    for (var i = 7; i <= vitriK; i++) {
+                    for (var i = 7; i <= 8; i++) {
                         let data = {
                             maphutung: "",
                             ghichu: "",
@@ -90,8 +104,10 @@ function readFile(file, token) {
                             data.giaban_head = ws["G" + i].v;
                         if (ws["H" + i] && ws["H" + i] !== null)
                             data.giaban_le = ws["H" + i].v;
-                        if (ws["I" + i] && ws["I" + i] !== null)
-                            data.ngaycapnhat = "01/01/2020";
+                        if (ws["I" + i] && ws["I" + i] !== null) {
+                            var date=stringToDate(ws["I" + i].v, "DD/MM/YYYY","/");
+                            data.ngaycapnhat =  moment(date).format('MM/DD/YYYY');
+                        }
                         dataSend.chitiet.push(data);
 
                     }
@@ -247,6 +263,9 @@ function readFile(file, token) {
                 // }
 
             }
+            console.log('darta');
+            console.log(dataSend.chitiet);
+
             return ImportMuBH(token, dataSend).then(() => {
                 alert("Thêm thành công");
                 window.location.href="/products";

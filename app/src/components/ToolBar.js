@@ -120,7 +120,7 @@ const ListToolBar = [
         index: 4,
         title: "Dịch vụ",
         img: ImgServices,
-        Roles: ["Admin","Dịch Vụ"],
+        Roles: ["Admin","Dịch Vụ","Phụ Tùng"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/services') {
                 history.push("/services");
@@ -133,7 +133,7 @@ const ListToolBar = [
         index: 5,
         title: "Bán Lẻ",
         img: ImgBanLe,
-        Roles: ["Admin","Dịch Vụ", "Phụ Tùng"],
+        Roles: ["Admin", "Phụ Tùng"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/banle') {
                 history.push("/banle");
@@ -188,7 +188,7 @@ const ListToolBar = [
         index: 9,
         title: "Cửa hàng ngoài",
         img: ImgThongKe,
-        Roles: ["Admin", "Dịch Vụ", "Phụ Kiện", "Phụ Tùng"],
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/cuahangngoai') {
                 history.push("/cuahangngoai");

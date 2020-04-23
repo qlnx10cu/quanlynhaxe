@@ -31,7 +31,7 @@ const PhuTungItem = ({
         <tr>
             <td>{item.maphutung}</td>
             <td>{item.tentiengviet}</td>
-            <td>{item.giaban_head.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+            {/* <td>{item.giaban_head.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td> */}
             <td>{item.giaban_le.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
             <td>{item.vitri}</td>
             <td>{item.soluongtonkho}</td>
@@ -157,9 +157,8 @@ const PhuTung = (props) => {
 
                     <tr>
                         <th>Mã phụ tùng</th>
-
                         <th>Tên tiếng việt</th>
-                        <th>Giá nhập</th>
+                        {/* <th>Giá nhập</th> */}
                         <th>Giá bán lẻ</th>
                         <th>Vị trí</th>
                         <th>Số lượng <br /> tồn kho</th>

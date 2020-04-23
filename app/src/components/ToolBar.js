@@ -174,7 +174,7 @@ const ListToolBar = [
         index: 8,
         title: "Thống kê",
         img: ImgThongKe,
-        Roles: ["Admin", "Dịch Vụ", "Phụ Kiện"],
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/thongke') {
                 history.push("/thongke");

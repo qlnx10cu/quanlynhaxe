@@ -35,9 +35,9 @@ const Home = (props) => {
                 {props.info!=null && <Route exact path="/products" component={LoadingComponent(() =><Products chucvu={props.info.chucvu} {...props}/>)} />}
                 {props.info!=null && props.info.chucvu==="Admin"  && <Route path="/staffs" component={LoadingComponent(Staffs)}/>}
                 {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Dịch Vụ") && <Route path="/repairPrice" component={LoadingComponent(RepairPrice)}/>}
-                {props.info!=null &&  <Route path="/customer" component={LoadingComponent(Customer)}/>}
-                {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Dịch Vụ") &&  <Route exact path="/services" component={LoadingComponent(() =><Services socket={socket} {...props}/>)}/>}
-                {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Dịch Vụ") &&  <Route path="/services/repairedbill" component={LoadingComponent(() =><RepairedBill socket={socket} {...props}/>)}/>}
+                {props.info!=null && <Route path="/customer" component={LoadingComponent(Customer)}/>}
+                {props.info!=null && <Route exact path="/services" component={LoadingComponent(() =><Services socket={socket} {...props}/>)}/>}
+                {props.info!=null && <Route path="/services/repairedbill" component={LoadingComponent(() =><RepairedBill socket={socket} {...props}/>)}/>}
                 {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Phụ Tùng") &&  <Route path="/banle" component={LoadingComponent(BanLe)}/>}
                 {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Dịch Vụ") &&  <Route path="/chamcong" component={LoadingComponent(ChamCong)}/>}
                 <Route path="/thongke" component={LoadingComponent(ThongKe)}/>

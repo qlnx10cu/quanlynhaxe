@@ -71,7 +71,7 @@ function readFile(file, token) {
                     const ws = workbook.Sheets[wsname];
                     var K = ws['!ref'].split(':')[1];
                     var vitriK = parseInt(K.substring(1, K.length));
-                    for (var i = 7; i <= 8; i++) {
+                    for (var i = 7; i <= vitriK; i++) {
                         let data = {
                             maphutung: "",
                             ghichu: "",
@@ -263,9 +263,6 @@ function readFile(file, token) {
                 // }
 
             }
-            console.log('darta');
-            console.log(dataSend.chitiet);
-
             return ImportMuBH(token, dataSend).then(() => {
                 alert("Thêm thành công");
                 window.location.href="/products";

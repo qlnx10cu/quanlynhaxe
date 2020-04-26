@@ -431,7 +431,7 @@ const RepairedBill = (props) => {
             <DivFlexRow style={{ alignItems: 'center' }}>
                 <DivFlexColumn>
                     <label>Loại xe: </label>
-                    <Input autocomplete="off" list="loai_xe" name="loai_xe" readOnly={isUpdateBill != 0} {...mTenLoaiXe} />
+                    <Input autocomplete="off" list="loai_xe" name="loai_xe" readOnly={isUpdateBill != 0} {...mLoaiXe} />
                     <datalist id="loai_xe">
                         {listLoaiXe.map((item, index) => (
                             <option key={index} value={item} >{item}</option>

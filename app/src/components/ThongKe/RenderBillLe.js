@@ -1,6 +1,7 @@
 import React, { } from 'react';
 import { DivFlexRow, DivFlexColumn, Table, Input,Button } from '../../styles'
 import moment from 'moment';
+import { HOST } from '../../Config'
 
 const RenderTableBill = ({ list }) => {
     return (

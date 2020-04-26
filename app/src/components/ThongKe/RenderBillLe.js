@@ -45,6 +45,12 @@ const RenderBillLe = ({
     const exportBill = () => {
         window.print();
     }
+    const exportBillNew = () => {
+        window.open(
+            `${HOST}/billle/mahoadon/${data.mahoadon}/export`,
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    }
 
     return (
         <div>
@@ -69,6 +75,9 @@ const RenderBillLe = ({
                     <DivFlexColumn>
                             <Button onClick={exportBill} style={{ marginLeft: 20 ,marginTop:10}}>
                                 Print
+                            </Button>
+                            <Button onClick={exportBillNew} style={{ marginLeft: 20 ,marginTop:10}}>
+                                Print New
                             </Button>
                     </DivFlexColumn>
                 </DivFlexRow>

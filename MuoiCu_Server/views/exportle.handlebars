@@ -1,0 +1,290 @@
+<html>
+
+<head>
+  <title>Xuất phiếu bán lẻ</title>
+  <style>
+    @page {
+      size: 21cm 29.7cm;
+    }
+
+    .whater {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+    }
+
+    div {
+      font-size: 15px;
+    }
+
+    .mahoadon {
+      position: absolute;
+      left: 630px;
+      top: 75px;
+      font-size: 30px;
+    }
+
+    .tenkh {
+      position: absolute;
+      top: 308px;
+      left: 200px;
+      font-size: 20px;
+      max-width: 280px;
+    }
+
+    .diachi {
+      position: absolute;
+      top: 340px;
+      left: 130px;
+      max-width: 350px;
+    }
+
+    .sdt {
+      position: absolute;
+      left: 440px;
+      font-size: 20px;
+      top: 335px;
+    }
+
+    .manv {
+      position: absolute;
+      top: 365px;
+      left: 200px;
+      font-size: 20px;
+      max-width: 280px;
+    }
+
+
+    #ngaythanhtoan {
+      position: absolute;
+      top: 275px;
+      font-size: 20px;
+      left: 320px;
+    }
+
+    #thangthanhtoan {
+      position: absolute;
+      top: 275px;
+      font-size: 20px;
+      left: 410px;
+    }
+
+    #namthanhtoan {
+      position: absolute;
+      top: 275px;
+      font-size: 20px;
+      left: 475px;
+    }
+
+
+    .cell {
+      position: absolute;
+    }
+
+    .row-ten {
+      text-transform: lowercase;
+    }
+
+    .row-0 {
+      top: calc(430px + 0px);
+    }
+
+    .row-1 {
+      top: calc(430px + 15px);
+    }
+
+    .row-2 {
+      top: calc(430px + 2 * 15px);
+    }
+
+    .row-3 {
+      top: calc(430px + 3 * 15px);
+    }
+
+    .row-4 {
+      top: calc(430px + 4 * 15px);
+    }
+
+    .row-5 {
+      top: calc(430px + 5 * 15px);
+    }
+
+    .row-6 {
+      top: calc(430px + 6 * 15px);
+    }
+
+    .row-7 {
+      top: calc(430px + 7 * 15px);
+    }
+
+    .row-8 {
+      top: calc(430px + 8 * 15px);
+    }
+
+    .row-9 {
+      top: calc(430px + 9 * 15px);
+    }
+
+    .row-10 {
+      top: calc(430px + 10 * 15px);
+    }
+
+    .row-11 {
+      top: calc(430px + 11 * 15px);
+    }
+
+    .row-12 {
+      top: calc(430px + 12 * 15px);
+    }
+
+    .row-13 {
+      top: calc(430px + 13 * 15px);
+    }
+
+    .row-14 {
+      top: calc(430px + 14 * 15px);
+    }
+
+    .row-15 {
+      top: calc(430px + 15 * 15px);
+    }
+
+    .row-16 {
+      top: calc(430px + 16 * 15px);
+    }
+
+    .row-17 {
+      top: calc(430px + 17 * 15px);
+    }
+
+    .row-18 {
+      top: calc(430px + 18 * 15px);
+    }
+
+    .row-19 {
+      top: calc(430px + 19 * 15px);
+    }
+
+    .row-20 {
+      top: calc(430px + 560px);
+    }
+
+    .index {
+      left: 80px;
+      max-width: 15px;
+      min-width: 15px;
+      text-align: right;
+    }
+
+    .mapt {
+      left: 110px;
+      max-width: 125px;
+      min-width: 125px;
+      text-align: left;
+    }
+
+    .ten {
+      left: 245px;
+      max-width: 165px;
+      min-width: 165px;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .sl {
+      left: 425px;
+      text-align: right;
+      min-width: 32px;
+      max-width: 32px;
+    }
+
+    .dongia {
+      left: 463px;
+      max-width: 95px;
+      min-width: 95px;
+      text-align: right;
+    }
+
+    .chietkhau {
+      left: 570px;
+      min-width: 50px;
+      max-width: 50px;
+      text-align: right;
+    }
+
+    .tong {
+      left: 630px;
+      min-width: 95px;
+      max-width: 95px;
+      text-align: right;
+    }
+
+    .tongtien {
+      left: 630px;
+      min-width: 85px;
+      max-width: 85px;
+      text-align: right;
+    }
+  </style>
+</head>
+
+<body>
+  <img src='/maule.png' class="whater" />
+
+  <div class='mahoadon'>{{mahoadon }}</div>
+  <div class='tenkh'>{{tenkh}}</div>
+  <div class="diachi">{{diachi}}</div>
+  <div class="sdt">{{sodienthoai}}</div>
+  <div class="manv">{{manv}}</div>
+
+
+  <div id="thanhtoan" style="display: none;">{{ngaythanhtoan}}</div>
+  <div id="ngaythanhtoan"></div>
+  <div id="thangthanhtoan"></div>
+  <div id="namthanhtoan"></div>
+
+  {{#each chitiet}}
+  <div class="cell index row-{{@index}}">{{@index}}</div>
+  <div class="cell mapt row-{{@index}}">{{maphutung}}</div>
+  <div class="cell ten row-{{@index}} row-ten">{{tenphutung}}</div>
+  <div class="cell sl row-{{@index}}">{{soluong}}</div>
+  <div class="cell dongia row-{{@index}}">{{dongia}}</div>
+  <div class="cell chietkhau row-{{@index}}">{{chietkhau}}</div>
+  <div class="cell tong row-{{@index}}">{{tongtien}}</div>
+  {{/each}}
+
+
+
+
+  <div class="cell row-20 tongtien">{{tongtien}}</div>
+
+  <script>
+    function format_momey(name) {
+      var list = document.getElementsByClassName(name);
+      for (var i = 0; i < list.length; i++) {
+        list[i].innerHTML = parseInt(list[i].innerHTML).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })
+      }
+    }
+
+
+    console.log(document.getElementById("thanhtoan").innerHTML);
+    var date = new Date(document.getElementById("thanhtoan").innerHTML);
+    document.getElementById("ngaythanhtoan").innerHTML = date.getDate();
+    document.getElementById("thangthanhtoan").innerHTML = (date.getMonth() + 1);
+    document.getElementById("namthanhtoan").innerHTML = date.getFullYear();
+
+    var list = document.getElementsByClassName("index");
+    for (var i = 0; i < list.length; i++) {
+      list[i].innerHTML = parseInt(list[i].innerHTML) + 1;
+    }
+    
+    format_momey("tong");
+    format_momey("dongia");
+    format_momey("tongtien");
+
+
+
+  </script>
+</body>
+
+</html>

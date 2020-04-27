@@ -168,7 +168,7 @@ module.exports = {
     exportBill: async function (req, res, next) {
         var ws_data = await BillLe.getChitiet(req.params.mahoadon);
         // var ws_data=getDataTmp();
-        if (!ws_data["manv"]) {
+        if (ws_data["manv"]) {
             try {
                 var datanv = { ma: ws_data["manv"] };
                 var nhanvien = await Abstract.getOne(Employee, datanv);

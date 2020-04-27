@@ -3,6 +3,7 @@ const BillLe = require("../models/BillLe");
 const AbstractTwo = require("../models/AbstractTwo");
 const Abstract = require('../models/Abstract');
 const librespone = require("../lib/respone");
+const Employee = require("../models/Employee");
 
 module.exports = {
     getList: async function (req, res, next) {
@@ -85,7 +86,7 @@ module.exports = {
             } = req.body;
             let resulft = await AbstractTwo.getList(Bill, BillLe, { mahoadon: req.body.mahoadon });
             let check = await Abstract.getOne(Bill, { mahoadon: mahoadon });
-            if (resulft&& check) {
+            if (resulft && check) {
                 var bodybill = conlai;
                 bodybill['ngaysuachua'] = new Date();
                 var detailbill = chitiet;
@@ -96,7 +97,7 @@ module.exports = {
 
                 let resulft = await Abstract.update(Bill, bodybill, paramHoaDon);
                 await BillLe.deleteMahoaDon(mahoadon);
-                if (detailbill.length != 0){
+                if (detailbill.length != 0) {
                     await BillLe.tangSoLuongPhuTung(resulft);
                     resulft = await Abstract.addMutil(BillLe, detailbill);
                     await BillLe.giamSoLuongPhuTung(detailbill);
@@ -126,7 +127,7 @@ module.exports = {
             })
         }
     },
-    export: async function(req, res, next) {
+    export: async function (req, res, next) {
         try {
             // var ws_data = await Abstract.getOne(Bill, req.params);
             // if (ws_data == null) {
@@ -164,65 +165,174 @@ module.exports = {
             })
         }
     },
-    exportBill: async function(req, res, next) {
+    exportBill: async function (req, res, next) {
         var ws_data = await BillLe.getChitiet(req.params.mahoadon);
-    //     var ws_data={"mahoadon":"PT-249923","manv":"root","manvsuachua":null,"diachi":"adjsklajdklas  adkj aljl ada da","sodienthoai":"0123456789",
-    //     "manvtiepnhan":null,"tenkh":"Anh Nguyên ","makh":null,"biensoxe":null,
-    //     "tongtien":642000,"ngayban":"2020-04-23 13:56:32","ngaythanhtoan":"2020-04-23 13:56:32",
-    //     "trangthai":1,"loaihoadon":1,"ngaysuachua":"2020-04-22 23:56:32","isdelete":0,"yeucaukhachhang":null,
-    //     "tuvansuachua":null,"sokm":0,"chitiet":[
-    //         {"ma":1,"mahoadon":"PT-249923","maphutung":"06381KFM900",
-    //     "tenphutung":"Bộ thanh truyền","dongia":12637000,"soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"},
-    //     {"ma":2,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-    //     ,  {"ma":3,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-    //    , {"ma":4,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-    //     , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-    //     , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"} , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"} , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"} , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"} , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"} , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"} , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"} , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-    //     , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-    //     , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-    //     , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-    //     , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-    //     , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-    //     , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-    //     , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-    //     , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-    //     , {"ma":5,"mahoadon":"PT-249923","maphutung":"06420KFL890","tenphutung":"Nan hoa sau,trong 10x156","dongia":5000,
-    //     "soluong":1,"ghichu":null,"chietkhau":0,"nhacungcap":"Trung Trang"}
-        
-    //     ]};
+        // var ws_data=getDataTmp();
+        if (!ws_data["manv"]) {
+            try {
+                var datanv = { ma: ws_data["manv"] };
+                var nhanvien = await Abstract.getOne(Employee, datanv);
+                ws_data["tennv"] = nhanvien.ten;
+            } catch (ex) {
 
-        var chitiet=ws_data.chitiet;
-        for(var i=0;i<chitiet.length;i++){
-              chitiet[i].tongtien= parseInt(chitiet[i].dongia)*parseInt(chitiet[i].soluong)
+            }
+        }
+        if(!ws_data["tennv"]){
+            ws_data["tennv"]=ws_data["manv"];
+        }
+        var chitiet = ws_data.chitiet;
+        for (var i = 0; i < chitiet.length; i++) {
+            chitiet[i].tongtien = parseInt(chitiet[i].dongia) * parseInt(chitiet[i].soluong)
         }
         ws_data['tongtien'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.tongtien, 0);
         ws_data['layout'] = false;
         if (!ws_data['tenkh'])
             ws_data['tenkh'] = ''
 
-  
+
         // console.log(ws_data)
         res.render('exportle', ws_data);
     },
+
+    getDataTmp: function () {
+        var ws_data = {
+            "mahoadon": "PT-249923", "manv": "root", "manvsuachua": null, "diachi": "adjsklajdklas  adkj aljl ada da", "sodienthoai": "0123456789",
+            "manvtiepnhan": null, "tenkh": "Anh Nguyên ", "makh": null, "biensoxe": null,
+            "tongtien": 642000, "ngayban": "2020-04-23 13:56:32", "ngaythanhtoan": "2020-04-23 13:56:32",
+            "trangthai": 1, "loaihoadon": 1, "ngaysuachua": "2020-04-22 23:56:32", "isdelete": 0, "yeucaukhachhang": null,
+            "tuvansuachua": null, "sokm": 0, "chitiet": [
+                {
+                    "ma": 1, "mahoadon": "PT-249923", "maphutung": "06381KFM900",
+                    "tenphutung": "Bộ thanh truyền", "dongia": 12637000, "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                },
+                {
+                    "ma": 2, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 3, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 4, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }, {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }, {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }, {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }, {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }, {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }, {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }, {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+                , {
+                    "ma": 5, "mahoadon": "PT-249923", "maphutung": "06420KFL890", "tenphutung": "Nan hoa sau,trong 10x156", "dongia": 5000,
+                    "soluong": 1, "ghichu": null, "chietkhau": 0, "nhacungcap": "Trung Trang"
+                }
+            ]
+        };
+        return ws_data;
+    }
 
 }

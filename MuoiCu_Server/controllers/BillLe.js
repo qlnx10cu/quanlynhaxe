@@ -168,13 +168,19 @@ module.exports = {
     exportBill: async function (req, res, next) {
         var ws_data = await BillLe.getChitiet(req.params.mahoadon);
         // var ws_data=getDataTmp();
+        if(!ws_data){
+            res.render('exportle', ws_data);
+            return;
+        }
         if (ws_data["manv"]) {
             try {
                 var datanv = { ma: ws_data["manv"] };
+                console.log("datanv:"+datanv)
                 var nhanvien = await Abstract.getOne(Employee, datanv);
+                console.log(nhanvien)
                 ws_data["tennv"] = nhanvien.ten;
             } catch (ex) {
-
+                console.log("exportBill:"+ex.message)
             }
         }
         if(!ws_data["tennv"]){

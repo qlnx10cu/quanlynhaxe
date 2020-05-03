@@ -515,7 +515,11 @@ const RepairedBill = (props) => {
                             <td>{(item.dongia * item.soluongphutung).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>
                                 <input list="tien_cong_bill" type="number" onChange={(e) => handleChangeTienCong(e, index)} value={props.listBillProduct[index].tiencong} min="0" />
-                               
+                                <datalist id="tien_cong_bill">
+                                {listGiaDichVu.map((item, index) => (
+                                        <option key={index} value={item.tien} >{item.ten}</option>
+                                    ))}
+                                </datalist>
                             </td>
                             <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>

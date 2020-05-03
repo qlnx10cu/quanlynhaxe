@@ -12,6 +12,7 @@ import { deleteBillProduct, deleteItemBillProduct, setListBillProduct, updateBil
 import { withRouter } from 'react-router-dom'
 import PopupBillCHN from './PopupBillCHN';
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
+import { GetListSalary } from '../../API/Salary'
 
 const listLoaiXe = [
     "Airblade",
@@ -69,6 +70,7 @@ const RepairedBill = (props) => {
     let mSoKM = lib.handleInput("0");
     let mYeuCau = lib.handleInput("");
     let mTuVan = lib.handleInput("");
+    let [listGiaDichVu, setListGiaDichVu] = useState([]);
 
 
 
@@ -82,6 +84,9 @@ const RepairedBill = (props) => {
         GetListCuaHangNgoai(props.token).then(res => {
             setCuaHangNgoai(res.data);
         });
+        GetListSalary(props.token).then(respose=>{
+            setListGiaDichVu(respose.data);
+        })
     }, [])
 
     useEffect(() => {
@@ -508,7 +513,10 @@ const RepairedBill = (props) => {
                             <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td><input type="number" onChange={(e) => handleChangeSL(e, index)} value={props.listBillProduct[index].soluongphutung} min="1" /></td>
                             <td>{(item.dongia * item.soluongphutung).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td><input type="number" onChange={(e) => handleChangeTienCong(e, index)} value={props.listBillProduct[index].tiencong} min="0" /></td>
+                            <td>
+                                <input list="tien_cong_bill" type="number" onChange={(e) => handleChangeTienCong(e, index)} value={props.listBillProduct[index].tiencong} min="0" />
+                               
+                            </td>
                             <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>
                                 <DelButton onClick={() => {

@@ -178,6 +178,7 @@ const RepairedBill = (props) => {
         GetBillSuaChuaByMaHoaDon(props.token, mahoadon).then(res => {
             searchBienSoXe(res.data.biensoxe);
             searchNhanVienSuaChua(res.data.manvsuachua);
+            updateTongTienBill(res.data.chitiet);
             props.setListBillProduct(res.data.chitiet);
             mLoaiXe.setValue(res.data.loaixe);
             mMaKH.setValue(res.data.ma);

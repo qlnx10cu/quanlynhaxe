@@ -89,6 +89,7 @@ const PopupAccessory = (props) => {
             tongtien:(parseInt(mDonGia.value) || 0)*(parseInt(mSoLuong.value)||0)+(parseInt(mTienCong.value)||0),
             nhacungcap:"Trung Trang"
         }
+        props.addItemToProduct(data);
         props.addBillProduct(data);
         mTenCongViec.setValue("");
         setMaPhuTung("");

@@ -84,10 +84,10 @@ const PopupBillTienCong = (props) => {
                     </DivFlexColumn>
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Tiền công: </label>
-                        <Input list="tien_cong" name="tien_cong" value={tentiencong} onChange={(e) => {
+                        <Input list="tien_cong_1" name="tien_cong_1" value={tentiencong} onChange={(e) => {
                             searchTenTienCong(e.target.value);
                         }} />
-                        <datalist id="tien_cong">
+                        <datalist id="tien_cong_1">
                             {listGiaDichVu.map((item, index) => (
                                 <option key={index} value={item.ten} >{item.ten} - {item.tien}</option>
                             ))}

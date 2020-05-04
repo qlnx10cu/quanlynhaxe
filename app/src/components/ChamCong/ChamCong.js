@@ -21,7 +21,7 @@ export default () => {
     document.title = 'Chấm công';
     const fetchData = async () => {
         let tmp = moment(dateStart).format('YYYY-MM-DD');
-        
+
         setLoading(true);
         try {
             let res = await axios.get(`${HOST}/chamcong/theongay/ngay/${tmp}`);
@@ -29,15 +29,15 @@ export default () => {
             setLoading(false);
             await setArr(arr);
         } catch (error) {
-            
+
         }
     };
     const uploadData = async () => {
-        if(arr.length){
+        if (arr.length) {
             try {
                 let ngay = moment(dateStart).format('YYYY-MM-DD');
                 let tmp = arr.map(e => {
-                    let _tmp = {...e};
+                    let _tmp = { ...e };
                     delete _tmp['ten'];
                     delete _tmp['ma'];
                     return _tmp;
@@ -55,10 +55,10 @@ export default () => {
     };
     const handleTextInput = (index, name, value) => {
         let newArr = [...arr];
-        if(name ==='ghichu')
+        if (name === 'ghichu')
             newArr[index][name] = value;
         else
-        newArr[index][name] = Number.parseInt(value || 0);
+            newArr[index][name] = Number.parseInt(value || 0);
         setArr(newArr);
     };
     return (
@@ -67,10 +67,10 @@ export default () => {
             <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                 <DivFlexRow style={{ alignItems: 'center' }}>
                     <label style={{ marginLeft: 10 }}>Ngày: </label>
-                    <Input type="date"  data-date="" data-date-format="DD MMMM YYYY" max={new Date()} value={dateStart} style={{ marginLeft: 10 }} onChange={(e) => setDateStart(e.target.value)} />
+                    <Input type="date" data-date="" data-date-format="DD MMMM YYYY" max={new Date()} value={dateStart} style={{ marginLeft: 10 }} onChange={(e) => setDateStart(e.target.value)} />
                 </DivFlexRow>
                 <Button onClick={isLoading ? null : () => fetchData()}>
-                    {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Lấy danh sách" }
+                    {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Lấy danh sách"}
                 </Button>
             </DivFlexRow>
             <Table style={{ marginTop: 15 }}>
@@ -87,11 +87,20 @@ export default () => {
                             <tr key={index}>
                                 <td>{e.ten || ''}</td>
                                 <td>{(e.tiencong || 0).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                                <td><NewInput type='number' min={0} value={arr[index]['vskp']} onChange={(e) => handleTextInput(index, 'vskp', e.target.value)}/></td>
-                                <td><NewInput type='number' min={0} value={arr[index]['vsbd']} onChange={(e) => handleTextInput(index, 'vsbd', e.target.value)}/></td>
-                                <td><NewInput value={arr[index].ghichu ? arr[index].ghichu: ''} onChange={(e) => handleTextInput(index, 'ghichu', e.target.value)}/></td>
+                                <td><NewInput type='number' min={0} value={arr[index]['vskp']} onChange={(e) => handleTextInput(index, 'vskp', e.target.value)} /></td>
+                                <td><NewInput type='number' min={0} value={arr[index]['vsbd']} onChange={(e) => handleTextInput(index, 'vsbd', e.target.value)} /></td>
+                                <td><NewInput value={arr[index].ghichu ? arr[index].ghichu : ''} onChange={(e) => handleTextInput(index, 'ghichu', e.target.value)} /></td>
                             </tr>
                         ))
+                    }
+                    {
+                        <tr>
+                            <td>Tổng</td>
+                            <td>{arr.reduce((a, b) => a + (b.tiencong || 0), 0)}</td>
+                            <td>{arr.reduce((a, b) => a + (b.vskp || 0), 0)}</td>
+                            <td>{arr.reduce((a, b) => a + (b.vsbd || 0), 0)}</td>
+                            <td></td>
+                        </tr>
                     }
                 </tbody>
             </Table>

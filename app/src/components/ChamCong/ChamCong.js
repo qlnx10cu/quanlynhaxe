@@ -96,9 +96,9 @@ export default () => {
                     {
                         <tr>
                             <td>Tổng</td>
-                            <td>{arr.reduce((a, b) => a + (b.tiencong || 0), 0)}</td>
-                            <td>{arr.reduce((a, b) => a + (b.vskp || 0), 0)}</td>
-                            <td>{arr.reduce((a, b) => a + (b.vsbd || 0), 0)}</td>
+                            <td>{arr.reduce((a, b) => a + (b.tiencong || 0), 0).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td>{arr.reduce((a, b) => a + (b.vskp || 0), 0).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td>{arr.reduce((a, b) => a + (b.vsbd || 0), 0).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td></td>
                         </tr>
                     }

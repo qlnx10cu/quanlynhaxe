@@ -149,10 +149,10 @@ const PopupPhuTung = (props) => {
                 </DivFlexRow>
 
                 <DivFlexRow >
-                    {/* <DivFlexColumn style={{ flex: 1 }}>
+                {(!item || !item.maphutung) &&<DivFlexColumn style={{ flex: 1 }}>
                         <label>Giá nhập</label>
                         <Input type="number" min={0} {...mGiaBanHead} />
-                    </DivFlexColumn> */}
+                    </DivFlexColumn>}
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Giá bán lẻ</label>
                         <Input type="number" min={0} {...mGiaBanLe} />

@@ -54,6 +54,18 @@ module.exports = {
             librespone.error(req, res, error.message);
         }
     },
+    deleteAll: async function (req, res, next) {
+        try {
+            if(req.params.loaiphutung!="phutung")
+                return librespone.error(req, res, "Not support");
+            //
+            var param = {loaiphutung:"phụ tùng"};
+            let resulft = await Abstract.delete(Item,param);
+            res.json(resulft);
+        } catch (error) {
+            librespone.error(req, res, error.message);
+        }
+    },
     addMutil: async function (req, res, next) {
         try {
             let body = {

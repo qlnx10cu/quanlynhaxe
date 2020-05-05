@@ -73,6 +73,11 @@ const RepairedBill = (props) => {
     let mSoKM = lib.handleInput("0");
     let mYeuCau = lib.handleInput("");
     let mTuVan = lib.handleInput("");
+
+    let [sokm, setSoKM] = useState("");
+    let [yeucau, setYeuCau] = useState("");
+    let [tuvan, setTuvan] = useState("");
+
     let [listGiaDichVu, setListGiaDichVu] = useState([]);
 
 
@@ -182,9 +187,12 @@ const RepairedBill = (props) => {
             props.setListBillProduct(res.data.chitiet);
             mLoaiXe.setValue(res.data.loaixe);
             mMaKH.setValue(res.data.ma);
-            mTuVan.setValue(res.data.tuvansuachua);
-            mYeuCau.setValue(res.data.yeucaukhachhang);
-            mSoKM.setValue(res.data.sokm);
+            // mTuVan.setValue(res.data.tuvansuachua);
+            // mYeuCau.setValue(res.data.yeucaukhachhang);
+            // mSoKM.setValue(res.data.sokm);
+            setTuvan(res.data.tuvansuachua);
+            setYeuCau(res.data.yeucaukhachhang);
+            setSoKM(res.data.sokm);
         })
             .catch(err => {
                 alert("Không lấy được hóa đơn.")
@@ -345,9 +353,9 @@ const RepairedBill = (props) => {
             biensoxe: biensoxe,
             chitiet: listProduct,
             manv: props.info.ma,
-            yeucaukhachhang: mYeuCau.value,
-            tuvansuachua: mTuVan.value,
-            sokm: mSoKM.value
+            yeucaukhachhang: yeucau,
+            tuvansuachua: tuvan,
+            sokm: sokm
         }
         return data
     }
@@ -485,7 +493,7 @@ const RepairedBill = (props) => {
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Số km: </label>
-                    <Input disabled={isDisableEditInfo} autocomplete="off" {...mSoKM} type="Number" max={999999} min={0} />
+                    <Input disabled={isDisableEditInfo} autocomplete="off" value={sokm} type="Number" max={999999} min={0} onChange={(e=>{setSoKM(e.target.value)})} />
                 </DivFlexColumn>
                 <Button disabled={!isDisableEditInfo} onClick={() => setShowHistoryCustomer(true)} style={{ marginLeft: 20, marginTop: 10 }}>
                     Chi tiết
@@ -494,11 +502,11 @@ const RepairedBill = (props) => {
             <DivFlexRow style={{ alignItems: 'center' }}>
                 <DivFlexColumn>
                     <label>Yêu cầu khách hàng: </label>
-                    <Input autocomplete="off" {...mYeuCau} />
+                    <Input autocomplete="off" value={yeucau} onChange={(e=>{setYeuCau(e.target.value)})} />
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Tư vấn Sữa chữa: </label>
-                    <Input autocomplete="off" {...mTuVan} />
+                    <Input autocomplete="off" value={tuvan} onChange={(e=>{setTuvan(e.target.value)})}/>
                 </DivFlexColumn>
             </DivFlexRow>
             <DivFlexRow style={{ marginTop: 5, marginBottom: 5, justifyContent: 'space-between', alignItems: 'center' }}>

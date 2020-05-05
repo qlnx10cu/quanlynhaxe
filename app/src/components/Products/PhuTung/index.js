@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ProductContainer, DivFlexRow, Button, Table, DelButton, Input } from '../../../styles'
 import PopupPhuTung from './PopupPhuTung'
-import { DelPhuTung } from '../../../API/PhuTungAPI'
+import { DelPhuTung,DelAllPhuTung } from '../../../API/PhuTungAPI'
 
 import { connect } from 'react-redux'
 import _ from 'lodash'
@@ -101,6 +101,17 @@ const PhuTung = (props) => {
         setPage(0);
     };
 
+    const handleXoaHetPhutung = () =>{
+        if (window.confirm("Bạn chắc muốn hủy") == true) {
+            DelAllPhuTung(props.token).then(res => {
+                alert("Xóa thành công.");
+                window.location.reload();
+            }).catch(err => {
+                    alert("Không xóa được. @@")
+                })
+        }
+        
+    }
 
     const handleNextPage = () => {
         let newPage = page + 1;
@@ -128,6 +139,7 @@ const PhuTung = (props) => {
         <ProductContainer className={props.isActive ? "active" : ""}>
             <DivFlexRow style={{ justifyContent: 'space-between' }}>
                 <h3>Danh sách phụ tùng</h3>
+                <Button onClick={() => { handleXoaHetPhutung(); }}>Xóa hết phụ tùng</Button>
                 <Button onClick={() => { setShowing(true); setItemEdit(null) }}>Thêm mới</Button>
             </DivFlexRow>
             <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginTop: 5, marginBottom: 15 }}>
@@ -169,6 +181,7 @@ const PhuTung = (props) => {
                         mArrPhuTung[page] && mArrPhuTung[page].map(item => (
                             <PhuTungItem
                                 item={item}
+                                token={props.token}
                                 key={item.ma}
                                 getList={() => {
                                 }}

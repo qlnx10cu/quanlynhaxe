@@ -41,3 +41,11 @@ export const GetDetailPhuTung = (token, maphutung) => {
 
     return axios.get(url,{headers});
 }
+
+export const DelAllPhuTung = (token) => {
+    let url = `${HOST}/itempart/all/phutung`;
+    let headers = {
+        'Authorization': 'Bearer ' + token
+    }
+    return axios.delete(url,{headers})
+}

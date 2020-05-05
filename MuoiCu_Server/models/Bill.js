@@ -28,6 +28,9 @@ class Bill {
     }
     static getArrayParam(param) {
         let tmp = ['mahoadon', 'manv', 'tenkh', 'makh', 'biensoxe', 'tongtien', 'ngayban', 'ngaythanhtoan', 'trangthai', 'loaihoadon'];
+        if(param){
+            tmp = ['mahoadon', 'manv', 'tenkh', 'makh', 'biensoxe', 'tongtien', 'ngayban', 'ngaythanhtoan', 'trangthai', 'loaihoadon','yeucaukhachhang','tuvansuachua','sokm'];
+        }
         let obj = {};
         let arr = Object.keys(param).filter(e => tmp.includes(e));
         arr.forEach(e => {

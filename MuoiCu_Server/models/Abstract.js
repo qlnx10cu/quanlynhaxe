@@ -127,6 +127,16 @@ class Abstract {
         let res = await query(sql, wherevalue);
         return res;
     }
+    static async deleteAll(ClassTable) {
+        let where = ' 1=? ';
+        let wherevalue = [
+            1,
+        ];
+        let sql = `DELETE FROM ${ClassTable.getNameTable()} where ${where}`;
+        let res = await query(sql, wherevalue);
+        return res;
+    }
+    
 }
 
 module.exports = Abstract;

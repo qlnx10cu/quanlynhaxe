@@ -393,7 +393,7 @@ const RepairedBill = (props) => {
     const updateTongTienBill = (product) => {
         var tong = 0;
         product.forEach(element => {
-            tong = element.tongtien;
+            tong += element.tongtien;
         });
         setTongTienBill(tong);
     }

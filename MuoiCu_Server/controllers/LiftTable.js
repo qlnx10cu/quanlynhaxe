@@ -1,7 +1,7 @@
 var liftTable = [];
 for (var i = 0; i < 12; i++)
-    liftTable[i] = { "trangthai": 0, "mahoadon": "", "biensxe": "" };
-liftTable[7]={"trangthai": 2, "mahoadon": "DV-883902", "biensxe": "67B1-74455"}
+    liftTable[i] = { "trangthai": 0, "mahoadon": "", "biensoxe": "" };
+liftTable[7]={"trangthai": 2, "mahoadon": "DV-883902", "biensoxe": "67B1-74455"}
 module.exports = function (io) {
     io.on('connection', function (socket) {
 

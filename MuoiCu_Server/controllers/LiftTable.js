@@ -71,7 +71,7 @@ module.exports = function (io) {
         socket.on('release', (data) => {
             try {
                 let index = Number.parseInt(data.maban);
-                Abstract.update(BanNang, { mahoadon: data.mahoadon, biensoxe: data.biensoxe, trangthai: 0 }, { ma: index }).then(
+                Abstract.update(BanNang, { mahoadon: "", biensoxe: "", trangthai: 0 }, { ma: index }).then(
                     () => {
                         liftTable[index].trangthai = 0;
                         liftTable[index].mahoadon = "";

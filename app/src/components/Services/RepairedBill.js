@@ -355,7 +355,7 @@ const RepairedBill = (props) => {
             manv: props.info.ma,
             yeucaukhachhang: yeucau,
             tuvansuachua: tuvan,
-            sokm: sokm
+            sokm: sokm?sokm:0
         }
         return data
     }

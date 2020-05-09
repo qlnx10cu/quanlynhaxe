@@ -71,10 +71,7 @@ module.exports = {
     },
     delete: async function (req, res, next) {
         try {
-            var param={
-                isdelete:1,
-            }
-            let resulft = await Abstract.update(Employee,param, req.params);
+            let resulft = await Abstract.delete(Employee, req.params);
             res.json(resulft);
         } catch (error) {
             res.status(400).json({

@@ -327,8 +327,8 @@ const RepairedBill = (props) => {
 
         for (var i = 0; i < listProduct.length; i++) {
             var item = listProduct[i];
-            if (item.soluongphutung <= 0) {
-                alert("Phụ tùng :" + item.tenphutungvacongviec + " có số lượng <= 0");
+            if (item.soluongphutung < 0) {
+                alert("Phụ tùng :" + item.tenphutungvacongviec + " có số lượng < 0");
                 return null;
             }
             if (item.dongia < 0) {

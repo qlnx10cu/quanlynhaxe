@@ -50,9 +50,9 @@ const PopupBillTienCong = (props) => {
             key: props.listBillProduct.length + 1,
             tenphutungvacongviec: tentiencong,
             maphutung: "",
-            dongia: parseInt(dongia) || 0,
-            soluongphutung: 1,
-            tiencong: 0,
+            dongia: 0,
+            soluongphutung: 0,
+            tiencong: parseInt(dongia) || 0,
             tongtien: parseInt(dongia) || 0,
             nhacungcap:"Trung Trang"
         }

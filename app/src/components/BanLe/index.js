@@ -26,6 +26,8 @@ const BanLe = (props) => {
     let [listCustomer, setListCustomer] = useState([]);
     let [loai, setLoai] = useState(false);
     let [mahoadonUpdate, setmahoadonUpdate] = useState("");
+    let [searchValue, setSearchValue] = useState("");
+    let [mDataList, setDataList] = useState([]);
 
 
     let [isShowChitiet, setShowChitiet] = useState(false);
@@ -74,19 +76,19 @@ const BanLe = (props) => {
             if (data.tenkh) {
                 mCustomerName.setValue(data.tenkh)
             }
-            var chitiet=[...data.chitiet]
-            for(var k in chitiet){
-                var newItem=chitiet[k];
-                newItem.tencongviec=newItem.tenphutung
+            var chitiet = [...data.chitiet]
+            for (var k in chitiet) {
+                var newItem = chitiet[k];
+                newItem.tencongviec = newItem.tenphutung
                 newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
             }
-            console.log("day data",data);
+            console.log("day data", data);
             setTongTien(data.tongtien);
             setProducts(chitiet)
 
         }).catch(err => {
             alert("Không lấy được chi tiết hóa đơn:" + mahoadon);
-            window.location.href="/thongke";
+            window.location.href = "/thongke";
         })
     }
     const clearAll = () => {
@@ -98,15 +100,15 @@ const BanLe = (props) => {
         setMaKhachHang("");
     }
 
-    const tinhTongTien=(chitiet)=>{
-        var tongtien=0;
-        for(var i=0;i<chitiet.length;i++){
-            var item=chitiet[i];
-            tongtien+= item.dongia * item.soluong * ((100 - item.chietkhau) / 100)
+    const tinhTongTien = (chitiet) => {
+        var tongtien = 0;
+        for (var i = 0; i < chitiet.length; i++) {
+            var item = chitiet[i];
+            tongtien += item.dongia * item.soluong * ((100 - item.chietkhau) / 100)
         }
         return tongtien
     }
-    
+
     const handleSaveBill = () => {
 
         if (mTongTien === 0) {
@@ -125,24 +127,24 @@ const BanLe = (props) => {
             }
         })
 
-        for(var i=0;i<chitiet.length;i++){
-            var item=chitiet[i];
-            if(item.dongia<0){
-                alert("Ma: "+item.maphutung+" SP: "+item.tenphutung+" co don gia < 0")
+        for (var i = 0; i < chitiet.length; i++) {
+            var item = chitiet[i];
+            if (item.dongia < 0) {
+                alert("Ma: " + item.maphutung + " SP: " + item.tenphutung + " co don gia < 0")
                 return;
             }
-            if(item.soluong<0){
-                alert("Ma: "+item.maphutung+" SP: "+item.tenphutung+" co soluong < 0")
+            if (item.soluong < 0) {
+                alert("Ma: " + item.maphutung + " SP: " + item.tenphutung + " co soluong < 0")
                 return;
             }
-            if(item.chietkhau<0||item.chietkhau>100){
-                alert("Ma: "+item.maphutung+" SP: "+item.tenphutung+" co chietkhau < 0% or > 100%")
+            if (item.chietkhau < 0 || item.chietkhau > 100) {
+                alert("Ma: " + item.maphutung + " SP: " + item.tenphutung + " co chietkhau < 0% or > 100%")
                 return;
             }
         }
- 
 
-        var tongtien=tinhTongTien(chitiet)
+
+        var tongtien = tinhTongTien(chitiet)
         let data = {
             mahoadon: mahoadonUpdate,
             manv: props.info.ma,
@@ -153,7 +155,7 @@ const BanLe = (props) => {
 
         UpdateBillBanLe(props.token, data).then(res => {
             alert('Thành công. ');
-            window.location.href="/thongke";
+            window.location.href = "/thongke";
         })
             .catch(err => {
                 alert("Không xuất được hóa đơn.");
@@ -177,23 +179,23 @@ const BanLe = (props) => {
             }
         })
 
-        for(var i=0;i<chitiet.length;i++){
-            var item=chitiet[i];
-            if(item.dongia<0){
-                alert(" SP: "+item.tenphutung+" co don gia < 0")
+        for (var i = 0; i < chitiet.length; i++) {
+            var item = chitiet[i];
+            if (item.dongia < 0) {
+                alert(" SP: " + item.tenphutung + " co don gia < 0")
                 return;
             }
-            if(item.soluong<0){
-                alert(" SP: "+item.tenphutung+" co soluong < 0")
+            if (item.soluong < 0) {
+                alert(" SP: " + item.tenphutung + " co soluong < 0")
                 return;
             }
-            if(item.chietkhau<0||item.chietkhau>100){
-                alert(" SP: "+item.tenphutung+" co chietkhau < 0% or > 100%")
+            if (item.chietkhau < 0 || item.chietkhau > 100) {
+                alert(" SP: " + item.tenphutung + " co chietkhau < 0% or > 100%")
                 return;
             }
         }
- 
-        var tongtien=tinhTongTien(chitiet)
+
+        var tongtien = tinhTongTien(chitiet)
 
         let data = {
             manv: props.info.ma,
@@ -232,8 +234,20 @@ const BanLe = (props) => {
         }))
     }
     const addItemToProduct = (item) => {
-        setTongTien(mTongTien + item.tongtien);
-        setProducts([...mProducts, item]);
+        var i = 0;
+        for (i = 0; i < mProducts.length; i++) {
+            if (checkHasItem(item, mProducts[i])) {
+                break;
+            }
+        }
+        if (i == mProducts.length) {
+            setTongTien(mTongTien + item.tongtien);
+            setProducts([...mProducts, item]);
+        }
+        else {
+            let newItem = mProducts[i];
+            updateChangSL(i, parseInt(newItem.soluong) + parseInt(item.soluong));
+        }
     }
 
     const handleChangeKH = (e) => {
@@ -246,28 +260,113 @@ const BanLe = (props) => {
             mCustomerName.setValue(kq.ten);
         }
     };
-
-    const handleChangeSL = (e, index) => {
+    const updateChangSL = (index, soluong) => {
         let newItem = mProducts[index];
-        newItem.soluong = e.target.value;
+        newItem.soluong = soluong;
         let tongTien = mTongTien - newItem.tongtien;
         newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
         let newProduct = [...mProducts.slice(0, index), newItem, ...mProducts.slice(index + 1, mProducts.lenght)];
         setProducts(newProduct);
         setTongTien(tinhTongTien(newProduct));
+    }
+    const handleChangeSL = (e, index) => {
+        updateChangSL(index, e.target.value);
     }
 
 
     const handleChangeChieuKhau = (e, index) => {
-        let newItem = mProducts[index];
-        newItem.chietkhau = e.target.value;
-        let tongTien = mTongTien - newItem.tongtien;
-        newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
-        let newProduct = [...mProducts.slice(0, index), newItem, ...mProducts.slice(index + 1, mProducts.lenght)];
-        setProducts(newProduct);
-        setTongTien(tinhTongTien(newProduct));
-    }
+        try {
+            let newItem = mProducts[index];
+            newItem.chietkhau = parseInt(e.target.value);
+            let tongTien = mTongTien - newItem.tongtien;
+            newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
+            let newProduct = [...mProducts.slice(0, index), newItem, ...mProducts.slice(index + 1, mProducts.lenght)];
+            setProducts(newProduct);
+            setTongTien(tinhTongTien(newProduct));
+        } catch (ex) {
 
+        }
+    }
+    const checkHasItem = (sp, item) => {
+        if (sp.tencongviec.toLowerCase() == "" || sp.tencongviec.toLowerCase() != item.tencongviec.toLowerCase())
+            return false;
+        if (sp.maphutung == "" || sp.maphutung.toLowerCase() != item.maphutung.toLowerCase())
+            return false;
+        if (sp.nhacungcap == "" || sp.nhacungcap != 'Trung Trang' || sp.nhacungcap.toLowerCase() != item.nhacungcap.toLowerCase())
+            return false;
+        if (!sp.dongia || sp.dongia < 0 || sp.dongia != item.dongia)
+            return false;
+        return true;
+    };
+
+    const checkHasRender = (Search, item) => {
+        let strSearch = Search.toLowerCase();
+        return (item.maphutung != "" && item.maphutung.toLowerCase() == strSearch);
+    };
+
+    const _handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleButtonSearch();
+        }
+    };
+
+    const handleButtonSearch = () => {
+        let search = searchValue;
+        let list = props.listProduct.filter(function (item) {
+            return (checkHasRender(search, item));
+        });
+        console.log(list,search)
+        if (!list || list.length == 0) {
+            alert("Không tìm thấy item: " + search)
+            return;
+        }
+        var item = list[0];
+
+
+        if (!item.maphutung || item.maphutung === "") {
+            alert("mã phụ tùng không đúng: " + item.maphutung);
+            return;
+        }
+        if (!item.giaban_le || !item.giaban_le < 0) {
+            alert("phụ tùng không hợp lệ");
+            return;
+        }
+
+        let newData = {
+            tencongviec: item.tentiengviet,
+            maphutung: item.maphutung,
+            dongia: parseInt(item.giaban_le),
+            soluong: 1,
+            chietkhau: 0,
+            tongtien: parseInt(item.giaban_le),
+            nhacungcap: 'Trung Trang'
+        };
+        addItemToProduct(newData);
+        setSearchValue("")
+    };
+    const SliceTop20 = (list) => {
+        var arr = list.filter(e => e.soluongtonkho > 0);
+        setDataList(arr.slice(0, 20));
+    };
+    const searchMaPhuTung = (values) => {
+        setSearchValue(values)
+        if (values === "") {
+            SliceTop20(props.listProduct);
+            return;
+        }
+        let product = props.listProduct.filter(function (item) {
+            return ((item.maphutung.toLowerCase()).includes(values.toLowerCase()) ||
+                ((item.tentiengviet.toLowerCase()).includes(values.toLowerCase()))
+            );
+        });
+        if (product.length !== 0) {
+            if (product.length === 1 && product[0].maphutung === values) {
+                
+            } else {
+                SliceTop20(product);
+            }
+        }
+    };
     return (
         <div>
             {loai && <h1 style={{ textAlign: "center" }}> Hóa đơn {mahoadonUpdate}</h1>}
@@ -294,6 +393,23 @@ const BanLe = (props) => {
                 </Button>
                 <Button onClick={() => setNewProduct(true)}>
                     Thêm Phụ Tùng
+                </Button>
+            </DivFlexRow>
+            <DivFlexRow style={{ alignItems: 'center' }}>
+                <Input autoFocus ref={input => input && input.focus()} list="browser_search" onKeyPress={_handleKeyPress} value={searchValue} style={{ width: 250, marginRight: 15 }}
+                    onChange={(e) => searchMaPhuTung(e.target.value)} />
+                <datalist id="browser_search">
+                        {mDataList.map((item, index) => (
+                            <option disabled={item.soluongtonkho === 0} key={index}
+                                value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
+                        ))}
+                    </datalist>
+                <Button onClick={() => {
+                    handleButtonSearch();
+                }}>
+                
+                    Tìm Kiếm
+                        <i className="fas fa-search" />
                 </Button>
             </DivFlexRow>
             <Table>
@@ -339,14 +455,14 @@ const BanLe = (props) => {
             <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
                 <label></label>
                 {loai && <Button onClick={() => {
-                            if (window.confirm("Bạn chắc muốn thay đổi")){
-                                handleSaveBill();
-                            }
+                    if (window.confirm("Bạn chắc muốn thay đổi")) {
+                        handleSaveBill();
+                    }
                 }}>Thay đổi</Button>}
                 {!loai && <Button onClick={() => {
-                    if (window.confirm("Bạn chắc muốn thanh toán")){
-                    handleAddBill();
-                }
+                    if (window.confirm("Bạn chắc muốn thanh toán")) {
+                        handleAddBill();
+                    }
                 }}>Lưu</Button>}
             </DivFlexRow>
             <PopupNewProduct
@@ -362,7 +478,7 @@ const BanLe = (props) => {
             />
             <ChiTietThongKe
                 isShowing={isShowChitiet}
-                onCloseClick={() => {setShowChitiet(false);setMaHoaDon("")}}
+                onCloseClick={() => { setShowChitiet(false); setMaHoaDon("") }}
                 mahoadon={mMaHoaDon}
                 token={props.token}
                 loaihoadon={1}
@@ -374,6 +490,7 @@ const BanLe = (props) => {
 const mapState = (state) => ({
     token: state.Authenticate.token,
     info: state.Authenticate.info,
+    listProduct: state.Product.listProduct,
 })
 
 export default connect(mapState)(BanLe);

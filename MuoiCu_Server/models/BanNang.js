@@ -6,10 +6,10 @@ class BanNang {
     }
     static getColmun(param) {
         if (param) {
-            let tmp = ['ma','mahoadon', 'biensoxe'];
+            let tmp = ['ma','mahoadon', 'biensoxe','trangthai'];
             return tmp.filter(e => Object.keys(param).includes(e));
         }
-        return "`ma`,`mahoadon`, `biensoxe`";
+        return "`ma`,`mahoadon`, `biensoxe`,`trangthai`";
     }
     static getLike(k) {
         let tmp = ['mahoadon'];
@@ -19,12 +19,12 @@ class BanNang {
         return "";
     }
     static getParam(param) {
-        let tmp = ['ma','mahoadon', 'biensoxe'];
+        let tmp = ['ma','mahoadon', 'biensoxe','trangthai'];
         let arr = Object.keys(param).filter(e => tmp.includes(e)).map(e => param[e])
         return arr;
     }
     static getArrayParam(param) {
-        let tmp = ['ma','mahoadon', 'biensoxe'];
+        let tmp = ['ma','mahoadon', 'biensoxe','trangthai'];
         let obj = {};
         let arr = Object.keys(param).filter(e => tmp.includes(e));
         arr.forEach(e => {

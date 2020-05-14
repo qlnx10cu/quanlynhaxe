@@ -133,6 +133,10 @@ const Services = (props) => {
             biensoxe:"",
         })
     };
+    const updateBan=()=>{
+        props.socket.emit('update');
+        alert('Update thành công')
+    }
     useEffect(() => {
         subscribe();
         return () => subscribe();
@@ -140,6 +144,10 @@ const Services = (props) => {
     return (
         <div>
             <h3>Khu vực sửa chữa</h3>
+           {props.info.chucvu=="Admin"&&<Button onClick={() => updateBan(true)} style={{ marginLeft: 20, marginTop: 10 }}>
+                    Update
+            </Button>
+            }
             <RepairWraper>
                 {ARR.map(index => (
                     <CRepairItem socket={props.socket} key={index} STT={index} history={props.history} select={select} release={release} item={liftTable[index - 1]} working={liftTable[index - 1] && liftTable[index - 1].trangthai} />

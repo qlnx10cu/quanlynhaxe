@@ -29,9 +29,9 @@ getTable().then(value => {
     liftTable = value;
 });
 
-module.exports = function (io) {
+module.exports = function(io) {
 
-    io.on('connection', function (socket) {
+    io.on('connection', function(socket) {
 
         socket.on('connected', (data) => {
             socket.emit('connected', liftTable);
@@ -51,8 +51,7 @@ module.exports = function (io) {
                         socket.broadcast.emit('lifttableFull', liftTable);
                     }
                 )
-            } catch (e) {
-            }
+            } catch (e) {}
         })
         socket.on('bill', (data) => {
             try {
@@ -65,8 +64,7 @@ module.exports = function (io) {
                         socket.emit('lifttable', liftTable);
                         socket.broadcast.emit('lifttableFull', liftTable);
                     });
-            } catch (e) {
-            }
+            } catch (e) {}
         })
         socket.on('release', (data) => {
             try {
@@ -80,6 +78,15 @@ module.exports = function (io) {
                         socket.broadcast.emit('lifttableFull', liftTable);
                         socket.broadcast.emit('lifttableBill', liftTable);
                     });
+            } catch (e) {
+
+            }
+        })
+        socket.on('update', () => {
+            try {
+                getTable().then(value => {
+                    liftTable = value;
+                });
             } catch (e) {
 
             }

@@ -396,7 +396,7 @@ const BanLe = (props) => {
                 </Button>
             </DivFlexRow>
             <DivFlexRow style={{ alignItems: 'center' }}>
-                <Input autoFocus ref={input => input && input.focus()} list="browser_search" onKeyPress={_handleKeyPress} value={searchValue} style={{ width: 250, marginRight: 15 }}
+                <Input autoFocus list="browser_search" onKeyPress={_handleKeyPress} value={searchValue} style={{ width: 250, marginRight: 15 }}
                     onChange={(e) => searchMaPhuTung(e.target.value)} />
                 <datalist id="browser_search">
                         {mDataList.map((item, index) => (

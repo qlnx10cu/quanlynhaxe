@@ -78,6 +78,12 @@ const BanLe = (props) => {
             if (data.tenkh) {
                 mCustomerName.setValue(data.tenkh)
             }
+            if(data.sodienthoai){
+                setSoDienThoai(data.sodienthoai);
+            }
+            if(data.diachi){
+                mDiaChi.setValue(data.diachi);
+            }
             var chitiet = [...data.chitiet]
             for (var k in chitiet) {
                 var newItem = chitiet[k];

@@ -400,7 +400,7 @@ const BanLe = (props) => {
             <DivFlexRow>
                 <DivFlexColumn>
                     <label>Tên khách hàng: </label>
-                    <Input autocomplete="off" {...mCustomerName} readOnly/>
+                    <Input autocomplete="off" {...mCustomerName} />
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Mã khách hàng: </label>

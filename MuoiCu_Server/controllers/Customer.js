@@ -1,5 +1,6 @@
 const Customer = require("../models/Customer");
 const Abstract = require("../models/Abstract");
+const Employee = require("../models/Employee");
 
 module.exports = {
     getList: async function (req, res, next) {
@@ -70,7 +71,15 @@ module.exports = {
             var param = Object.assign(req.params, req.query)
             let resulft = await Abstract.getOne(Customer, param);
             resulft["chitiet"] =await Customer.getChitiet(param.ma);
-            console.log(resulft);
+            for(var i=0; i<resulft["chitiet"].length;i++){
+                var item=resulft["chitiet"][i];
+                if(item.manvsuachua){
+                    var param={ma:item.manvsuachua};
+                    var nhanvien  = await Abstract.getOne(Employee, param);
+                    item.tennvsuachua=nhanvien.ten;
+                }
+                console.log(item);
+            }
             res.json(resulft);
         } catch (error) {
             res.status(400).json({

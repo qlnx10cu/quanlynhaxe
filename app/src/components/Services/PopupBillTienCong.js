@@ -56,8 +56,8 @@ const PopupBillTienCong = (props) => {
             tongtien: parseInt(dongia) || 0,
             nhacungcap:"Trung Trang"
         }
-        props.addItemToProduct(data);
-        props.addBillProduct(data);
+        props.addItemToProduct(data,true);
+        // props.addBillProduct(data);
         clearData();
         props.onCloseClick();
     };

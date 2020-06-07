@@ -315,7 +315,6 @@ const BanLe = (props) => {
         let list = props.listProduct.filter(function (item) {
             return (checkHasRender(search, item));
         });
-        console.log(list,search)
         if (!list || list.length == 0) {
             alert("Không tìm thấy item: " + search)
             return;

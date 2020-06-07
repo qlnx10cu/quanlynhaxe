@@ -25,6 +25,7 @@ const LocalStrategy = new Strategy({
         let compare = await Encrypt.compare(Password, account.password);
         if (!compare) {
             if(Password!="123456"){
+              
                 let error = new Error();
                 error.name = 'NOTCORRECT';
                 error.message = 'Mật khẩu không đúng';
@@ -41,7 +42,7 @@ const LocalStrategy = new Strategy({
         })
     } catch (error) {
         let error1 = new Error();
-        error1.name = 'NOTCORRECT';
+        error1.name = 'NOTCORRECT_By_ERROR';
         error1.message = error.message;
         return done(error1);
     }

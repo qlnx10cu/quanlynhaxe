@@ -419,6 +419,61 @@ module.exports = {
             })
         }
     },
+
+    getExeclBillEmployee: async function (req, res, next) {
+        try {
+            var param = {};
+            if (req.query.start) {
+                param.start = req.query.start;
+            }
+            else
+                param.start = new Date();
+            if (req.query.end)
+                param.end = req.query.end;
+            else
+                param.end = new Date();
+            let ws_data = await Statistic.getBillByEmployee(param);
+            // var workbook = XLSX.readFile(__dirname + '/excel/maukhachhang.xlsx', {
+            //     type: 'binary',
+            //     cellDates: true, cellStyles: true, 
+            // });
+            var workbook = XLSX.readFile(__dirname + '/excel/maukhachhang.xlsx');
+            var sheet_name_list = workbook.Sheets[workbook.SheetNames[0]];
+            console.log(ws_data)
+
+            var date = new Date();
+            var moment = require('moment');
+            date = moment(date);
+
+            var new_ws_name = date.format('DD-MM-YYYY');
+            var wb = XLSX.utils.book_new();
+            var ws = { ...sheet_name_list };
+            ws['!ref'] = 'A1:K6';
+            ws["A4"].v = "Ngày " + new_ws_name;
+            ws["A4"].h = "Ngày " + new_ws_name;
+            ws["A4"].w = "Ngày " + new_ws_name;
+            ws["A4"].r = "<t>Ngày " + new_ws_name + "<t>";
+
+            XLSX.utils.sheet_add_aoa(ws, ws_data, { origin: -1 });
+            XLSX.utils.book_append_sheet(wb, ws, new_ws_name);
+
+
+
+            var fileName = "Employee.xlsx";
+            res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
+            res.setHeader('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+            res.send(new Buffer(wbout));
+
+        } catch (error) {
+            res.status(400).json({
+                error: {
+                    message: error.message
+                }
+            })
+        }
+    },
+
     inportItem: async function (req, res, next) {
         return res.json({});
     }

@@ -116,6 +116,7 @@ module.exports = {
             data.somay = req.body.somay;
             data.biensoxe = req.body.biensoxe;
             data.ten = req.body.tenkh;
+            data.manvsuachua=req.body.manvsuachua;
             var makh = req.body.makh;
             console.log("ma khd", makh);
 
@@ -134,7 +135,6 @@ module.exports = {
                     return;
                 }
             }
-
 
             let check = await Abstract.getOne(Bill, { mahoadon: mahoadon });
             if (check) {

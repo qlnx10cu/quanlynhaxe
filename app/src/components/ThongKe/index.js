@@ -9,13 +9,15 @@ import { HuyThanhToan } from '../../API/Bill'
 import { HOST } from '../../Config'
 import { connect } from 'react-redux'
 
-const oneDay = 1000*3600*24;
+const oneDay = 1000 * 3600 * 24;
 
 const ThongKe = (props) => {
 
     let [dateStart, setDateStart] = useState(moment().format("YYYY-MM-DD"));
     let [dateEnd, setDateEnd] = useState(moment().format("YYYY-MM-DD"));
+    let [searchBSX, setSearchBSX] = useState("");
     let [mBills, setBills] = useState([]);
+    let [mBillCurrents, setBillCurrents] = useState([]);
     let [isShowing, setShowing] = useState(false);
     let [mMaHoaDon, setMaHoaDon] = useState("");
     let [loaihoadon, setLoaiHoaDon] = useState(-1);
@@ -59,6 +61,7 @@ const ThongKe = (props) => {
         let end = moment(dateEnd).format("YYYY/MM/DD");
         GetBillTheoNgay(props.token, start, end).then(res => {
             setBills(res.data);
+            setBillCurrents([...res.data]);
             CallApiGetListStaff();
         })
             .catch(err => {
@@ -79,6 +82,24 @@ const ThongKe = (props) => {
         );
     }
 
+    const handleExportEmployee =()=>{
+        let start = moment(dateStart).format("YYYY/MM/DD");
+        let end = moment(dateEnd).format("YYYY/MM/DD");
+        let url = `${HOST}/statistic/bill/employee/export?start=${start}&end=${end}&trangthai=1`;
+        window.open(
+            url,
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    }
+
+    const handleSearchBienSoXe = () => {
+        if(mBillCurrents){
+            console.log(mBillCurrents)
+            const result = mBillCurrents.filter(bill =>searchBSX==""||  bill&&bill.biensoxe&&bill.biensoxe===searchBSX);
+            setBills(result)
+        }
+    }
+
 
     return (
         <div>
@@ -91,7 +112,10 @@ const ThongKe = (props) => {
                     <Input type="date" value={dateEnd} style={{ marginLeft: 10 }} onChange={(e) => setDateEnd(e.target.value)} />
                 </DivFlexRow>
                 <DivFlexRow>
-                    <Button onClick={isLoading ? () => { } : handleExport}>
+                <Button onClick={isLoading ? () => { } : handleExportEmployee}>
+                        {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Xuất khách hàng"}
+                    </Button>
+                    <Button onClick={isLoading ? () => { } : handleExport} style={{ marginLeft: 10 }}>
                         {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Export"}
                     </Button>
                     <Button onClick={isLoading ? () => { } : handleLayDanhSach} style={{ marginLeft: 10 }}>
@@ -100,10 +124,19 @@ const ThongKe = (props) => {
                 </DivFlexRow>
 
             </DivFlexRow>
+            <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                <DivFlexRow style={{ alignItems: 'center' }}>
+                    <label style={{ marginLeft: 10 }}>Biển số xe </label>
+                    <Input type="text" value={searchBSX} style={{ marginLeft: 10 }} onChange={(e) => setSearchBSX(e.target.value)} />
+                    <Button style={{ marginLeft: 10 }} onClick={handleSearchBienSoXe}>Search </Button>
+                </DivFlexRow>
+            </DivFlexRow>
+
             <Table style={{ marginTop: 15 }}>
                 <tbody>
                     <tr>
                         <th>Mã hóa đơn</th>
+                        <th>Biển số xe</th>
                         <th>Tổng tiền</th>
                         <th>Ngày thanh toán</th>
                         <th>Loại hóa đơn</th>
@@ -115,6 +148,7 @@ const ThongKe = (props) => {
                         mBills && mBills.map((item, index) => (
                             <tr key={index}>
                                 <td>{item.mahoadon}</td>
+                                <td>{item.biensoxe}</td>
                                 <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                                 <td>{moment(item.ngaythanhtoan).format("hh:mm DD/MM/YYYY")}</td>
                                 <td>{item.loaihoadon === 0 ? "Sửa chữa" : "Bán lẻ"}</td>
@@ -130,10 +164,10 @@ const ThongKe = (props) => {
                                         Hủy</DelButton>
                                 </td>
                                 <td>
-                                {(moment().valueOf() - moment(item.ngaythanhtoan).valueOf()) <= oneDay ? 
-                                    <Button onClick={() => {
-                                        UpdateHoaDon(item.mahoadon, item.loaihoadon)
-                                    }}>Thay đổi</Button> : null}
+                                    {(moment().valueOf() - moment(item.ngaythanhtoan).valueOf()) <= oneDay ?
+                                        <Button onClick={() => {
+                                            UpdateHoaDon(item.mahoadon, item.loaihoadon)
+                                        }}>Thay đổi</Button> : null}
                                 </td>
                             </tr>
                         ))

@@ -19,7 +19,7 @@ class Customer {
         return "";
     }
     static async getChitiet(param) {
-        let sql = "SELECT mahoadon,ngaythanhtoan,yeucaukhachhang,tuvansuachua,sokm FROM hoadon where makh=? AND trangthai=1 AND loaihoadon=0 order by mahoadon DESC";
+        let sql = "SELECT mahoadon,manvsuachua,ngaythanhtoan,yeucaukhachhang,tuvansuachua,sokm FROM hoadon where makh=? AND trangthai=1 AND loaihoadon=0 order by mahoadon DESC";
         var res = await query(sql, [param]);
         return res;
     }

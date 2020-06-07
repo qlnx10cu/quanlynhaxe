@@ -60,7 +60,8 @@ const PopupBillCHN = (props) => {
             tongtien: parseInt(dongia * soluong) || 0,
             nhacungcap:nhacungcap
         }
-        props.addBillProduct(data);
+        props.addItemToProduct(data,true);
+        // props.addBillProduct(data);
         clearData();
         props.onCloseClick();
     };

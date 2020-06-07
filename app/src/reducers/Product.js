@@ -55,6 +55,7 @@ export default (state = initState , action) => {
             }
         }
         case ADD_BILL_PRODUCT: {
+            console.log("vao day:",state.listBillProduct,action.data )
             return {
                 ...state,
                 listBillProduct:[...state.listBillProduct,action.data]

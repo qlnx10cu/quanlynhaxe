@@ -8,7 +8,7 @@ const XLSX = require('xlsx');
 module.exports = {
     getBill: async function (praram) {
         var param = [];
-        var sql = "select mahoadon,tongtien,ngaythanhtoan,loaihoadon from hoadon where trangthai=1 ";
+        var sql = "select mahoadon,biensoxe,tongtien,ngaythanhtoan,loaihoadon from hoadon where trangthai=1 ";
         if (praram.start) {
             param.push(praram.start);
             sql = sql + "AND DATEDIFF(ngaythanhtoan,?) >= 0 ";
@@ -169,6 +169,23 @@ module.exports = {
         let res = await query(sql);
         let i = 1;
         res = res.map(e => [i++, e.maphutung, e.tentiengviet, e.soluongtonkho, e.vitri,e.giaban_le,'','',e.thanhtien]);
+        return res;
+    },
+    getBillByEmployee: async function (praram) {
+        var param = [];
+        var sql = "select makh,tenkh,biensoxe,sum(tongtien) as tongtien from hoadon where trangthai=1 ";
+        if (praram.start) {
+            param.push(praram.start);
+            sql = sql + "AND DATEDIFF(ngaythanhtoan,?) >= 0 ";
+        }
+        if (praram.end) {
+            param.push(praram.end);
+            sql = sql + "AND DATEDIFF(?,ngaythanhtoan) >= 0 ";
+        }
+        sql = sql + " group by makh,biensoxe,tenkh";
+        let res = await query(sql, param);
+        let i = 1;
+        res = res.map(e => [i++, e.makh, e.tenkh, e.biensoxe, e.tongtien]);
         return res;
     },
 };

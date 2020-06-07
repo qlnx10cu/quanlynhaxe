@@ -85,8 +85,13 @@ class Abstract {
     static async update(ClassTable, paramSetValue, paramWhere) {
         if (!paramSetValue || (!paramWhere && !paramSetValue))
             return null;
+        console.log("update",paramSetValue)
+
         var colSet = ClassTable.getArrayParam(paramSetValue);
         var colWhere = ClassTable.getArrayParam(paramWhere);
+
+        console.log("colSet",colSet)
+
         if (!colSet || (!colWhere && !colSet))
             return null;
         let set = '';

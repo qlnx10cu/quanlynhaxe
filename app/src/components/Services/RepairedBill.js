@@ -14,6 +14,7 @@ import { withRouter } from 'react-router-dom'
 import PopupBillCHN from './PopupBillCHN';
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
 import { GetListSalary } from '../../API/Salary'
+import { addBillProduct } from '../../actions/Product';
 
 const listLoaiXe = [
     "Airblade",
@@ -77,7 +78,8 @@ const RepairedBill = (props) => {
     let [sokm, setSoKM] = useState("");
     let [yeucau, setYeuCau] = useState("");
     let [tuvan, setTuvan] = useState("");
-
+    let [searchValue, setSearchValue] = useState("");
+    let [mDataList, setDataList] = useState([]);
     let [listGiaDichVu, setListGiaDichVu] = useState([]);
 
 
@@ -164,13 +166,27 @@ const RepairedBill = (props) => {
         setTongTienBill(tong);
     }
 
-    const addItemToProduct = (item) => {
+    const addItemToProduct = (item, isUpdate) => {
+
+        var i = 0;
+        for (i = 0; i < props.listBillProduct.length; i++) {
+            if (checkHasItem(item, props.listBillProduct[i])) {
+                break;
+            }
+        }
         var tong = 0;
         props.listBillProduct.forEach(element => {
             tong += element.tongtien;
         });
-        tong += item.tongtien;
-        setTongTienBill(tong);
+
+        if (i == props.listBillProduct.length) {
+            setTongTienBill(tong + item.tongtien);
+            props.addBillProduct(item);
+        }
+        else {
+            let newItem = props.listBillProduct[i];
+            handleChangeSL(parseInt(newItem.soluongphutung) + parseInt(item.soluongphutung), i);
+        }
     }
     const exportBill = () => {
         window.open(
@@ -355,7 +371,7 @@ const RepairedBill = (props) => {
             manv: props.info.ma,
             yeucaukhachhang: yeucau,
             tuvansuachua: tuvan,
-            sokm: sokm?sokm:0
+            sokm: sokm ? sokm : 0
         }
         return data
     }
@@ -398,10 +414,10 @@ const RepairedBill = (props) => {
         setTongTienBill(tong);
     }
 
-    const handleChangeSL = (e, index) => {
+    const handleChangeSL = (value, index) => {
         let newItem = props.listBillProduct[index];
-        if (e.target.value)
-            newItem.soluongphutung = parseInt(e.target.value);
+        if (value && value >= 0)
+            newItem.soluongphutung = parseInt(value);
         else
             newItem.soluongphutung = 1;
         newItem.tongtien = parseInt(newItem.dongia) * parseInt(newItem.soluongphutung) + parseInt(newItem.tiencong);
@@ -411,10 +427,10 @@ const RepairedBill = (props) => {
     }
 
 
-    const handleChangeTienCong = (e, index) => {
+    const handleChangeTienCong = (value, index) => {
         let newItem = props.listBillProduct[index];
-        if (e.target.value)
-            newItem.tiencong = parseInt(e.target.value);
+        if (value && value >= 0)
+            newItem.tiencong = parseInt(value);
         else
             newItem.tiencong = 0;
         newItem.tongtien = parseInt(newItem.dongia) * parseInt(newItem.soluongphutung) + parseInt(newItem.tiencong);
@@ -422,6 +438,88 @@ const RepairedBill = (props) => {
         props.setListBillProduct(newProduct);
         updateTongTienBill(newProduct);
     }
+
+    const _handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleButtonSearch();
+        }
+    };
+
+    const SliceTop20 = (list) => {
+        var arr = list.filter(e => e.soluongtonkho > 0);
+        setDataList(arr.slice(0, 20));
+    };
+    const searchMaPhuTung = (values) => {
+        setSearchValue(values)
+        if (values === "") {
+            SliceTop20(props.listProduct);
+            return;
+        }
+        let product = props.listProduct.filter(function (item) {
+            return ((item.maphutung.toLowerCase()).includes(values.toLowerCase()) ||
+                ((item.tentiengviet.toLowerCase()).includes(values.toLowerCase()))
+            );
+        });
+        if (product.length !== 0) {
+            if (product.length === 1 && product[0].maphutung === values) {
+
+            } else {
+                SliceTop20(product);
+            }
+        }
+    };
+    const checkHasRender = (Search, item) => {
+        let strSearch = Search.toLowerCase();
+        return (item.maphutung != "" && item.maphutung.toLowerCase() == strSearch);
+    };
+
+    const handleButtonSearch = () => {
+        let search = searchValue;
+        let list = props.listProduct.filter(function (item) {
+            return (checkHasRender(search, item));
+        });
+
+        if (!list || list.length == 0) {
+            alert("Không tìm thấy item: " + search)
+            return;
+        }
+        var item = list[0];
+
+
+        if (!item.maphutung || item.maphutung === "") {
+            alert("mã phụ tùng không đúng: " + item.maphutung);
+            return;
+        }
+        if (!item.giaban_le || !item.giaban_le < 0) {
+            alert("phụ tùng không hợp lệ");
+            return;
+        }
+
+        var newData = {
+            key: props.listBillProduct.length + 1,
+            tenphutungvacongviec: item.tentiengviet,
+            maphutung: item.maphutung,
+            dongia: parseInt(item.giaban_le),
+            soluongphutung: 1,
+            tiencong: 0,
+            tongtien: parseInt(item.giaban_le),
+            nhacungcap: "Trung Trang"
+        }
+        addItemToProduct(newData, false);
+        setSearchValue("")
+    };
+
+    const checkHasItem = (sp, item) => {
+        if (sp.tenphutungvacongviec.toLowerCase() == "" || sp.tenphutungvacongviec.toLowerCase() != item.tenphutungvacongviec.toLowerCase())
+            return false;
+        if (sp.maphutung == "" || sp.maphutung.toLowerCase() != item.maphutung.toLowerCase())
+            return false;
+        if (sp.nhacungcap == "" || sp.nhacungcap != 'Trung Trang' || sp.nhacungcap.toLowerCase() != item.nhacungcap.toLowerCase())
+            return false;
+        if (!sp.dongia || sp.dongia < 0 || sp.dongia != item.dongia)
+            return false;
+        return true;
+    };
 
     return (
         <div>
@@ -432,7 +530,7 @@ const RepairedBill = (props) => {
             <DivFlexRow style={{ alignItems: 'center' }}>
                 <DivFlexColumn>
                     <label>Nhân viên sửa chữa: </label>
-                    <Input autocomplete="off" readOnly={isUpdateBill != 0} list="nv_suachua" name="nv_suachua" value={mMaNVSuaChua.value} onChange={(e) => {
+                    <Input autocomplete="off" list="nv_suachua" name="nv_suachua" value={mMaNVSuaChua.value} onChange={(e) => {
                         searchNhanVienSuaChua(e.target.value);
                     }} />
                     <datalist id="nv_suachua">
@@ -493,7 +591,7 @@ const RepairedBill = (props) => {
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Số km: </label>
-                    <Input disabled={isDisableEditInfo} autocomplete="off" value={sokm} type="Number" max={999999} min={0} onChange={(e=>{setSoKM(e.target.value)})} />
+                    <Input disabled={isDisableEditInfo} autocomplete="off" value={sokm} type="Number" max={999999} min={0} onChange={(e => { setSoKM(e.target.value) })} />
                 </DivFlexColumn>
                 <Button disabled={!isDisableEditInfo} onClick={() => setShowHistoryCustomer(true)} style={{ marginLeft: 20, marginTop: 10 }}>
                     Chi tiết
@@ -502,38 +600,53 @@ const RepairedBill = (props) => {
             <DivFlexRow style={{ alignItems: 'center' }}>
                 <DivFlexColumn>
                     <label>Yêu cầu khách hàng: </label>
-                    <Input autocomplete="off" value={yeucau} onChange={(e=>{setYeuCau(e.target.value)})} />
+                    <Input autocomplete="off" value={yeucau} onChange={(e => { setYeuCau(e.target.value) })} />
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Tư vấn Sữa chữa: </label>
-                    <Input autocomplete="off" value={tuvan} onChange={(e=>{setTuvan(e.target.value)})}/>
+                    <Input autocomplete="off" value={tuvan} onChange={(e => { setTuvan(e.target.value) })} />
                 </DivFlexColumn>
             </DivFlexRow>
-            <DivFlexRow style={{ marginTop: 5, marginBottom: 5, justifyContent: 'space-between', alignItems: 'center' }}>
-                <label>Bảng giá phụ tùng: </label>
+            <DivFlexRow style={{ marginTop: 5, marginBottom: 5, alignItems: 'center', justifyContent: 'space-between',}}>
                 {/* {isUpdateBill === 0 ? <div></div> :
                     <Button onClick={exportBill}>
                         Export
                 </Button>
                 } */}
-                <Button onClick={() => {
-                    setShowTienCong(true);
-                    setUpdated(false)
-                }}>
-                    Thêm Tiền Công
+                <DivFlexRow style={{ alignItems: 'center' }}>
+                    <label> Bảng giá phụ tùng: </label>
+                    <Input autoFocus list="browser_search_suachua" onKeyPress={_handleKeyPress} value={searchValue} style={{ width: 250, marginRight: 15 }}
+                        onChange={(e) => searchMaPhuTung(e.target.value)} />
+                    <datalist id="browser_search_suachua">
+                        {mDataList.map((item, index) => (
+                            <option disabled={item.soluongtonkho === 0} key={index}
+                                value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
+                        ))}
+                    </datalist>
+                    <Button onClick={() => {  handleButtonSearch(); }}> 
+                        Tìm Kiếm <i className="fas fa-search" />
+                    </Button>
+                </DivFlexRow>
+                <DivFlexRow style={{ alignItems: 'center', float:'right' }}>
+                    <Button onClick={() => {
+                        setShowTienCong(true);
+                        setUpdated(false)
+                    }}>
+                        Thêm Tiền Công
                 </Button>
-                <Button onClick={() => {
-                    setShowCuaHangNgoai(true);
-                    setUpdated(false)
-                }}>
-                    Thêm của hàng ngoài
+                    <Button onClick={() => {
+                        setShowCuaHangNgoai(true);
+                        setUpdated(false)
+                    }}>
+                        Thêm của hàng ngoài
                 </Button>
-                <Button onClick={() => {
-                    setShowNewBill(true)
-                    setUpdated(false)
-                }}>
-                    Thêm mới
+                    <Button onClick={() => {
+                        setShowNewBill(true)
+                        setUpdated(false)
+                    }}>
+                        Thêm mới
                 </Button>
+                </DivFlexRow>
             </DivFlexRow>
             <Table>
                 <tbody>
@@ -555,10 +668,10 @@ const RepairedBill = (props) => {
                             <td>{item.tenphutungvacongviec}</td>
                             <td>{item.maphutung}</td>
                             <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td><input type="number" onChange={(e) => handleChangeSL(e, index)} value={props.listBillProduct[index].soluongphutung} min="1" /></td>
+                            <td><input type="number" onChange={(e) => handleChangeSL(e.target.value, index)} value={props.listBillProduct[index].soluongphutung} min="1" /></td>
                             <td>{(item.dongia * item.soluongphutung).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                             <td>
-                                <input list="tien_cong_bill" type="number" onChange={(e) => handleChangeTienCong(e, index)} value={props.listBillProduct[index].tiencong} min="0" />
+                                <input list="tien_cong_bill" type="number" onChange={(e) => handleChangeTienCong(e.target.value, index)} value={props.listBillProduct[index].tiencong} min="0" />
                                 <datalist id="tien_cong_bill">
                                     {listGiaDichVu.map((item, index) => (
                                         <option key={index} value={item.tien} >{item.ten}</option>
@@ -633,6 +746,7 @@ const RepairedBill = (props) => {
 const mapState = (state) => ({
     token: state.Authenticate.token,
     listBillProduct: state.Product.listBillProduct,
+    listProduct: state.Product.listProduct,
     info: state.Authenticate.info
 })
 const mapDispatch = (dispatch) => ({
@@ -640,6 +754,7 @@ const mapDispatch = (dispatch) => ({
     deleteItemBillProduct: (key) => { console.log(key); dispatch(deleteItemBillProduct(key)) },
     deleteItemBillProductMa: (key) => { console.log(key); dispatch(deleteItemBillProductMa(key)) },
     setListBillProduct: (arr) => { dispatch(setListBillProduct(arr)) },
+    addBillProduct: (data) => { dispatch(addBillProduct(data)) },
     updateBillProduct: (data, index) => { dispatch(updateBillProduct(data, index)) }
 })
 export default withRouter(connect(mapState, mapDispatch)(RepairedBill));

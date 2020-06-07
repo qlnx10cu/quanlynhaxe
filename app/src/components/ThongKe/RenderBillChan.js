@@ -82,8 +82,12 @@ const RenderBillChan = ({
                 </DivFlexRow>
                 <DivFlexRow>
                     <DivFlexColumn>
+                        <label>Nhân Viên Sữa Chữa: </label>
+                        <Input readOnly autocomplete="off" value={data.tennvsuachua} />
+                    </DivFlexColumn>
+                    <DivFlexColumn>
                         <label>Yêu Cầu khách hàng: </label>
-                        <Input readOnly autocomplete="off" value={data.yeucaukhachhang} />
+                        <Input readOnly autocomplete="off" value={data.yeucaukhachhang} style={{ marginLeft: 20 }} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ marginLeft: 20 }}>
                         <label>Tư vấn sửa chữa: </label>

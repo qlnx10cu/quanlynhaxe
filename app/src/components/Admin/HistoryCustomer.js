@@ -13,7 +13,6 @@ const RenderTableDetail = ({ list }) => {
 
     let [isShowChitiet, setShowChitiet] = useState(false);
     let [mMaHoaDon, setMaHoaDon] = useState("");
-
     return (
         <React.Fragment>
             <Table>
@@ -22,6 +21,7 @@ const RenderTableDetail = ({ list }) => {
                         <th>STT</th>
                         <th>Ngày</th>
                         <th>Mã Hóa Đơn</th>
+                        <th>Nhân viên sữa chữa</th>
                         <th>Yêu cầu khách hàng</th>
                         <th>Tư vấn sữa chữa</th>
                         <th></th>
@@ -32,6 +32,7 @@ const RenderTableDetail = ({ list }) => {
                             <td>{index + 1}</td>
                             <td>{item.ngaythanhtoan}</td>
                             <td>{item.mahoadon}</td>
+                            <td>{item.tennvsuachua}</td>
                             <td>{item.yeucaukhachhang}</td>
                             <td>{item.tuvansuachua}</td>
                             <td><Button onClick={() => {

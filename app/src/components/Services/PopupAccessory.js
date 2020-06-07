@@ -85,12 +85,12 @@ const PopupAccessory = (props) => {
             maphutung:mMaPhuTung,
             dongia:parseInt(mDonGia.value)||0,
             soluongphutung:parseInt(mSoLuong.value)||0,
-            tiencong:parseInt(mTienCong.value)||0,
+            tiencong:0,
             tongtien:(parseInt(mDonGia.value) || 0)*(parseInt(mSoLuong.value)||0)+(parseInt(mTienCong.value)||0),
             nhacungcap:"Trung Trang"
         }
-        props.addItemToProduct(data);
-        props.addBillProduct(data);
+        props.addItemToProduct(data,true);
+        // props.addBillProduct(data);
         mTenCongViec.setValue("");
         setMaPhuTung("");
         mDonGia.setValue("");
@@ -142,7 +142,7 @@ const PopupAccessory = (props) => {
                         <label>Số lượng: </label>
                         <Input type="Number" max={mTonKho.value} min={0} {...mSoLuong} />
                     </DivFlexColumn>
-                    <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
+                    {/* <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Tiền công: </label>
                         <Input list="tien_cong" name="tien_cong" type="number" {...mTienCong} />
                         <datalist id="tien_cong">
@@ -150,7 +150,7 @@ const PopupAccessory = (props) => {
                                 <option key={index} value={item.tien} >{item.ten}</option>
                             ))}
                         </datalist>
-                    </DivFlexColumn>
+                    </DivFlexColumn> */}
                 </DivFlexRow>
 
                 <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: 'flex-end' }}>

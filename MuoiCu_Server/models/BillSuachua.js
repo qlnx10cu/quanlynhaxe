@@ -44,7 +44,18 @@ class BillChan {
             return null;
         sql = "select * from khachhang where ma = ?";
         var resKH = await query(sql, [res[0].makh]);
+
+
         result = Object.assign(res[0], resKH[0]);
+
+        if(res[0].manvsuachua){
+            sql="select * from nhanvien where ma= ?"
+            var resNV = await query(sql, [res[0].manvsuachua]);
+            if(resNV){
+                result.tennvsuachua=resNV[0].ten
+            }
+        }
+      
         sql = "select * from chitiethoadonsuachua where mahoadon = ? ";
         res = await query(sql, param);
         result["chitiet"] = res;

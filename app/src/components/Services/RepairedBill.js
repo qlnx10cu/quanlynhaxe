@@ -593,7 +593,7 @@ const RepairedBill = (props) => {
                     <label>Số km: </label>
                     <Input disabled={isDisableEditInfo} autocomplete="off" value={sokm} type="Number" max={999999} min={0} onChange={(e => { setSoKM(e.target.value) })} />
                 </DivFlexColumn>
-                <Button disabled={!isDisableEditInfo} onClick={() => setShowHistoryCustomer(true)} style={{ marginLeft: 20, marginTop: 10 }}>
+                <Button disabled={isUpdateBill == 0} onClick={() => setShowHistoryCustomer(true)} style={{ marginLeft: 20, marginTop: 10 }}>
                     Chi tiết
                 </Button>
             </DivFlexRow>

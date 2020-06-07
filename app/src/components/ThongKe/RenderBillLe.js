@@ -56,10 +56,20 @@ const RenderBillLe = ({
     return (
         <div>
             {data && <React.Fragment>
+                <DivFlexRow>
                 <DivFlexColumn>
                     <label>Tên khách hàng: </label>
                     <Input readOnly autocomplete="off" value={data.tenkh} />
                 </DivFlexColumn>
+                <DivFlexColumn style={{ marginLeft: 10 }}>
+                    <label>Số điện thoại: </label>
+                    <Input readOnly autocomplete="off" value={data.sodienthoai} />
+                </DivFlexColumn>
+                <DivFlexColumn style={{ marginLeft: 10 }}>
+                    <label>Địa chỉ: </label>
+                    <Input readOnly autocomplete="off" value={data.diachi} />
+                </DivFlexColumn>
+                </DivFlexRow>
                 <DivFlexRow style={{ marginTop: 10 }}>
                     <DivFlexColumn>
                         <label>Ngày bán: </label>

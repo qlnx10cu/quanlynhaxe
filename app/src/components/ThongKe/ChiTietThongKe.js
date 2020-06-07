@@ -8,7 +8,7 @@ import { GetListStaff } from '../../API/Staffs'
 const RenderChiTietNhanVien = ({ staff }) => {
     return (
         <React.Fragment>
-            <h3> Nhân viên bán hàng : {staff ? staff.ten : <h3></h3>}</h3>
+            <h3> Nhân viên bán hàng : {staff ? staff.ten : <div></div>}</h3>
         </React.Fragment>
     )
 }

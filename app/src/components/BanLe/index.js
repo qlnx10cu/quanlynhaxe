@@ -16,7 +16,9 @@ import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
 const BanLe = (props) => {
 
     let mCustomerName = lib.handleInput("");
+    let mDiaChi = lib.handleInput("");
     let [makhachhang, setMaKhachHang] = useState("");
+    let [sodienthoai, setSoDienThoai] = useState("");
     let [mProducts, setProducts] = useState([]);
     let [mHangNgoais, setHangNgoais] = useState([]);
     let [isShowNewProduct, setNewProduct] = useState(false);
@@ -199,6 +201,7 @@ const BanLe = (props) => {
 
         let data = {
             manv: props.info.ma,
+            makh: makhachhang,
             tenkh: mCustomerName.value,
             tongtien: tongtien,
             chitiet: chitiet,
@@ -254,12 +257,36 @@ const BanLe = (props) => {
         setMaKhachHang(e.target.value);
         let kq = null;
         kq = listCustomer.find(function (item) {
-            return item.ma === parseInt(e.target.value)
+            return item.ma && item.ma === parseInt(e.target.value)
         });
         if (kq) {
             mCustomerName.setValue(kq.ten);
+            mDiaChi.setValue(kq.diachi);
+            setSoDienThoai(kq.sodienthoai);
+        } else {
+            mCustomerName.setValue("");
+            mDiaChi.setValue("");
+            setSoDienThoai("");
         }
     };
+
+    const handleChangeSDT = (e) => {
+        setSoDienThoai(e.target.value);
+        let kq = null;
+        kq = listCustomer.find(function (item) {
+            return item.sodienthoai && item.sodienthoai === e.target.value
+        });
+        if (kq) {
+            mCustomerName.setValue(kq.ten);
+            mDiaChi.setValue(kq.diachi);
+            setMaKhachHang(kq.ma);
+        } else {
+            mCustomerName.setValue("");
+            mDiaChi.setValue("");
+            setMaKhachHang("");
+        }
+    };
+
     const updateChangSL = (index, soluong) => {
         let newItem = mProducts[index];
         newItem.soluong = soluong;
@@ -360,7 +387,7 @@ const BanLe = (props) => {
         });
         if (product.length !== 0) {
             if (product.length === 1 && product[0].maphutung === values) {
-                
+
             } else {
                 SliceTop20(product);
             }
@@ -373,7 +400,7 @@ const BanLe = (props) => {
             <DivFlexRow>
                 <DivFlexColumn>
                     <label>Tên khách hàng: </label>
-                    <Input autocomplete="off" {...mCustomerName} />
+                    <Input autocomplete="off" {...mCustomerName} readOnly/>
                 </DivFlexColumn>
                 <DivFlexColumn style={{ marginLeft: 20 }}>
                     <label>Mã khách hàng: </label>
@@ -383,6 +410,20 @@ const BanLe = (props) => {
                             <option key={index} value={item.ma} >{item.ten}</option>
                         ))}
                     </datalist>
+                </DivFlexColumn>
+                <DivFlexColumn style={{ marginLeft: 20 }}>
+                    <label>Số điện thoại: </label>
+                    <Input list="sodienthoai" name="sodienthoai" autocomplete="off" value={sodienthoai} onChange={(e) => handleChangeSDT(e)} />
+                    <datalist id="sodienthoai">
+                        {listCustomer.map((item, index) => (
+                            <option key={index} value={item.sodienthoai} >{item.ten}</option>
+                        ))}
+                    </datalist>
+                </DivFlexColumn>
+
+                <DivFlexColumn style={{ marginLeft: 20 }} >
+                    <label>Địa chỉ: </label>
+                    <Input autocomplete="off" {...mDiaChi} width='400px' readOnly/>
                 </DivFlexColumn>
             </DivFlexRow>
             <DivFlexRow style={{ marginTop: 5, marginBottom: 5, justifyContent: 'space-between', alignItems: 'center' }}>
@@ -398,15 +439,15 @@ const BanLe = (props) => {
                 <Input autoFocus list="browser_search" onKeyPress={_handleKeyPress} value={searchValue} style={{ width: 250, marginRight: 15 }}
                     onChange={(e) => searchMaPhuTung(e.target.value)} />
                 <datalist id="browser_search">
-                        {mDataList.map((item, index) => (
-                            <option disabled={item.soluongtonkho === 0} key={index}
-                                value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
-                        ))}
-                    </datalist>
+                    {mDataList.map((item, index) => (
+                        <option disabled={item.soluongtonkho === 0} key={index}
+                            value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
+                    ))}
+                </datalist>
                 <Button onClick={() => {
                     handleButtonSearch();
                 }}>
-                
+
                     Tìm Kiếm
                         <i className="fas fa-search" />
                 </Button>

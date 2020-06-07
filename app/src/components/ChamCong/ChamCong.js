@@ -78,8 +78,8 @@ export default () => {
                     <tr>
                         <th>Nhân viên</th>
                         <th>Tiền công</th>
-                        <th>VSKP</th>
-                        <th>VSBĐ</th>
+                        {/* <th>VSKP</th>
+                        <th>VSBĐ</th> */}
                         <th>Ghi chú</th>
                     </tr>
                     {
@@ -87,8 +87,8 @@ export default () => {
                             <tr key={index}>
                                 <td>{e.ten || ''}</td>
                                 <td>{(e.tiencong || 0).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                                <td><NewInput type='number' min={0} value={arr[index]['vskp']} onChange={(e) => handleTextInput(index, 'vskp', e.target.value)} /></td>
-                                <td><NewInput type='number' min={0} value={arr[index]['vsbd']} onChange={(e) => handleTextInput(index, 'vsbd', e.target.value)} /></td>
+                                {/* <td><NewInput type='number' min={0} value={arr[index]['vskp']} onChange={(e) => handleTextInput(index, 'vskp', e.target.value)} /></td>
+                                <td><NewInput type='number' min={0} value={arr[index]['vsbd']} onChange={(e) => handleTextInput(index, 'vsbd', e.target.value)} /></td> */}
                                 <td><NewInput value={arr[index].ghichu ? arr[index].ghichu : ''} onChange={(e) => handleTextInput(index, 'ghichu', e.target.value)} /></td>
                             </tr>
                         ))
@@ -97,8 +97,8 @@ export default () => {
                         <tr>
                             <td>Tổng</td>
                             <td>{arr.reduce((a, b) => a + (b.tiencong || 0), 0).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td>{arr.reduce((a, b) => a + (b.vskp || 0), 0).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td>{arr.reduce((a, b) => a + (b.vsbd || 0), 0).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            {/* <td>{arr.reduce((a, b) => a + (b.vskp || 0), 0).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td>{arr.reduce((a, b) => a + (b.vsbd || 0), 0).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td> */}
                             <td></td>
                         </tr>
                     }

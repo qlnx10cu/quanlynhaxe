@@ -36,6 +36,15 @@ class BillLe {
         var result = [];
         var res = await query(sql, param);
         result = res[0];
+        if(result&&result.makh){
+            sql="select * from khachhang where ma=?";
+            res = await query(sql, [result.makh]);
+            if(res&&res[0]){
+                result.diachi=res[0].diachi;
+                result.sodienthoai=res[0].sodienthoai;
+            }
+        }
+
         sql = "select * from chitiethoadonle ct where ct.mahoadon=?";
         res = await query(sql, param);
         result["chitiet"] = res;

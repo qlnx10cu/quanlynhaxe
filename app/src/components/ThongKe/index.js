@@ -1,15 +1,111 @@
 import React, { useState } from 'react';
-import { DivFlexRow, Button, Input, Table, DelButton } from '../../styles'
+import { DivFlexRow, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton } from '../../styles'
 import moment from 'moment'
 import { GetBillTheoNgay } from "../../API/ThongKeAPI"
 import ChiTietThongKe from './ChiTietThongKe'
 import { GetListStaff } from '../../API/Staffs'
-import { HuyThanhToan } from '../../API/Bill'
+import { HuyThanhToan, CheckUpdateBill } from '../../API/Bill'
 
 import { HOST } from '../../Config'
 import { connect } from 'react-redux'
 
 const oneDay = 1000 * 3600 * 24;
+
+
+const AlertWarrper = (props) => {
+    return (
+        <Modal className={props.isShowing ? "active" : ""}>
+            <ModalContent style={{ width: '50%' }}>
+                <div style={{ paddingTop: 3, paddingBottom: 3 }}>
+                    <CloseButton onClick={() => props.onCloseClick()}>&times;</CloseButton>
+                    <h2> </h2>
+                </div>
+                <h3 style={{ textAlign: 'center' }}>{props.mess}</h3>
+            </ModalContent>
+        </Modal>
+    );
+}
+
+
+const ConfirmHoaDon = (props) => {
+    let [maBarcode, setMaBarcode] = useState("");
+    let [isShowAlert, setShowAlert] = useState(false);
+    let [messAlert, setMessAlert] = useState("");
+    const showAlert = (mes) => {
+        setShowAlert(true);
+        setMessAlert(mes)
+    }
+
+    const UpdateHoaDon = (maHoaDon, loai) => {
+        var date = new Date();
+        if (loai == 0) {
+            let url = `/services/repairedbill/updatebill?mahoadon=${maHoaDon}&token=${date.getTime()}`;
+            window.open(
+                url,
+                '_blank' // <- This is what makes it open in a new window.
+            );
+        }
+        if (loai == 1) {
+            let url = `/banle?mahoadon=${maHoaDon}&token=${date.getTime()}`;
+            window.open(
+                url,
+                '_blank' // <- This is what makes it open in a new window.
+            );
+        }
+    }
+
+    const confirmBarCodeByServer = () => {
+        if (!maBarcode) {
+            showAlert("vui lòng nhập mã code");
+            return;
+        }
+
+        CheckUpdateBill(props.token, { ma: maBarcode, mahoadon: props.mahoadon }).then(res => {
+            if (res && res.data && res.data.error && res.data.error >= 1) {
+
+                UpdateHoaDon(props.mahoadon, props.loaihoadon)
+            } else {
+                showAlert("Mã code không đúng, vui lòng nhập lại")
+            }
+        }).catch(err => {
+            showAlert("Lỗi : " + err.message)
+        })
+    }
+
+    const _handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            confirmBarCodeByServer();
+        }
+    };
+    return (
+        <Modal className={props.isShowing ? "active" : ""}>
+            <ModalContent style={{ width: '90%' }}>
+                <div style={{ paddingTop: 3, paddingBottom: 3 }}>
+                    <CloseButton onClick={() => props.onCloseClick()}>&times;</CloseButton>
+                    <h2> </h2>
+                </div>
+                <h3 style={{ textAlign: 'center' }}>HEAD TRUNG TRANG</h3>
+                <h4 style={{ textAlign: 'center' }}>612/31B Trần Hưng Đạo, phường Bình Khánh, TP Long Xuyên, An Giang</h4>
+                <h5 style={{ textAlign: 'center' }}> Bán hàng: 02963 603 828 - Phụ tùng: 02963 603 826 - Dịch vụ: 02963 957 669</h5>
+                <DivFlexRow style={{ alignItems: 'center', textAlign: 'center' }}>
+                    <label>Nhập barcode: </label>
+                    <Input type="password" autocomplete="off" value={maBarcode} onKeyPress={_handleKeyPress} style={{ marginLeft: 10 }} onChange={(e) => setMaBarcode(e.target.value)} />
+                    <Button style={{ marginLeft: 10 }} onClick={() => {
+                        confirmBarCodeByServer();
+                    }}>Thay đổi</Button>
+                </DivFlexRow>
+                <AlertWarrper
+                    isShowing={isShowAlert}
+                    mess={messAlert}
+                    onCloseClick={() => setShowAlert(false)}></AlertWarrper>
+            </ModalContent>
+        </Modal>
+
+
+    );
+}
+
+
 
 const ThongKe = (props) => {
 
@@ -19,8 +115,11 @@ const ThongKe = (props) => {
     let [mBills, setBills] = useState([]);
     let [mBillCurrents, setBillCurrents] = useState([]);
     let [isShowing, setShowing] = useState(false);
+    let [isShowingConfirm, setShowingConfirm] = useState(false);
+
+
     let [mMaHoaDon, setMaHoaDon] = useState("");
-    let [loaihoadon, setLoaiHoaDon] = useState(-1);
+    let [loaihoadon, setLoaiHoaDon] = useState("");
     let [isLoading, setLoading] = useState(false);
     let [listStaff, setListStaff] = useState([]);
 
@@ -39,22 +138,7 @@ const ThongKe = (props) => {
             alert("Lỗi hủy hóa đpm7")
         })
     }
-    const UpdateHoaDon = (maHoaDon, loai) => {
-        if (loai == 0) {
-            let url = `/services/repairedbill/updatebill/${maHoaDon}`;
-            window.open(
-                url,
-                '_blank' // <- This is what makes it open in a new window.
-            );
-        }
-        if (loai == 1) {
-            let url = `/banle/${maHoaDon}`;
-            window.open(
-                url,
-                '_blank' // <- This is what makes it open in a new window.
-            );
-        }
-    }
+
     const handleLayDanhSach = () => {
         setLoading(true)
         let start = moment(dateStart).format("YYYY/MM/DD");
@@ -82,7 +166,7 @@ const ThongKe = (props) => {
         );
     }
 
-    const handleExportEmployee =()=>{
+    const handleExportEmployee = () => {
         let start = moment(dateStart).format("YYYY/MM/DD");
         let end = moment(dateEnd).format("YYYY/MM/DD");
         let url = `${HOST}/statistic/bill/employee/export?start=${start}&end=${end}&trangthai=1`;
@@ -93,9 +177,9 @@ const ThongKe = (props) => {
     }
 
     const handleSearchBienSoXe = () => {
-        if(mBillCurrents){
+        if (mBillCurrents) {
             console.log(mBillCurrents)
-            const result = mBillCurrents.filter(bill =>searchBSX==""||  bill&&bill.biensoxe&&bill.biensoxe===searchBSX);
+            const result = mBillCurrents.filter(bill => searchBSX == "" || bill && bill.biensoxe && bill.biensoxe === searchBSX);
             setBills(result)
         }
     }
@@ -112,7 +196,7 @@ const ThongKe = (props) => {
                     <Input type="date" value={dateEnd} style={{ marginLeft: 10 }} onChange={(e) => setDateEnd(e.target.value)} />
                 </DivFlexRow>
                 <DivFlexRow>
-                <Button onClick={isLoading ? () => { } : handleExportEmployee}>
+                    <Button onClick={isLoading ? () => { } : handleExportEmployee}>
                         {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Xuất khách hàng"}
                     </Button>
                     <Button onClick={isLoading ? () => { } : handleExport} style={{ marginLeft: 10 }}>
@@ -166,7 +250,10 @@ const ThongKe = (props) => {
                                 <td>
                                     {(moment().valueOf() - moment(item.ngaythanhtoan).valueOf()) <= oneDay ?
                                         <Button onClick={() => {
-                                            UpdateHoaDon(item.mahoadon, item.loaihoadon)
+                                            setMaHoaDon(item.mahoadon)
+                                            setShowingConfirm(true);
+                                            setLoaiHoaDon(item.loaihoadon);
+                                            // UpdateHoaDon(item.mahoadon, item.loaihoadon)
                                         }}>Thay đổi</Button> : null}
                                 </td>
                             </tr>
@@ -174,6 +261,14 @@ const ThongKe = (props) => {
                     }
                 </tbody>
             </Table>
+            <ConfirmHoaDon
+                isShowing={isShowingConfirm}
+                onCloseClick={() => setShowingConfirm(false)}
+                mahoadon={mMaHoaDon}
+                token={props.token}
+                loaihoadon={loaihoadon}
+            />
+
             <ChiTietThongKe
                 isShowing={isShowing}
                 onCloseClick={() => setShowing(false)}

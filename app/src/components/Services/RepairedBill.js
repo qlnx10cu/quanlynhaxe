@@ -99,20 +99,54 @@ const RepairedBill = (props) => {
         })
     }, [])
 
+    const getQueryParams = (url) => {
+        let queryParams = {};
+        var tmp = url.substring(url.lastIndexOf('?') + 1, url.length);
+        if (tmp == "")
+            return queryParams;
+        let params = tmp.split('&');
+        for (var i = 0; i < params.length; i++) {
+            var pair = params[i].split('=');
+            var value = pair.lenght == 0 ? "" : pair[1];
+            queryParams[pair[0]] = decodeURIComponent(value);
+        }
+        return queryParams;
+    };
+    const checkTokenDateTime = (token) => {
+        var dateCurrent = new Date();
+        var tokenCheck = 0;
+        try {
+            tokenCheck = parseInt(token);
+        } catch (e) {
+            return false;
+        }
+        if (dateCurrent.getTime() < tokenCheck || dateCurrent.getTime() - tokenCheck >= 3600000) {
+            return false;
+        }
+        return true;
+    }
+
+
     useEffect(() => {
         let pathname = window.location.href;
         if (pathname.endsWith("/"))
             pathname = pathname.substring(0, pathname.length - 1);
         if (pathname.indexOf("services/repairedbill/updatebill") !== -1) {
-            let tmp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length);
-            if (tmp == "" || tmp.length != 9) {
+            var queryParams = getQueryParams(window.location.href);
+            if (!queryParams || !queryParams.mahoadon || !queryParams.token) {
                 alert("Đường dẫn không đúng");
-                window.location.href = "/thongke";
+                window.close()
                 return;
             }
+            if (!checkTokenDateTime(queryParams.token)) {
+                alert("Update đã hết hiệu lực, vui lòng làm lại");
+                window.close()
+                return;
+            }
+
             setUpdateBill(3);
-            setMaHoaDon(tmp)
-            showHoaDon(tmp);
+            setMaHoaDon(queryParams.mahoadon)
+            showHoaDon(queryParams.mahoadon);
             return;
         }
 
@@ -607,7 +641,7 @@ const RepairedBill = (props) => {
                     <Input autocomplete="off" value={tuvan} onChange={(e => { setTuvan(e.target.value) })} />
                 </DivFlexColumn>
             </DivFlexRow>
-            <DivFlexRow style={{ marginTop: 5, marginBottom: 5, alignItems: 'center', justifyContent: 'space-between',}}>
+            <DivFlexRow style={{ marginTop: 5, marginBottom: 5, alignItems: 'center', justifyContent: 'space-between', }}>
                 {/* {isUpdateBill === 0 ? <div></div> :
                     <Button onClick={exportBill}>
                         Export
@@ -623,11 +657,11 @@ const RepairedBill = (props) => {
                                 value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
                         ))}
                     </datalist>
-                    <Button onClick={() => {  handleButtonSearch(); }}> 
+                    <Button onClick={() => { handleButtonSearch(); }}>
                         Tìm Kiếm <i className="fas fa-search" />
                     </Button>
                 </DivFlexRow>
-                <DivFlexRow style={{ alignItems: 'center', float:'right' }}>
+                <DivFlexRow style={{ alignItems: 'center', float: 'right' }}>
                     <Button onClick={() => {
                         setShowTienCong(true);
                         setUpdated(false)

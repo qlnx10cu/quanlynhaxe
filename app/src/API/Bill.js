@@ -15,6 +15,15 @@ export const GetCuaHangNgoai = (token) => {
     }
     return axios.get(url,{headers})
 }
+
+export const CheckUpdateBill = (token, data) => {
+    let url = `${HOST}/bill/checkupdate`;
+    let headers = {
+        'Authorization': 'Bearer ' + token
+    }
+    return axios.post(url,data,{headers})
+}
+
 export const UpdateBillBanLe = (token, data) => {
     let url = `${HOST}/billle/mahoadon/${data.mahoadon}`;
     let headers = {

@@ -8,6 +8,7 @@ router.put('/mahoadon/:mahoadon/thanhtoan', Bill.thanhtoan);
 // router.post('/', Bill.add);
 // router.put('/mahoadon/:mahoadon', Bill.update);
 router.delete('/mahoadon/:mahoadon', Bill.delete);
+router.post("/checkupdate", Bill.checkupdate)
 
 
 module.exports = router;

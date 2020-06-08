@@ -2,6 +2,7 @@ const Bill = require("../models/Bill");
 const BillSuachua = require("../models/BillSuachua");
 const AbstractTwo = require("../models/AbstractTwo");
 const Abstract = require('../models/Abstract');
+const Option = require("../models/Option")
 const librespone = require("../lib/respone");
 
 module.exports = {
@@ -70,4 +71,16 @@ module.exports = {
             librespone.error(req, res, error.message);
         }
     },
+    checkupdate: async function (req, res, next) {
+        try {
+            let check = await Option.getValue("barcode");
+            if (check && check.value && check.value == req.body.ma) {
+                res.json({ error: 1 });
+            }
+            else
+                res.json({ error: -1 });
+        } catch (error) {
+            librespone.error(req, res, error.message);
+        }
+    }
 }

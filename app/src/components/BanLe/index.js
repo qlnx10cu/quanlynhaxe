@@ -35,21 +35,37 @@ const BanLe = (props) => {
     let [isShowChitiet, setShowChitiet] = useState(false);
     let [mMaHoaDon, setMaHoaDon] = useState("");
 
+    const getQueryParams = (url) => {
+        let queryParams = {};
+        var tmp = url.substring(url.lastIndexOf('?') + 1, url.length);
+        if (tmp == "")
+            return queryParams;
+        let params = tmp.split('&');
+        for (var i = 0; i < params.length; i++) {
+            var pair = params[i].split('=');
+            var value = pair.lenght == 0 ? "" : pair[1];
+            queryParams[pair[0]] = decodeURIComponent(value);
+        }
+        return queryParams;
+    };
+    const checkTokenDateTime = (token) => {
+        var dateCurrent = new Date();
+        var tokenCheck = 0;
+        try {
+            tokenCheck = parseInt(token);
+        } catch (e) {
+            return false;
+        }
+        if (dateCurrent.getTime() < tokenCheck || dateCurrent.getTime() - tokenCheck >= 3600000) {
+            return false;
+        }
+        return true;
+    }
+
 
     useEffect(() => {
         clearAll();
-        GetListCuaHangNgoai(props.token).then(res => {
-            setCuaHangNgoai(res.data);
-        });
-        GetlistCustomer(props.token).then(res => {
-            setListCustomer(res.data);
-        })
-            .catch(err => {
-                alert("Không thể lấy danh sách khách hàng")
-            })
-    }, [])
 
-    useEffect(() => {
         let pathname = window.location.href;
         if (pathname.endsWith("/"))
             pathname = pathname.substring(0, pathname.length - 1);
@@ -57,16 +73,30 @@ const BanLe = (props) => {
             setLoai(false)
         }
         else {
-            let tmp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length);
-            if (tmp == "" || tmp.length != 9) {
-                setLoai(false)
+            var queryParams = getQueryParams(window.location.href);
+            if (!queryParams || !queryParams.mahoadon || !queryParams.token) {
+                alert("Đường dẫn không đúng");
+                window.close()
+                return;
             }
-            else {
-                setmahoadonUpdate(tmp)
-                setLoai(true)
-                getBill(tmp)
+            if (!checkTokenDateTime(queryParams.token)) {
+                alert("Update đã hết hiệu lực, vui lòng làm lại");
+                window.close()
+                return;
             }
+            setmahoadonUpdate(queryParams.mahoadon)
+            setLoai(true)
+            getBill(queryParams.mahoadon)
         }
+
+        GetListCuaHangNgoai(props.token).then(res => {
+            setCuaHangNgoai(res.data);
+        });
+        GetlistCustomer(props.token).then(res => {
+            setListCustomer(res.data);
+        }).catch(err => {
+            alert("Không thể lấy danh sách khách hàng")
+        })
 
     }, []);
     const getBill = (mahoadon) => {
@@ -78,10 +108,10 @@ const BanLe = (props) => {
             if (data.tenkh) {
                 mCustomerName.setValue(data.tenkh)
             }
-            if(data.sodienthoai){
+            if (data.sodienthoai) {
                 setSoDienThoai(data.sodienthoai);
             }
-            if(data.diachi){
+            if (data.diachi) {
                 mDiaChi.setValue(data.diachi);
             }
             var chitiet = [...data.chitiet]
@@ -90,7 +120,6 @@ const BanLe = (props) => {
                 newItem.tencongviec = newItem.tenphutung
                 newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
             }
-            console.log("day data", data);
             setTongTien(data.tongtien);
             setProducts(chitiet)
 
@@ -429,7 +458,7 @@ const BanLe = (props) => {
 
                 <DivFlexColumn style={{ marginLeft: 20 }} >
                     <label>Địa chỉ: </label>
-                    <Input autocomplete="off" {...mDiaChi} width='400px' readOnly/>
+                    <Input autocomplete="off" {...mDiaChi} width='400px' readOnly />
                 </DivFlexColumn>
             </DivFlexRow>
             <DivFlexRow style={{ marginTop: 5, marginBottom: 5, justifyContent: 'space-between', alignItems: 'center' }}>

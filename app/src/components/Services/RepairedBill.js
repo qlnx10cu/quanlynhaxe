@@ -15,6 +15,9 @@ import PopupBillCHN from './PopupBillCHN';
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
 import { GetListSalary } from '../../API/Salary'
 import { addBillProduct } from '../../actions/Product';
+import Loading from "../Loading";
+import AlertWarrper from '../Warrper/AlertWarrper';
+import { alert, error, setLoading } from "../../actions/App";
 
 const listLoaiXe = [
     "Airblade",
@@ -134,12 +137,12 @@ const RepairedBill = (props) => {
         if (pathname.indexOf("services/repairedbill/updatebill") !== -1) {
             var queryParams = getQueryParams(window.location.href);
             if (!queryParams || !queryParams.mahoadon || !queryParams.token) {
-                alert("Đường dẫn không đúng");
+                props.alert("Đường dẫn không đúng");
                 window.close()
                 return;
             }
             if (!checkTokenDateTime(queryParams.token)) {
-                alert("Update đã hết hiệu lực, vui lòng làm lại");
+                props.alert("Update đã hết hiệu lực, vui lòng làm lại");
                 window.close()
                 return;
             }
@@ -245,7 +248,7 @@ const RepairedBill = (props) => {
             setSoKM(res.data.sokm);
         })
             .catch(err => {
-                alert("Không lấy được hóa đơn.")
+                props.alert("Không lấy được hóa đơn.")
             })
     }
     const setCustomer = (lbs, values) => {
@@ -317,10 +320,10 @@ const RepairedBill = (props) => {
         SaveBill(props.token, data).then(Response => {
             props.deleteBillProduct();
             props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon, biensoxe: bsx });
-            alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.data.mahoadon);
+            props.alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.data.mahoadon);
             props.history.goBack();
         }).catch(err => {
-            alert(err)
+            props.error("Không thể lưu phiếu sữa chưa: ");
             console.log(err);
         })
 
@@ -330,10 +333,11 @@ const RepairedBill = (props) => {
             HuyThanhToan(props.token, mMaHoaDon).then(res => {
                 props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
                 setMaHoaDon("");
-                alert('Hủy đã thành công');
+                props.alert('Hủy đã thành công');
                 window.location.href = '/services';
             }).catch(err => {
-                alert("Lỗi thanh toán")
+                props.error("Lỗi hủy hóa đơn");
+                console.log(err);
             })
         }
     }
@@ -348,15 +352,15 @@ const RepairedBill = (props) => {
     }
     const getData = () => {
         if (!biensoxe || biensoxe == "" || biensoxe == undefined) {
-            alert('Vui lòng điền biển số xe');
+            props.alert('Vui lòng điền biển số xe');
             return null;
         }
         if (!mMaNVSuaChua.value || mMaNVSuaChua.value == "") {
-            alert('Vui lòng điền nhân viên sữa chữa');
+            props.alert('Vui lòng điền nhân viên sữa chữa');
             return null;
         }
         if (!listNhanVienSuaChua.find(e => e.ma == mMaNVSuaChua.value)) {
-            alert('Nhân viên sữa chữa không tồn tại');
+            props.alert('Nhân viên sữa chữa không tồn tại');
             return null;
         }
         var tong = 0;
@@ -378,15 +382,15 @@ const RepairedBill = (props) => {
         for (var i = 0; i < listProduct.length; i++) {
             var item = listProduct[i];
             if (item.soluongphutung < 0) {
-                alert("Phụ tùng :" + item.tenphutungvacongviec + " có số lượng < 0");
+                props.alert("Phụ tùng :" + item.tenphutungvacongviec + " có số lượng < 0");
                 return null;
             }
             if (item.dongia < 0) {
-                alert("Phụ tùng :" + item.tenphutungvacongviec + " có đơn giá < 0");
+                props.alert("Phụ tùng :" + item.tenphutungvacongviec + " có đơn giá < 0");
                 return null;
             }
             if (item.tiencong < 0) {
-                alert("Phụ tùng :" + item.tenphutungvacongviec + " có tiền công < 0");
+                props.alert("Phụ tùng :" + item.tenphutungvacongviec + " có tiền công < 0");
                 return null;
             }
         }
@@ -433,10 +437,11 @@ const RepairedBill = (props) => {
             return;
         data.mahoadon = mMaHoaDon;
         UpdateBill(props.token, data).then(res => {
-            alert("Update hóa đơn thành công");
+            props.alert("Update hóa đơn thành công");
             setUpdated(true);
         }).catch(err => {
-            alert("Lỗi thanh toán")
+            props.error("!!Không thể update hóa đơn thanh toán");
+            console.log(err);
         })
     }
 
@@ -514,18 +519,18 @@ const RepairedBill = (props) => {
         });
 
         if (!list || list.length == 0) {
-            alert("Không tìm thấy item: " + search)
+            props.alert("Không tìm thấy item: " + search)
             return;
         }
         var item = list[0];
 
 
         if (!item.maphutung || item.maphutung === "") {
-            alert("mã phụ tùng không đúng: " + item.maphutung);
+            props.alert("mã phụ tùng không đúng: " + item.maphutung);
             return;
         }
         if (!item.giaban_le || !item.giaban_le < 0) {
-            alert("phụ tùng không hợp lệ");
+            props.alert("phụ tùng không hợp lệ");
             return;
         }
 
@@ -774,6 +779,7 @@ const RepairedBill = (props) => {
                 setShowHistoryCustomer(false)
             }
             } ma={mMaKH.value && mMaKH.value !== "" ? mMaKH.value : null} />
+            <AlertWarrper />
         </div>
     )
 }
@@ -781,6 +787,7 @@ const mapState = (state) => ({
     token: state.Authenticate.token,
     listBillProduct: state.Product.listBillProduct,
     listProduct: state.Product.listProduct,
+    isLoading: state.App.isLoading,
     info: state.Authenticate.info
 })
 const mapDispatch = (dispatch) => ({
@@ -789,6 +796,9 @@ const mapDispatch = (dispatch) => ({
     deleteItemBillProductMa: (key) => { console.log(key); dispatch(deleteItemBillProductMa(key)) },
     setListBillProduct: (arr) => { dispatch(setListBillProduct(arr)) },
     addBillProduct: (data) => { dispatch(addBillProduct(data)) },
+    alert: (mess) => { dispatch(alert(mess)) },
+    error: (mess) => { dispatch(error(mess)) },
+    setLoading: (isLoad) => { dispatch(setLoading(isLoad)) },
     updateBillProduct: (data, index) => { dispatch(updateBillProduct(data, index)) }
 })
 export default withRouter(connect(mapState, mapDispatch)(RepairedBill));

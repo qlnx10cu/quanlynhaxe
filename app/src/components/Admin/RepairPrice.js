@@ -6,6 +6,8 @@ import RepairPriceDetail from './RepairPriceDetail'
 import { connect } from 'react-redux'
 import { setLoading } from "../../actions/App";
 import Loading from "../Loading";
+import AlertWarrper from '../Warrper/AlertWarrper';
+import { alert, error } from "../../actions/App";
 
 const RepairPrice = (props) => {
     let [editItem, setEditItem] = useState(null);
@@ -26,12 +28,13 @@ const RepairPrice = (props) => {
             setListSalary(response.data);
             setListSalaryAll(response.data);
             props.setLoading(false)
-        }).catch(() => {
-            props.setLoading(false)
+        }).catch((e) => {
+            props.setLoading(true)
+            props.error(true, 'Kết nối server có vấn đề, vui lòng kiểm tra đường mạng');
         })
     }, [])
+
     const TimKiem = () => {
-        console.log('dsds');
         var arr = []
         if (!searchValue)
             arr = listSalaryAll;
@@ -52,6 +55,7 @@ const RepairPrice = (props) => {
     }
     return (
         <div>
+            <AlertWarrper />
             {props.isLoading && <Loading />}
             {!props.isLoading &&
                 <React.Fragment>
@@ -127,6 +131,8 @@ const mapState = (state) => ({
     isLoading: state.App.isLoading
 })
 const mapDispatch = (dispatch) => ({
+    alert: (mess) => { dispatch(alert(mess)) },
+    error: (mess) => { dispatch(error(mess)) },
     setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
 })
 export default connect(mapState, mapDispatch)(RepairPrice);

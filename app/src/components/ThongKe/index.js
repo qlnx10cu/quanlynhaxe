@@ -5,36 +5,17 @@ import { GetBillTheoNgay } from "../../API/ThongKeAPI"
 import ChiTietThongKe from './ChiTietThongKe'
 import { GetListStaff } from '../../API/Staffs'
 import { HuyThanhToan, CheckUpdateBill } from '../../API/Bill'
-
 import { HOST } from '../../Config'
 import { connect } from 'react-redux'
+import Loading from "../Loading";
+import AlertWarrper from '../Warrper/AlertWarrper';
+import { alert, setLoading } from "../../actions/App";
+
 
 const oneDay = 1000 * 3600 * 24;
 
-
-const AlertWarrper = (props) => {
-    return (
-        <Modal className={props.isShowing ? "active" : ""}>
-            <ModalContent style={{ width: '50%' }}>
-                <div style={{ paddingTop: 3, paddingBottom: 3 }}>
-                    <CloseButton onClick={() => props.onCloseClick()}>&times;</CloseButton>
-                    <h2> </h2>
-                </div>
-                <h3 style={{ textAlign: 'center' }}>{props.mess}</h3>
-            </ModalContent>
-        </Modal>
-    );
-}
-
-
 const ConfirmHoaDon = (props) => {
     let [maBarcode, setMaBarcode] = useState("");
-    let [isShowAlert, setShowAlert] = useState(false);
-    let [messAlert, setMessAlert] = useState("");
-    const showAlert = (mes) => {
-        setShowAlert(true);
-        setMessAlert(mes)
-    }
 
     const UpdateHoaDon = (maHoaDon, loai) => {
         var date = new Date();
@@ -56,19 +37,18 @@ const ConfirmHoaDon = (props) => {
 
     const confirmBarCodeByServer = () => {
         if (!maBarcode) {
-            showAlert("vui lòng nhập mã code");
+            props.alert("vui lòng nhập mã code");
             return;
         }
 
         CheckUpdateBill(props.token, { ma: maBarcode, mahoadon: props.mahoadon }).then(res => {
             if (res && res.data && res.data.error && res.data.error >= 1) {
-
                 UpdateHoaDon(props.mahoadon, props.loaihoadon)
             } else {
-                showAlert("Mã code không đúng, vui lòng nhập lại")
+                props.alert("Mã code không đúng, vui lòng nhập lại")
             }
         }).catch(err => {
-            showAlert("Lỗi : " + err.message)
+            props.alert("Lỗi : " + err.message)
         })
     }
 
@@ -94,10 +74,7 @@ const ConfirmHoaDon = (props) => {
                         confirmBarCodeByServer();
                     }}>Thay đổi</Button>
                 </DivFlexRow>
-                <AlertWarrper
-                    isShowing={isShowAlert}
-                    mess={messAlert}
-                    onCloseClick={() => setShowAlert(false)}></AlertWarrper>
+                <AlertWarrper></AlertWarrper>
             </ModalContent>
         </Modal>
 
@@ -126,16 +103,15 @@ const ThongKe = (props) => {
     const CallApiGetListStaff = () => {
         GetListStaff(props.token).then(res => {
             setListStaff(res.data);
-        })
-            .catch(err => {
-                alert("Không lấy được danh sách nhân viên");
+        }).catch(err => {
+                props.alert("Không lấy được danh sách nhân viên");
             })
     }
     const HuyHoaDon = (mMaHoaDon) => {
         HuyThanhToan(props.token, mMaHoaDon).then(res => {
-            alert('Hủy đã thành công');
+            props.alert('Hủy đã thành công');
         }).catch(err => {
-            alert("Lỗi hủy hóa đpm7")
+            props.alert("Lỗi hủy hóa đpm7")
         })
     }
 
@@ -149,7 +125,7 @@ const ThongKe = (props) => {
             CallApiGetListStaff();
         })
             .catch(err => {
-                alert("Lỗi: ");
+                props.alert("Lỗi: ");
             }).finally(() => {
                 setLoading(false);
             })
@@ -266,6 +242,7 @@ const ThongKe = (props) => {
                 onCloseClick={() => setShowingConfirm(false)}
                 mahoadon={mMaHoaDon}
                 token={props.token}
+                alert={(mess)=>props.alert(mess)}
                 loaihoadon={loaihoadon}
             />
 
@@ -283,6 +260,12 @@ const ThongKe = (props) => {
 
 const mapState = (state) => ({
     token: state.Authenticate.token,
+    isLoading: state.App.isLoading
 })
 
-export default connect(mapState)(ThongKe);
+const mapDispatch = (dispatch) => ({
+    alert: (isLoad, mess) => { dispatch(alert(isLoad, mess)) },
+    setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
+})
+
+export default connect(mapState, mapDispatch)(ThongKe);

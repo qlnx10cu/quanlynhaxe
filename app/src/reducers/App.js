@@ -1,18 +1,34 @@
 import {
-   IS_LOADING
+    IS_LOADING,
+    SWAP_ALERT
 } from '../actions/App'
 
-const initState ={
-    isLoading: false
+const initState = {
+    isLoading: false,
+    alert: {
+        isLoading: false,
+        error: false,
+        message: ""
+    },
 }
 
-export default (state = initState , action) => {
-    switch(action.type) {
+export default (state = initState, action) => {
+    switch (action.type) {
         case IS_LOADING:
-        {
+            {
+                return {
+                    ...state,
+                    isLoading: action.data
+                }
+            }
+        case SWAP_ALERT: {
             return {
                 ...state,
-                isLoading: action.data
+                alert: {
+                    isLoading: action.data.isLoading,
+                    error: action.data.error,
+                    message: action.data.message
+                }
             }
         }
         default:

@@ -12,6 +12,7 @@
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "dotenv": "^7.0.0",
+    "easy-pdf-merge": "^0.2.2",
     "express": "~4.16.0",
     "express-handlebars": "^3.0.2",
     "formidable": "^1.2.1",

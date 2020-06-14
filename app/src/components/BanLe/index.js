@@ -10,8 +10,9 @@ import { connect } from 'react-redux'
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
 import { GetBillBanLeByMaHoaDon, GetBillSuaChuaByMaHoaDon } from '../../API/Bill'
 import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
-
-
+import Loading from "../Loading";
+import AlertWarrper from '../Warrper/AlertWarrper';
+import { alert, error, setLoading } from "../../actions/App";
 
 const BanLe = (props) => {
 
@@ -48,6 +49,7 @@ const BanLe = (props) => {
         }
         return queryParams;
     };
+
     const checkTokenDateTime = (token) => {
         var dateCurrent = new Date();
         var tokenCheck = 0;
@@ -75,12 +77,12 @@ const BanLe = (props) => {
         else {
             var queryParams = getQueryParams(window.location.href);
             if (!queryParams || !queryParams.mahoadon || !queryParams.token) {
-                alert("Đường dẫn không đúng");
+                props.alert("Đường dẫn không đúng");
                 window.close()
                 return;
             }
             if (!checkTokenDateTime(queryParams.token)) {
-                alert("Update đã hết hiệu lực, vui lòng làm lại");
+                props.alert("Update đã hết hiệu lực, vui lòng làm lại");
                 window.close()
                 return;
             }
@@ -95,7 +97,7 @@ const BanLe = (props) => {
         GetlistCustomer(props.token).then(res => {
             setListCustomer(res.data);
         }).catch(err => {
-            alert("Không thể lấy danh sách khách hàng")
+            props.alert("Không thể lấy danh sách khách hàng")
         })
 
     }, []);
@@ -124,7 +126,7 @@ const BanLe = (props) => {
             setProducts(chitiet)
 
         }).catch(err => {
-            alert("Không lấy được chi tiết hóa đơn:" + mahoadon);
+            props.alert("Không lấy được chi tiết hóa đơn:" + mahoadon);
             window.location.href = "/thongke";
         })
     }
@@ -149,7 +151,7 @@ const BanLe = (props) => {
     const handleSaveBill = () => {
 
         if (mTongTien === 0) {
-            alert("Chưa có sản phẩm nào.")
+            props.alert("Chưa có sản phẩm nào.")
             return;
         }
 
@@ -167,15 +169,15 @@ const BanLe = (props) => {
         for (var i = 0; i < chitiet.length; i++) {
             var item = chitiet[i];
             if (item.dongia < 0) {
-                alert("Ma: " + item.maphutung + " SP: " + item.tenphutung + " co don gia < 0")
+                props.alert("Ma: " + item.maphutung + " SP: " + item.tenphutung + " co don gia < 0")
                 return;
             }
             if (item.soluong < 0) {
-                alert("Ma: " + item.maphutung + " SP: " + item.tenphutung + " co soluong < 0")
+                props.alert("Ma: " + item.maphutung + " SP: " + item.tenphutung + " co soluong < 0")
                 return;
             }
             if (item.chietkhau < 0 || item.chietkhau > 100) {
-                alert("Ma: " + item.maphutung + " SP: " + item.tenphutung + " co chietkhau < 0% or > 100%")
+                props.alert("Ma: " + item.maphutung + " SP: " + item.tenphutung + " co chietkhau < 0% or > 100%")
                 return;
             }
         }
@@ -191,17 +193,17 @@ const BanLe = (props) => {
         }
 
         UpdateBillBanLe(props.token, data).then(res => {
-            alert('Thành công. ');
+            props.alert('Thành công. ');
             window.location.href = "/thongke";
         })
             .catch(err => {
-                alert("Không xuất được hóa đơn.");
+                props.alert("Không xuất được hóa đơn.");
             })
     }
 
     const handleAddBill = () => {
         if (mTongTien === 0) {
-            alert("Chưa có sản phẩm nào.")
+            props.alert("Chưa có sản phẩm nào.")
             return;
         }
 
@@ -219,15 +221,15 @@ const BanLe = (props) => {
         for (var i = 0; i < chitiet.length; i++) {
             var item = chitiet[i];
             if (item.dongia < 0) {
-                alert(" SP: " + item.tenphutung + " co don gia < 0")
+                props.alert(" SP: " + item.tenphutung + " co don gia < 0")
                 return;
             }
             if (item.soluong < 0) {
-                alert(" SP: " + item.tenphutung + " co soluong < 0")
+                props.alert(" SP: " + item.tenphutung + " co soluong < 0")
                 return;
             }
             if (item.chietkhau < 0 || item.chietkhau > 100) {
-                alert(" SP: " + item.tenphutung + " co chietkhau < 0% or > 100%")
+                props.alert(" SP: " + item.tenphutung + " co chietkhau < 0% or > 100%")
                 return;
             }
         }
@@ -248,7 +250,7 @@ const BanLe = (props) => {
             setShowChitiet(true);
         })
             .catch(err => {
-                alert("Không xuất được hóa đơn.");
+                props.alert("Không xuất được hóa đơn.");
             })
     }
 
@@ -374,22 +376,24 @@ const BanLe = (props) => {
 
     const handleButtonSearch = () => {
         let search = searchValue;
+        if (search === "")
+            return;
         let list = props.listProduct.filter(function (item) {
             return (checkHasRender(search, item));
         });
         if (!list || list.length == 0) {
-            alert("Không tìm thấy item: " + search)
+            props.alert("Không tìm thấy item: " + search)
             return;
         }
         var item = list[0];
 
 
         if (!item.maphutung || item.maphutung === "") {
-            alert("mã phụ tùng không đúng: " + item.maphutung);
+            props.alert("mã phụ tùng không đúng: " + item.maphutung);
             return;
         }
         if (!item.giaban_le || !item.giaban_le < 0) {
-            alert("phụ tùng không hợp lệ");
+            props.alert("phụ tùng không hợp lệ");
             return;
         }
 
@@ -430,6 +434,7 @@ const BanLe = (props) => {
     };
     return (
         <div>
+            <AlertWarrper />
             {loai && <h1 style={{ textAlign: "center" }}> Hóa đơn {mahoadonUpdate}</h1>}
             {!loai && <h1 style={{ textAlign: "center" }}> Hóa đơn bán lẻ</h1>}
             <DivFlexRow>
@@ -566,6 +571,14 @@ const mapState = (state) => ({
     token: state.Authenticate.token,
     info: state.Authenticate.info,
     listProduct: state.Product.listProduct,
+    isLoading: state.App.isLoading
+
 })
 
-export default connect(mapState)(BanLe);
+const mapDispatch = (dispatch) => ({
+    alert: (mess) => { dispatch(alert(mess)) },
+    error: (mess) => { dispatch(error(mess)) },
+    setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
+})
+
+export default connect(mapState, mapDispatch)(BanLe);

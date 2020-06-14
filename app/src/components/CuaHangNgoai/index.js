@@ -11,8 +11,8 @@ const CuaHangNgoai = (props) => {
     let [item, setItem] = useState(null);
     var [listCuaHang, setCuaHang] = useState([]);
 
-    const handleDelItem = (tenphutung,nhacungcap) => {
-        DeleteItemCuaHangNgoai(props.token, tenphutung,nhacungcap).then(res => {
+    const handleDelItem = (tenphutung, nhacungcap) => {
+        DeleteItemCuaHangNgoai(props.token, tenphutung, nhacungcap).then(res => {
             loadCuaHangNgoai();
         }).catch(err => {
             alert("Lỗi xóa item");
@@ -61,7 +61,9 @@ const CuaHangNgoai = (props) => {
                                     setItem(item);
                                 }}><i className="fas fa-cog"></i></Button>
                                 <DelButton onClick={() => {
-                                    handleDelItem(item.tenphutung,item.nhacungcap);
+                                    if (window.confirm("Bạn chắc muốn hủy") == true) {
+                                        handleDelItem(item.tenphutung, item.nhacungcap);
+                                    }
                                 }} style={{ marginLeft: 5 }}><i className="far fa-trash-alt"></i></DelButton>
                             </td>
                         </tr>
@@ -71,7 +73,7 @@ const CuaHangNgoai = (props) => {
 
             <PopupCuaHangNgoai
                 isShowing={isShowing}
-                onCloseClick={() => {setIsShowing(false);setItem(null);}}
+                onCloseClick={() => { setIsShowing(false); setItem(null); }}
                 token={props.token}
                 item={item}
                 getList={() => loadCuaHangNgoai()}

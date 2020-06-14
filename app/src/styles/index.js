@@ -99,6 +99,31 @@ const ModalContent = styled.div`
     }
 `;
 
+const ModalAlert = styled.div`
+    display: none;
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    ${'' /* padding-top: 5%; */}
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    animation-name: fadeIn;
+    animation-duration: 0.4s;
+
+    @keyframes fadeIn {
+      from {opacity: 0} 
+      to {opacity: 1}
+    }
+
+    &.active {
+      display: flex;
+    }
+`
+
 const Table = styled.table`
     border-collapse: collapse;
     width: 100%;
@@ -208,6 +233,7 @@ export {
     DelButton,
     Modal,
     ModalContent,
+    ModalAlert,
     Input,
     Table,
     Select,

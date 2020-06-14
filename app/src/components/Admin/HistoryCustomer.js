@@ -36,23 +36,23 @@ const RenderTableDetail = ({ list }) => {
                             <td>{item.yeucaukhachhang}</td>
                             <td>{item.tuvansuachua}</td>
                             <td><Button onClick={() => {
-                                    setShowChitiet(true);
-                                    setMaHoaDon(item.mahoadon);
-                                }} >Chi tiết</Button>
+                                setShowChitiet(true);
+                                setMaHoaDon(item.mahoadon);
+                            }} >Chi tiết</Button>
                             </td>
                         </tr>
 
                     ))}
 
                 </tbody>
+            </Table>
             <ChiTietThongKe
                 isShowing={isShowChitiet}
-                onCloseClick={() => {setShowChitiet(false);setMaHoaDon("")}}
+                onCloseClick={() => { setShowChitiet(false); setMaHoaDon("") }}
                 mahoadon={mMaHoaDon}
                 token={""}
                 loaihoadon={0}
             />
-            </Table>
         </React.Fragment>
     )
 }
@@ -64,7 +64,7 @@ const HistoryCustomer = (props) => {
     let ma = props.ma;
     useEffect(() => {
         if (ma) {
-            GetCustomerDetail(props.token,ma).then((res) => {
+            GetCustomerDetail(props.token, ma).then((res) => {
                 setData(res.data);
             }).catch(err => {
                 alert('không thể xem được chi tiết');

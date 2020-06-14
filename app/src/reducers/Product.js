@@ -55,7 +55,6 @@ export default (state = initState , action) => {
             }
         }
         case ADD_BILL_PRODUCT: {
-            console.log("vao day:",state.listBillProduct,action.data )
             return {
                 ...state,
                 listBillProduct:[...state.listBillProduct,action.data]
@@ -74,23 +73,18 @@ export default (state = initState , action) => {
             }
         }
         case DELETE_ITEM_BILL_PRODUCT: {
-            console.log("action",action.data);
             var temp =state.listBillProduct.filter(function(item){
                 return item.key !== action.data;
             });
-            console.log(temp);
             return {
                 ...state,
                 listBillProduct:temp
             }
         }
         case DELETE_ITEM_BILL_PRODUCT_MA: {
-            console.log("action",action.data);
             var temp =state.listBillProduct.filter(function(item){
-                console.log("set tiem",item.ma,action.data);
-                return item.ma !== action.data;
+                    return item.ma !== action.data;
             });
-            console.log(temp);
             return {
                 ...state,
                 listBillProduct:temp

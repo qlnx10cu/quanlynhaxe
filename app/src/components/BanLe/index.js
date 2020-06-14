@@ -126,7 +126,7 @@ const BanLe = (props) => {
             setProducts(chitiet)
 
         }).catch(err => {
-            props.alert("Không lấy được chi tiết hóa đơn:" + mahoadon);
+            props.error("Không lấy được chi tiết hóa đơn:" + mahoadon);
             window.location.href = "/thongke";
         })
     }
@@ -197,7 +197,7 @@ const BanLe = (props) => {
             window.location.href = "/thongke";
         })
             .catch(err => {
-                props.alert("Không xuất được hóa đơn.");
+                props.error("Không update được hóa đơn.");
             })
     }
 
@@ -250,7 +250,7 @@ const BanLe = (props) => {
             setShowChitiet(true);
         })
             .catch(err => {
-                props.alert("Không xuất được hóa đơn.");
+                props.error("Không thể thanh toán hóa đơn.");
             })
     }
 

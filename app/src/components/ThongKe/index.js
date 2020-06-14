@@ -44,6 +44,8 @@ const ConfirmHoaDon = (props) => {
         CheckUpdateBill(props.token, { ma: maBarcode, mahoadon: props.mahoadon }).then(res => {
             if (res && res.data && res.data.error && res.data.error >= 1) {
                 UpdateHoaDon(props.mahoadon, props.loaihoadon)
+                setMaBarcode("")
+                props.onCloseClick();
             } else {
                 props.alert("Mã code không đúng, vui lòng nhập lại")
             }

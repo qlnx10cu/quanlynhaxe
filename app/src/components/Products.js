@@ -7,7 +7,7 @@ import NonBaoHiem from './Products/NonBaoHiem/index'
 import DauNhot from './Products/DauNhot/index'
 import { connect } from 'react-redux'
 import Loading from '../components/Loading'
-import { GetFileExportProduct, ImportPhuTung, ImportMuBH, ImportPhuKien } from '../API/Product'
+import { GetFileExportProduct, ImportMuBH } from '../API/Product'
 import XLSX from 'xlsx';
 import { setLoading } from "../actions/App";
 import { getAllProduct } from "../actions/Product";

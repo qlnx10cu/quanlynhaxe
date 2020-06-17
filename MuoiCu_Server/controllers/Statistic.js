@@ -439,7 +439,6 @@ module.exports = {
             // });
             var workbook = XLSX.readFile(__dirname + '/excel/maukhachhang.xlsx');
             var sheet_name_list = workbook.Sheets[workbook.SheetNames[0]];
-            console.log(ws_data)
 
             var date = new Date();
             var moment = require('moment');

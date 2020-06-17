@@ -44,7 +44,7 @@ module.exports = {
     },
     getBangCongEmployee: async function (praram) {
         var param = [];
-        var sql="";
+        var sql = "";
         var data = [];
 
         if (praram.start) {
@@ -55,7 +55,7 @@ module.exports = {
             param.push(praram.end);
             sql = sql + " AND DATEDIFF(?,ngaythanhtoan) >= 0 ";
         }
-         sql = "select nv.ma,nv.ten from nhanvien nv where nv.chucvu='Sửa Chữa'";
+        sql = "select nv.ma,nv.ten from nhanvien nv where nv.chucvu='Sửa Chữa'";
         var nv = await query(sql);
         var nhanvien = [];
 
@@ -102,36 +102,6 @@ module.exports = {
             data.push({ ngay: str, data: dt });
         }
         return data;
-        // var sql = "select cthd.manvsuachua,nv.ten,SUM(cthd.tiencong) as tiencong,  CAST(hd.ngaythanhtoan AS date) as ngaythanhtoan from  hoadon hd, chitiethoadonsuachua cthd , nhanvien nv " +
-        //     " where hd.mahoadon=cthd.mahoadon and hd.trangthai=1 AND nv.ma=cthd.manvsuachua ";
-
-        // var param = [];
-        // if (praram.start) {
-        //     param.push(praram.start);
-        //     sql = sql + " AND DATEDIFF(ngaythanhtoan,?) >= 0 ";
-        // }
-        // if (praram.end) {
-        //     param.push(praram.end);
-        //     sql = sql + " AND DATEDIFF(?,ngaythanhtoan) >= 0 ";
-        // }
-        // if (param.manvsuachua) {
-        //     sql = sql + " AND nv.ma = ? ";
-        //     param.push(praram.manvsuachua);
-        // }
-        // sql = sql + " GROUP BY cthd.manvsuachua,ngaythanhtoan ORDER BY hd.ngaythanhtoan ASC ";
-
-        // sql = "select cc.manv,cc.vsbd,cc.vskp,cc.ngay,ct.ten, SUM(ct.tiencong) tiencong from chamcong cc ,(" + sql + ") as ct where 1=1 AND cc.manv=ct.manvsuachua ";
-        // if (praram.start) {
-        //     param.push(praram.start);
-        //     sql = sql + " AND DATEDIFF(cc.ngay,?) >= 0 ";
-        // }
-        // if (praram.end) {
-        //     param.push(praram.end);
-        //     sql = sql + " AND DATEDIFF(?,cc.ngay) >= 0 ";
-        // }
-        // sql = sql + " GROUP BY cc.manv, cc.ngay ORDER BY cc.ngay ASC ";
-        // let res = await query(sql, param);
-        // return res;
     },
     getBangCong: async function (praram) {
         var now = new Date();
@@ -168,12 +138,13 @@ module.exports = {
         let sql = "select maphutung,tentiengviet,soluongtonkho,vitri ,giaban_le, giaban_le*soluongtonkho as thanhtien from phutung";
         let res = await query(sql);
         let i = 1;
-        res = res.map(e => [i++, e.maphutung, e.tentiengviet, e.soluongtonkho, e.vitri,e.giaban_le,'','',e.thanhtien]);
+        res = res.map(e => [i++, e.maphutung, e.tentiengviet, e.soluongtonkho, e.vitri, e.giaban_le, '', '', e.thanhtien]);
         return res;
     },
     getBillByEmployee: async function (praram) {
         var param = [];
-        var sql = "select makh,tenkh,biensoxe,sum(tongtien) as tongtien from hoadon where trangthai=1 ";
+        var sql = "select A.*,kh.sodienthoai,kh.diachi,kh.loaixe,kh.sokhung,kh.somay from ("
+        sql = sql + "select makh,tenkh,biensoxe,sum(tongtien) as tongtien from hoadon where trangthai=1 ";
         if (praram.start) {
             param.push(praram.start);
             sql = sql + "AND DATEDIFF(ngaythanhtoan,?) >= 0 ";
@@ -183,9 +154,13 @@ module.exports = {
             sql = sql + "AND DATEDIFF(?,ngaythanhtoan) >= 0 ";
         }
         sql = sql + " group by makh,biensoxe,tenkh";
+        sql = sql + " ) as A "
+
+        sql = sql + " left join khachhang kh on kh.ma=A.makh and A.biensoxe=kh.biensoxe and A.makh != ''"
+
         let res = await query(sql, param);
         let i = 1;
-        res = res.map(e => [i++, e.makh, e.tenkh, e.biensoxe, e.tongtien]);
+        res = res.map(e => [i++, e.makh, e.tenkh, e.sodienthoai, e.diachi, e.biensoxe, e.loaixe, e.sokhung, e.somay, e.tongtien]);
         return res;
     },
 };

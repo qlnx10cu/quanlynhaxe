@@ -194,7 +194,6 @@ const BanLe = (props) => {
 
         UpdateBillBanLe(props.token, data).then(res => {
             props.alert('Thành công. ');
-            window.location.href = "/thongke";
         })
             .catch(err => {
                 props.error("Không update được hóa đơn.");
@@ -238,11 +237,12 @@ const BanLe = (props) => {
 
         let data = {
             manv: props.info.ma,
-            makh: makhachhang,
             tenkh: mCustomerName.value,
             tongtien: tongtien,
             chitiet: chitiet,
         }
+        if (makhachhang)
+            data.makh = makhachhang;
 
         SaveBillBanLe(props.token, data).then(res => {
             clearAll();
@@ -519,7 +519,7 @@ const BanLe = (props) => {
                             <td>
                                 <DelButton onClick={() => {
                                     deleteProduct(item);
-                                }}>
+                                }} title="Xóa">
                                     <i className="far fa-trash-alt" />
                                 </DelButton>
                             </td>
@@ -543,7 +543,7 @@ const BanLe = (props) => {
                     if (window.confirm("Bạn chắc muốn thanh toán")) {
                         handleAddBill();
                     }
-                }}>Lưu</Button>}
+                }}>Thánh Toán</Button>}
             </DivFlexRow>
             <PopupNewProduct
                 isShowing={isShowNewProduct}

@@ -106,8 +106,8 @@ const ThongKe = (props) => {
         GetListStaff(props.token).then(res => {
             setListStaff(res.data);
         }).catch(err => {
-                props.alert("Không lấy được danh sách nhân viên");
-            })
+            props.alert("Không lấy được danh sách nhân viên");
+        })
     }
     const HuyHoaDon = (mMaHoaDon) => {
         HuyThanhToan(props.token, mMaHoaDon).then(res => {
@@ -215,25 +215,30 @@ const ThongKe = (props) => {
                                 <td>{moment(item.ngaythanhtoan).format("hh:mm DD/MM/YYYY")}</td>
                                 <td>{item.loaihoadon === 0 ? "Sửa chữa" : "Bán lẻ"}</td>
                                 <td>
-                                    <Button style={{ marginLeft: 15 }} onClick={() => {
+                                    <Button onClick={() => {
                                         setMaHoaDon(item.mahoadon)
                                         setShowing(true);
                                         setLoaiHoaDon(item.loaihoadon);
                                     }}>Chi tiết</Button>
-                                    <DelButton style={{ marginLeft: 15 }} onClick={() => {
-                                        if (window.confirm("Bạn chắc muốn hủy") == true) { HuyHoaDon(item.mahoadon); handleLayDanhSach() }
-                                    }}>
-                                        Hủy</DelButton>
                                 </td>
-                                <td>
-                                    {(moment().valueOf() - moment(item.ngaythanhtoan).valueOf()) <= oneDay ?
-                                        <Button onClick={() => {
-                                            setMaHoaDon(item.mahoadon)
-                                            setShowingConfirm(true);
-                                            setLoaiHoaDon(item.loaihoadon);
-                                            // UpdateHoaDon(item.mahoadon, item.loaihoadon)
-                                        }}>Thay đổi</Button> : null}
-                                </td>
+
+                                {
+                                    (moment().valueOf() - moment(item.ngaythanhtoan).valueOf()) <= oneDay ?
+                                        <td>
+                                            <Button style={{ marginLeft: 15 }} onClick={() => {
+                                                setMaHoaDon(item.mahoadon)
+                                                setShowingConfirm(true);
+                                                setLoaiHoaDon(item.loaihoadon);
+                                            }}>Thay đổi</Button>
+
+                                            <DelButton style={{ marginLeft: 15 }} onClick={() => {
+                                                if (window.confirm("Bạn chắc muốn hủy") == true) { HuyHoaDon(item.mahoadon); handleLayDanhSach() }
+                                            }}> Hủy</DelButton>
+                                        </td>
+                                        :
+                                        <td></td>
+                                }
+
                             </tr>
                         ))
                     }
@@ -244,7 +249,7 @@ const ThongKe = (props) => {
                 onCloseClick={() => setShowingConfirm(false)}
                 mahoadon={mMaHoaDon}
                 token={props.token}
-                alert={(mess)=>props.alert(mess)}
+                alert={(mess) => props.alert(mess)}
                 loaihoadon={loaihoadon}
             />
 

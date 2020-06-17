@@ -31,7 +31,7 @@ const Customer = (props) => {
     // };
     const handleButtonSearch = () => {
         var arr = []
-        arr = listCustomerTemp.filter(e => e.ten.toLowerCase().includes(searchValue.toLowerCase()) || e.biensoxe.toLowerCase().includes(searchValue.toLowerCase())  || e.sodienthoai.toLowerCase().includes(searchValue.toLowerCase()) );
+        arr = listCustomerTemp.filter(e => e.ten.toLowerCase().includes(searchValue.toLowerCase()) || e.biensoxe.toLowerCase().includes(searchValue.toLowerCase()) || e.sodienthoai.toLowerCase().includes(searchValue.toLowerCase()));
         setlistCustomer(arr);
     };
     const _handleKeyPress = (e) => {
@@ -61,11 +61,11 @@ const Customer = (props) => {
                 </Button>
             </DivFlexRow>
             <Table>
-                <tbody>
+                <thead>
                     <tr>
-                        <th>Mã Khách Hàng</th>
-                        <th>Tên Khách Hàng</th>
-                        <th>Số Điện Thoại</th>
+                        <th>Mã</th>
+                        <th>Tên</th>
+                        <th>SDT</th>
                         <th>Địa Chỉ</th>
                         <th>Biển Số Xe</th>
                         <th>Loại Xe</th>
@@ -73,7 +73,8 @@ const Customer = (props) => {
                         <th>Số  Máy</th>
                         <th></th>
                     </tr>
-
+                </thead>
+                <tbody>
                     {listCustomer.map((item, index) => (
                         <tr key={index}>
                             <td>{item.ma}</td>
@@ -88,19 +89,19 @@ const Customer = (props) => {
                                 <Button onClick={() => {
                                     setShowHistoryCustomer(true);
                                     setEditItem(item);
-                                }} >Chi tiết</Button>
+                                }} title="Xem chi tiết"><i className="fas fa-address-book"></i> </Button>
                                 <Button onClick={() => {
                                     setShowCustomerDetail(true);
                                     setEditItem(item);
-                                }} style={{ marginLeft: 5 }}>Cập nhật</Button>
+                                }} style={{ marginLeft: 5 }} title="Cập nhập thông tin khách hàng"><i className="fas fa-edit"></i></Button>
                                 <DelButton onClick={() => {
-                                    if (window.confirm("Bạn chắc muốn hủy") == true) {
+                                    if (window.confirm("Bạn chắc muốn xóa khách hàng này") == true) {
                                         DeleteCustomer(props.token, item.ma).then().catch(err => {
                                             console.log('Xoa that bai');
                                         });
                                         getlistCustomer();
                                     }
-                                }} style={{ marginLeft: 5 }}><i className="far fa-trash-alt"></i></DelButton>
+                                }} style={{ marginLeft: 5 }} title="Xóa Khách hàng"><i className="far fa-trash-alt"></i></DelButton>
                             </td>
                         </tr>
 

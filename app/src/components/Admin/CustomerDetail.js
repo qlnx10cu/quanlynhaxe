@@ -53,7 +53,7 @@ const CustomerDetail = (props) => {
         setUpload(true);
         AddCustomer(props.token, data).then(Response => {
             setUpload(false);
-            props.onCloseClick();
+            props.onCloseClick(true);
         }).catch(err => {
             setUpload(false);
             alert("Tạo tài khoản thất bại \n\n Error:" + err.response.data.error.message);
@@ -72,7 +72,7 @@ const CustomerDetail = (props) => {
         setUpload(true);
         UpdateCustomer(props.token, data, item.ma).then(Response => {
             setUpload(false);
-            props.onCloseClick();
+            props.onCloseClick(true);
         }).catch(err => {
             setUpload(false);
             alert("Cập nhập tài khoản thất bại \n\n Error:" + err.response.data.error.message);

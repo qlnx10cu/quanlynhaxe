@@ -73,7 +73,7 @@ const Customer = (props) => {
                                 <th>Mã</th>
                                 <th>Tên</th>
                                 <th>SDT</th>
-                                <th style={{width:320}}>Địa Chỉ</th>
+                                <th style={{ width: 320 }}>Địa Chỉ</th>
                                 <th>Biển Số Xe</th>
                                 <th>Loại Xe</th>
                                 <th>Số  Khung</th>
@@ -84,15 +84,15 @@ const Customer = (props) => {
                         <tbody>
                             {listCustomer.map((item, index) => (
                                 <tr key={index}>
-                                    <td style={{fontSize:14}}>{item.ma}</td>
-                                    <td style={{fontSize:14}}>{item.ten}</td>
-                                    <td style={{fontSize:14}}>{item.sodienthoai}</td>
-                                    <td style={{fontSize:14}}>{item.diachi}</td>
-                                    <td style={{fontSize:14}}>{item.biensoxe}</td>
-                                    <td style={{fontSize:14}}>{item.loaixe}</td>
-                                    <td style={{fontSize:14}}>{item.sokhung}</td>
-                                    <td style={{fontSize:14}}>{item.somay}</td>
-                                    <td style={{fontSize:14}}>
+                                    <td style={{ fontSize: 14 }}>{item.ma}</td>
+                                    <td style={{ fontSize: 14 }}>{item.ten}</td>
+                                    <td style={{ fontSize: 14 }}>{item.sodienthoai}</td>
+                                    <td style={{ fontSize: 14 }}>{item.diachi}</td>
+                                    <td style={{ fontSize: 14 }}>{item.biensoxe}</td>
+                                    <td style={{ fontSize: 14 }}>{item.loaixe}</td>
+                                    <td style={{ fontSize: 14 }}>{item.sokhung}</td>
+                                    <td style={{ fontSize: 14 }}>{item.somay}</td>
+                                    <td style={{ fontSize: 14 }}>
                                         <Button onClick={() => {
                                             setShowHistoryCustomer(true);
                                             setEditItem(item);
@@ -103,10 +103,11 @@ const Customer = (props) => {
                                         }} style={{ marginLeft: 5 }} title="Cập nhập thông tin khách hàng"><i className="fas fa-edit"></i></Button>
                                         <DelButton onClick={() => {
                                             if (window.confirm("Bạn chắc muốn xóa khách hàng này") == true) {
-                                                DeleteCustomer(props.token, item.ma).then().catch(err => {
+                                                DeleteCustomer(props.token, item.ma).then(() => {
+                                                    getlistCustomer();
+                                                }).catch(err => {
                                                     props.error('Xoa that bai');
                                                 });
-                                                getlistCustomer();
                                             }
                                         }} style={{ marginLeft: 5 }} title="Xóa Khách hàng"><i className="far fa-trash-alt"></i></DelButton>
                                     </td>
@@ -119,10 +120,13 @@ const Customer = (props) => {
                         <Button><i className="fas fa-angle-double-left"></i></Button>
                         <Button style={{ marginLeft: 10 }}><i className="fas fa-angle-double-right"></i></Button>
                     </DivFlexRow>
-                    <CustomerDetail isShowing={isShowCustomerDetail} onCloseClick={() => {
+                    <CustomerDetail isShowing={isShowCustomerDetail} onCloseClick={(hasUpdate) => {
                         setShowCustomerDetail(false)
                         setEditItem(null);
-                        getlistCustomer();
+                        console.log(hasUpdate);
+                        if (hasUpdate===true) {
+                            getlistCustomer();
+                        }
                     }
                     } editItem={editItem} />
 

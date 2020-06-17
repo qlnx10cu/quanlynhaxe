@@ -137,6 +137,8 @@ const BanLe = (props) => {
         setNewCuaHangNgoai(false);
         mCustomerName.setValue("");
         setMaKhachHang("");
+        mDiaChi.setValue("");
+        setSoDienThoai("");
     }
 
     const tinhTongTien = (chitiet) => {

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ProductContainer, DivFlexRow, Button, Table, DelButton, Input } from '../../../styles'
 import PopupPhuTung from './PopupPhuTung'
-import { DelPhuTung,DelAllPhuTung } from '../../../API/PhuTungAPI'
+import { DelPhuTung, DelAllPhuTung } from '../../../API/PhuTungAPI'
+import AlertWarrper from '../../Warrper/AlertWarrper';
+import { alert, error } from "../../../actions/App";
 
 import { connect } from 'react-redux'
 import _ from 'lodash'
@@ -11,6 +13,8 @@ const PhuTungItem = ({
     token,
     getList = () => {
     },
+    alertProps,
+    alertError,
     setShowing,
     setItemEdit,
 }) => {
@@ -18,11 +22,11 @@ const PhuTungItem = ({
     const handleDelClick = () => {
         if (window.confirm("Bạn chắc muốn hủy") == true) {
             DelPhuTung(token, item.maphutung).then(res => {
-                alert("Xóa thành công.");
+                alertProps("Xóa thành công.");
                 getList();
             })
                 .catch(err => {
-                    alert("Không xóa được. @@")
+                    alertError("Không xóa được phụ tùng " + item.maphutung)
                 })
         }
     };
@@ -101,22 +105,22 @@ const PhuTung = (props) => {
         setPage(0);
     };
 
-    const handleXoaHetPhutung = () =>{
+    const handleXoaHetPhutung = () => {
         if (window.confirm("Bạn chắc muốn hủy") == true) {
             DelAllPhuTung(props.token).then(res => {
-                alert("Xóa thành công.");
+                props.alert("Xóa thành công.");
                 window.location.reload();
             }).catch(err => {
-                    alert("Không xóa được. @@")
-                })
+                props.error("Không xóa được. @@")
+            })
         }
-        
+
     }
 
     const handleNextPage = () => {
         let newPage = page + 1;
         if (newPage >= maxPage) {
-            newPage = 0;
+            return;
         }
         setPage(newPage);
     };
@@ -124,7 +128,7 @@ const PhuTung = (props) => {
     const handlePrevPage = () => {
         let newPage = page - 1;
         if (newPage < 0) {
-            newPage = maxPage - 1;
+            return;
         }
         setPage(newPage);
     };
@@ -156,10 +160,13 @@ const PhuTung = (props) => {
 
                 <DivFlexRow>
                     <Button onClick={handlePrevPage}>
-                        Trang trước
+                        <i className="fas fa-angle-double-left"></i>
                     </Button>
+                    <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginLeft: 10 }}>
+                        <div> {page + 1}/{maxPage > 1 ? maxPage : 1}</div>
+                    </DivFlexRow>
                     <Button style={{ marginLeft: 15 }} onClick={handleNextPage}>
-                        Trang Sau
+                        <i className="fas fa-angle-double-right"></i>
                     </Button>
                 </DivFlexRow>
 
@@ -185,6 +192,7 @@ const PhuTung = (props) => {
                                 key={item.ma}
                                 getList={() => {
                                 }}
+                                alertProps={props.alert}
                                 setShowing={setShowing}
                                 setItemEdit={
                                     setItemEdit
@@ -195,6 +203,21 @@ const PhuTung = (props) => {
 
                 </tbody>
             </Table>
+            <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginTop: 5, marginBottom: 15 }}>
+                <DivFlexRow style={{ alignItems: 'center' }}>
+                </DivFlexRow>
+                <DivFlexRow>
+                    <Button onClick={handlePrevPage}>
+                        <i className="fas fa-angle-double-left"></i>
+                    </Button>
+                    <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginLeft: 10 }}>
+                        <div> {page + 1}/{maxPage > 1 ? maxPage : 1}</div>
+                    </DivFlexRow>
+                    <Button style={{ marginLeft: 15 }} onClick={handleNextPage}>
+                        <i className="fas fa-angle-double-right"></i>
+                    </Button>
+                </DivFlexRow>
+            </DivFlexRow>
             <PopupPhuTung
                 chucvu={chucvu}
                 item={itemEdit}
@@ -204,6 +227,7 @@ const PhuTung = (props) => {
                 getList={() => {
                 }}
             />
+            <AlertWarrper />
         </ProductContainer>
     );
 };
@@ -213,4 +237,10 @@ const mapState = (state) => ({
     info: state.Authenticate.info
 });
 
-export default connect(mapState)(PhuTung);
+const mapDispatch = (dispatch) => ({
+    alert: (mess) => { dispatch(alert(mess)) },
+    error: (mess) => { dispatch(error(mess)) },
+})
+
+
+export default connect(mapState, mapDispatch)(PhuTung);

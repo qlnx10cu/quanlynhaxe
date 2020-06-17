@@ -127,7 +127,7 @@ const ThongKe = (props) => {
             CallApiGetListStaff();
         })
             .catch(err => {
-                props.alert("Lỗi: ");
+                props.alert("Có lỗi không thể lấy danh sách");
             }).finally(() => {
                 setLoading(false);
             })
@@ -156,7 +156,6 @@ const ThongKe = (props) => {
 
     const handleSearchBienSoXe = () => {
         if (mBillCurrents) {
-            console.log(mBillCurrents)
             const result = mBillCurrents.filter(bill => searchBSX == "" || bill && bill.biensoxe && bill.biensoxe === searchBSX);
             setBills(result)
         }
@@ -261,6 +260,8 @@ const ThongKe = (props) => {
                 loaihoadon={loaihoadon}
                 listStaff={listStaff}
             />
+
+            <AlertWarrper />
         </div>
     );
 }
@@ -271,7 +272,7 @@ const mapState = (state) => ({
 })
 
 const mapDispatch = (dispatch) => ({
-    alert: (isLoad, mess) => { dispatch(alert(isLoad, mess)) },
+    alert: (mess) => { dispatch(alert(mess)) },
     setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
 })
 

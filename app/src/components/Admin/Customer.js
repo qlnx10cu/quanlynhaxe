@@ -4,6 +4,10 @@ import { connect } from 'react-redux'
 import CustomerDetail from './CustomerDetail'
 import { GetlistCustomer, DeleteCustomer } from '../../API/Customer'
 import HistoryCustomer from './HistoryCustomer'
+import Loading from "../Loading";
+import AlertWarrper from '../Warrper/AlertWarrper';
+import { alert, error, setLoading } from "../../actions/App";
+
 
 const Customer = (props) => {
     let [editItem, setEditItem] = useState(null);
@@ -15,14 +19,14 @@ const Customer = (props) => {
     var [searchValue, setSearchValue] = useState("");
     useEffect(() => {
         getlistCustomer();
-
     }, []);
 
     const getlistCustomer = () => {
+        props.setLoading(true);
         GetlistCustomer(props.token).then(Response => {
             setlistCustomer(Response.data);
             setlistCustomerTemp(Response.data);
-
+            props.setLoading(false);
         });
     }
     // const handleButtonEdit = (item) => {
@@ -41,97 +45,108 @@ const Customer = (props) => {
     }
     return (
         <React.Fragment>
-            <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '20px' }}>Danh sách Khách Hàng</span>
-                <Button onClick={() => {
-                    setShowCustomerDetail(true)
-                    setEditItem(null);
-                }}>
-                    Thêm mới
+            {props.isLoading && <Loading />}
+            {!props.isLoading &&
+                <React.Fragment>
+                    <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '20px' }}>Danh sách Khách Hàng</span>
+                        <Button onClick={() => {
+                            setShowCustomerDetail(true)
+                            setEditItem(null);
+                        }}>
+                            Thêm mới
               <i className="fas fa-plus"></i>
-                </Button>
-            </DivFlexRow>
-            <DivFlexRow style={{ alignItems: 'center', marginTop: 5, marginBottom: 15 }}>
-                <Input onKeyPress={_handleKeyPress} style={{ width: 250, marginRight: 15 }} onChange={(e) => setSearchValue(e.target.value)} />
-                <Button onClick={() => {
-                    handleButtonSearch();
-                }}>
-                    Tìm Kiếm
+                        </Button>
+                    </DivFlexRow>
+                    <DivFlexRow style={{ alignItems: 'center', marginTop: 5, marginBottom: 15 }}>
+                        <Input onKeyPress={_handleKeyPress} style={{ width: 250, marginRight: 15 }} onChange={(e) => setSearchValue(e.target.value)} />
+                        <Button onClick={() => {
+                            handleButtonSearch();
+                        }}>
+                            Tìm Kiếm
               <i className="fas fa-search"></i>
-                </Button>
-            </DivFlexRow>
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Mã</th>
-                        <th>Tên</th>
-                        <th>SDT</th>
-                        <th>Địa Chỉ</th>
-                        <th>Biển Số Xe</th>
-                        <th>Loại Xe</th>
-                        <th>Số  Khung</th>
-                        <th>Số  Máy</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {listCustomer.map((item, index) => (
-                        <tr key={index}>
-                            <td>{item.ma}</td>
-                            <td>{item.ten}</td>
-                            <td>{item.sodienthoai}</td>
-                            <td>{item.diachi}</td>
-                            <td>{item.biensoxe}</td>
-                            <td>{item.loaixe}</td>
-                            <td>{item.sokhung}</td>
-                            <td>{item.somay}</td>
-                            <td>
-                                <Button onClick={() => {
-                                    setShowHistoryCustomer(true);
-                                    setEditItem(item);
-                                }} title="Xem chi tiết"><i className="fas fa-address-book"></i> </Button>
-                                <Button onClick={() => {
-                                    setShowCustomerDetail(true);
-                                    setEditItem(item);
-                                }} style={{ marginLeft: 5 }} title="Cập nhập thông tin khách hàng"><i className="fas fa-edit"></i></Button>
-                                <DelButton onClick={() => {
-                                    if (window.confirm("Bạn chắc muốn xóa khách hàng này") == true) {
-                                        DeleteCustomer(props.token, item.ma).then().catch(err => {
-                                            console.log('Xoa that bai');
-                                        });
-                                        getlistCustomer();
-                                    }
-                                }} style={{ marginLeft: 5 }} title="Xóa Khách hàng"><i className="far fa-trash-alt"></i></DelButton>
-                            </td>
-                        </tr>
+                        </Button>
+                    </DivFlexRow>
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th>Mã</th>
+                                <th>Tên</th>
+                                <th>SDT</th>
+                                <th>Địa Chỉ</th>
+                                <th>Biển Số Xe</th>
+                                <th>Loại Xe</th>
+                                <th>Số  Khung</th>
+                                <th>Số  Máy</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {listCustomer.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{item.ma}</td>
+                                    <td>{item.ten}</td>
+                                    <td>{item.sodienthoai}</td>
+                                    <td>{item.diachi}</td>
+                                    <td>{item.biensoxe}</td>
+                                    <td>{item.loaixe}</td>
+                                    <td>{item.sokhung}</td>
+                                    <td>{item.somay}</td>
+                                    <td>
+                                        <Button onClick={() => {
+                                            setShowHistoryCustomer(true);
+                                            setEditItem(item);
+                                        }} title="Xem chi tiết"><i className="fas fa-address-book"></i> </Button>
+                                        <Button onClick={() => {
+                                            setShowCustomerDetail(true);
+                                            setEditItem(item);
+                                        }} style={{ marginLeft: 5 }} title="Cập nhập thông tin khách hàng"><i className="fas fa-edit"></i></Button>
+                                        <DelButton onClick={() => {
+                                            if (window.confirm("Bạn chắc muốn xóa khách hàng này") == true) {
+                                                DeleteCustomer(props.token, item.ma).then().catch(err => {
+                                                    props.error('Xoa that bai');
+                                                });
+                                                getlistCustomer();
+                                            }
+                                        }} style={{ marginLeft: 5 }} title="Xóa Khách hàng"><i className="far fa-trash-alt"></i></DelButton>
+                                    </td>
+                                </tr>
 
-                    ))}
-                </tbody>
-            </Table>
-            <DivFlexRow style={{ alignItems: ' center', justifyContent: 'flex-end', marginTop: 15 }}>
-                <Button><i className="fas fa-angle-double-left"></i></Button>
-                <Button style={{ marginLeft: 10 }}><i className="fas fa-angle-double-right"></i></Button>
-            </DivFlexRow>
-            <CustomerDetail isShowing={isShowCustomerDetail} onCloseClick={() => {
-                setShowCustomerDetail(false)
-                setEditItem(null);
-                getlistCustomer();
+                            ))}
+                        </tbody>
+                    </Table>
+                    <DivFlexRow style={{ alignItems: ' center', justifyContent: 'flex-end', marginTop: 15 }}>
+                        <Button><i className="fas fa-angle-double-left"></i></Button>
+                        <Button style={{ marginLeft: 10 }}><i className="fas fa-angle-double-right"></i></Button>
+                    </DivFlexRow>
+                    <CustomerDetail isShowing={isShowCustomerDetail} onCloseClick={() => {
+                        setShowCustomerDetail(false)
+                        setEditItem(null);
+                        getlistCustomer();
+                    }
+                    } editItem={editItem} />
+
+                    <HistoryCustomer token={props.token} isShowing={isShowHistoryCustomer} onCloseClick={() => {
+                        setShowHistoryCustomer(false)
+                        setEditItem(null);
+                    }
+                    } ma={editItem && editItem.ma ? editItem.ma : null} />
+
+                </React.Fragment>
             }
-            } editItem={editItem} />
-
-            <HistoryCustomer token={props.token} isShowing={isShowHistoryCustomer} onCloseClick={() => {
-                setShowHistoryCustomer(false)
-                setEditItem(null);
-            }
-            } ma={editItem && editItem.ma ? editItem.ma : null} />
-
-
-
         </React.Fragment>
 
     )
 }
 const mapState = (state) => ({
+    isLoading: state.App.isLoading,
     token: state.Authenticate.token
 })
-export default connect(mapState, null)(Customer);
+
+const mapDispatch = (dispatch) => ({
+    alert: (mess) => { dispatch(alert(mess)) },
+    error: (mess) => { dispatch(error(mess)) },
+    setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
+})
+
+export default connect(mapState, mapDispatch)(Customer);

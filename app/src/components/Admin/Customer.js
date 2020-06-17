@@ -73,26 +73,26 @@ const Customer = (props) => {
                                 <th>Mã</th>
                                 <th>Tên</th>
                                 <th>SDT</th>
-                                <th>Địa Chỉ</th>
+                                <th style={{width:320}}>Địa Chỉ</th>
                                 <th>Biển Số Xe</th>
                                 <th>Loại Xe</th>
                                 <th>Số  Khung</th>
                                 <th>Số  Máy</th>
-                                <th></th>
+                                <th>Chi tiết | Cập nhập | Xóa</th>
                             </tr>
                         </thead>
                         <tbody>
                             {listCustomer.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.ma}</td>
-                                    <td>{item.ten}</td>
-                                    <td>{item.sodienthoai}</td>
-                                    <td>{item.diachi}</td>
-                                    <td>{item.biensoxe}</td>
-                                    <td>{item.loaixe}</td>
-                                    <td>{item.sokhung}</td>
-                                    <td>{item.somay}</td>
-                                    <td>
+                                    <td style={{fontSize:14}}>{item.ma}</td>
+                                    <td style={{fontSize:14}}>{item.ten}</td>
+                                    <td style={{fontSize:14}}>{item.sodienthoai}</td>
+                                    <td style={{fontSize:14}}>{item.diachi}</td>
+                                    <td style={{fontSize:14}}>{item.biensoxe}</td>
+                                    <td style={{fontSize:14}}>{item.loaixe}</td>
+                                    <td style={{fontSize:14}}>{item.sokhung}</td>
+                                    <td style={{fontSize:14}}>{item.somay}</td>
+                                    <td style={{fontSize:14}}>
                                         <Button onClick={() => {
                                             setShowHistoryCustomer(true);
                                             setEditItem(item);

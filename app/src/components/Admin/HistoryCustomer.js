@@ -24,7 +24,7 @@ const RenderTableDetail = ({ list }) => {
                         <th>Nhân viên sữa chữa</th>
                         <th>Yêu cầu khách hàng</th>
                         <th>Tư vấn sữa chữa</th>
-                        <th></th>
+                        <th>Xem chi tiết</th>
                     </tr>
 
                     {list && list.map((item, index) => (
@@ -35,10 +35,10 @@ const RenderTableDetail = ({ list }) => {
                             <td>{item.tennvsuachua}</td>
                             <td>{item.yeucaukhachhang}</td>
                             <td>{item.tuvansuachua}</td>
-                            <td><Button onClick={() => {
+                            <td><Button title="Xem chi tiết" onClick={() => {
                                 setShowChitiet(true);
                                 setMaHoaDon(item.mahoadon);
-                            }} >Chi tiết</Button>
+                            }} ><i className="fas fa-address-book"></i> </Button>
                             </td>
                         </tr>
 
@@ -89,7 +89,7 @@ const HistoryCustomer = (props) => {
                         Số Điện Thoại
                                 <Input readOnly width='auto' type="Number" value={mData.sodienthoai} />
                     </DivFlexColumn>
-                    <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 5 }}>
+                    <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 5, width: 400 }}>
                         Địa Chỉ
                                 <Input readOnly width='auto' value={mData.diachi} />
                     </DivFlexColumn>

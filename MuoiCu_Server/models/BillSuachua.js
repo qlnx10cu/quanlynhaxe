@@ -79,7 +79,6 @@ class BillChan {
             result = res[0];
             sql = "select * from chitiethoadonsuachua ct where ct.mahoadon=?  AND maphutung!=''";
             res = await query(sql, param);
-            console.log(res);
             result["chitiet"] = res;
             return result;
         } catch (e) {

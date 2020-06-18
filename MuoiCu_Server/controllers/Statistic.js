@@ -62,16 +62,26 @@ module.exports = {
                 data = data.reduce((returnData, cur) => {
                     if (returnData[cur.maphutung]) {
                         if (cur.loaihoadon === 1)
-                            returnData[cur.maphutung]['soluong'] += cur.soluong;
+                            returnData[cur.maphutung + "_" + cur.dongia]['soluong'] += cur.soluong ? cur.soluong : cur.soluongphutung;
                         else
-                            returnData[cur.maphutung]['soluong'] += cur.soluongphutung;
+                            returnData[cur.maphutung + "_" + cur.dongia]['soluong'] += cur.soluong ? cur.soluong : cur.soluongphutung;
                         return returnData;
                     }
-                    returnData[cur.maphutung] = cur;
+                    returnData[cur.maphutung + "_" + cur.dongia] = cur;
+                    returnData[cur.maphutung + "_" + cur.dongia]['soluong'] = cur.soluong ? cur.soluong : cur.soluongphutung;
                     return returnData
                 }, {})
 
-                data = Object.keys(data).map((e, index) => ({ STT: index + 1, maphutung: data[e].maphutung, ten: data[e].tenphutung, soluong: data[e].soluong, vitri: '', dongia: data[e].dongia, chuaVAT: null, VAT: null, tongtien: data[e].dongia * data[e].soluong }));
+                data = Object.keys(data).map((e, index) => ({
+                    STT: index + 1,
+                    maphutung: data[e].maphutung,
+                    ten: data[e].tenphutung,
+                    soluong: data[e].soluong,
+                    vitri: '',
+                    dongia: data[e].dongia,
+                    chuaVAT: 0, VAT: 0,
+                    tongtien: data[e].dongia * data[e].soluong
+                }));
 
                 let i = 7;
                 var tam = [];
@@ -107,14 +117,18 @@ module.exports = {
                     return [...returnData, ...cur.chitiet]
                 }, [])
                 data = _result.reduce((returnData, cur) => {
-                    if (returnData[cur.maphutung]) {
-                        returnData[cur.maphutung]['soluong'] += cur.soluong;
+                    if (returnData[cur.maphutung + "_" + cur.dongia]) {
+                        returnData[cur.maphutung + "_" + cur.dongia]['soluong'] += cur.soluong ? cur.soluong : cur.soluongphutung;
                         return returnData;
                     }
-                    returnData[cur.maphutung] = cur;
+                    returnData[cur.maphutung + "_" + cur.dongia] = cur;
+                    returnData[cur.maphutung + "_" + cur.dongia]['soluong'] = cur.soluong ? cur.soluong : cur.soluongphutung;
                     return returnData
                 }, {})
-                data = Object.keys(data).map((e, index) => ({ STT: index + 1, maphutung: data[e].maphutung, ten: data[e].tenphutung, soluong: data[e].soluong, vitri: '', dongia: data[e].dongia, chuaVAT: null, VAT: null, tongtien: data[e].dongia * data[e].soluong }));
+                data = Object.keys(data).map((e, index) => ({
+                    STT: index + 1, maphutung: data[e].maphutung, ten: data[e].tenphutung,
+                    soluong: data[e].soluong, vitri: '', dongia: data[e].dongia, chuaVAT: 0, VAT: 0, tongtien: data[e].dongia * data[e].soluong
+                }));
                 let i = 7;
                 var tam = [];
                 var tam2 = [];
@@ -131,7 +145,7 @@ module.exports = {
                     i++;
                 })
                 ws["!ref"] = `A1:K${i}`;
-                XLSX.utils.book_append_sheet(wb, ws, 'billel');
+                XLSX.utils.book_append_sheet(wb, ws, 'bille');
             }
 
             //Bill chan
@@ -150,16 +164,17 @@ module.exports = {
                     return [...returnData, ...cur.chitiet]
                 }, [])
                 data = _result.reduce((returnData, cur) => {
-                    if (returnData[cur.maphutung]) {
-                        returnData[cur.maphutung]['soluongphutung'] += cur.soluongphutung;
+                    if (returnData[cur.maphutung + "_" + cur.dongia]) {
+                        returnData[cur.maphutung + "_" + cur.dongia]['soluong'] += cur.soluongphutung ? cur.soluongphutung : cur.soluong;
                         return returnData;
                     }
-                    returnData[cur.maphutung] = cur;
+                    returnData[cur.maphutung + "_" + cur.dongia] = cur;
+                    returnData[cur.maphutung + "_" + cur.dongia]['soluong'] = cur.soluongphutung ? cur.soluongphutung : cur.soluong;
                     return returnData
                 }, {})
                 data = Object.keys(data).map((e, index) => ({
-                    STT: index + 1, maphutung: data[e].maphutung, ten: data[e].tenphutung, soluongphutung: data[e].soluongphutung, vitri: '',
-                    dongia: data[e].dongia, chuaVAT: null, VAT: null, tongtien: data[e].dongia * data[e].soluongphutung
+                    STT: index + 1, maphutung: data[e].maphutung, ten: data[e].tenphutung, soluong: data[e].soluong, vitri: '',
+                    dongia: data[e].dongia, chuaVAT: 0, VAT: 0, tongtien: data[e].dongia * data[e].soluong
                 }));
                 let i = 7;
                 var tam = [];
@@ -196,14 +211,18 @@ module.exports = {
                     return [...returnData, ...cur.chitiet]
                 }, [])
                 data = _result.reduce((returnData, cur) => {
-                    if (returnData[cur.tenphutung + cur.nhacungcap]) {
-                        returnData[cur.tenphutung + cur.nhacungcap]['soluong'] += cur.soluong;
+                    if (returnData[cur.tenphutung + cur.nhacungcap + "_" + cur.dongia]) {
+                        returnData[cur.tenphutung + cur.nhacungcap + "_" + cur.dongia]['soluong'] += cur.soluong ? cur.soluong : cur.soluongphutung;
                         return returnData;
                     }
-                    returnData[cur.tenphutung + cur.nhacungcap] = cur;
+                    returnData[cur.tenphutung + cur.nhacungcap + "_" + cur.dongia] = cur;
+                    returnData[cur.tenphutung + cur.nhacungcap + "_" + cur.dongia]['soluong'] = cur.soluong ? cur.soluong : cur.soluongphutung;
                     return returnData
                 }, {})
-                data = Object.keys(data).map((e, index) => ({ STT: index + 1, maphutung: data[e].maphutung, ten: data[e].tenphutung, soluong: data[e].soluong, vitri: '', dongia: data[e].dongia, chuaVAT: null, VAT: null, tongtien: data[e].dongia * data[e].soluong }));
+                data = Object.keys(data).map((e, index) => ({
+                    STT: index + 1, maphutung: data[e].maphutung, ten: data[e].tenphutung,
+                    soluong: data[e].soluong, vitri: '', dongia: data[e].dongia, chuaVAT: 0, VAT: 0, tongtien: data[e].dongia * data[e].soluong
+                }));
                 let i = 7;
                 var tam = [];
                 var tam2 = [];
@@ -220,7 +239,7 @@ module.exports = {
                     i++;
                 })
                 ws["!ref"] = `A1:K${i}`;
-                XLSX.utils.book_append_sheet(wb, ws, 'cuahangnogai');
+                XLSX.utils.book_append_sheet(wb, ws, 'cuahangngoai');
             }
 
 
@@ -273,7 +292,7 @@ module.exports = {
 
             var workbook = XLSX.readFile(__dirname + '/excel/maubaocao.xlsx', {
                 type: 'binary',
-                cellDates: true, cellStyles: true, 
+                cellDates: true, cellStyles: true,
             });
             var sheet_name_list = workbook.Sheets[workbook.SheetNames[0]];
             var ws = { ...sheet_name_list };
@@ -333,7 +352,7 @@ module.exports = {
             res.setHeader('Content-disposition', 'attachment; filename=filecong.xlsx');
             res.setHeader('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
-            res.send(new Buffer(wbout,'binary'));
+            res.send(new Buffer(wbout, 'binary'));
         } catch (error) {
             librespone.error(req, res, error.message);
         }
@@ -353,7 +372,7 @@ module.exports = {
             let resulft = await Statistic.getBangCongEmployee(param);
             var workbook = XLSX.readFile(__dirname + '/excel/mauphutung.xlsx', {
                 type: 'binary',
-                cellDates: true, cellStyles: true, 
+                cellDates: true, cellStyles: true,
             });
 
             var sheet_name_list = workbook.Sheets[workbook.SheetNames[0]];

@@ -57,11 +57,6 @@ const NonBaoHiem = (props) => {
     let [searchValue, setSearchValue] = useState("");
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
-    let chucvu = null;
-
-    if (props.info && props.info.chucvu) {
-        chucvu = props.info.chucvu
-    }
 
     useEffect(() => {
         if (props.listMuBaoHiem) {

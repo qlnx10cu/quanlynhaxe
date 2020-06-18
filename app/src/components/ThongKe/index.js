@@ -7,7 +7,6 @@ import { GetListStaff } from '../../API/Staffs'
 import { HuyThanhToan, CheckUpdateBill } from '../../API/Bill'
 import { HOST } from '../../Config'
 import { connect } from 'react-redux'
-import Loading from "../Loading";
 import AlertWarrper from '../Warrper/AlertWarrper';
 import { alert, setLoading } from "../../actions/App";
 

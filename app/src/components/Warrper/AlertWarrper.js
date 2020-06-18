@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ModalAlert, ModalContent, CloseButton } from '../../styles'
 import { setAlert } from "../../actions/App";
 import { connect } from 'react-redux'

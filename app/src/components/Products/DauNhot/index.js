@@ -9,7 +9,7 @@ const DauNhotItem = ({ item,
     token, cb,
     getList }) => {
     const handleDelClick = () => {
-        if (window.confirm("Bạn chắc muốn hủy") == true) {
+        if (window.confirm("Bạn chắc muốn hủy") ===  true) {
             DelDauNhot(token, item.maphutung).then(res => {
                 alert("Xóa thành công.");
                 getList();
@@ -50,12 +50,6 @@ const DauNhot = (props) => {
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
     let [itemData, setItem] = useState(null);
-    let chucvu = null;
-
-    if (props.info && props.info.chucvu) {
-        chucvu = props.info.chucvu
-    }
-
 
     useEffect(() => {
         if (props.listDauNhot) {

@@ -9,13 +9,12 @@ import { connect } from 'react-redux'
 import { UpdateBill, SaveBill, ThanhToan, HuyThanhToan, GetBillSuaChuaByMaHoaDon } from '../../API/Bill'
 import { GetlistCustomer } from '../../API/Customer'
 import { GetListNVSuaChua } from '../../API/Staffs'
-import { deleteBillProduct, deleteItemBillProduct, setListBillProduct, updateBillProduct, REQUEST_LIST_PRODUCT, deleteItemBillProductMa } from '../../actions/Product';
+import { deleteBillProduct, deleteItemBillProduct, setListBillProduct, updateBillProduct, deleteItemBillProductMa } from '../../actions/Product';
 import { withRouter } from 'react-router-dom'
 import PopupBillCHN from './PopupBillCHN';
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
 import { GetListSalary } from '../../API/Salary'
 import { addBillProduct } from '../../actions/Product';
-import Loading from "../Loading";
 import AlertWarrper from '../Warrper/AlertWarrper';
 import { alert, error, setLoading } from "../../actions/App";
 
@@ -52,7 +51,6 @@ const RepairedBill = (props) => {
     let mAddress = lib.handleInput("");
     let mMaKH = lib.handleInput("");
     let mMaNVSuaChua = lib.handleInput("");
-    let mTenLoaiXe = lib.handleInput("");
     let [biensoxe, setBienSoXe] = useState("");
     let [isShowHistoryCustomer, setShowHistoryCustomer] = useState(false);
     let [isShowNewBill, setShowNewBill] = useState(false);

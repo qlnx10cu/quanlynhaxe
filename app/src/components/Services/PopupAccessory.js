@@ -3,7 +3,7 @@ import { Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButto
 import lib from '../../lib'
 import { GetListSalary } from '../../API/Salary'
 import { connect } from 'react-redux'
-import { getAllProduct,addBillProduct } from '../../actions/Product';
+import { getAllProduct, addBillProduct } from '../../actions/Product';
 
 const PopupAccessory = (props) => {
 
@@ -11,14 +11,13 @@ const PopupAccessory = (props) => {
     let [mMaPhuTung, setMaPhuTung] = useState("");
     let mDonGia = lib.handleInput("");
     let mSoLuong = lib.handleInput(1);
-    let mTonKho=lib.handleInput(0);
+    let mTonKho = lib.handleInput(0);
     let mTienCong = lib.handleInput(0);
-    let [listGiaDichVu, setListGiaDichVu] = useState([]);
     let [mDataList, setDataList] = useState([]);
 
     const searchMaPhuTung = (values) => {
         setMaPhuTung(values);
-        if(values === "") {
+        if (values === "") {
             SliceTop20(props.listProduct);
             return;
         }
@@ -28,7 +27,7 @@ const PopupAccessory = (props) => {
             );
         });
         if (product.length !== 0) {
-            if(product.length === 1&&product[0].maphutung===values) {
+            if (product.length === 1 && product[0].maphutung === values) {
                 setMaPhuTung(product[0].maphutung);
                 mTenCongViec.setValue(product[0].tentiengviet);
                 mDonGia.setValue(product[0].giaban_le);
@@ -44,17 +43,17 @@ const PopupAccessory = (props) => {
     };
 
     useEffect(() => {
-        if(props.isShowing && props.listProduct) {
+        if (props.isShowing && props.listProduct) {
             SliceTop20(props.listProduct);
         }
-    },[props.isShowing, props.listProduct]);
+    }, [props.isShowing, props.listProduct]);
 
     const SliceTop20 = (list) => {
-        setDataList(list.slice(0,20));
+        setDataList(list.slice(0, 20));
     };
-   
+
     const handleAdd = () => {
-        if (!mMaPhuTung|| mMaPhuTung === "") {
+        if (!mMaPhuTung || mMaPhuTung === "") {
             alert("Chưa nhập mã phụ tùng");
             return;
         }
@@ -64,7 +63,7 @@ const PopupAccessory = (props) => {
             return;
         }
 
-        if(!mTenCongViec||mTenCongViec.value === "" ||!mDonGia || !mDonGia.value || mDonGia.value<0){
+        if (!mTenCongViec || mTenCongViec.value === "" || !mDonGia || !mDonGia.value || mDonGia.value < 0) {
             alert("phụ tùng không hợp lệ");
             return;
         }
@@ -73,23 +72,23 @@ const PopupAccessory = (props) => {
             alert("Phải nhập số lượng");
             return;
         }
-        if(mSoLuong.value>mTonKho.value){
+        if (mSoLuong.value > mTonKho.value) {
             alert("Số lượng lón hơn tồn kho hiện tai");
             return;
         }
 
 
-        var data={
-            key:props.listBillProduct.length+1,
-            tenphutungvacongviec:mTenCongViec.value,
-            maphutung:mMaPhuTung,
-            dongia:parseInt(mDonGia.value)||0,
-            soluongphutung:parseInt(mSoLuong.value)||0,
-            tiencong:0,
-            tongtien:(parseInt(mDonGia.value) || 0)*(parseInt(mSoLuong.value)||0)+(parseInt(mTienCong.value)||0),
-            nhacungcap:"Trung Trang"
+        var data = {
+            key: props.listBillProduct.length + 1,
+            tenphutungvacongviec: mTenCongViec.value,
+            maphutung: mMaPhuTung,
+            dongia: parseInt(mDonGia.value) || 0,
+            soluongphutung: parseInt(mSoLuong.value) || 0,
+            tiencong: 0,
+            tongtien: (parseInt(mDonGia.value) || 0) * (parseInt(mSoLuong.value) || 0) + (parseInt(mTienCong.value) || 0),
+            nhacungcap: "Trung Trang"
         }
-        props.addItemToProduct(data,true);
+        props.addItemToProduct(data, true);
         // props.addBillProduct(data);
         mTenCongViec.setValue("");
         setMaPhuTung("");
@@ -102,9 +101,6 @@ const PopupAccessory = (props) => {
     }
     useEffect(() => {
         props.getAllProduct(props.token);
-        GetListSalary(props.token).then(respose=>{
-            setListGiaDichVu(respose.data);
-        })
     }, []);
     return (
         <Modal className={props.isShowing ? "active" : ""}>
@@ -127,7 +123,7 @@ const PopupAccessory = (props) => {
                         <datalist id="browsers">
                             {mDataList.map((item, index) => (
                                 <option disabled={item.soluongtonkho === 0} key={index}
-                                        value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
+                                    value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
                             ))}
                         </datalist>
                     </DivFlexColumn>
@@ -154,7 +150,7 @@ const PopupAccessory = (props) => {
                 </DivFlexRow>
 
                 <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: 'flex-end' }}>
-                    <label>Tổng tiền: <span style={{ fontWeight: 'bold' }}>{((parseInt(mDonGia.value)||0)*(parseInt(mSoLuong.value)||0)+(parseInt(mTienCong.value)||0)).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</span></label>
+                    <label>Tổng tiền: <span style={{ fontWeight: 'bold' }}>{((parseInt(mDonGia.value) || 0) * (parseInt(mSoLuong.value) || 0) + (parseInt(mTienCong.value) || 0)).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</span></label>
                 </DivFlexRow>
 
                 <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: 'flex-end' }}>
@@ -169,7 +165,7 @@ const PopupAccessory = (props) => {
 const mapState = (state) => ({
     token: state.Authenticate.token,
     listProduct: state.Product.listProduct,
-    listBillProduct:state.Product.listBillProduct
+    listBillProduct: state.Product.listBillProduct
 });
 const mapDispatch = (dispatch) => ({
     getAllProduct: (token) => { dispatch(getAllProduct(token)) },

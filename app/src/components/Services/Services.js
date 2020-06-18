@@ -71,7 +71,7 @@ const CRepairItem = (props) => {
             props.socket.emit('release', {
                 maban: props.STT - 1,
                 mahoadon: "",
-                biensoxe:"",
+                biensoxe: "",
             })
         }
     }
@@ -119,7 +119,7 @@ const Services = (props) => {
         props.socket.emit('select', {
             maban: stt - 1,
             mahoadon: "",
-            biensoxe:"",
+            biensoxe: "",
         })
         props.socket.on('lifttable', async data => {
             await setLiftTable(data);
@@ -130,10 +130,10 @@ const Services = (props) => {
         props.socket.emit('release', {
             maban: stt - 1,
             mahoadon: "",
-            biensoxe:"",
+            biensoxe: "",
         })
     };
-    const updateBan=()=>{
+    const updateBan = () => {
         props.socket.emit('update');
         alert('Update thành công')
     }
@@ -144,8 +144,8 @@ const Services = (props) => {
     return (
         <div>
             <h3>Khu vực sửa chữa</h3>
-           {props.info.chucvu=="Admin"&&<Button onClick={() => updateBan(true)} style={{ marginLeft: 20, marginTop: 10 }}>
-                    Update
+            {props.info.chucvu === "Admin" && <Button onClick={() => updateBan(true)} style={{ marginLeft: 20, marginTop: 10 }}>
+                Update
             </Button>
             }
             <RepairWraper>

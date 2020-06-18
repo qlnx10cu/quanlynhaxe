@@ -16,7 +16,6 @@ const PopupPhuTung = (props) => {
     let mModel = lib.handleInput("");
     let mColor = lib.handleInput("#FFFFFF");
     let item = props.item;
-    let chucvu = props.chucvu;
 
     useEffect(() => {
         if (item && item.maphutung) {

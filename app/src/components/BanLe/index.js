@@ -8,7 +8,7 @@ import { UpdateBillBanLe } from '../../API/Bill'
 import { GetlistCustomer } from '../../API/Customer'
 import { connect } from 'react-redux'
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
-import { GetBillBanLeByMaHoaDon, GetBillSuaChuaByMaHoaDon } from '../../API/Bill'
+import { GetBillBanLeByMaHoaDon } from '../../API/Bill'
 import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
 import Loading from "../Loading";
 import AlertWarrper from '../Warrper/AlertWarrper';
@@ -66,6 +66,7 @@ const BanLe = (props) => {
 
 
     useEffect(() => {
+        props.setLoading(true);
         clearAll();
 
         let pathname = window.location.href;
@@ -96,6 +97,7 @@ const BanLe = (props) => {
         });
         GetlistCustomer(props.token).then(res => {
             setListCustomer(res.data);
+            props.setLoading(false);
         }).catch(err => {
             props.alert("Không thể lấy danh sách khách hàng")
         })
@@ -437,134 +439,139 @@ const BanLe = (props) => {
     return (
         <div>
             <AlertWarrper />
-            {loai && <h1 style={{ textAlign: "center" }}> Hóa đơn {mahoadonUpdate}</h1>}
-            {!loai && <h1 style={{ textAlign: "center" }}> Hóa đơn bán lẻ</h1>}
-            <DivFlexRow>
-                <DivFlexColumn>
-                    <label>Tên khách hàng: </label>
-                    <Input autocomplete="off" {...mCustomerName} />
-                </DivFlexColumn>
-                <DivFlexColumn style={{ marginLeft: 20 }}>
-                    <label>Mã khách hàng: </label>
-                    <Input list="customer" name="customer" autocomplete="off" value={makhachhang} onChange={(e) => handleChangeKH(e)} />
-                    <datalist id="customer">
-                        {listCustomer.map((item, index) => (
-                            <option key={index} value={item.ma} >{item.ten}</option>
-                        ))}
-                    </datalist>
-                </DivFlexColumn>
-                <DivFlexColumn style={{ marginLeft: 20 }}>
-                    <label>Số điện thoại: </label>
-                    <Input list="sodienthoai" name="sodienthoai" autocomplete="off" value={sodienthoai} onChange={(e) => handleChangeSDT(e)} />
-                    <datalist id="sodienthoai">
-                        {listCustomer.map((item, index) => (
-                            <option key={index} value={item.sodienthoai} >{item.ten}</option>
-                        ))}
-                    </datalist>
-                </DivFlexColumn>
+            {props.isLoading && <Loading />}
+            {!props.isLoading &&
+                <div>
+                    {loai && <h1 style={{ textAlign: "center" }}> Hóa đơn {mahoadonUpdate}</h1>}
+                    {!loai && <h1 style={{ textAlign: "center" }}> Hóa đơn bán lẻ</h1>}
+                    <DivFlexRow>
+                        <DivFlexColumn>
+                            <label>Tên khách hàng: </label>
+                            <Input autocomplete="off" {...mCustomerName} />
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <label>Mã khách hàng: </label>
+                            <Input list="customer" name="customer" autocomplete="off" value={makhachhang} onChange={(e) => handleChangeKH(e)} />
+                            <datalist id="customer">
+                                {listCustomer.map((item, index) => (
+                                    <option key={index} value={item.ma} >{item.ten}</option>
+                                ))}
+                            </datalist>
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <label>Số điện thoại: </label>
+                            <Input list="sodienthoai" name="sodienthoai" autocomplete="off" value={sodienthoai} onChange={(e) => handleChangeSDT(e)} />
+                            <datalist id="sodienthoai">
+                                {listCustomer.map((item, index) => (
+                                    <option key={index} value={item.sodienthoai} >{item.ten}</option>
+                                ))}
+                            </datalist>
+                        </DivFlexColumn>
 
-                <DivFlexColumn style={{ marginLeft: 20 }} >
-                    <label>Địa chỉ: </label>
-                    <Input autocomplete="off" {...mDiaChi} width='400px' readOnly />
-                </DivFlexColumn>
-            </DivFlexRow>
-            <DivFlexRow style={{ marginTop: 5, marginBottom: 5, justifyContent: 'space-between', alignItems: 'center' }}>
-                <label>Bảng giá phụ tùng: </label>
-                <Button onClick={() => setNewCuaHangNgoai(true)}>
-                    Thêm Của Hàng Ngoài
+                        <DivFlexColumn style={{ marginLeft: 20 }} >
+                            <label>Địa chỉ: </label>
+                            <Input autocomplete="off" {...mDiaChi} width='400px' readOnly />
+                        </DivFlexColumn>
+                    </DivFlexRow>
+                    <DivFlexRow style={{ marginTop: 5, marginBottom: 5, justifyContent: 'space-between', alignItems: 'center' }}>
+                        <label>Bảng giá phụ tùng: </label>
+                        <Button onClick={() => setNewCuaHangNgoai(true)}>
+                            Thêm Của Hàng Ngoài
                 </Button>
-                <Button onClick={() => setNewProduct(true)}>
-                    Thêm Phụ Tùng
+                        <Button onClick={() => setNewProduct(true)}>
+                            Thêm Phụ Tùng
                 </Button>
-            </DivFlexRow>
-            <DivFlexRow style={{ alignItems: 'center' }}>
-                <Input autoFocus list="browser_search" onKeyPress={_handleKeyPress} value={searchValue} style={{ width: 250, marginRight: 15 }}
-                    onChange={(e) => searchMaPhuTung(e.target.value)} />
-                <datalist id="browser_search">
-                    {mDataList.map((item, index) => (
-                        <option disabled={item.soluongtonkho === 0} key={index}
-                            value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
-                    ))}
-                </datalist>
-                <Button onClick={() => {
-                    handleButtonSearch();
-                }}>
+                    </DivFlexRow>
+                    <DivFlexRow style={{ alignItems: 'center' }}>
+                        <Input autoFocus list="browser_search" onKeyPress={_handleKeyPress} value={searchValue} style={{ width: 250, marginRight: 15 }}
+                            onChange={(e) => searchMaPhuTung(e.target.value)} />
+                        <datalist id="browser_search">
+                            {mDataList.map((item, index) => (
+                                <option disabled={item.soluongtonkho === 0} key={index}
+                                    value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
+                            ))}
+                        </datalist>
+                        <Button onClick={() => {
+                            handleButtonSearch();
+                        }}>
 
-                    Tìm Kiếm
+                            Tìm Kiếm
                         <i className="fas fa-search" />
-                </Button>
-            </DivFlexRow>
-            <Table>
-                <tbody>
-                    <tr>
-                        <th>STT</th>
-                        <th>Tên phụ tùng</th>
-                        <th>Mã phụ tùng</th>
-                        <th>Đơn giá (VND)</th>
-                        <th>SL</th>
-                        <th>Nhà Cung Cấp</th>
-                        <th>Chiết khấu (%)</th>
-                        <th>Tổng tiền (VND)</th>
-                        <th><i className="far fa-trash-alt" /></th>
-                    </tr>
+                        </Button>
+                    </DivFlexRow>
+                    <Table>
+                        <tbody>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên phụ tùng</th>
+                                <th>Mã phụ tùng</th>
+                                <th>Đơn giá (VND)</th>
+                                <th>SL</th>
+                                <th>Nhà Cung Cấp</th>
+                                <th>Chiết khấu (%)</th>
+                                <th>Tổng tiền (VND)</th>
+                                <th><i className="far fa-trash-alt" /></th>
+                            </tr>
 
-                    {mProducts.map((item, index) => (
-                        <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{item.tencongviec}</td>
-                            <td>{item.maphutung}</td>
-                            <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td><input type="number" onChange={(e) => handleChangeSL(e, index)} value={mProducts[index].soluong} min="1" /></td>
-                            <td>{item.nhacungcap ? item.nhacungcap : "Trung Trang"}</td>
-                            <td><input type="number" max={100} onChange={(e) => handleChangeChieuKhau(e, index)} value={mProducts[index].chietkhau} min="0" /></td>
-                            <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td>
-                                <DelButton onClick={() => {
-                                    deleteProduct(item);
-                                }} title="Xóa">
-                                    <i className="far fa-trash-alt" />
-                                </DelButton>
-                            </td>
-                        </tr>
+                            {mProducts.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{index + 1}</td>
+                                    <td>{item.tencongviec}</td>
+                                    <td>{item.maphutung}</td>
+                                    <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                                    <td><input type="number" onChange={(e) => handleChangeSL(e, index)} value={mProducts[index].soluong} min="1" /></td>
+                                    <td>{item.nhacungcap ? item.nhacungcap : "Trung Trang"}</td>
+                                    <td><input type="number" max={100} onChange={(e) => handleChangeChieuKhau(e, index)} value={mProducts[index].chietkhau} min="0" /></td>
+                                    <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                                    <td>
+                                        <DelButton onClick={() => {
+                                            deleteProduct(item);
+                                        }} title="Xóa">
+                                            <i className="far fa-trash-alt" />
+                                        </DelButton>
+                                    </td>
+                                </tr>
 
-                    ))}
+                            ))}
 
-                </tbody>
-            </Table>
-            <DivFlexRow style={{ justifyContent: 'flex-end' }}>
-                <h3>Tổng tiền: {mTongTien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</h3>
-            </DivFlexRow>
-            <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
-                <label></label>
-                {loai && <Button onClick={() => {
-                    if (window.confirm("Bạn chắc muốn thay đổi")) {
-                        handleSaveBill();
-                    }
-                }}>Thay đổi</Button>}
-                {!loai && <Button onClick={() => {
-                    if (window.confirm("Bạn chắc muốn thanh toán")) {
-                        handleAddBill();
-                    }
-                }}>Thánh Toán</Button>}
-            </DivFlexRow>
-            <PopupNewProduct
-                isShowing={isShowNewProduct}
-                onCloseClick={() => setNewProduct(false)}
-                addItemToProduct={(item) => addItemToProduct(item)}
-            />
-            <PopupNewCuaHangNgoai
-                isShowing={isShowCuaHangNgoai}
-                onCloseClick={() => setNewCuaHangNgoai(false)}
-                listCuaHangNgoai={listCuaHangNgoai}
-                addItemToHangNgoai={(item) => addItemToProduct(item)}
-            />
-            <ChiTietThongKe
-                isShowing={isShowChitiet}
-                onCloseClick={() => { setShowChitiet(false); setMaHoaDon("") }}
-                mahoadon={mMaHoaDon}
-                token={props.token}
-                loaihoadon={1}
-            />
+                        </tbody>
+                    </Table>
+                    <DivFlexRow style={{ justifyContent: 'flex-end' }}>
+                        <h3>Tổng tiền: {mTongTien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</h3>
+                    </DivFlexRow>
+                    <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
+                        <label></label>
+                        {loai && <Button onClick={() => {
+                            if (window.confirm("Bạn chắc muốn thay đổi")) {
+                                handleSaveBill();
+                            }
+                        }}>Thay đổi</Button>}
+                        {!loai && <Button onClick={() => {
+                            if (window.confirm("Bạn chắc muốn thanh toán")) {
+                                handleAddBill();
+                            }
+                        }}>Thánh Toán</Button>}
+                    </DivFlexRow>
+                    <PopupNewProduct
+                        isShowing={isShowNewProduct}
+                        onCloseClick={() => setNewProduct(false)}
+                        addItemToProduct={(item) => addItemToProduct(item)}
+                    />
+                    <PopupNewCuaHangNgoai
+                        isShowing={isShowCuaHangNgoai}
+                        onCloseClick={() => setNewCuaHangNgoai(false)}
+                        listCuaHangNgoai={listCuaHangNgoai}
+                        addItemToHangNgoai={(item) => addItemToProduct(item)}
+                    />
+                    <ChiTietThongKe
+                        isShowing={isShowChitiet}
+                        onCloseClick={() => { setShowChitiet(false); setMaHoaDon("") }}
+                        mahoadon={mMaHoaDon}
+                        token={props.token}
+                        loaihoadon={1}
+                    />
+                </div>
+            }
         </div>
     );
 }

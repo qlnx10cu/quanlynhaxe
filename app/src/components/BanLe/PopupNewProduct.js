@@ -11,7 +11,6 @@ const PopupNewProduct = (props) => {
     let mDonGia = lib.handleInput(0);
     let mSoLuong = lib.handleInput(1);
     let mTonKho = lib.handleInput(1);
-    let mTienCong = lib.handleInput(0);
     let [mDataList, setDataList] = useState([]);
     let [chietkhau, setChietkhau] = useState(0);
 

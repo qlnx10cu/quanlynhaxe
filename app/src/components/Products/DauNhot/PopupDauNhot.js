@@ -1,7 +1,7 @@
-import React, { useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { Modal, ModalContent, DivFlexRow, DivFlexColumn, Input, Button, DelButton } from '../../../styles'
 import lib from '../../../lib'
-import { UpdateDauNhot,AddDauNhot } from '../../../API/DauNhotAPI'
+import { UpdateDauNhot, AddDauNhot } from '../../../API/DauNhotAPI'
 import { connect } from 'react-redux'
 
 const PopupDauNhot = (props) => {
@@ -18,7 +18,7 @@ const PopupDauNhot = (props) => {
     let chucvu = props.chucvu;
 
     useEffect(() => {
-        if(item&&item.maphutung){
+        if (item && item.maphutung) {
             mMaPhuTung.setValue(item.maphutung);
             mNameEng.setValue(item.tentienganh);
             mNameVie.setValue(item.tentiengviet);
@@ -27,8 +27,7 @@ const PopupDauNhot = (props) => {
             mViTri.setValue(item.vitri);
             mSoLuongTonKho.setValue(item.soluongtonkho);
             mNote.setValue(item.ghichu);
-        }else
-        {
+        } else {
             mMaPhuTung.setValue('');
             mNameEng.setValue('');
             mNameVie.setValue('');
@@ -39,8 +38,8 @@ const PopupDauNhot = (props) => {
             mNote.setValue('');
         }
     }, [item])
-    
-    
+
+
     const handleUpdate = () => {
         let _gia_head = parseInt(mGiaBanHead.value)
         let _gia_le = parseInt(mGiaBanLe.value)
@@ -56,21 +55,21 @@ const PopupDauNhot = (props) => {
             soluongtonkho: _soluong,
             ghichu: mNote.value,
         }
-        item.maphutung=data.maphutung;
-        item.tentienganh=data.tentienganh;
-        item.tentiengviet=data.tentiengviet;
-        item.giaban_head=data.giaban_head;
-        item.giaban_le=data.giaban_le;
-        item.soluongtonkho=data.soluongtonkho;
-        item.vitri=data.vitri;
-        item.ghichu=data.ghichu;
+        item.maphutung = data.maphutung;
+        item.tentienganh = data.tentienganh;
+        item.tentiengviet = data.tentiengviet;
+        item.giaban_head = data.giaban_head;
+        item.giaban_le = data.giaban_le;
+        item.soluongtonkho = data.soluongtonkho;
+        item.vitri = data.vitri;
+        item.ghichu = data.ghichu;
 
         UpdateDauNhot(props.token, data).then(res => {
             alert("Update thành công.");
             props.getList();
             props.onCloseClick();
         }).catch(err => {
-            alert("Lỗi update phụ tùng \n\n Error: "+err.response.data.error.message);
+            alert("Lỗi update phụ tùng \n\n Error: " + err.response.data.error.message);
         })
     }
     const handleAdd = () => {
@@ -138,7 +137,7 @@ const PopupDauNhot = (props) => {
                 <DivFlexRow >
                     <DivFlexColumn style={{ flex: 1 }}>
                         <label>Số lượng tồn kho </label>
-                        <Input type="number" min={0} {...mSoLuongTonKho}   disabled={!chucvu || chucvu != "Admin"}/>
+                        <Input type="number" min={0} {...mSoLuongTonKho} disabled={!chucvu || chucvu !== "Admin"} />
                     </DivFlexColumn>
 
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
@@ -150,7 +149,7 @@ const PopupDauNhot = (props) => {
 
                 <DivFlexRow style={{ justifyContent: 'flex-end', marginTop: 15 }}>
                     {loai && <Button onClick={handleUpdate}>Lưu</Button>}
-                    {loai === false && <Button isShowing={loai === false} style={{marginLeft: 15}} onClick={handleAdd}>Thêm Vào</Button>}
+                    {loai === false && <Button isShowing={loai === false} style={{ marginLeft: 15 }} onClick={handleAdd}>Thêm Vào</Button>}
                     <DelButton onClick={() => props.onCloseClick()} style={{ marginLeft: 15 }}>Hủy bỏ</DelButton>
                 </DivFlexRow>
 

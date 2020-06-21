@@ -399,6 +399,10 @@ const BanLe = (props) => {
             props.alert("phụ tùng không hợp lệ");
             return;
         }
+        if (item.soluongtonkho <= 0) {
+            props.alert("hiện tại phut tùng " + item.maphutung + " đã hết hàng\n Vui lòng kiểm tra lại kho");
+            return;
+        }
 
         let newData = {
             tencongviec: item.tentiengviet,

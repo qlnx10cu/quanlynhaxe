@@ -7,6 +7,10 @@ const AlertWarrper = (props) => {
     const onCloseClick = () => {
         props.setAlert(false, null, false);
     }
+    var message = [];
+    if (props && props.alert && props.alert.message) {
+        message = props.alert.message.split('\n');
+    }
     return (
         <ModalAlert className={props.alert.isLoading ? "active" : ""}>
             <ModalContent style={{ width: '50%' }} style={{ backgroundColor: props.alert.error ? '#ff4100' : "#fefefe" }}>
@@ -14,7 +18,9 @@ const AlertWarrper = (props) => {
                     <CloseButton onClick={() => onCloseClick()}>&times;</CloseButton>
                     <h2> </h2>
                 </div>
-                <h3 style={{ textAlign: 'center' }}>{props.alert.message}</h3>
+                {message.map((mess, index) => (
+                    <h3 key={index} style={{ textAlign: 'center' }}>{mess}</h3>
+                ))}
             </ModalContent>
         </ModalAlert >
     );

@@ -1,7 +1,8 @@
-import React, {Suspense} from 'react';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
+const AlertWarrper = React.lazy(() => import('./Warrper/AlertWarrper'))
 
-const Wrapper = styled.div `
+const Wrapper = styled.div`
     position: absolute;
     z-index: 10;
     top: 0;
@@ -15,10 +16,11 @@ const Wrapper = styled.div `
 `
 
 
-export default (Component) => {
+export default (Component, paramProps, paramExtend) => {
     return props => (
         <Suspense fallback={<Wrapper>Đang tải..</Wrapper>}>
-            <Component {...props}/>
+            <Component {...props} {...paramProps} {...paramExtend} />
+            <AlertWarrper></AlertWarrper>
         </Suspense>
     )
 }

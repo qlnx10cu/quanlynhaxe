@@ -15,7 +15,6 @@ import PopupBillCHN from './PopupBillCHN';
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
 import { GetListSalary } from '../../API/Salary'
 import { addBillProduct } from '../../actions/Product';
-import AlertWarrper from '../Warrper/AlertWarrper';
 import { alert, error, setLoading } from "../../actions/App";
 
 const listLoaiXe = [
@@ -777,7 +776,6 @@ const RepairedBill = (props) => {
                 setShowHistoryCustomer(false)
             }
             } ma={mMaKH.value && mMaKH.value !== "" ? mMaKH.value : null} />
-            <AlertWarrper />
         </div>
     )
 }

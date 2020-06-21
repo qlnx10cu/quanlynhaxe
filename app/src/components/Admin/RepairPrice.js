@@ -6,7 +6,6 @@ import RepairPriceDetail from './RepairPriceDetail'
 import { connect } from 'react-redux'
 import { setLoading } from "../../actions/App";
 import Loading from "../Loading";
-import AlertWarrper from '../Warrper/AlertWarrper';
 import { alert, error } from "../../actions/App";
 
 const RepairPrice = (props) => {
@@ -55,7 +54,6 @@ const RepairPrice = (props) => {
     }
     return (
         <div>
-            <AlertWarrper />
             {props.isLoading && <Loading />}
             {!props.isLoading &&
                 <React.Fragment>

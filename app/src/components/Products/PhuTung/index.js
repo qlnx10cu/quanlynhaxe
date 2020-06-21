@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { ProductContainer, DivFlexRow, Button, Table, DelButton, Input } from '../../../styles'
 import PopupPhuTung from './PopupPhuTung'
 import { DelPhuTung, DelAllPhuTung } from '../../../API/PhuTungAPI'
-import AlertWarrper from '../../Warrper/AlertWarrper';
 import { alert, error } from "../../../actions/App";
 
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
 const PhuTungItem = ({
+    stt,
     item,
     token,
     getList = () => {
@@ -33,6 +33,7 @@ const PhuTungItem = ({
 
     return (
         <tr>
+            <td>{stt}</td>
             <td>{item.maphutung}</td>
             <td>{item.tentiengviet}</td>
             {/* <td>{item.giaban_head.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td> */}
@@ -67,6 +68,7 @@ const PhuTung = (props) => {
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
     let chucvu = null;
+    const maxSizePage = 150;
 
     if (props.info && props.info.chucvu) {
         chucvu = props.info.chucvu
@@ -99,7 +101,7 @@ const PhuTung = (props) => {
     }, [props.listPhuTung.length]);
 
     const tachList = (list) => {
-        let tmp = _.chunk(list, 150);
+        let tmp = _.chunk(list, maxSizePage);
         setArrPhuTung(tmp);
         setMaxPage(tmp.length);
         setPage(0);
@@ -172,9 +174,9 @@ const PhuTung = (props) => {
 
             </DivFlexRow>
             <Table style={{ marginTop: 15 }}>
-                <tbody>
-
+                <thead>
                     <tr>
+                        <th>STT</th>
                         <th>Mã phụ tùng</th>
                         <th>Tên tiếng việt</th>
                         {/* <th>Giá nhập</th> */}
@@ -183,13 +185,15 @@ const PhuTung = (props) => {
                         <th>Số lượng <br /> tồn kho</th>
                         <th>Sửa/Xóa</th>
                     </tr>
-
+                </thead>
+                <tbody>
                     {
-                        mArrPhuTung[page] && mArrPhuTung[page].map(item => (
+                        mArrPhuTung[page] && mArrPhuTung[page].map((item, index) => (
                             <PhuTungItem
+                                key={index}
+                                stt={index + page * maxSizePage + 1}
                                 item={item}
                                 token={props.token}
-                                key={item.ma}
                                 getList={() => {
                                 }}
                                 alertProps={props.alert}
@@ -223,11 +227,12 @@ const PhuTung = (props) => {
                 item={itemEdit}
                 isShowing={isShowing}
                 listPhuTung={props.listPhuTung}
+                alert={props.alert}
+                error={props.error}
                 onCloseClick={() => { setShowing(false); setItemEdit(null) }}
                 getList={() => {
                 }}
             />
-            <AlertWarrper />
         </ProductContainer>
     );
 };

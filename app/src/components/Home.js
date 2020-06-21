@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ToolBar from './ToolBar'
-import {BrowserRouter as Router, Route} from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import styled from 'styled-components'
 import IO from 'socket.io-client';
-import {HOST} from '../Config'
+import { HOST } from '../Config'
 import LoadingComponent from './LoadingComponent';
 import { connect } from 'react-redux'
+import { alert, error, setLoading } from '../actions/App';
 const Staffs = React.lazy(() => import('./Admin/Staffs'));
 const Customer = React.lazy(() => import('./Admin/Customer'));
 const Products = React.lazy(() => import('./Products'));
@@ -13,7 +14,7 @@ const RepairPrice = React.lazy(() => import('./Admin/RepairPrice'));
 const Services = React.lazy(() => import('./Services/Services'));
 const RepairedBill = React.lazy(() => import('./Services/RepairedBill'));
 const BanLe = React.lazy(() => import('./BanLe'));
-const ChamCong = React.lazy(() => import ('./ChamCong'));
+const ChamCong = React.lazy(() => import('./ChamCong'));
 const ThongKe = React.lazy(() => import('./ThongKe/index.js'));
 const CuaHangNgoai = React.lazy(() => import('./CuaHangNgoai'))
 
@@ -28,20 +29,45 @@ const BaseContainer = styled.div`
 `;
 const Home = (props) => {
     const socket = IO(HOST);
+    useEffect(() => {
+        props.setLoading(true);
+    }, []);
+
+
     return (
         <Router>
-            <ToolBar socket={socket}/>
+            <ToolBar socket={socket} />
             <BaseContainer>
-                {props.info!=null && <Route exact path="/products" component={LoadingComponent(() =><Products chucvu={props.info.chucvu} {...props}/>)} />}
-                {props.info!=null && props.info.chucvu==="Admin"  && <Route path="/staffs" component={LoadingComponent(Staffs)}/>}
-                {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Dịch Vụ") && <Route path="/repairPrice" component={LoadingComponent(RepairPrice)}/>}
-                {props.info!=null && <Route path="/customer" component={LoadingComponent(Customer)}/>}
-                {props.info!=null && <Route exact path="/services" component={LoadingComponent(() =><Services socket={socket} {...props}/>)}/>}
-                {props.info!=null && <Route path="/services/repairedbill" component={LoadingComponent(() =><RepairedBill socket={socket} {...props}/>)}/>}
-                {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Phụ Tùng") &&  <Route path="/banle" component={LoadingComponent(BanLe)}/>}
-                {props.info!=null && (props.info.chucvu==="Admin" || props.info.chucvu==="Dịch Vụ") &&  <Route path="/chamcong" component={LoadingComponent(ChamCong)}/>}
-                <Route path="/thongke" component={LoadingComponent(ThongKe)}/>
-                <Route path="/cuahangngoai" component={LoadingComponent(CuaHangNgoai)}/>
+                {props.info != null &&
+                    <Route exact path="/products" component={LoadingComponent(() => <Products chucvu={props.info.chucvu} {...props} />)} />
+                }
+                {props.info != null && props.info.chucvu === "Admin" &&
+                    <Route path="/staffs" component={LoadingComponent(Staffs)} />
+                }
+                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ") &&
+                    <Route path="/repairPrice" component={LoadingComponent(RepairPrice)} />
+                }
+                {props.info != null &&
+                    <Route path="/customer" component={LoadingComponent(Customer, props)} />
+                }
+                {props.info != null &&
+                    <Route exact path="/services" component={LoadingComponent(() => <Services socket={socket} {...props} />)} />
+                }
+                {props.info != null &&
+                    <Route path="/services/repairedbill" component={LoadingComponent(() => <RepairedBill socket={socket} {...props} />)} />
+                }
+                {props.info != null &&
+                    (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") && <Route path="/banle" component={LoadingComponent(BanLe)} />
+                }
+                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ") &&
+                    <Route path="/chamcong" component={LoadingComponent(ChamCong)} />
+                }
+                {props.info != null &&
+                    <Route path="/thongke" component={LoadingComponent(ThongKe)} />
+                }
+                {props.info != null &&
+                    <Route path="/cuahangngoai" component={LoadingComponent(CuaHangNgoai)} />
+                }
             </BaseContainer>
         </Router>
     )
@@ -52,8 +78,14 @@ const mapState = (state) => ({
     info: state.Authenticate.info,
 })
 
+const mapDispatch = (dispatch) => ({
+    alert: (mess) => { dispatch(alert(mess)) },
+    error: (mess) => { dispatch(error(mess)) },
+    setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
+})
+
 // const mapDispatch = dispatch => ({
 //     showNoti: (type, mess) => { dispatch(showNoti(type, mess)) }
 // })
 
-export default connect(mapState, null)(Home);
+export default connect(mapState, mapDispatch)(Home);

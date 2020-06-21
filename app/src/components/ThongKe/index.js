@@ -7,7 +7,6 @@ import { GetListStaff } from '../../API/Staffs'
 import { HuyThanhToan, CheckUpdateBill } from '../../API/Bill'
 import { HOST } from '../../Config'
 import { connect } from 'react-redux'
-import AlertWarrper from '../Warrper/AlertWarrper';
 import { alert, setLoading } from "../../actions/App";
 
 
@@ -75,7 +74,6 @@ const ConfirmHoaDon = (props) => {
                         confirmBarCodeByServer();
                     }}>Thay đổi</Button>
                 </DivFlexRow>
-                <AlertWarrper></AlertWarrper>
             </ModalContent>
         </Modal>
 
@@ -260,7 +258,6 @@ const ThongKe = (props) => {
                 listStaff={listStaff}
             />
 
-            <AlertWarrper />
         </div>
     );
 }

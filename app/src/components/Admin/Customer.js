@@ -5,7 +5,6 @@ import CustomerDetail from './CustomerDetail'
 import { GetlistCustomer, DeleteCustomer } from '../../API/Customer'
 import HistoryCustomer from './HistoryCustomer'
 import Loading from "../Loading";
-import AlertWarrper from '../Warrper/AlertWarrper';
 import { alert, error, setLoading } from "../../actions/App";
 
 
@@ -22,12 +21,13 @@ const Customer = (props) => {
     }, []);
 
     const getlistCustomer = () => {
-        props.setLoading(true);
         GetlistCustomer(props.token).then(Response => {
             setlistCustomer(Response.data);
             setlistCustomerTemp(Response.data);
             props.setLoading(false);
-        });
+        }).catch(err => {
+            props.alert("Không thể load danh sách khách hàng");
+        })
     }
     // const handleButtonEdit = (item) => {
     //     setShowCustomerDetail(true);
@@ -147,10 +147,4 @@ const mapState = (state) => ({
     token: state.Authenticate.token
 })
 
-const mapDispatch = (dispatch) => ({
-    alert: (mess) => { dispatch(alert(mess)) },
-    error: (mess) => { dispatch(error(mess)) },
-    setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
-})
-
-export default connect(mapState, mapDispatch)(Customer);
+export default connect(mapState, null)(Customer);

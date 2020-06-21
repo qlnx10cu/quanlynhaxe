@@ -19,7 +19,6 @@ const PopupPhuTung = (props) => {
 
     useEffect(() => {
         if (item && item.maphutung) {
-            console.log(props);
             GetDetailPhuTung(props.token, item.maphutung).then(res => {
                 let _item = res.data;
                 mMaPhuTung.setValue(_item.maphutung);
@@ -91,7 +90,6 @@ const PopupPhuTung = (props) => {
             props.onCloseClick();
         })
             .catch(err => {
-                console.log(err);
                 alert("Lỗi Update phụ tùng")
             })
     }
@@ -123,7 +121,6 @@ const PopupPhuTung = (props) => {
             props.onCloseClick();
         })
             .catch(err => {
-                console.log(err);
                 alert("Lỗi thêm phụ tùng")
             })
     }
@@ -148,7 +145,7 @@ const PopupPhuTung = (props) => {
                 </DivFlexRow>
 
                 <DivFlexRow >
-                {(!item || !item.maphutung) &&<DivFlexColumn style={{ flex: 1 }}>
+                    {(!item || !item.maphutung) && <DivFlexColumn style={{ flex: 1 }}>
                         <label>Giá nhập</label>
                         <Input type="number" min={0} {...mGiaBanHead} />
                     </DivFlexColumn>}
@@ -166,7 +163,7 @@ const PopupPhuTung = (props) => {
                 <DivFlexRow >
                     <DivFlexColumn style={{ flex: 1 }}>
                         <label>Số lượng tồn kho </label>
-                        <Input type="number" min={0} {...mSoLuongTonKho}/>
+                        <Input type="number" min={0} {...mSoLuongTonKho} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Model</label>

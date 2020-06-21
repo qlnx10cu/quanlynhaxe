@@ -11,7 +11,6 @@ import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
 import { GetBillBanLeByMaHoaDon } from '../../API/Bill'
 import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
 import Loading from "../Loading";
-import AlertWarrper from '../Warrper/AlertWarrper';
 import { alert, error, setLoading } from "../../actions/App";
 
 const BanLe = (props) => {
@@ -438,7 +437,6 @@ const BanLe = (props) => {
     };
     return (
         <div>
-            <AlertWarrper />
             {props.isLoading && <Loading />}
             {!props.isLoading &&
                 <div>

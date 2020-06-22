@@ -1,6 +1,8 @@
 
 export const IS_LOADING = 'IS_LOADING';
 export const SWAP_ALERT = 'SWAP_ALERT';
+export const SWAP_CONFIRM = 'SWAP_CONFIRM';
+
 
 export const setLoading = (isLoading) => (dispatch) => {
     dispatch({
@@ -32,7 +34,6 @@ export const alert = (message) => {
 }
 
 export const error = (message, err) => {
-    console.log(err)
     return {
         type: SWAP_ALERT,
         data: {
@@ -44,4 +45,24 @@ export const error = (message, err) => {
 }
 
 
+export const setConfirm = (isLoading, message, callback) => {
+    return {
+        type: SWAP_CONFIRM,
+        data: {
+            isLoading: isLoading,
+            callback: callback,
+            message: message
+        }
+    };
+}
 
+export const confirm = (message, callback) => {
+    return {
+        type: SWAP_CONFIRM,
+        data: {
+            isLoading: true,
+            callback: callback,
+            message: message
+        }
+    };
+}

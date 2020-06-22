@@ -153,12 +153,16 @@ const ThongKe = (props) => {
 
     const handleSearchBienSoXe = () => {
         if (mBillCurrents) {
-            const result = mBillCurrents.filter(bill => searchBSX == "" || bill && bill.biensoxe && bill.biensoxe === searchBSX);
+            const result = mBillCurrents.filter(bill => searchBSX == "" || bill && bill.biensoxe && bill.biensoxe.toLowerCase().includes(searchBSX.toLowerCase()));
             setBills(result)
         }
     }
 
-
+    const _handleKeyPressBSX = (e) => {
+        if (e.key === 'Enter') {
+            handleSearchBienSoXe();
+        }
+    }
     return (
         <div>
             <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
@@ -185,7 +189,7 @@ const ThongKe = (props) => {
             <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                 <DivFlexRow style={{ alignItems: 'center' }}>
                     <label style={{ marginLeft: 10 }}>Biển số xe </label>
-                    <Input type="text" value={searchBSX} style={{ marginLeft: 10 }} onChange={(e) => setSearchBSX(e.target.value)} />
+                    <Input type="text" onKeyPress={_handleKeyPressBSX} value={searchBSX} style={{ marginLeft: 10 }} onChange={(e) => setSearchBSX(e.target.value)} />
                     <Button style={{ marginLeft: 10 }} onClick={handleSearchBienSoXe}>Search </Button>
                 </DivFlexRow>
             </DivFlexRow>

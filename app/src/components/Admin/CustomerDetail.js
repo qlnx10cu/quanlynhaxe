@@ -41,6 +41,10 @@ const CustomerDetail = (props) => {
     }, [item])
 
     const handleButtonSave = () => {
+        if (mSoXe == "") {
+            props.alert("Không thể để biển số xe trống");
+            return;
+        }
         var data = {
             ten: mCustomerName,
             sodienthoai: mSDT,
@@ -56,10 +60,14 @@ const CustomerDetail = (props) => {
             props.onCloseClick(true);
         }).catch(err => {
             setUpload(false);
-            alert("Tạo tài khoản thất bại \n\n Error:" + err.response.data.error.message);
+            props.alert("Tạo thông tin khách hàng thất bại \n Error:" + err.response.data.error.message);
         });
     };
     const handleButtonUpdate = () => {
+        if (mSoXe == "") {
+            props.alert("Không thể để biển số xe trống");
+            return;
+        }
         var data = {
             ten: mCustomerName,
             sodienthoai: mSDT,
@@ -75,8 +83,7 @@ const CustomerDetail = (props) => {
             props.onCloseClick(true);
         }).catch(err => {
             setUpload(false);
-            alert("Cập nhập tài khoản thất bại \n\n Error:" + err.response.data.error.message);
-            console.log(err.response.data);
+            props.alert("Cập nhập tài khoản thất bại \n Error:" + err.response.data.error.message);
         });
     };
 
@@ -121,13 +128,15 @@ const CustomerDetail = (props) => {
                 </DivFlexRow>
                 <DivFlexRow style={{ justifyContent: 'flex-end' }}>
                     {
-                        (!item || !item.ma) && <Button width='100px' onClick={() => handleButtonSave()}>
-                            {isUpload ? <i className="fas fa-spinner fa-spin"></i> : "Lưu"}
+                        (!item || !item.ma) && <Button width='200px' onClick={() => handleButtonSave()}>
+                            {isUpload ? "" : "Tạo khách hàng"}
+                            {isUpload ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-plus"></i>}
                         </Button>
                     }
                     {
-                        item && item.ma && <Button width='100px' onClick={() => handleButtonUpdate()}>
-                            {isUpload ? <i className="fas fa-spinner fa-spin"></i> : "Cập nhật"}
+                        item && item.ma && <Button width='150px' onClick={() => handleButtonUpdate()}>
+                            {isUpload ? "" : "Cập nhật"}
+                            {isUpload ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-edit"></i>}
                         </Button>
                     }
                 </DivFlexRow>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ProductContainer, DivFlexRow, Button, Table, DelButton, Input } from '../../../styles'
+import { ProductContainer, DivFlexRow, Button, Table, DelButton, Input, Select } from '../../../styles'
 import PopupPhuTung from './PopupPhuTung'
 import { DelPhuTung, DelAllPhuTung } from '../../../API/PhuTungAPI'
 import { alert, error } from "../../../actions/App";
@@ -64,11 +64,12 @@ const PhuTung = (props) => {
     let [itemEdit, setItemEdit] = useState({});
 
     let [mArrPhuTung, setArrPhuTung] = useState([]);
+    let [mArrPhuTungTemp, setArrPhuTungTemp] = useState([]);
     let [searchValue, setSearchValue] = useState("");
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
     let chucvu = null;
-    const maxSizePage = 150;
+    let [maxSizePage, setMaxSizePage] = useState(250);
 
     if (props.info && props.info.chucvu) {
         chucvu = props.info.chucvu
@@ -85,7 +86,8 @@ const PhuTung = (props) => {
         let list = props.listPhuTung.filter(function (item) {
             return (checkHasRender(search, item));
         });
-        tachList(list);
+        setArrPhuTungTemp(list);
+        tachList(list, maxSizePage);
     };
 
     const _handleKeyPress = (e) => {
@@ -96,12 +98,13 @@ const PhuTung = (props) => {
 
     useEffect(() => {
         if (props.listPhuTung) {
-            tachList(props.listPhuTung);
+            setArrPhuTungTemp(props.listPhuTung);
+            tachList(props.listPhuTung, maxSizePage);
         }
     }, [props.listPhuTung.length]);
 
-    const tachList = (list) => {
-        let tmp = _.chunk(list, maxSizePage);
+    const tachList = (list, size) => {
+        let tmp = _.chunk(list, size);
         setArrPhuTung(tmp);
         setMaxPage(tmp.length);
         setPage(0);
@@ -140,6 +143,11 @@ const PhuTung = (props) => {
         return (Search === "ALL" || item.tentiengviet.toLowerCase().includes(strSearch) || item.maphutung.toLowerCase().includes(strSearch));
     };
 
+    const handleChangeSoHang = (e) => {
+        setMaxSizePage(parseInt(e));
+        tachList(mArrPhuTungTemp, e);
+    }
+
     return (
 
         <ProductContainer className={props.isActive ? "active" : ""}>
@@ -160,8 +168,19 @@ const PhuTung = (props) => {
                     </Button>
                 </DivFlexRow>
 
-                <DivFlexRow>
-                    <Button onClick={handlePrevPage}>
+                <DivFlexRow style={{ alignItems: ' center', justifyContent: 'flex-end' }}>
+                    <label>Số hàng </label>
+                    <Select style={{ marginLeft: 10 }} width={100} value={maxSizePage} onChange={(e) => handleChangeSoHang(e.target.value)} >
+                        <option value="25" >25</option>
+                        <option value="50" >50</option>
+                        <option value="100" >100</option>
+                        <option value="250" >250</option>
+                        <option value="500" >500</option>
+                        <option value="1000" >1000</option>
+                        <option value="2000" >2000</option>
+                    </Select>
+
+                    <Button style={{ marginLeft: 35 }} onClick={handlePrevPage}>
                         <i className="fas fa-angle-double-left"></i>
                     </Button>
                     <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginLeft: 10 }}>

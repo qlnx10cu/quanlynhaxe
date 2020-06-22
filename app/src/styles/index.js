@@ -181,7 +181,7 @@ const DivFlexRow = styled.div`
 
 const Select = styled.select`
     border-radius: 3px;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid rgba(0,0,0);
     height: 38px;
     padding: 0 10px;
     font-size: 16px;

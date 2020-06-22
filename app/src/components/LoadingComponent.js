@@ -22,8 +22,8 @@ export default (Component, paramProps, paramExtend) => {
     return props => (
         <Suspense fallback={<Wrapper>Đang tải..</Wrapper>}>
             <Component {...props} {...paramProps} {...paramExtend} />
-            <AlertWarrper></AlertWarrper>
             <ConfirmWarrper></ConfirmWarrper>
+            <AlertWarrper></AlertWarrper>
         </Suspense>
     )
 }

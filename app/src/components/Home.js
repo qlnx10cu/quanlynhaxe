@@ -6,7 +6,7 @@ import IO from 'socket.io-client';
 import { HOST } from '../Config'
 import LoadingComponent from './LoadingComponent';
 import { connect } from 'react-redux'
-import { alert, error, setLoading } from '../actions/App';
+import { alert, error, setLoading, confirm } from '../actions/App';
 const Staffs = React.lazy(() => import('./Admin/Staffs'));
 const Customer = React.lazy(() => import('./Admin/Customer'));
 const Products = React.lazy(() => import('./Products'));
@@ -29,10 +29,6 @@ const BaseContainer = styled.div`
 `;
 const Home = (props) => {
     const socket = IO(HOST);
-    useEffect(() => {
-        props.setLoading(true);
-    }, []);
-
 
     return (
         <Router>
@@ -42,10 +38,10 @@ const Home = (props) => {
                     <Route exact path="/products" component={LoadingComponent(() => <Products chucvu={props.info.chucvu} {...props} />)} />
                 }
                 {props.info != null && props.info.chucvu === "Admin" &&
-                    <Route path="/staffs" component={LoadingComponent(Staffs)} />
+                    <Route path="/staffs" component={LoadingComponent(Staffs, props)} />
                 }
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ") &&
-                    <Route path="/repairPrice" component={LoadingComponent(RepairPrice)} />
+                    <Route path="/repairPrice" component={LoadingComponent(RepairPrice, props)} />
                 }
                 {props.info != null &&
                     <Route path="/customer" component={LoadingComponent(Customer, props)} />
@@ -56,17 +52,17 @@ const Home = (props) => {
                 {props.info != null &&
                     <Route path="/services/repairedbill" component={LoadingComponent(() => <RepairedBill socket={socket} {...props} />)} />
                 }
-                {props.info != null &&
-                    (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") && <Route path="/banle" component={LoadingComponent(BanLe)} />
+                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") &&
+                    <Route path="/banle" component={LoadingComponent(BanLe, props)} />
                 }
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ") &&
-                    <Route path="/chamcong" component={LoadingComponent(ChamCong)} />
+                    <Route path="/chamcong" component={LoadingComponent(ChamCong, props)} />
                 }
                 {props.info != null &&
-                    <Route path="/thongke" component={LoadingComponent(ThongKe)} />
+                    <Route path="/thongke" component={LoadingComponent(ThongKe, props)} />
                 }
                 {props.info != null &&
-                    <Route path="/cuahangngoai" component={LoadingComponent(CuaHangNgoai)} />
+                    <Route path="/cuahangngoai" component={LoadingComponent(CuaHangNgoai, props)} />
                 }
             </BaseContainer>
         </Router>
@@ -81,6 +77,7 @@ const mapState = (state) => ({
 const mapDispatch = (dispatch) => ({
     alert: (mess) => { dispatch(alert(mess)) },
     error: (mess) => { dispatch(error(mess)) },
+    confirm: (mess, callback) => { dispatch(confirm(mess, callback)) },
     setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
 })
 

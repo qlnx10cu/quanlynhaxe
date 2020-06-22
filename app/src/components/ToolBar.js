@@ -14,7 +14,7 @@ import ImgThongKe from '../icon/thongke.svg'
 import ImgBack from '../icon/back.svg'
 import ImgCustomer from '../icon/customer.svg'
 import { logout } from '../actions/Authenticate';
-import {getAllProduct} from '../actions/Product'
+import { getAllProduct } from '../actions/Product'
 
 const ToolBarItem = styled.div`
     display: flex;
@@ -57,7 +57,7 @@ const CToolBarItem = (props) => {
 const RenderByRole = (props) => {
     let canRender = props.Roles.indexOf(props.Role);
 
-    if(canRender > -1) {
+    if (canRender > -1) {
         return (
             <>
                 {props.children}
@@ -74,7 +74,7 @@ const ListToolBar = [
         index: 0,
         title: "Back",
         img: ImgBack,
-        Roles: ["Admin","Dịch Vụ", "Phụ Tùng","Văn Phòng"],
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng"],
         onClick: (history) => {
             history.goBack();
         },
@@ -83,7 +83,7 @@ const ListToolBar = [
         index: 1,
         title: "Sản Phẩm",
         img: ImgProduct,
-        Roles: ["Admin","Dịch Vụ", "Phụ Tùng","Văn Phòng"],
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/products') {
                 history.push("/products");
@@ -108,7 +108,7 @@ const ListToolBar = [
         index: 3,
         title: "Tiền Công",
         img: ImgRepairPrice,
-        Roles: ["Admin","Dịch Vụ","Văn Phòng"],
+        Roles: ["Admin", "Dịch Vụ", "Văn Phòng"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/repairPrice')
                 history.push("/repairPrice");
@@ -120,7 +120,7 @@ const ListToolBar = [
         index: 4,
         title: "Dịch vụ",
         img: ImgServices,
-        Roles: ["Admin","Dịch Vụ","Phụ Tùng"],
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/services') {
                 history.push("/services");
@@ -137,6 +137,10 @@ const ListToolBar = [
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/banle') {
                 history.push("/banle");
+            } else {
+                if (history.location.search.indexOf("mahoadon")) {
+                    window.location.href = "/banle"
+                }
             }
 
             setIndex(5);
@@ -147,7 +151,7 @@ const ListToolBar = [
         index: 6,
         title: "Khách Hàng",
         img: ImgCustomer,
-        Roles: ["Admin","Dịch Vụ", "Phụ Tùng","Văn Phòng"],
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/customer') {
                 history.push("/customer");
@@ -161,7 +165,7 @@ const ListToolBar = [
         index: 7,
         title: "Chấm công",
         img: ImgChamCong,
-        Roles: ["Admin","Dịch Vụ"],
+        Roles: ["Admin", "Dịch Vụ"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/chamcong') {
                 history.push("/chamcong");
@@ -174,7 +178,7 @@ const ListToolBar = [
         index: 8,
         title: "Thống kê",
         img: ImgThongKe,
-        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng","Văn Phòng"],
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/thongke') {
                 history.push("/thongke");
@@ -188,7 +192,7 @@ const ListToolBar = [
         index: 9,
         title: "Cửa hàng ngoài",
         img: ImgThongKe,
-        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng","Văn Phòng"],
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/cuahangngoai') {
                 history.push("/cuahangngoai");
@@ -211,7 +215,7 @@ const ToolBar = (props) => {
             console.log(props.info.chucvu);
             props.getAllProduct(props.token);
         }
-    },[props.info]);
+    }, [props.info]);
 
     return (
         <WraperToolBar>
@@ -223,7 +227,7 @@ const ToolBar = (props) => {
                                 <CToolBarItem
                                     isActive={index === item.index}
                                     title={item.title} img={item.img} onClick={() =>
-                                    item.onClick(props.history, setIndex)}
+                                        item.onClick(props.history, setIndex)}
                                 />
                             </RenderByRole>
                         </React.Fragment>
@@ -240,7 +244,7 @@ const mapState = (state) => ({
 });
 const mapDispatch = (dispatch) => ({
     logout: () => { dispatch(logout()) },
-    getAllProduct: (token) => {dispatch(getAllProduct(token))}
+    getAllProduct: (token) => { dispatch(getAllProduct(token)) }
 });
 
 export default connect(mapState, mapDispatch)(withRouter(ToolBar));

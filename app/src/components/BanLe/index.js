@@ -11,7 +11,6 @@ import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
 import { GetBillBanLeByMaHoaDon } from '../../API/Bill'
 import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
 import Loading from "../Loading";
-import { alert, error, setLoading } from "../../actions/App";
 
 const BanLe = (props) => {
 
@@ -385,7 +384,7 @@ const BanLe = (props) => {
             return (checkHasRender(search, item));
         });
         if (!list || list.length == 0) {
-            props.alert("Không tìm thấy item: " + search)
+            props.alert("Không tìm thấy phụ tùng: " + search)
             return;
         }
         var item = list[0];
@@ -400,7 +399,7 @@ const BanLe = (props) => {
             return;
         }
         if (item.soluongtonkho <= 0) {
-            props.alert("hiện tại phut tùng " + item.maphutung + " đã hết hàng\n Vui lòng kiểm tra lại kho");
+            props.alert("hiện tại phụ tùng " + item.maphutung + " đã hết hàng\n Vui lòng kiểm tra lại kho");
             return;
         }
 
@@ -449,11 +448,11 @@ const BanLe = (props) => {
                     <DivFlexRow>
                         <DivFlexColumn>
                             <label>Tên khách hàng: </label>
-                            <Input autocomplete="off" {...mCustomerName} />
+                            <Input autocomplete="off" {...mCustomerName} readOnly={loai == true} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Mã khách hàng: </label>
-                            <Input list="customer" name="customer" autocomplete="off" value={makhachhang} onChange={(e) => handleChangeKH(e)} />
+                            <Input list="customer" name="customer" autocomplete="off" value={makhachhang} onChange={(e) => handleChangeKH(e)} readOnly={loai == true} />
                             <datalist id="customer">
                                 {listCustomer.map((item, index) => (
                                     <option key={index} value={item.ma} >{item.ten}</option>
@@ -462,7 +461,7 @@ const BanLe = (props) => {
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Số điện thoại: </label>
-                            <Input list="sodienthoai" name="sodienthoai" autocomplete="off" value={sodienthoai} onChange={(e) => handleChangeSDT(e)} />
+                            <Input list="sodienthoai" name="sodienthoai" autocomplete="off" value={sodienthoai} onChange={(e) => handleChangeSDT(e)} readOnly={loai == true} />
                             <datalist id="sodienthoai">
                                 {listCustomer.map((item, index) => (
                                     <option key={index} value={item.sodienthoai} >{item.ten}</option>
@@ -472,7 +471,7 @@ const BanLe = (props) => {
 
                         <DivFlexColumn style={{ marginLeft: 20 }} >
                             <label>Địa chỉ: </label>
-                            <Input autocomplete="off" {...mDiaChi} width='400px' readOnly />
+                            <Input autocomplete="off" {...mDiaChi} width='400px' readOnly readOnly={loai == true} />
                         </DivFlexColumn>
                     </DivFlexRow>
                     <DivFlexRow style={{ marginTop: 5, marginBottom: 5, justifyContent: 'space-between', alignItems: 'center' }}>
@@ -544,14 +543,14 @@ const BanLe = (props) => {
                     <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
                         <label></label>
                         {loai && <Button onClick={() => {
-                            if (window.confirm("Bạn chắc muốn thay đổi")) {
+                            props.confirm("Bạn chắc muốn thay đổi hóa đơn " + mahoadonUpdate, () => {
                                 handleSaveBill();
-                            }
+                            })
                         }}>Thay đổi</Button>}
                         {!loai && <Button onClick={() => {
-                            if (window.confirm("Bạn chắc muốn thanh toán")) {
+                            props.confirm("Bạn muốn thanh toán", () => {
                                 handleAddBill();
-                            }
+                            })
                         }}>Thánh Toán</Button>}
                     </DivFlexRow>
                     <PopupNewProduct
@@ -586,10 +585,4 @@ const mapState = (state) => ({
 
 })
 
-const mapDispatch = (dispatch) => ({
-    alert: (mess) => { dispatch(alert(mess)) },
-    error: (mess) => { dispatch(error(mess)) },
-    setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
-})
-
-export default connect(mapState, mapDispatch)(BanLe);
+export default connect(mapState, null)(BanLe);

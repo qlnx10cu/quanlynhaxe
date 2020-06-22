@@ -1,5 +1,6 @@
 import {
     IS_LOADING,
+    SWAP_CONFIRM,
     SWAP_ALERT
 } from '../actions/App'
 
@@ -8,6 +9,11 @@ const initState = {
     alert: {
         isLoading: false,
         error: false,
+        message: ""
+    },
+    confirm: {
+        isLoading: false,
+        callback: null,
         message: ""
     },
 }
@@ -27,6 +33,16 @@ export default (state = initState, action) => {
                 alert: {
                     isLoading: action.data.isLoading,
                     error: action.data.error,
+                    message: action.data.message
+                }
+            }
+        }
+        case SWAP_CONFIRM: {
+            return {
+                ...state,
+                confirm: {
+                    isLoading: action.data.isLoading,
+                    callback: action.data.callback,
                     message: action.data.message
                 }
             }

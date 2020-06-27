@@ -4,15 +4,15 @@ const Abstract = require("../models/Abstract");
 async function getTable() {
 
     var liftTableBTC = [];
-    for (var i = 0; i < 12; i++)
+    for (var i = 0; i < 20; i++)
         liftTableBTC[i] = { "trangthai": 0, "mahoadon": "", "biensoxe": "" };
     let resulft = await Abstract.getList(BanNang);
     if (!resulft)
         return liftTableBTC;
-    if (resulft.length > 12) {
-        var size = resulft.length - 12;
+    if (resulft.length > 20) {
+        var size = resulft.length - 20;
         for (var i = 0; i < size; i++)
-            liftTableBTC[i + 12] = { "trangthai": 0, "mahoadon": "", "biensoxe": "" };
+            liftTableBTC[i + 20] = { "trangthai": 0, "mahoadon": "", "biensoxe": "" };
     }
     for (var i = 0; i < resulft.length; i++) {
         if (resulft[i].ma > resulft.length - 1)

@@ -163,6 +163,16 @@ const Services = (props) => {
                     <CRepairItem socket={props.socket} key={index + 8} STT={index + 8} history={props.history} select={select} release={release} item={liftTable[index + 7]} working={liftTable[index + 7] && liftTable[index + 7].trangthai} />
                 ))}
             </RepairWraper>
+            <RepairWraper>
+                {ARR.map(index => (
+                    <CRepairItem socket={props.socket} key={index + 12} STT={index + 12} history={props.history} select={select} release={release} item={liftTable[index + 11]} working={liftTable[index + 11] && liftTable[index + 11].trangthai} />
+                ))}
+            </RepairWraper>
+            <RepairWraper>
+                {ARR.map(index => (
+                    <CRepairItem socket={props.socket} key={index + 16} STT={index + 16} history={props.history} select={select} release={release} item={liftTable[index + 15]} working={liftTable[index + 15] && liftTable[index + 15].trangthai} />
+                ))}
+            </RepairWraper>
         </div>
     )
 }

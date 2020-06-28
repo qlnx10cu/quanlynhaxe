@@ -362,7 +362,7 @@ const RepairedBill = (props) => {
 
     const DelItem = (item) => {
         removeItemToProduct(item)
-        if (isUpdateBill !== 0)
+        if (!item.key)
             props.deleteItemBillProductMa(item.ma);
         else
             props.deleteItemBillProduct(item.key);
@@ -568,9 +568,9 @@ const RepairedBill = (props) => {
     const checkHasItem = (sp, item) => {
         if (sp.tenphutungvacongviec.toLowerCase() == "" || sp.tenphutungvacongviec.toLowerCase() != item.tenphutungvacongviec.toLowerCase())
             return false;
-        if (sp.maphutung == "" || sp.maphutung.toLowerCase() != item.maphutung.toLowerCase())
+        if (!sp.maphutung || sp.maphutung == "" || sp.maphutung.toLowerCase() != item.maphutung.toLowerCase())
             return false;
-        if (sp.nhacungcap == "" || sp.nhacungcap != 'Trung Trang' || sp.nhacungcap.toLowerCase() != item.nhacungcap.toLowerCase())
+        if (!sp.nhacungcap || sp.nhacungcap == "" || sp.nhacungcap != 'Trung Trang' || sp.nhacungcap.toLowerCase() != item.nhacungcap.toLowerCase())
             return false;
         if (!sp.dongia || sp.dongia < 0 || sp.dongia != item.dongia)
             return false;
@@ -813,8 +813,8 @@ const mapState = (state) => ({
 })
 const mapDispatch = (dispatch) => ({
     deleteBillProduct: () => { dispatch(deleteBillProduct()) },
-    deleteItemBillProduct: (key) => { console.log(key); dispatch(deleteItemBillProduct(key)) },
-    deleteItemBillProductMa: (key) => { console.log(key); dispatch(deleteItemBillProductMa(key)) },
+    deleteItemBillProduct: (key) => { dispatch(deleteItemBillProduct(key)) },
+    deleteItemBillProductMa: (key) => { dispatch(deleteItemBillProductMa(key)) },
     setListBillProduct: (arr) => { dispatch(setListBillProduct(arr)) },
     addBillProduct: (data) => { dispatch(addBillProduct(data)) },
     updateBillProduct: (data, index) => { dispatch(updateBillProduct(data, index)) }

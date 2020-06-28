@@ -362,7 +362,7 @@ const RepairedBill = (props) => {
 
     const DelItem = (item) => {
         removeItemToProduct(item)
-        if (!item.key)
+        if (!isUpdateBill !== 0 && item.key)
             props.deleteItemBillProductMa(item.ma);
         else
             props.deleteItemBillProduct(item.key);

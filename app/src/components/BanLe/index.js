@@ -64,14 +64,16 @@ const BanLe = (props) => {
 
 
     useEffect(() => {
-        props.setLoading(true);
+        props.setLoading(true, 2);
         clearAll();
 
+        var mhd = '';
+        var loai = false;
         let pathname = window.location.href;
         if (pathname.endsWith("/"))
             pathname = pathname.substring(0, pathname.length - 1);
         if (pathname.endsWith("/banle")) {
-            setLoai(false)
+            loai = false;
         }
         else {
             var queryParams = getQueryParams(window.location.href);
@@ -85,20 +87,32 @@ const BanLe = (props) => {
                 window.close()
                 return;
             }
+
+            mhd = queryParams.mahoadon;
             setmahoadonUpdate(queryParams.mahoadon)
-            setLoai(true)
-            getBill(queryParams.mahoadon)
+            loai = true;
+        }
+        if (loai == true) {
+            props.setLoading(true, 3);
         }
 
         GetListCuaHangNgoai(props.token).then(res => {
             setCuaHangNgoai(res.data);
+            props.addLoading();
         });
         GetlistCustomer(props.token).then(res => {
             setListCustomer(res.data);
-            props.setLoading(false);
+            props.addLoading();
         }).catch(err => {
             props.alert("Không thể lấy danh sách khách hàng")
         })
+
+        setLoai(loai)
+
+        if (loai == true) {
+            getBill(mhd)
+        }
+
 
     }, []);
     const getBill = (mahoadon) => {
@@ -124,6 +138,7 @@ const BanLe = (props) => {
             }
             setTongTien(data.tongtien);
             setProducts(chitiet)
+            props.addLoading();
 
         }).catch(err => {
             props.error("Không lấy được chi tiết hóa đơn:" + mahoadon);

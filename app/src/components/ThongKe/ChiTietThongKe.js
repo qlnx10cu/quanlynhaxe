@@ -34,7 +34,6 @@ const ChiTietThongKe = (props) => {
                 GetBillSuaChuaByMaHoaDon(props.token, props.mahoadon).then(res => {
                     getStaff(res.data.manv);
                     setData(res.data);
-                    console.log(res);
                 })
                     .catch(err => {
                         alert("Không lấy được chi tiết bill");

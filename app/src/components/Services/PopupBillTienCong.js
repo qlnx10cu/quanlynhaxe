@@ -67,13 +67,6 @@ const PopupBillTienCong = (props) => {
         setDonGia("0");
     };
 
-
-    useEffect(() => {
-        if (props.isShowing) {
-
-        };
-    }, [props.isShowing]);
-
     return (
         <Modal className={props.isShowing ? "active" : ""}>
             <ModalContent>

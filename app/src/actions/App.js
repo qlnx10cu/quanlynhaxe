@@ -1,15 +1,26 @@
 
 export const IS_LOADING = 'IS_LOADING';
+export const ADD_LOADING = 'ADD_LOADING';
 export const SWAP_ALERT = 'SWAP_ALERT';
 export const SWAP_CONFIRM = 'SWAP_CONFIRM';
 
 
-export const setLoading = (isLoading) => (dispatch) => {
+export const setLoading = (isLoading, totalLoading) => (dispatch) => {
     dispatch({
         type: IS_LOADING,
-        data: isLoading
+        data: {
+            isLoading: isLoading,
+            totalLoading: totalLoading
+        }
     });
 }
+export const addLoading = () => {
+    return {
+        type: ADD_LOADING,
+        data: null
+    };
+}
+
 
 export const setAlert = (isLoading, message, error) => {
     return {

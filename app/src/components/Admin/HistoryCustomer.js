@@ -83,33 +83,33 @@ const HistoryCustomer = (props) => {
                 <DivFlexRow style={{ marginTop: 10, width: '100%' }}>
                     <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                         Tên Khách Hàng
-                                <Input readOnly width='auto' value={mData.ten} />
+                                <Input readOnly width='auto' value={mData.ten || ''} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Số Điện Thoại
-                                <Input readOnly width='auto' type="Number" value={mData.sodienthoai} />
+                                <Input readOnly width='auto' type="Number" value={mData.sodienthoai || ''} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 5, width: 400 }}>
                         Địa Chỉ
-                                <Input readOnly width='auto' value={mData.diachi} />
+                                <Input readOnly width='auto' value={mData.diachi || ''} />
                     </DivFlexColumn>
                 </DivFlexRow>
                 <DivFlexRow style={{ marginTop: 10, width: '100%' }}>
                     <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                         Biển Số Xe
-                                <Input readOnly width='auto' value={mData.biensoxe} />
+                                <Input readOnly width='auto' value={mData.biensoxe || ''} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Loại Xe
-                                <Input readOnly width='auto' value={mData.loaixe} />
+                                <Input readOnly width='auto' value={mData.loaixe || ''} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Số  Khung
-                                <Input readOnly width='auto' value={mData.sokhung} />
+                                <Input readOnly width='auto' value={mData.sokhung || ''} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Số  Máy
-                                <Input readOnly width='auto' value={mData.somay} />
+                                <Input readOnly width='auto' value={mData.somay || ''} />
                     </DivFlexColumn>
                 </DivFlexRow>
                 <RenderTableDetail list={mData.chitiet} />

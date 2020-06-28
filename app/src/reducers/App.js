@@ -1,11 +1,14 @@
 import {
     IS_LOADING,
+    ADD_LOADING,
     SWAP_CONFIRM,
     SWAP_ALERT
 } from '../actions/App'
 
 const initState = {
     isLoading: false,
+    totalLoading: 0,
+    currentLoading: 0,
     alert: {
         isLoading: false,
         error: false,
@@ -24,7 +27,17 @@ export default (state = initState, action) => {
             {
                 return {
                     ...state,
-                    isLoading: action.data
+                    isLoading: action.data.isLoading,
+                    totalLoading: action.data.totalLoading || 1,
+                    currentLoading: action.data.currentLoading || 0
+                }
+            }
+        case ADD_LOADING:
+            {
+                return {
+                    ...state,
+                    isLoading: state.currentLoading + 1 != state.totalLoading,
+                    currentLoading: state.currentLoading + 1
                 }
             }
         case SWAP_ALERT: {

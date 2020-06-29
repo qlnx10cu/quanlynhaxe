@@ -347,6 +347,8 @@ const RepairedBill = (props) => {
                 props.deleteBillProduct();
                 props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon, biensoxe: bsx });
                 props.alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.data.mahoadon);
+                props.history.push("/services")
+                props.history.push("/services")
                 props.history.goBack();
             }).catch(err => {
                 props.error("Không thể lưu phiếu sữa chưa: ");
@@ -361,7 +363,9 @@ const RepairedBill = (props) => {
                 props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
                 setMaHoaDon("");
                 props.alert('Hủy hóa đơn ' + mMaHoaDon + ' thành công');
-                window.location.href = '/services';
+                props.history.push("/services")
+                props.history.push("/services")
+                props.history.goBack();
             }).catch(err => {
                 props.error('Hủy hóa đơn ' + mMaHoaDon + ' thất bại');
                 console.log(err);
@@ -459,6 +463,8 @@ const RepairedBill = (props) => {
                     props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
                     setMaHoaDon("");
                     exportBill()
+                    props.history.push("/services")
+                    props.history.push("/services")
                     props.history.goBack();
                 }).catch(err => {
                     console.log(err);

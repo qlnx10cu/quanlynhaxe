@@ -15,6 +15,7 @@ const initState = {
         message: ""
     },
     confirm: {
+        error: 0,
         isLoading: false,
         callback: null,
         message: ""
@@ -56,6 +57,7 @@ export default (state = initState, action) => {
                 confirm: {
                     isLoading: action.data.isLoading,
                     callback: action.data.callback,
+                    error: action.data.error,
                     message: action.data.message
                 }
             }

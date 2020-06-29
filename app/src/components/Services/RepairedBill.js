@@ -332,32 +332,41 @@ const RepairedBill = (props) => {
 
     const handleSaveBill = () => {
         var data = getData()
-        if (data == null)
+        if (data == null) {
+            props.error("Không thể lưu phiếu sữa chưa: ");;
             return;
+        }
+        var length = data.chitiet.length;
         var bsx = data.biensoxe;
-        SaveBill(props.token, data).then(Response => {
-            props.deleteBillProduct();
-            props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon, biensoxe: bsx });
-            props.alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.data.mahoadon);
-            props.history.goBack();
-        }).catch(err => {
-            props.error("Không thể lưu phiếu sữa chưa: ");
-            console.log(err);
-        })
+        var mess = "Bạn muốn lưu hóa đơn này với: " + length + " phụ tùng và tổng tiền:" + data.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) + " VND";
+        if (length == 0) {
+            mess = "Vui lòng lưu ý trước khi lưu\n Vì hóa đơn này có " + length + " phụ tùng"
+        }
+        props.confirmError(mess, length == 0? 1 : 0, () => {
+            SaveBill(props.token, data).then(Response => {
+                props.deleteBillProduct();
+                props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon, biensoxe: bsx });
+                props.alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.data.mahoadon);
+                props.history.goBack();
+            }).catch(err => {
+                props.error("Không thể lưu phiếu sữa chưa: ");
+                console.log(err);
+            })
+        });
 
     }
     const HuyHoaDon = () => {
-        if (window.confirm("Bạn chắc muốn hủy hóa đơn này") == true) {
+        props.confirmError("Bạn chắc muốn hủy hóa đơn " + mMaHoaDon, 2, () => {
             HuyThanhToan(props.token, mMaHoaDon).then(res => {
                 props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
                 setMaHoaDon("");
-                props.alert('Hủy đã thành công');
+                props.alert('Hủy hóa đơn ' + mMaHoaDon + ' thành công');
                 window.location.href = '/services';
             }).catch(err => {
-                props.error("Lỗi hủy hóa đơn");
+                props.error('Hủy hóa đơn ' + mMaHoaDon + ' thất bại');
                 console.log(err);
             })
-        }
+        })
     }
 
     const DelItem = (item) => {
@@ -383,6 +392,7 @@ const RepairedBill = (props) => {
         }
         var tong = 0;
         var listProduct = [];
+        console.log("listBill:", props.listBillProduct);
         for (let i = 0; i < props.listBillProduct.length; i++) {
             tong = tong + props.listBillProduct[i].tongtien;
             let temp = {
@@ -436,30 +446,50 @@ const RepairedBill = (props) => {
         if (data == null)
             return;
         data.mahoadon = mMaHoaDon;
-        UpdateBill(props.token, data).then(res => {
-            ThanhToan(props.token, mMaHoaDon).then(res => {
-                props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
-                setMaHoaDon("");
-                exportBill()
-                props.history.goBack();
+
+        var length = data.chitiet.length;
+        var mess = "Bạn muốn update và thanh toán hóa đơn " + mMaHoaDon + " với tổng tiền:" + data.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) + " VND";
+        if (length == 0) {
+            mess = "Vui lòng lưu ý trước khi thánh toán\n Vì hóa đơn này có " + length + " phụ tùng"
+        }
+
+        props.confirmError(mess, length == 0 ? 1 : 0, () => {
+            UpdateBill(props.token, data).then(res => {
+                ThanhToan(props.token, mMaHoaDon).then(res => {
+                    props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
+                    setMaHoaDon("");
+                    exportBill()
+                    props.history.goBack();
+                }).catch(err => {
+                    console.log(err);
+                    props.error("Không thể  thanh toán hóa đơn " + mMaHoaDon + "\nVui lòng kiểm lại đường mạng")
+                })
             }).catch(err => {
-                alert("Lỗi thanh toán")
+                console.log(err);
+                props.error("Không thể  update hóa đơn " + mMaHoaDon + "\nVui lòng kiểm lại đường mạng");
             })
-        }).catch(err => {
-            alert("Lỗi thanh toán")
         })
     }
     const UpdateHoaDon = () => {
         var data = getData();
         if (data == null)
             return;
-        data.mahoadon = mMaHoaDon;
-        UpdateBill(props.token, data).then(res => {
-            props.alert("Update hóa đơn thành công");
-            setUpdated(true);
-        }).catch(err => {
-            props.error("!!Không thể update hóa đơn thanh toán");
-        })
+
+        var length = data.chitiet.length;
+        var mess = "Bạn muốn update hóa đơn " + mMaHoaDon + " với tổng tiền:" + data.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) + " VND";
+        if (length == 0) {
+            mess = "Vui lòng lưu ý trước khi update\n Vì hóa đơn này có " + length + " phụ tùng"
+        }
+
+        props.confirmError(mess, length==0?1:0, () => {
+            data.mahoadon = mMaHoaDon;
+            UpdateBill(props.token, data).then(res => {
+                props.alert("Update hóa đơn " + mMaHoaDon + " thành công");
+                setUpdated(true);
+            }).catch(err => {
+                props.error("Không thể  update hóa đơn " + mMaHoaDon + "\nVui lòng kiểm lại đường mạng");
+            })
+        });
     }
 
     const updateTongTienBill = (product) => {
@@ -759,32 +789,24 @@ const RepairedBill = (props) => {
                         <label></label>
                         {isUpdateBill === 0 ?
                             <Button onClick={() => {
-                                if (window.confirm("Bạn chắc muốn lưu")) {
-                                    handleSaveBill();
-                                }
+                                handleSaveBill();
                             }}>
                                 Lưu
                     </Button>
                             :
                             <DivFlexRow>
                                 <Button onClick={() => {
-                                    if (window.confirm("Bạn chắc muốn thay đổi")) {
-                                        UpdateHoaDon();
-                                    }
+                                    UpdateHoaDon();
                                 }}>
                                     Update
                         </Button>
                                 {isUpdateBill != 3 && <Button style={{ marginLeft: 15 }} onClick={() => {
-                                    if (window.confirm("Bạn chắc muốn update và thanh toán")) {
-                                        thanhToanHoaDon()
-                                    }
+                                    thanhToanHoaDon()
                                 }}>
                                     Update và Thanh toán
                         </Button>}
                                 {isUpdateBill != 3 && <DelButton style={{ marginLeft: 15 }} onClick={() => {
-                                    if (window.confirm("Bạn chắc muốn Hủy hóa đợn")) {
-                                        HuyHoaDon();
-                                    }
+                                    HuyHoaDon();
                                 }}>
                                     Hủy
                         </DelButton>}

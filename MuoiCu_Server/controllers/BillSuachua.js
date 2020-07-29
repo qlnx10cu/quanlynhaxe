@@ -5,10 +5,11 @@ const Customer = require("../models/Customer");
 const Abstract = require('../models/Abstract');
 const XLSX = require('xlsx');
 const librespone = require("../lib/respone");
+var exec = require('child_process').exec;
 
 module.exports = {
 
-    getList: async function(req, res, next) {
+    getList: async function (req, res, next) {
         try {
             let resulft = await AbstractTwo.getList(Bill, BillSuachua, req.query);
             res.json(resulft);
@@ -16,7 +17,7 @@ module.exports = {
             librespone.error(req, res, error.message);
         }
     },
-    getChitiet: async function(req, res, next) {
+    getChitiet: async function (req, res, next) {
         try {
             let resulft = await BillSuachua.getChitiet(req.params.mahoadon);
             res.json(resulft);
@@ -24,7 +25,7 @@ module.exports = {
             librespone.error(req, res, error.message);
         }
     },
-    getByMa: async function(req, res, next) {
+    getByMa: async function (req, res, next) {
         try {
             var param = Object.assign(req.params, req.query);
             let resulft = await AbstractTwo.getList(Bill, BillSuachua, param);
@@ -33,7 +34,7 @@ module.exports = {
             librespone.error(req, res, error.message);
         }
     },
-    add: async function(req, res, next) {
+    add: async function (req, res, next) {
         try {
             if (!req.body.biensoxe) {
                 librespone.error(req, res, "Không có biển số xe");
@@ -86,13 +87,13 @@ module.exports = {
             let resulft = await Abstract.add(Bill, bodybill);
             if (detailbill.length != 0)
                 resulft = await Abstract.addMutil(BillSuachua, detailbill);
-                await BillSuachua.giamSoLuongPhuTung(mahoadon);
+            await BillSuachua.giamSoLuongPhuTung(mahoadon);
             res.json({ "mahoadon": mahoadon });
         } catch (error) {
             librespone.error(req, res, error.message);
         }
     },
-    update: async function(req, res, next) {
+    update: async function (req, res, next) {
         try {
             if (!req.body.mahoadon) {
                 librespone.error(req, res, "Không tồn tại mã hóa đơn");
@@ -116,7 +117,7 @@ module.exports = {
             data.somay = req.body.somay;
             data.biensoxe = req.body.biensoxe;
             data.ten = req.body.tenkh;
-            data.manvsuachua=req.body.manvsuachua;
+            data.manvsuachua = req.body.manvsuachua;
             var makh = req.body.makh;
             console.log("ma khd", makh);
 
@@ -150,8 +151,8 @@ module.exports = {
                 await BillSuachua.deleteMahoaDon(mahoadon);
                 if (detailbill.length != 0)
                     resulft = await Abstract.addMutil(BillSuachua, detailbill);
-                    await BillSuachua.giamSoLuongPhuTung(mahoadon);
-                    res.json({ "mahoadon": mahoadon });
+                await BillSuachua.giamSoLuongPhuTung(mahoadon);
+                res.json({ "mahoadon": mahoadon });
             } else
                 librespone.error(req, res, 'Không update được hóa đơn');
 
@@ -159,7 +160,7 @@ module.exports = {
             librespone.error(req, res, error.message);
         }
     },
-    delete: async function(req, res, next) {
+    delete: async function (req, res, next) {
         try {
             let resulft = await BillSuachua.delete(req.params.ma);
             res.json(resulft);
@@ -167,7 +168,7 @@ module.exports = {
             librespone.error(req, res, error.message);
         }
     },
-    export: async function(req, res, next) {
+    export: async function (req, res, next) {
         try {
             // var ws_data={"mahoadon":"DV-260071","manv":1,"manvsuachua":55,"manvtiepnhan":null,"tenkh":"adas","makh":20,"biensoxe":"67p1-6","tongtien":6592340,"ngayban":"2019-12-15 23:06:47","ngaythanhtoan":"2019-12-15 23:06:54","trangthai":1,"loaihoadon":0,"ngaysuachua":"2019-12-15 23:06:47","isdelete":0,"yeucaukhachhang":"321312asdadsadadafsfdskfskdf;l  fk;dsfk ;ldskf;lds kfk ;kf;ls f","tuvansuachua":"safafdsaf [of[pdsof  [pof[psa ofdsof[p sof[ps","sokm":0,"ma":20,"ten":"adas","sodienthoai":"asdsa","diachi":"sadsa","loaixe":"adsa79798","sokhung":"asdasd","somay":"sadas","chitiet":[{"ma":159,"mahoadon":"DV-260071","tenphutungvacongviec":"ÉP MÂM","nhacungcap":null,"maphutung":"","soluongphutung":2,"dongia":170000,"tiencong":0,"tongtien":340000,"manvsuachua":55},{"ma":160,"mahoadon":"DV-260071","tenphutungvacongviec":"Cao su giảm chấn bánh xe","nhacungcap":null,"maphutung":"06410KWB600","soluongphutung":1,"dongia":33000,"tiencong":2100000,"tongtien":2133000,"manvsuachua":55},{"ma":161,"mahoadon":"DV-260071","tenphutungvacongviec":"Cao su giảm chấn bánh xe","nhacungcap":null,"maphutung":"06410KVV900","soluongphutung":1,"dongia":41800,"tiencong":0,"tongtien":41800,"manvsuachua":55},{"ma":162,"mahoadon":"DV-260071","tenphutungvacongviec":"Cao su giảm chấn bánh xe","nhacungcap":null,"maphutung":"06410KFL850","soluongphutung":4,"dongia":27500,"tiencong":0,"tongtien":110000,"manvsuachua":55},{"ma":163,"mahoadon":"DV-260071","tenphutungvacongviec":"Bộ má phanh sau","nhacungcap":null,"maphutung":"06430KVB950","soluongphutung":4,"dongia":154880,"tiencong":0,"tongtien":619520,"manvsuachua":55},{"ma":164,"mahoadon":"DV-260071","tenphutungvacongviec":"Bộ má phanh","nhacungcap":null,"maphutung":"06430GCE305","soluongphutung":3,"dongia":65230,"tiencong":0,"tongtien":195690,"manvsuachua":55},{"ma":165,"mahoadon":"DV-260071","tenphutungvacongviec":"Bộ má phanh dầu sau","nhacungcap":null,"maphutung":"06435K01902","soluongphutung":1,"dongia":413600,"tiencong":2100000,"tongtien":2513600,"manvsuachua":55},{"ma":166,"mahoadon":"DV-260071","tenphutungvacongviec":"Bộ má phanh","nhacungcap":null,"maphutung":"06430GCE305","soluongphutung":1,"dongia":65230,"tiencong":24000,"tongtien":89230,"manvsuachua":55},{"ma":167,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PÍT TÔNG NGÀM PHANH","nhacungcap":null,"maphutung":"06451443405","soluongphutung":1,"dongia":34100,"tiencong":0,"tongtien":34100,"manvsuachua":55},{"ma":168,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PISTON NGÀM PHANH","nhacungcap":null,"maphutung":"06451961405","soluongphutung":1,"dongia":19800,"tiencong":0,"tongtien":19800,"manvsuachua":55},{"ma":169,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PÍT TÔNG NGÀM PHANH","nhacungcap":null,"maphutung":"06451443405","soluongphutung":1,"dongia":34100,"tiencong":0,"tongtien":34100,"manvsuachua":55},{"ma":170,"mahoadon":"DV-260071","tenphutungvacongviec":"test 23","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":20000,"tiencong":0,"tongtien":20000,"manvsuachua":55},{"ma":171,"mahoadon":"DV-260071","tenphutungvacongviec":"VỆ SINH BUỒNG ĐỐT","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":100000,"tiencong":0,"tongtien":100000,"manvsuachua":55},{"ma":172,"mahoadon":"DV-260071","tenphutungvacongviec":"test 23","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":20000,"tiencong":0,"tongtien":20000,"manvsuachua":55},{"ma":173,"mahoadon":"DV-260071","tenphutungvacongviec":"test 23","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":20000,"tiencong":0,"tongtien":20000,"manvsuachua":55},{"ma":174,"mahoadon":"DV-260071","tenphutungvacongviec":"Nan hoa sau,trong 10x156","nhacungcap":null,"maphutung":"06420KFL890","soluongphutung":1,"dongia":3300,"tiencong":0,"tongtien":3300,"manvsuachua":55},{"ma":175,"mahoadon":"DV-260071","tenphutungvacongviec":"ÉP MÂM","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":170000,"tiencong":0,"tongtien":170000,"manvsuachua":55},{"ma":176,"mahoadon":"DV-260071","tenphutungvacongviec":"test 23","nhacungcap":null,"maphutung":"","soluongphutung":3,"dongia":20000,"tiencong":0,"tongtien":60000,"manvsuachua":55},{"ma":177,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PÍT TÔNG NGÀM PHANH","nhacungcap":null,"maphutung":"06451443405","soluongphutung":1,"dongia":34100,"tiencong":0,"tongtien":34100,"manvsuachua":55},{"ma":178,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PÍT TÔNG NGÀM PHANH","nhacungcap":null,"maphutung":"06451443405","soluongphutung":1,"dongia":34100,"tiencong":0,"tongtien":34100,"manvsuachua":55}]}
             var ws_data = await Abstract.getOne(Bill, req.params);
@@ -206,7 +207,7 @@ module.exports = {
             })
         }
     },
-    exportBill: async function(req, res, next) {
+    exportBill: async function (req, res, next) {
         var ws_data = await BillSuachua.getChitiet(req.params.mahoadon);
         // var ws_data={"mahoadon":"DV-260071","manv":1,"manvsuachua":55,"manvtiepnhan":null,
         // "tenkh":"adas","makh":20,"biensoxe":"67p1-6","tongtien":6592340,
@@ -216,9 +217,9 @@ module.exports = {
         // "tuvansuachua":"safafdsaf [of[pdsof  [pof[ps321312asdadsakdf;l  fk;dsfk ;ldskf;lds kfk ;kf;ls f1312asdadsadadafsfdskfskdf;l  fk;dsfk ;ldskf;lds321312asdadsakdf;l  fk;dsfk ;ldskf;lds kfk ;kf;ls f1312asdadsadadafsfdskfskdf;l  fk;dsfk ;ldskf;ldsa ofdsof[p sof[ps",
         // "sokm":0,"ma":20,"ten":"adas","sodienthoai":"asdsa","diachi":"sadsa","loaixe":"adsa79798","sokhung":"asdasd","somay":"sadas","chitiet":[{"ma":159,"mahoadon":"DV-260071","tenphutungvacongviec":"ÉP MÂM","nhacungcap":null,"maphutung":"","soluongphutung":2,"dongia":170000,"tiencong":0,"tongtien":340000,"manvsuachua":55},{"ma":160,"mahoadon":"DV-260071","tenphutungvacongviec":"Cao su giảm chấn bánh xe","nhacungcap":null,"maphutung":"06410KWB600","soluongphutung":1,"dongia":33000,"tiencong":2100000,"tongtien":2133000,"manvsuachua":55},{"ma":161,"mahoadon":"DV-260071","tenphutungvacongviec":"Cao su giảm chấn bánh xe","nhacungcap":null,"maphutung":"06410KVV900","soluongphutung":1,"dongia":41800,"tiencong":0,"tongtien":41800,"manvsuachua":55},{"ma":162,"mahoadon":"DV-260071","tenphutungvacongviec":"Cao su giảm chấn bánh xe","nhacungcap":null,"maphutung":"06410KFL850","soluongphutung":4,"dongia":27500,"tiencong":0,"tongtien":110000,"manvsuachua":55},{"ma":163,"mahoadon":"DV-260071","tenphutungvacongviec":"Bộ má phanh sau","nhacungcap":null,"maphutung":"06430KVB950","soluongphutung":4,"dongia":154880,"tiencong":0,"tongtien":619520,"manvsuachua":55},{"ma":164,"mahoadon":"DV-260071","tenphutungvacongviec":"Bộ má phanh","nhacungcap":null,"maphutung":"06430GCE305","soluongphutung":3,"dongia":65230,"tiencong":0,"tongtien":195690,"manvsuachua":55},{"ma":165,"mahoadon":"DV-260071","tenphutungvacongviec":"Bộ má phanh dầu sau","nhacungcap":null,"maphutung":"06435K01902","soluongphutung":1,"dongia":413600,"tiencong":2100000,"tongtien":2513600,"manvsuachua":55},{"ma":166,"mahoadon":"DV-260071","tenphutungvacongviec":"Bộ má phanh","nhacungcap":null,"maphutung":"06430GCE305","soluongphutung":1,"dongia":65230,"tiencong":24000,"tongtien":89230,"manvsuachua":55},{"ma":167,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PÍT TÔNG NGÀM PHANH","nhacungcap":null,"maphutung":"06451443405","soluongphutung":1,"dongia":34100,"tiencong":0,"tongtien":34100,"manvsuachua":55},{"ma":168,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PISTON NGÀM PHANH","nhacungcap":null,"maphutung":"06451961405","soluongphutung":1,"dongia":19800,"tiencong":0,"tongtien":19800,"manvsuachua":55},{"ma":169,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PÍT TÔNG NGÀM PHANH","nhacungcap":null,"maphutung":"06451443405","soluongphutung":1,"dongia":34100,"tiencong":0,"tongtien":34100,"manvsuachua":55},{"ma":170,"mahoadon":"DV-260071","tenphutungvacongviec":"test 23","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":20000,"tiencong":0,"tongtien":20000,"manvsuachua":55},{"ma":171,"mahoadon":"DV-260071","tenphutungvacongviec":"VỆ SINH BUỒNG ĐỐT","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":100000,"tiencong":0,"tongtien":100000,"manvsuachua":55},{"ma":172,"mahoadon":"DV-260071","tenphutungvacongviec":"test 23","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":20000,"tiencong":0,"tongtien":20000,"manvsuachua":55},{"ma":173,"mahoadon":"DV-260071","tenphutungvacongviec":"test 23","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":20000,"tiencong":0,"tongtien":20000,"manvsuachua":55},{"ma":174,"mahoadon":"DV-260071","tenphutungvacongviec":"Nan hoa sau,trong 10x156","nhacungcap":null,"maphutung":"06420KFL890","soluongphutung":1,"dongia":3300,"tiencong":0,"tongtien":3300,"manvsuachua":55},{"ma":175,"mahoadon":"DV-260071","tenphutungvacongviec":"ÉP MÂM","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":170000,"tiencong":0,"tongtien":170000,"manvsuachua":55},{"ma":176,"mahoadon":"DV-260071","tenphutungvacongviec":"test 23","nhacungcap":null,"maphutung":"","soluongphutung":3,"dongia":20000,"tiencong":0,"tongtien":60000,"manvsuachua":55},{"ma":177,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PÍT TÔNG NGÀM PHANH","nhacungcap":null,"maphutung":"06451443405","soluongphutung":1,"dongia":34100,"tiencong":0,"tongtien":34100,"manvsuachua":55},{"ma":178,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PÍT TÔNG NGÀM PHANH","nhacungcap":null,"maphutung":"06451443405","soluongphutung":1,"dongia":34100,"tiencong":0,"tongtien":34100,"manvsuachua":55}]}
 
-        var chitiet=ws_data.chitiet;
-        for(var i=0;i<chitiet.length;i++){
-              chitiet[i].tinhtien= parseInt(chitiet[i].dongia)*parseInt(chitiet[i].soluongphutung)
+        var chitiet = ws_data.chitiet;
+        for (var i = 0; i < chitiet.length; i++) {
+            chitiet[i].tinhtien = parseInt(chitiet[i].dongia) * parseInt(chitiet[i].soluongphutung)
         }
         ws_data['tongtienpt'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.tinhtien, 0);
         ws_data['tongtiencong'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.tiencong, 0);
@@ -227,9 +228,27 @@ module.exports = {
         if (!ws_data['tenkh'])
             ws_data['tenkh'] = ''
 
-  
+
         // console.log(ws_data)
         res.render('exportsuachua', ws_data);
+    },
+    exportBillNew: async function (req, res, next) {
+        var ws_data = await BillSuachua.getChitiet(req.params.mahoadon);
+        if (ws_data == null) {
+            librespone.send(req, res, 'Khong tim thay mã hóa đơn ' + req.params.mahoadon);
+            return;
+        }
+        var cmd = 'D:\\hoctap\\ReadAndWriteFileExcel\\ReadAndWriteFileExcel\\bin\\Release\\ReadAndWriteFileExcel.exe suachua DV-000782 D:\\hoctap\\ReadAndWriteFileExcel\\ReadAndWriteFileExcel\\bin\\Release';
+
+        await exec(cmd, function (error, stdout, stderr) {
+            // command output is in stdout
+            console.log(error)
+            console.log(stdout)
+            console.log(stderr)
+        });
+
+        res.json({ "mahoadon": req.params.mahoadon });
+
     },
     // exportBill: async function (req, res, next) {
     // try {

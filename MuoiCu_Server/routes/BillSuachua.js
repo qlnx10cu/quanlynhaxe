@@ -9,6 +9,7 @@ router.delete('/mahoadon/:mahoadon', Bill.delete);
 router.get('/mahoadon/:mahoadon/chitiet', Bill.getChitiet);
 router.get("/mahoadon/:mahoadon/export",Bill.export);
 router.get("/mahoadon/:mahoadon/exportbill",Bill.exportBill);
+router.get("/mahoadon/:mahoadon/exportbillNew",Bill.exportBillNew);
 
 
 module.exports = router;

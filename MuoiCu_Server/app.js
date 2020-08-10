@@ -25,6 +25,7 @@ const {
 require('dotenv').config({
   path: '.env'
 })
+require('events').EventEmitter.prototype._maxListeners = 100;
 
 const config = require('./config');
 

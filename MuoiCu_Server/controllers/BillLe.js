@@ -95,11 +95,11 @@ module.exports = {
                 }
                 var paramHoaDon = { mahoadon: mahoadon };
 
-                let resulft = await Abstract.update(Bill, bodybill, paramHoaDon);
+                let resulft1 = await Abstract.update(Bill, bodybill, paramHoaDon);
                 await BillLe.deleteMahoaDon(mahoadon);
+                await BillLe.tangSoLuongPhuTung(resulft);
                 if (detailbill.length != 0) {
-                    await BillLe.tangSoLuongPhuTung(resulft);
-                    resulft = await Abstract.addMutil(BillLe, detailbill);
+                    resulft1 = await Abstract.addMutil(BillLe, detailbill);
                     await BillLe.giamSoLuongPhuTung(detailbill);
                 }
                 res.json({ "mahoadon": mahoadon });
@@ -117,6 +117,7 @@ module.exports = {
     delete: async function (req, res, next) {
         try {
             var param = Object.assign(req.params, req.query)
+            await BillLe.tangSoLuongPhuTungByMaHD(param.mahoadon)
             let resulft = await Abstract.delete(Bill, param);
             res.json(resulft);
         } catch (error) {

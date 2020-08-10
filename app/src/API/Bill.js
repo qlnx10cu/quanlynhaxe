@@ -80,3 +80,11 @@ export const HuyThanhToan = (token, mahoadon) => {
     }
     return axios.delete(url,{headers})
 }
+
+export const HuyThanhToanLe = (token, mahoadon) => {
+    let url = `${HOST}/billle/mahoadon/${mahoadon}/`;
+    let headers = {
+        'Authorization': 'Bearer ' + token
+    }
+    return axios.delete(url,{headers})
+}

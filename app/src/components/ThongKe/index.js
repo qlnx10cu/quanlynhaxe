@@ -4,7 +4,7 @@ import moment from 'moment'
 import { GetBillTheoNgay } from "../../API/ThongKeAPI"
 import ChiTietThongKe from './ChiTietThongKe'
 import { GetListStaff } from '../../API/Staffs'
-import { HuyThanhToan, CheckUpdateBill } from '../../API/Bill'
+import { HuyThanhToan, HuyThanhToanLe, CheckUpdateBill } from '../../API/Bill'
 import { HOST } from '../../Config'
 import { connect } from 'react-redux'
 import { alert, setLoading } from "../../actions/App";
@@ -106,12 +106,21 @@ const ThongKe = (props) => {
             props.alert("Không lấy được danh sách nhân viên");
         })
     }
-    const HuyHoaDon = (mMaHoaDon) => {
-        HuyThanhToan(props.token, mMaHoaDon).then(res => {
-            props.alert('Hủy đã thành công');
-        }).catch(err => {
-            props.alert("Lỗi hủy hóa đpm7")
-        })
+    const HuyHoaDon = (mMaHoaDon, loaiHD) => {
+        if (loaiHD == 0) {
+            HuyThanhToan(props.token, mMaHoaDon).then(res => {
+                props.alert('Hủy hóa đơn '+mMaHoaDon +' đã thành công: ');
+            }).catch(err => {
+                props.alert("Lỗi hủy hóa đơn "+mMaHoaDon )
+            })
+        }
+        if (loaiHD == 1) {
+            HuyThanhToanLe(props.token, mMaHoaDon).then(res => {
+                props.alert('Hủy hóa đơn '+mMaHoaDon +' đã thành công: ');
+            }).catch(err => {
+                props.alert("Lỗi hủy hóa đơn "+mMaHoaDon)
+            })
+        }
     }
 
     const handleLayDanhSach = () => {
@@ -232,7 +241,7 @@ const ThongKe = (props) => {
                                             }}>Thay đổi</Button>
 
                                             <DelButton style={{ marginLeft: 15 }} onClick={() => {
-                                                if (window.confirm("Bạn chắc muốn hủy") == true) { HuyHoaDon(item.mahoadon); handleLayDanhSach() }
+                                                if (window.confirm("Bạn chắc muốn hủy") == true) { HuyHoaDon(item.mahoadon, item.loaihoadon); handleLayDanhSach() }
                                             }}> Hủy</DelButton>
                                         </td>
                                         :

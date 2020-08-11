@@ -37,7 +37,7 @@ class BillChan {
         console.log(res);
     }
     static async getChitiet(param) {
-        let sql = "select * from hoadon where mahoadon= ? and trangthai!=2";
+        let sql = "select * from hoadon where mahoadon= ? and trangthai!=2  and loaihoadon=0";
         var result = [];
         var res = await query(sql, param);
         if (!res)
@@ -48,19 +48,52 @@ class BillChan {
 
         result = Object.assign(res[0], resKH[0]);
 
-        if(res[0].manvsuachua){
-            sql="select * from nhanvien where ma= ?"
+        if (res[0].manvsuachua) {
+            sql = "select * from nhanvien where ma= ?"
             var resNV = await query(sql, [res[0].manvsuachua]);
-            if(resNV){
-                result.tennvsuachua=resNV[0].ten
+            if (resNV) {
+                result.tennvsuachua = resNV[0].ten
             }
         }
-      
+
         sql = "select * from chitiethoadonsuachua where mahoadon = ? ";
         res = await query(sql, param);
         result["chitiet"] = res;
         return result;
     }
+
+    static async getChitietThanhToan(param) {
+        try {
+            let sql = "select * from hoadon where mahoadon= ? and trangthai =1  and loaihoadon=0";
+            var result = [];
+            var res = await query(sql, param);
+            if (!res || res.length == 0) {
+                return null;
+            }
+            sql = "select * from khachhang where ma = ?";
+            var resKH = await query(sql, [res[0].makh]);
+
+
+            result = Object.assign(res[0], resKH[0]);
+
+            if (res[0].manvsuachua) {
+                sql = "select * from nhanvien where ma= ?"
+                var resNV = await query(sql, [res[0].manvsuachua]);
+                if (resNV) {
+                    result.tennvsuachua = resNV[0].ten
+                }
+            }
+
+            sql = "select * from chitiethoadonsuachua where mahoadon = ? ";
+            res = await query(sql, param);
+            result["chitiet"] = res;
+            return result;
+        } catch (ex) {
+
+        }
+        return null;
+    }
+
     static getDuplicate() {
         return "";
     }
@@ -74,7 +107,7 @@ class BillChan {
             let sql = "select * from hoadon where mahoadon= ? and trangthai!=2";
             var result = [];
             var res = await query(sql, param);
-            if (!res||res.count==0)
+            if (!res || res.count == 0)
                 return [];
             result = res[0];
             sql = "select * from chitiethoadonsuachua ct where ct.mahoadon=?  AND maphutung!=''";

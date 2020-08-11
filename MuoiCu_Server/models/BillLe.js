@@ -32,16 +32,16 @@ class BillLe {
         return obj;
     }
     static async getChitiet(param) {
-        let sql = "select * from hoadon where mahoadon= ?";
+        let sql = "select * from hoadon where mahoadon= ? and trangthai!=2 and loaihoadon=1";
         var result = [];
         var res = await query(sql, param);
         result = res[0];
-        if(result&&result.makh){
-            sql="select * from khachhang where ma=?";
+        if (result && result.makh) {
+            sql = "select * from khachhang where ma=?";
             res = await query(sql, [result.makh]);
-            if(res&&res[0]){
-                result.diachi=res[0].diachi;
-                result.sodienthoai=res[0].sodienthoai;
+            if (res && res[0]) {
+                result.diachi = res[0].diachi;
+                result.sodienthoai = res[0].sodienthoai;
             }
         }
 
@@ -50,8 +50,36 @@ class BillLe {
         result["chitiet"] = res;
         return result;
     }
+
+    static async getChitietThanhToan(param) {
+        try {
+            let sql = "select * from hoadon where mahoadon= ? and trangthai=1 and loaihoadon=1";
+            var result = [];
+            var res = await query(sql, param);
+            if (!res|| res.length == 0) {
+                return null;
+            }
+            result = res[0];
+            if (result && result.makh) {
+                sql = "select * from khachhang where ma=?";
+                res = await query(sql, [result.makh]);
+                if (res && res[0]) {
+                    result.diachi = res[0].diachi;
+                    result.sodienthoai = res[0].sodienthoai;
+                }
+            }
+
+            sql = "select * from chitiethoadonle ct where ct.mahoadon=?";
+            res = await query(sql, param);
+            result["chitiet"] = res;
+            return result;
+        } catch (ex) {
+        }
+        return null;
+    }
+
     static async getChitietHungTrang(param) {
-        let sql = "select * from hoadon where mahoadon= ? and trangthai!=2 and loaihoadon=1";
+        let sql = "select * from hoadon where mahoadon= ? and trangthai=1 and loaihoadon=1";
         var result = [];
         var res = await query(sql, param);
         if (!res || res.count == 0)
@@ -63,7 +91,7 @@ class BillLe {
         return result;
     }
     static async getChitietCuaHoangNgoai(param) {
-        let sql = "select * from hoadon where mahoadon= ?";
+        let sql = "select * from hoadon where mahoadon= ? and trangthai=1  and loaihoadon=1";
         var result = [];
         var res = await query(sql, param);
         result = res[0];

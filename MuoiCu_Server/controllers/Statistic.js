@@ -20,6 +20,31 @@ module.exports = {
             })
         }
     },
+    getBillChitiet: async function (req, res, next) {
+        try {
+            let dsHoaDon = await Statistic.getBill(req.query);
+            var resulft = [];
+            for (var i in dsHoaDon) {
+                var hd = null;
+                if (req.query.loaihoadon == 0 && dsHoaDon[i].loaihoadon == 0) {
+                    hd = await billchan.getChitietThanhToan(dsHoaDon[i].mahoadon)
+                }
+                if (req.query.loaihoadon == 1 && dsHoaDon[i].loaihoadon == 1) {
+                    hd = await BillLe.getChitietThanhToan(dsHoaDon[i].mahoadon)
+                }
+                if (hd != null) {
+                    resulft.push(hd);
+                }
+            }
+            res.json(resulft);
+        } catch (error) {
+            res.status(400).json({
+                error: {
+                    message: error.message
+                }
+            })
+        }
+    },
     getBillExport: async function (req, res, next) {
         try {
             var param = req.query;
@@ -32,43 +57,49 @@ module.exports = {
             var workbook = XLSX.readFile(__dirname + '/excel/mauphutung.xlsx');
             var sheet_name_list = workbook.Sheets[workbook.SheetNames[0]];
             var wb = XLSX.utils.book_new();
+            let tmp = resulft.filter(e => e.loaihoadon === 1);
+            let arr = tmp.map(e => BillLe.getChitietHungTrang(e.mahoadon));
+            let _resultLe = await Promise.all(arr);
+            var dataLe = [];
+            var dataChan = [];
+
+            dataLe = _resultLe.reduce((returnData, cur) => {
+                return [...returnData, ...cur.chitiet]
+            }, [])
+            let tmpChan = resulft.filter(e => e.loaihoadon === 0);
+            arr = tmpChan.map(e => billchan.getChitietHungTrang(e.mahoadon));
+            let _resultChan = await Promise.all(arr);
+            dataChan = _resultChan.reduce((returnData, cur) => {
+                return [...returnData, ...cur.chitiet]
+            }, [])
 
             //Bill tổng
             {
-                let tmp = resulft.filter(e => e.loaihoadon === 1);
                 var ws = { ...sheet_name_list };
                 var k = 3;
                 var cc = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
                 var ci = 1;
                 var data = [];
-                var dataLe = [];
-                var dataChan = [];
 
-                let arr = tmp.map(e => BillLe.getChitietHungTrang(e.mahoadon));
-                let _result = await Promise.all(arr);
-                dataLe = _result.reduce((returnData, cur) => {
-                    return [...returnData, ...cur.chitiet]
-                }, [])
-
-
-                let tmpChan = resulft.filter(e => e.loaihoadon === 0);
-                arr = tmpChan.map(e => billchan.getChitietHungTrang(e.mahoadon));
-                let _resultChan = await Promise.all(arr);
-                dataChan = _resultChan.reduce((returnData, cur) => {
-                    return [...returnData, ...cur.chitiet]
-                }, [])
                 data = [...dataLe, ...dataChan];
 
                 data = data.reduce((returnData, cur) => {
-                    if (returnData[cur.maphutung]) {
+                    if (cur.maphutung == "") {
+                        return;
+                    }
+                    var nhacungcap = cur.nhacungcap;
+                    if (!nhacungcap) {
+                        nhacungcap = "Trung Trang";
+                    }
+                    if (returnData[cur.maphutung + "_" + cur.dongia + "_" + nhacungcap]) {
                         if (cur.loaihoadon === 1)
-                            returnData[cur.maphutung + "_" + cur.dongia]['soluong'] += cur.soluong ? cur.soluong : cur.soluongphutung;
+                            returnData[cur.maphutung + "_" + cur.dongia + "_" + nhacungcap]['soluong'] += cur.soluong ? cur.soluong : cur.soluongphutung;
                         else
-                            returnData[cur.maphutung + "_" + cur.dongia]['soluong'] += cur.soluong ? cur.soluong : cur.soluongphutung;
+                            returnData[cur.maphutung + "_" + cur.dongia + "_" + nhacungcap]['soluong'] += cur.soluong ? cur.soluong : cur.soluongphutung;
                         return returnData;
                     }
-                    returnData[cur.maphutung + "_" + cur.dongia] = cur;
-                    returnData[cur.maphutung + "_" + cur.dongia]['soluong'] = cur.soluong ? cur.soluong : cur.soluongphutung;
+                    returnData[cur.maphutung + "_" + cur.dongia + "_" + nhacungcap] = cur;
+                    returnData[cur.maphutung + "_" + cur.dongia + "_" + nhacungcap]['soluong'] = cur.soluong ? cur.soluong : cur.soluongphutung;
                     return returnData
                 }, {})
 
@@ -104,19 +135,13 @@ module.exports = {
 
             //Bill le
             {
-                let tmp = resulft.filter(e => e.loaihoadon === 1);
                 var ws = { ...sheet_name_list };
                 var k = 3;
                 var cc = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
                 var ci = 1;
                 var data = [];
 
-                let arr = tmp.map(e => BillLe.getChitietHungTrang(e.mahoadon));
-                let _result = await Promise.all(arr);
-                _result = _result.reduce((returnData, cur) => {
-                    return [...returnData, ...cur.chitiet]
-                }, [])
-                data = _result.reduce((returnData, cur) => {
+                data = dataLe.reduce((returnData, cur) => {
                     if (returnData[cur.maphutung + "_" + cur.dongia]) {
                         returnData[cur.maphutung + "_" + cur.dongia]['soluong'] += cur.soluong ? cur.soluong : cur.soluongphutung;
                         return returnData;
@@ -150,7 +175,6 @@ module.exports = {
 
             //Bill chan
             {
-                let tmp = resulft.filter(e => e.loaihoadon === 0);
                 var ws = { ...sheet_name_list };
 
                 var k = 3;
@@ -158,12 +182,7 @@ module.exports = {
                 var ci = 1;
                 var data = [];
 
-                let arr = tmp.map(e => billchan.getChitietHungTrang(e.mahoadon));
-                let _result = await Promise.all(arr);
-                _result = _result.reduce((returnData, cur) => {
-                    return [...returnData, ...cur.chitiet]
-                }, [])
-                data = _result.reduce((returnData, cur) => {
+                data = dataChan.reduce((returnData, cur) => {
                     if (returnData[cur.maphutung + "_" + cur.dongia]) {
                         returnData[cur.maphutung + "_" + cur.dongia]['soluong'] += cur.soluongphutung ? cur.soluongphutung : cur.soluong;
                         return returnData;
@@ -195,52 +214,52 @@ module.exports = {
                 XLSX.utils.book_append_sheet(wb, ws, 'billsuachua');
             }
 
-            //le ngoai
-            {
-                let tmp = resulft.filter(e => e.loaihoadon === 1);
-                var ws = { ...sheet_name_list };
+            // //le ngoai
+            // {
+            //     let tmp = resulft.filter(e => e.loaihoadon === 1);
+            //     var ws = { ...sheet_name_list };
 
-                var k = 3;
-                var cc = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
-                var ci = 1;
-                var data = [];
+            //     var k = 3;
+            //     var cc = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+            //     var ci = 1;
+            //     var data = [];
 
-                let arr = tmp.map(e => BillLe.getChitietCuaHoangNgoai(e.mahoadon));
-                let _result = await Promise.all(arr);
-                _result = _result.reduce((returnData, cur) => {
-                    return [...returnData, ...cur.chitiet]
-                }, [])
-                data = _result.reduce((returnData, cur) => {
-                    if (returnData[cur.tenphutung + cur.nhacungcap + "_" + cur.dongia]) {
-                        returnData[cur.tenphutung + cur.nhacungcap + "_" + cur.dongia]['soluong'] += cur.soluong ? cur.soluong : cur.soluongphutung;
-                        return returnData;
-                    }
-                    returnData[cur.tenphutung + cur.nhacungcap + "_" + cur.dongia] = cur;
-                    returnData[cur.tenphutung + cur.nhacungcap + "_" + cur.dongia]['soluong'] = cur.soluong ? cur.soluong : cur.soluongphutung;
-                    return returnData
-                }, {})
-                data = Object.keys(data).map((e, index) => ({
-                    STT: index + 1, maphutung: data[e].maphutung, ten: data[e].tenphutung,
-                    soluong: data[e].soluong, vitri: '', dongia: data[e].dongia, chuaVAT: 0, VAT: 0, tongtien: data[e].dongia * data[e].soluong
-                }));
-                let i = 7;
-                var tam = [];
-                var tam2 = [];
-                data.forEach(e => {
+            //     let arr = tmp.map(e => BillLe.getChitietCuaHoangNgoai(e.mahoadon));
+            //     let _result = await Promise.all(arr);
+            //     _result = _result.reduce((returnData, cur) => {
+            //         return [...returnData, ...cur.chitiet]
+            //     }, [])
+            //     data = _result.reduce((returnData, cur) => {
+            //         if (returnData[cur.tenphutung + cur.nhacungcap + "_" + cur.dongia]) {
+            //             returnData[cur.tenphutung + cur.nhacungcap + "_" + cur.dongia]['soluong'] += cur.soluong ? cur.soluong : cur.soluongphutung;
+            //             return returnData;
+            //         }
+            //         returnData[cur.tenphutung + cur.nhacungcap + "_" + cur.dongia] = cur;
+            //         returnData[cur.tenphutung + cur.nhacungcap + "_" + cur.dongia]['soluong'] = cur.soluong ? cur.soluong : cur.soluongphutung;
+            //         return returnData
+            //     }, {})
+            //     data = Object.keys(data).map((e, index) => ({
+            //         STT: index + 1, maphutung: data[e].maphutung, ten: data[e].tenphutung,
+            //         soluong: data[e].soluong, vitri: '', dongia: data[e].dongia, chuaVAT: 0, VAT: 0, tongtien: data[e].dongia * data[e].soluong
+            //     }));
+            //     let i = 7;
+            //     var tam = [];
+            //     var tam2 = [];
+            //     data.forEach(e => {
 
-                    Object.keys(e).forEach((k, j) => {
-                        ws[`${cc[j]}${i}`] = {
-                            t: 's',
-                            v: e[k],
-                            w: e[k],
-                            r: e[k]
-                        }
-                    })
-                    i++;
-                })
-                ws["!ref"] = `A1:K${i}`;
-                XLSX.utils.book_append_sheet(wb, ws, 'cuahangngoai');
-            }
+            //         Object.keys(e).forEach((k, j) => {
+            //             ws[`${cc[j]}${i}`] = {
+            //                 t: 's',
+            //                 v: e[k],
+            //                 w: e[k],
+            //                 r: e[k]
+            //             }
+            //         })
+            //         i++;
+            //     })
+            //     ws["!ref"] = `A1:K${i}`;
+            //     XLSX.utils.book_append_sheet(wb, ws, 'cuahangngoai');
+            // }
 
 
             // XLSX.utils.book_append_sheet(wb, ws, 'billchan');

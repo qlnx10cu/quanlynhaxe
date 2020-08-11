@@ -117,15 +117,15 @@ module.exports = {
     delete: async function (req, res, next) {
         try {
             var param = Object.assign(req.params, req.query)
+            var data = {};
+            data['ngaysuachua'] = new Date();
+            data["trangthai"] = 2;
             await BillLe.tangSoLuongPhuTungByMaHD(param.mahoadon)
             let resulft = await Abstract.delete(Bill, param);
             res.json(resulft);
+            res.json(resulft);
         } catch (error) {
-            res.status(400).json({
-                error: {
-                    message: error.message
-                }
-            })
+            librespone.error(req, res, error.message);
         }
     },
     export: async function (req, res, next) {
@@ -169,7 +169,7 @@ module.exports = {
     exportBill: async function (req, res, next) {
         var ws_data = await BillLe.getChitiet(req.params.mahoadon);
         // var ws_data=getDataTmp();
-        if(!ws_data){
+        if (!ws_data) {
             res.render('exportle', ws_data);
             return;
         }
@@ -179,11 +179,11 @@ module.exports = {
                 var nhanvien = await Abstract.getOne(Employee, datanv);
                 ws_data["tennv"] = nhanvien.ten;
             } catch (ex) {
-                console.log("exportBill:"+ex.message)
+                console.log("exportBill:" + ex.message)
             }
         }
-        if(!ws_data["tennv"]){
-            ws_data["tennv"]=ws_data["manv"];
+        if (!ws_data["tennv"]) {
+            ws_data["tennv"] = ws_data["manv"];
         }
         var chitiet = ws_data.chitiet;
         for (var i = 0; i < chitiet.length; i++) {

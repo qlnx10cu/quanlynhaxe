@@ -6,12 +6,6 @@ const NavBarContainer = styled.div`
     min-height: 50px;
     padding: 0px 15px;
     background-color: white;
-    -webkit-touch-callout: none; 
-    -webkit-user-select: none; 
-    -khtml-user-select: none;
-    -moz-user-select: none; 
-    -ms-user-select: none; 
-    user-select: none;
     display: flex;
     font-size: 20px;
     color: gray;

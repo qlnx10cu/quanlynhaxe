@@ -19,12 +19,6 @@ const ThongKe = React.lazy(() => import('./ThongKe/index.js'));
 const CuaHangNgoai = React.lazy(() => import('./CuaHangNgoai'))
 
 const BaseContainer = styled.div`
-    -webkit-touch-callout: none; 
-    -webkit-user-select: none; 
-    -khtml-user-select: none; 
-    -moz-user-select: none; 
-    -ms-user-select: none; 
-    user-select: none;
     padding: 10px 20px;
 `;
 const Home = (props) => {

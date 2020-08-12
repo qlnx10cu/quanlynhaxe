@@ -10,12 +10,6 @@ const WraperToolBar = styled.div`
     flex-direction: row;
     justify-content: space-between;
     border-bottom: 1px solid rgba(0,0,0,0.3);
-    -webkit-touch-callout: none; 
-    -webkit-user-select: none; 
-    -khtml-user-select: none; 
-    -moz-user-select: none; 
-    -ms-user-select: none; 
-    user-select: none;
 `
 
 // const BaseContainer = styled.div`

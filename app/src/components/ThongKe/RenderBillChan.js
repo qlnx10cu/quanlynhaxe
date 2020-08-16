@@ -1,7 +1,7 @@
 import React, { } from 'react';
 import { DivFlexRow, DivFlexColumn, Table, Input,Button } from '../../styles'
 import moment from 'moment';
-import { HOST } from '../../Config'
+import { HOST,HOST_SHEME } from '../../Config'
 
 const RenderTableBill = ({ list }) => {
 
@@ -49,6 +49,12 @@ const RenderBillChan = ({
             '_blank' // <- This is what makes it open in a new window.
         );
     }
+    const exportBillExcel = () => {
+        window.open(
+            `${HOST_SHEME}/exportsuachua?mahoadon=${data.mahoadon}`,
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    }
 
     return (
         <div>
@@ -78,7 +84,10 @@ const RenderBillChan = ({
                     </DivFlexColumn>
                     <Button onClick={exportBill} style={{ marginLeft: 20 ,marginTop:10}}>
                         Export
-                </Button>
+                    </Button>
+                    <Button onClick={exportBillExcel} style={{ marginLeft: 20 ,marginTop:10}}>
+                        Export Excel
+                    </Button>
                 </DivFlexRow>
                 <DivFlexRow>
                     <DivFlexColumn>

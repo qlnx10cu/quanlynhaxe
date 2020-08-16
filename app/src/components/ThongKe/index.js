@@ -5,7 +5,7 @@ import { GetBillTheoNgay } from "../../API/ThongKeAPI"
 import ChiTietThongKe from './ChiTietThongKe'
 import { GetListStaff } from '../../API/Staffs'
 import { HuyThanhToan, HuyThanhToanLe, CheckUpdateBill } from '../../API/Bill'
-import { HOST } from '../../Config'
+import { HOST, HOST_SHEME } from '../../Config'
 import { connect } from 'react-redux'
 import { alert, setLoading } from "../../actions/App";
 
@@ -109,16 +109,16 @@ const ThongKe = (props) => {
     const HuyHoaDon = (mMaHoaDon, loaiHD) => {
         if (loaiHD == 0) {
             HuyThanhToan(props.token, mMaHoaDon).then(res => {
-                props.alert('Hủy hóa đơn '+mMaHoaDon +' đã thành công: ');
+                props.alert('Hủy hóa đơn ' + mMaHoaDon + ' đã thành công: ');
             }).catch(err => {
-                props.alert("Lỗi hủy hóa đơn "+mMaHoaDon )
+                props.alert("Lỗi hủy hóa đơn " + mMaHoaDon)
             })
         }
         if (loaiHD == 1) {
             HuyThanhToanLe(props.token, mMaHoaDon).then(res => {
-                props.alert('Hủy hóa đơn '+mMaHoaDon +' đã thành công: ');
+                props.alert('Hủy hóa đơn ' + mMaHoaDon + ' đã thành công: ');
             }).catch(err => {
-                props.alert("Lỗi hủy hóa đơn "+mMaHoaDon)
+                props.alert("Lỗi hủy hóa đơn " + mMaHoaDon)
             })
         }
     }
@@ -148,6 +148,11 @@ const ThongKe = (props) => {
             url,
             '_blank' // <- This is what makes it open in a new window.
         );
+    }
+    const handleExportThongKe = () => {
+        let start = moment(dateStart).format("YYYY/MM/DD");
+        let end = moment(dateEnd).format("YYYY/MM/DD");
+        window.open(`${HOST_SHEME}/exportthongke?start=${start}&end=${end}`,"_blank");
     }
 
     const handleExportEmployee = () => {
@@ -188,6 +193,9 @@ const ThongKe = (props) => {
                     </Button>
                     <Button onClick={isLoading ? () => { } : handleExport} style={{ marginLeft: 10 }}>
                         {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Export"}
+                    </Button>
+                    <Button onClick={isLoading ? () => { } : handleExportThongKe} style={{ marginLeft: 10 }}>
+                        {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Export Thống kê"}
                     </Button>
                     <Button onClick={isLoading ? () => { } : handleLayDanhSach} style={{ marginLeft: 10 }}>
                         {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Lấy danh sách"}

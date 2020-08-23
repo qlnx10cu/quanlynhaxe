@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Table, Button, DivFlexRow } from '../../styles'
 import { Input } from '../../styles'
 import axios from 'axios';
-import { HOST } from '../../Config'
+import { HOST,HOST_SHEME } from '../../Config'
 import moment from 'moment'
 import styled from 'styled-components';
 // const NewInput = styled(Input)`
@@ -60,7 +60,7 @@ export default () => {
         }
     }
     const exportData = async () => {
-        let url = `${HOST}/statistic/chamcong/employee/execl?start=${start.value}&end=${end.value}`;
+        let url = `${HOST_SHEME}/exporttheodoi?start=${start.value}&end=${end.value}`;
             window.open(
                 url,
                 '_blank' // <- This is what makes it open in a new window.
@@ -100,16 +100,16 @@ export default () => {
                                     <tr key={index}>
                                         <td>{e.ngay}</td>
                                         {
-                                            e.data.map((el, i) => <td key={i}>{el.tiencong + el.vsbd + el.vskp}</td>)
+                                            e.data.map((el, i) => <td key={i}>{((el.tiencong + el.vsbd + el.vskp) || 0).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>)
                                         }
                                     </tr>
                                 ))
                             }
                             <tr>
-                                {/* {nv.length > 0 && <td>Tổng tiền</td>}
+                                {nv.length > 0 && <td>Tổng tiền</td>}
                                 {
-                                    nv.map((e, i) => <td key={i}>{sum[e]}</td>)
-                                } */}
+                                    nv.map((e, i) => <td key={i}>{sum[e].toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>)
+                                } 
                             </tr>
                         </tbody>
                     )

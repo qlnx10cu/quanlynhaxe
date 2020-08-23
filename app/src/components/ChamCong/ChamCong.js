@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Table, Button, DivFlexRow } from '../../styles'
 import { Input } from '../../styles'
 import axios from 'axios';
-import { HOST } from '../../Config'
+import { HOST, HOST_SHEME } from '../../Config'
 import moment from 'moment'
 import styled from 'styled-components';
 
@@ -53,6 +53,14 @@ export default () => {
 
         }
     };
+    const exportData = async () => {
+        let ngay = moment(dateStart).format('YYYY-MM-DD');
+        let url = `${HOST_SHEME}/exportchamcong?start=${ngay}`;
+        window.open(
+            url,
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    }
     const handleTextInput = (index, name, value) => {
         let newArr = [...arr];
         if (name === 'ghichu')
@@ -69,9 +77,14 @@ export default () => {
                     <label style={{ marginLeft: 10 }}>Ngày: </label>
                     <Input type="date" data-date="" data-date-format="DD MMMM YYYY" max={new Date()} value={dateStart} style={{ marginLeft: 10 }} onChange={(e) => setDateStart(e.target.value)} />
                 </DivFlexRow>
-                <Button onClick={isLoading ? null : () => fetchData()}>
-                    {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Lấy danh sách"}
-                </Button>
+                <DivFlexRow style={{ alignItems: 'center' }}>
+                    <Button onClick={isLoading ? null : () => exportData()}>
+                        {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Export"}
+                    </Button>
+                    <Button onClick={isLoading ? null : () => fetchData()}>
+                        {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Lấy danh sách"}
+                    </Button>
+                </DivFlexRow>
             </DivFlexRow>
             <Table style={{ marginTop: 15 }}>
                 <tbody>

@@ -81,7 +81,7 @@ export default () => {
                     <Button onClick={isLoading ? null : () => exportData()}>
                         {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Export"}
                     </Button>
-                    <Button onClick={isLoading ? null : () => fetchData()}>
+                    <Button  style={{ marginLeft: 10 }} onClick={isLoading ? null : () => fetchData()}>
                         {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Lấy danh sách"}
                     </Button>
                 </DivFlexRow>

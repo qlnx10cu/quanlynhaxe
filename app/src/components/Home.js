@@ -6,7 +6,7 @@ import IO from 'socket.io-client';
 import { HOST } from '../Config'
 import LoadingComponent from './LoadingComponent';
 import { connect } from 'react-redux'
-import { alert, error, setLoading, addLoading, confirm ,confirmError} from '../actions/App';
+import { alert, error, setLoading, addLoading, confirm, confirmError } from '../actions/App';
 const Staffs = React.lazy(() => import('./Admin/Staffs'));
 const Customer = React.lazy(() => import('./Admin/Customer'));
 const Products = React.lazy(() => import('./Products'));
@@ -49,7 +49,7 @@ const Home = (props) => {
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") &&
                     <Route path="/banle" component={LoadingComponent(BanLe, props)} />
                 }
-                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ") &&
+                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ" || props.info.chucvu === "Văn Phòng") &&
                     <Route path="/chamcong" component={LoadingComponent(ChamCong, props)} />
                 }
                 {props.info != null &&
@@ -72,7 +72,7 @@ const mapDispatch = (dispatch) => ({
     alert: (mess) => { dispatch(alert(mess)) },
     error: (mess) => { dispatch(error(mess)) },
     confirm: (mess, callback) => { dispatch(confirm(mess, callback)) },
-    confirmError: (mess,error, callback) => { dispatch(confirmError(mess, error,callback)) },
+    confirmError: (mess, error, callback) => { dispatch(confirmError(mess, error, callback)) },
     addLoading: () => { dispatch(addLoading()) },
     setLoading: (isLoad, totalLoading) => { dispatch(setLoading(isLoad, totalLoading)) }
 })

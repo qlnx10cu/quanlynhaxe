@@ -165,7 +165,7 @@ const ListToolBar = [
         index: 7,
         title: "Chấm công",
         img: ImgChamCong,
-        Roles: ["Admin", "Dịch Vụ"],
+        Roles: ["Admin", "Dịch Vụ", "Văn Phòng"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/chamcong') {
                 history.push("/chamcong");

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import lib from '../../lib'
-import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton } from '../../styles'
+import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton, ButtonChooseFile } from '../../styles'
 import PopupNewProduct from './PopupNewProduct'
 import PopupNewCuaHangNgoai from './PopupNewCuaHangNgoai'
 import { SaveBillBanLe } from '../../API/Bill'
@@ -11,6 +11,7 @@ import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
 import { GetBillBanLeByMaHoaDon } from '../../API/Bill'
 import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
 import Loading from "../Loading";
+import XLSX from 'xlsx';
 
 const BanLe = (props) => {
 
@@ -307,6 +308,17 @@ const BanLe = (props) => {
         }
     }
 
+    const addListItemToProduct = (items) => {
+        var tongtien = 0;
+        for (var k in items) {
+            var item = items[k];
+            tongtien += item.tongtien;
+        }
+        var product = [...mProducts];
+        setProducts(product.concat(items));
+        setTongTien(mTongTien + tongtien);
+    }
+
     const handleChangeKH = (e) => {
         setMaKhachHang(e.target.value);
         let kq = null;
@@ -453,6 +465,64 @@ const BanLe = (props) => {
             }
         }
     };
+
+    const handleChoseFile = async (e) => {
+        var files = e.target.files;
+        // props.setLoading(true);
+        try {
+            var value = await readFile(files[0], props.token)
+            addListItemToProduct(value);
+        }
+        catch (err) {
+        };
+        // props.setLoading(false);
+    }
+    function readFile(file, token) {
+        return new Promise((resolve, reject) => {
+            let reader = new FileReader();
+            reader.readAsArrayBuffer(file)
+            reader.onload = function (e) {
+                var dataFile = new Uint8Array(e.target.result);
+                var workbook = XLSX.read(dataFile, { type: 'array' });
+                var data = [];
+                for (let k in workbook.SheetNames) {
+                    if (k != "0") continue;
+                    console.log(workbook.SheetNames[k])
+                    const wsname = workbook.SheetNames[k];
+                    const ws = workbook.Sheets[wsname];
+                    var K = ws['!ref'].split(':')[1];
+                    var vitriK = parseInt(K.substring(1, K.length));
+                    for (var i = 13; i <= vitriK; i++) {
+                        if (ws["B" + i] == null && ws["C" + i] == null || ws["D" + i] == null || ws["D" + i].v == null || ws["E" + i] == null || ws["E" + i].v == null || ws["E" + i].v == 0)
+                            continue;
+                        var dongia = parseInt(ws["D" + i].v);
+                        var soluong = parseInt(ws["E" + i].v);
+                        var chieukhau = ws["G" + i] ? parseFloat(ws["G" + i].v) : 0
+
+                        let newData = {
+                            tencongviec: ws["C" + i] ? ws["C" + i].v : "",
+                            maphutung: ws["B" + i] ? ws["B" + i].v : "",
+                            dongia: dongia,
+                            soluong: soluong,
+                            chietkhau: chieukhau * 100,
+                            tongtien: (dongia - dongia * chieukhau) * soluong,
+                            nhacungcap: 'Trung Trang'
+                        };
+                        console.log(newData);
+
+                        data.push(newData);
+                    }
+                }
+                return resolve(data);
+            }
+            reader.onloadend = function (e) {
+                // return resolve(dataws);
+            }
+            reader.onerror = function (e) {
+                return reject(e);
+            }
+        })
+    }
     return (
         <div>
             {props.isLoading && <Loading />}
@@ -491,12 +561,17 @@ const BanLe = (props) => {
                     </DivFlexRow>
                     <DivFlexRow style={{ marginTop: 5, marginBottom: 5, justifyContent: 'space-between', alignItems: 'center' }}>
                         <label>Bảng giá phụ tùng: </label>
-                        <Button onClick={() => setNewCuaHangNgoai(true)}>
-                            Thêm Của Hàng Ngoài
-                </Button>
-                        <Button onClick={() => setNewProduct(true)}>
-                            Thêm Phụ Tùng
-                </Button>
+                        <Button onClick={() => setNewCuaHangNgoai(true)}>    Thêm Của Hàng Ngoài   </Button>
+                        <DivFlexRow>
+                            <ButtonChooseFile>
+                                <input type="file"
+                                    multiple
+                                    accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                    onChange={(e) => handleChoseFile(e)} />
+                                Import +
+                        </ButtonChooseFile>
+                            <Button style={{ marginLeft: 15 }} onClick={() => setNewProduct(true)}> Thêm Phụ Tùng  </Button>
+                        </DivFlexRow>
                     </DivFlexRow>
                     <DivFlexRow style={{ alignItems: 'center' }}>
                         <Input autoFocus list="browser_search" onKeyPress={_handleKeyPress} value={searchValue} style={{ width: 250, marginRight: 15 }}

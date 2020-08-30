@@ -342,7 +342,7 @@ const RepairedBill = (props) => {
         if (length == 0) {
             mess = "Vui lòng lưu ý trước khi lưu\n Vì hóa đơn này có " + length + " phụ tùng"
         }
-        props.confirmError(mess, length == 0? 1 : 0, () => {
+        props.confirmError(mess, length == 0 ? 1 : 0, () => {
             SaveBill(props.token, data).then(Response => {
                 props.deleteBillProduct();
                 props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon, biensoxe: bsx });
@@ -405,6 +405,7 @@ const RepairedBill = (props) => {
                 soluongphutung: props.listBillProduct[i].soluongphutung,
                 tiencong: props.listBillProduct[i].tiencong,
                 dongia: props.listBillProduct[i].dongia,
+                chietkhau: props.listBillProduct[i].chietkhau,
                 manvsuachua: mMaNVSuaChua.value,
                 tongtien: props.listBillProduct[i].tongtien
             }
@@ -419,6 +420,10 @@ const RepairedBill = (props) => {
             }
             if (item.dongia < 0) {
                 props.alert("Phụ tùng :" + item.tenphutungvacongviec + " có đơn giá < 0");
+                return null;
+            }
+            if (item.chietkhau < 0||item.chietkhau >100) {
+                props.alert("Phụ tùng :" + item.tenphutungvacongviec + " có chiết kháu không hợp lệ");
                 return null;
             }
             if (item.tiencong < 0) {
@@ -487,7 +492,7 @@ const RepairedBill = (props) => {
             mess = "Vui lòng lưu ý trước khi update\n Vì hóa đơn này có " + length + " phụ tùng"
         }
 
-        props.confirmError(mess, length==0?1:0, () => {
+        props.confirmError(mess, length == 0 ? 1 : 0, () => {
             data.mahoadon = mMaHoaDon;
             UpdateBill(props.token, data).then(res => {
                 props.alert("Update hóa đơn " + mMaHoaDon + " thành công");
@@ -512,10 +517,28 @@ const RepairedBill = (props) => {
             newItem.soluongphutung = parseInt(value);
         else
             newItem.soluongphutung = 1;
-        newItem.tongtien = parseInt(newItem.dongia) * parseInt(newItem.soluongphutung) + parseInt(newItem.tiencong);
+        newItem.tongtien = Math.round((100 - newItem.chietkhau) * parseInt(newItem.dongia) * parseInt(newItem.soluongphutung) + parseInt(newItem.tiencong)) / 100;
         let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
         props.setListBillProduct(newProduct);
         updateTongTienBill(newProduct);
+    }
+
+    const handleChangeChieuKhau = (value, index) => {
+        try {
+            let newItem = props.listBillProduct[index];
+            if (value && value >= 0 && value <= 100)
+                newItem.chietkhau = parseInt(value);
+            else
+                newItem.chietkhau = 0;
+            if (newItem.chietkhau < 0 || newItem.chietkhau > 100)
+                newItem.chietkhau = 0;
+            newItem.tongtien = Math.round((100 - newItem.chietkhau) * parseInt(newItem.dongia) * parseInt(newItem.soluongphutung) + parseInt(newItem.tiencong)) / 100;
+            let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
+            props.setListBillProduct(newProduct);
+            updateTongTienBill(newProduct);
+        } catch (ex) {
+
+        }
     }
 
 
@@ -525,7 +548,7 @@ const RepairedBill = (props) => {
             newItem.tiencong = parseInt(value);
         else
             newItem.tiencong = 0;
-        newItem.tongtien = parseInt(newItem.dongia) * parseInt(newItem.soluongphutung) + parseInt(newItem.tiencong);
+        newItem.tongtien = Math.round((100 - newItem.chietkhau) * parseInt(newItem.dongia) * parseInt(newItem.soluongphutung) + parseInt(newItem.tiencong)) / 100;
         let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
         props.setListBillProduct(newProduct);
         updateTongTienBill(newProduct);
@@ -592,6 +615,7 @@ const RepairedBill = (props) => {
             tenphutungvacongviec: item.tentiengviet,
             maphutung: item.maphutung,
             dongia: parseInt(item.giaban_le),
+            chietkhau: 0,
             soluongphutung: 1,
             tiencong: 0,
             tongtien: parseInt(item.giaban_le),
@@ -751,6 +775,7 @@ const RepairedBill = (props) => {
                                 <th>Mã phụ tùng</th>
                                 <th>Đơn giá</th>
                                 <th>SL</th>
+                                <th>Chiết khấu (%)</th>
                                 <th>Tiền phụ tùng</th>
                                 <th>Tiền công</th>
                                 <th>Tổng tiền công <br />+ phụ tùng</th>
@@ -764,7 +789,8 @@ const RepairedBill = (props) => {
                                     <td>{item.maphutung}</td>
                                     <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                                     <td><input type="number" onChange={(e) => handleChangeSL(e.target.value, index)} value={props.listBillProduct[index].soluongphutung} min="1" /></td>
-                                    <td>{(item.dongia * item.soluongphutung).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                                    <td><input type="number" max={100} onChange={(e) => handleChangeChieuKhau(e.target.value, index)} value={props.listBillProduct[index].chietkhau} min="0" /></td>
+                                    <td>{(Math.round((100 - item.chietkhau) * item.dongia * item.soluongphutung) / 100).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                                     <td>
                                         <input list="tien_cong_bill" type="number" onChange={(e) => handleChangeTienCong(e.target.value, index)} value={props.listBillProduct[index].tiencong} min="0" />
                                         <datalist id="tien_cong_bill">

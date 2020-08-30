@@ -51,6 +51,7 @@ const PopupBillTienCong = (props) => {
             tenphutungvacongviec: tentiencong,
             maphutung: "",
             dongia: 0,
+            chietkhau:0,
             soluongphutung: 0,
             tiencong: parseInt(dongia) || 0,
             tongtien: parseInt(dongia) || 0,

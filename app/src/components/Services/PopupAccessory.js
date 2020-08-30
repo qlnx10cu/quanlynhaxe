@@ -82,6 +82,7 @@ const PopupAccessory = (props) => {
             key: props.listBillProduct.length + 1,
             tenphutungvacongviec: mTenCongViec.value,
             maphutung: mMaPhuTung,
+            chietkhau:0,
             dongia: parseInt(mDonGia.value) || 0,
             soluongphutung: parseInt(mSoLuong.value) || 0,
             tiencong: 0,

@@ -422,7 +422,7 @@ const RepairedBill = (props) => {
                 props.alert("Phụ tùng :" + item.tenphutungvacongviec + " có đơn giá < 0");
                 return null;
             }
-            if (item.chietkhau < 0||item.chietkhau >100) {
+            if (item.chietkhau < 0 || item.chietkhau > 100) {
                 props.alert("Phụ tùng :" + item.tenphutungvacongviec + " có chiết kháu không hợp lệ");
                 return null;
             }
@@ -517,7 +517,7 @@ const RepairedBill = (props) => {
             newItem.soluongphutung = parseInt(value);
         else
             newItem.soluongphutung = 1;
-        newItem.tongtien = Math.round((100 - newItem.chietkhau) * parseInt(newItem.dongia) * parseInt(newItem.soluongphutung) + parseInt(newItem.tiencong)) / 100;
+        newItem.tongtien = Math.round((100 - newItem.chietkhau) * parseInt(newItem.dongia) * parseInt(newItem.soluongphutung)) / 100 + parseInt(newItem.tiencong);
         let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
         props.setListBillProduct(newProduct);
         updateTongTienBill(newProduct);
@@ -532,7 +532,7 @@ const RepairedBill = (props) => {
                 newItem.chietkhau = 0;
             if (newItem.chietkhau < 0 || newItem.chietkhau > 100)
                 newItem.chietkhau = 0;
-            newItem.tongtien = Math.round((100 - newItem.chietkhau) * parseInt(newItem.dongia) * parseInt(newItem.soluongphutung) + parseInt(newItem.tiencong)) / 100;
+            newItem.tongtien = Math.round((100 - newItem.chietkhau) * parseInt(newItem.dongia) * parseInt(newItem.soluongphutung)) / 100 + parseInt(newItem.tiencong);
             let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
             props.setListBillProduct(newProduct);
             updateTongTienBill(newProduct);
@@ -548,7 +548,7 @@ const RepairedBill = (props) => {
             newItem.tiencong = parseInt(value);
         else
             newItem.tiencong = 0;
-        newItem.tongtien = Math.round((100 - newItem.chietkhau) * parseInt(newItem.dongia) * parseInt(newItem.soluongphutung) + parseInt(newItem.tiencong)) / 100;
+        newItem.tongtien = Math.round((100 - newItem.chietkhau) * parseInt(newItem.dongia) * parseInt(newItem.soluongphutung)) / 100 + parseInt(newItem.tiencong);
         let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
         props.setListBillProduct(newProduct);
         updateTongTienBill(newProduct);

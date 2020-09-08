@@ -61,7 +61,7 @@ const ConfirmHoaDon = (props) => {
         <Modal className={props.isShowing ? "active" : ""}>
             <ModalContent style={{ width: '90%' }}>
                 <div style={{ paddingTop: 3, paddingBottom: 3 }}>
-                    <CloseButton onClick={() => props.onCloseClick()}>&times;</CloseButton>
+                    <CloseButton onClick={() => {setMaBarcode("");props.onCloseClick()}}>&times;</CloseButton>
                     <h2> </h2>
                 </div>
                 <h3 style={{ textAlign: 'center' }}>HEAD TRUNG TRANG</h3>

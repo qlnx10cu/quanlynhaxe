@@ -4,16 +4,16 @@ class Item {
     }
     static getColmun(param) {
         if (param) {
-            let tmp = ['maphutung', 'tentienganh', 'tentiengviet', 'loaiphutung', 'giaban_head', 'giaban_le', 'soluongtonkho', 'ghichu', 'vitri', 'ngaycapnhat',  'loaixe', 'mau', 'model'];
+            let tmp = ['maphutung', 'tentienganh', 'tentiengviet', 'loaiphutung', 'giaban_head', 'giaban_le', 'soluongtonkho', 'ghichu', 'vitri', 'ngaycapnhat', 'loaixe', 'mau', 'model'];
             return tmp.filter(e => Object.keys(param).includes(e));
         }
         return "`maphutung`,`tentienganh`,`tentiengviet`,`loaiphutung`,`giaban_head`, `giaban_le`, `soluongtonkho`,`ghichu`,`vitri`,`ngaycapnhat`,`vat_head`,`vat_le`,`giaban_head_chuavat`,`giaban_le_chuavat`";
     }
 
     static getDuplicate() {
-        return "ON DUPLICATE KEY UPDATE soluongtonkho = VALUES(soluongtonkho) ";
+        return "ON DUPLICATE KEY UPDATE soluongtonkho = soluongtonkho + VALUES(soluongtonkho) ";
     }
-  
+
     static getLike(k) {
         let tmp = ['maphutung', 'tentienganh', 'tentiengviet'];
         return tmp.includes(k);
@@ -25,7 +25,7 @@ class Item {
     }
 
     static getArrayParam(param) {
-        let tmp = ['maphutung', 'tentienganh', 'tentiengviet', 'loaiphutung', 'giaban_head', 'giaban_le', 'soluongtonkho', 'ghichu', 'vitri', 'ngaycapnhat',  'loaixe', 'mau', 'model'];
+        let tmp = ['maphutung', 'tentienganh', 'tentiengviet', 'loaiphutung', 'giaban_head', 'giaban_le', 'soluongtonkho', 'ghichu', 'vitri', 'ngaycapnhat', 'loaixe', 'mau', 'model'];
         let obj = {};
         let arr = Object.keys(param).filter(e => tmp.includes(e));
         arr.forEach(e => {

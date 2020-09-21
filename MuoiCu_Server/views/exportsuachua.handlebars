@@ -34,7 +34,7 @@
 
     .diachi {
       position: absolute;
-      top: 190px;
+      top: 195px;
       left: 350px;
       max-width: 350px;
     }
@@ -251,11 +251,22 @@
       max-width: 160px;
       text-align: right;
     }
+
     .tongTest {
       left: 1117px;
       min-width: 160px;
       max-width: 160px;
       text-align: right;
+    }
+
+    .tennvsuachua {
+      position: absolute;
+      top: 1480px;
+      left: 900px;
+      text-align: left;
+      min-width: 160px;
+      max-width: 160px;
+      font-size: 22px;
     }
   </style>
 </head>
@@ -297,6 +308,7 @@
   <div class="cell row-20 tiencong">{{tongtiencong}}</div>
   <div class="cell row-20 tong">{{tongtongtien}}</div>
   <div class="cell row-20 tongTest">{{tongtongtien}}</div>
+  <div class="tennvsuachua" id="tennvsuachua">{{tennvsuachua}}</div>
 
   <script>
     function format_momey(name) {
@@ -309,6 +321,11 @@
     format_momey("tienpt");
     format_momey("tiencong");
     format_momey("tong");
+    var tennvsuachua = document.getElementById("tennvsuachua");
+    if (tennvsuachua) {
+      var rs = tennvsuachua.innerText.split(" ");
+      tennvsuachua.innerText = rs[rs.length - 1];
+    }
 
 
   </script>

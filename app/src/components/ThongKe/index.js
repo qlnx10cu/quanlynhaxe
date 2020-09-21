@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DivFlexRow, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton } from '../../styles'
+import { DivFlexRow, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Select } from '../../styles'
 import moment from 'moment'
 import { GetBillTheoNgay } from "../../API/ThongKeAPI"
 import ChiTietThongKe from './ChiTietThongKe'
@@ -8,6 +8,7 @@ import { HuyThanhToan, HuyThanhToanLe, CheckUpdateBill } from '../../API/Bill'
 import { HOST, HOST_SHEME } from '../../Config'
 import { connect } from 'react-redux'
 import { alert, setLoading } from "../../actions/App";
+import _ from 'lodash'
 
 
 const oneDay = 1000 * 3600 * 24;
@@ -61,7 +62,7 @@ const ConfirmHoaDon = (props) => {
         <Modal className={props.isShowing ? "active" : ""}>
             <ModalContent style={{ width: '90%' }}>
                 <div style={{ paddingTop: 3, paddingBottom: 3 }}>
-                    <CloseButton onClick={() => {setMaBarcode("");props.onCloseClick()}}>&times;</CloseButton>
+                    <CloseButton onClick={() => { setMaBarcode(""); props.onCloseClick() }}>&times;</CloseButton>
                     <h2> </h2>
                 </div>
                 <h3 style={{ textAlign: 'center' }}>HEAD TRUNG TRANG</h3>
@@ -98,6 +99,9 @@ const ThongKe = (props) => {
     let [loaihoadon, setLoaiHoaDon] = useState("");
     let [isLoading, setLoading] = useState(false);
     let [listStaff, setListStaff] = useState([]);
+    let [maxSizePage, setMaxSizePage] = useState(20);
+    let [maxPage, setMaxPage] = useState(0);
+    let [page, setPage] = useState(0);
 
     const CallApiGetListStaff = () => {
         GetListStaff(props.token).then(res => {
@@ -128,7 +132,7 @@ const ThongKe = (props) => {
         let start = moment(dateStart).format("YYYY/MM/DD");
         let end = moment(dateEnd).format("YYYY/MM/DD");
         GetBillTheoNgay(props.token, start, end).then(res => {
-            setBills(res.data);
+            tachList(res.data, maxSizePage);
             setBillCurrents([...res.data]);
             CallApiGetListStaff();
         })
@@ -139,6 +143,33 @@ const ThongKe = (props) => {
             })
     }
 
+    const handleNextPage = () => {
+        let newPage = page + 1;
+        if (newPage >= maxPage) {
+            return;
+        }
+        setPage(newPage);
+    };
+
+    const handlePrevPage = () => {
+        let newPage = page - 1;
+        if (newPage < 0) {
+            return;
+        }
+        setPage(newPage);
+    };
+
+    const handleChangeSoHang = (e) => {
+        setMaxSizePage(parseInt(e));
+        tachList(mBillCurrents, e);
+    }
+
+    const tachList = (list, size) => {
+        let tmp = _.chunk(list, size);
+        setBills(tmp);
+        setMaxPage(tmp.length);
+        setPage(0);
+    };
 
     const handleExport = () => {
         let start = moment(dateStart).format("YYYY/MM/DD");
@@ -152,7 +183,7 @@ const ThongKe = (props) => {
     const handleExportThongKe = () => {
         let start = moment(dateStart).format("YYYY/MM/DD");
         let end = moment(dateEnd).format("YYYY/MM/DD");
-        window.open(`${HOST_SHEME}/exportthongke?start=${start}&end=${end}`,"_blank");
+        window.open(`${HOST_SHEME}/exportthongke?start=${start}&end=${end}`, "_blank");
     }
 
     const handleExportEmployee = () => {
@@ -167,8 +198,8 @@ const ThongKe = (props) => {
 
     const handleSearchBienSoXe = () => {
         if (mBillCurrents) {
-            const result = mBillCurrents.filter(bill => searchBSX == "" || bill && bill.biensoxe && bill.biensoxe.toLowerCase().includes(searchBSX.toLowerCase()));
-            setBills(result)
+            const result = mBillCurrents.filter(bill => searchBSX == "" || bill && bill.biensoxe && bill.biensoxe.toLowerCase().includes(searchBSX.toLowerCase()) || bill && bill.mahoadon && bill.mahoadon.toLowerCase().includes(searchBSX.toLowerCase()));
+            tachList(result, maxSizePage)
         }
     }
 
@@ -205,9 +236,26 @@ const ThongKe = (props) => {
             </DivFlexRow>
             <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                 <DivFlexRow style={{ alignItems: 'center' }}>
-                    <label style={{ marginLeft: 10 }}>Biển số xe </label>
+                    <label style={{ marginLeft: 10 }}>Search MHD,BSX: </label>
                     <Input type="text" onKeyPress={_handleKeyPressBSX} value={searchBSX} style={{ marginLeft: 10 }} onChange={(e) => setSearchBSX(e.target.value)} />
                     <Button style={{ marginLeft: 10 }} onClick={handleSearchBienSoXe}>Search </Button>
+                </DivFlexRow>
+                <DivFlexRow style={{ alignItems: ' center', justifyContent: 'flex-end', marginTop: 5, marginBottom: 10 }}>
+                    <label>Số hàng </label>
+                    <Select style={{ marginLeft: 10 }} width={100} value={maxSizePage} onChange={(e) => handleChangeSoHang(e.target.value)} >
+                        <option value="20" >20</option>
+                        <option value="50" >50</option>
+                        <option value="100" >100</option>
+                        <option value="250" >250</option>
+                        <option value="500" >500</option>
+                        <option value="1000" >1000</option>
+                        <option value="2000" >2000</option>
+                    </Select>
+                    <Button style={{ marginLeft: 35 }} onClick={handlePrevPage}><i className="fas fa-angle-double-left"></i></Button>
+                    <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginLeft: 10 }}>
+                        <div> {page + 1}/{maxPage > 1 ? maxPage : 1}</div>
+                    </DivFlexRow>
+                    <Button style={{ marginLeft: 15 }} onClick={handleNextPage}><i className="fas fa-angle-double-right"></i></Button>
                 </DivFlexRow>
             </DivFlexRow>
 
@@ -224,7 +272,7 @@ const ThongKe = (props) => {
                     </tr>
 
                     {
-                        mBills && mBills.map((item, index) => (
+                        mBills[page] && mBills[page].map((item, index) => (
                             <tr key={index}>
                                 <td>{item.mahoadon}</td>
                                 <td>{item.biensoxe}</td>
@@ -261,6 +309,13 @@ const ThongKe = (props) => {
                     }
                 </tbody>
             </Table>
+            <DivFlexRow style={{ alignItems: ' center', justifyContent: 'flex-end', marginTop: 15 }}>
+                <Button onClick={handlePrevPage}><i className="fas fa-angle-double-left"></i></Button>
+                <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginLeft: 10 }}>
+                    <div> {page + 1}/{maxPage > 1 ? maxPage : 1}</div>
+                </DivFlexRow>
+                <Button style={{ marginLeft: 15 }} onClick={handleNextPage}><i className="fas fa-angle-double-right"></i></Button>
+            </DivFlexRow>
             <ConfirmHoaDon
                 isShowing={isShowingConfirm}
                 onCloseClick={() => setShowingConfirm(false)}

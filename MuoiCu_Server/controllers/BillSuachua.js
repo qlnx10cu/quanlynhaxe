@@ -210,7 +210,7 @@ module.exports = {
     exportBill: async function (req, res, next) {
         var ws_data = await BillSuachua.getChitiet(req.params.mahoadon);
         // var ws_data = {
-        //     "mahoadon": "DV-260071", "manv": 1, "manvsuachua": 55, "manvtiepnhan": null,
+        //     "mahoadon": "DV-260071", "manv": 1, "manvsuachua": 55, "manvtiepnhan": null, "tennvsuachua": "Nguyễn Đức Cường"
         //     "tenkh": "adas", "makh": 20, "biensoxe": "67p1-6", "tongtien": 6592340,
         //     "ngayban": "2019-12-15 23:06:47", "ngaythanhtoan": "2019-12-15 23:06:54", "trangthai": 1,
         //     "loaihoadon": 0, "ngaysuachua": "2019-12-15 23:06:47", "isdelete": 0,

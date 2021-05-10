@@ -190,6 +190,12 @@ const Input = styled.input`
     margin: 8px 0;
 `;
 
+const Textarea = styled.textarea`
+    width: ${props => props.width || 'auto'};
+    padding: 8px 20px;
+    margin: 8px 0;
+`;
+
 const ProductContainer = styled.div`
     display: none;
     width: auto;
@@ -229,6 +235,7 @@ export {
     ModalContent,
     ModalAlert,
     Input,
+    Textarea,
     Table,
     Select,
     CloseButton,

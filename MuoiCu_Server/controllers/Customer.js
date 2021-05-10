@@ -78,7 +78,6 @@ module.exports = {
                     var nhanvien  = await Abstract.getOne(Employee, param);
                     item.tennvsuachua=nhanvien.ten;
                 }
-                console.log(item);
             }
             res.json(resulft);
         } catch (error) {

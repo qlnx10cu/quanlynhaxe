@@ -61,7 +61,6 @@ module.exports = {
             let resulft = await Abstract.update(Employee, req.body, req.params);
             res.json(resulft);
         } catch (error) {
-            console.log(error);
             res.status(400).json({
                 error: {
                     message: error.message

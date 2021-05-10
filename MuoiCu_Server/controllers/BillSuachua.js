@@ -53,12 +53,10 @@ module.exports = {
             data.biensoxe = req.body.biensoxe;
             data.ten = req.body.tenkh;
             var makh = req.body.makh;
-            console.log("ma khd", makh);
 
             if (!makh) {
                 let r = await Abstract.add(Customer, data);
                 makh = r.insertId;
-                console.log(r.insertId);
                 if (!r || r == null) {
                     librespone.error(req, res, "Kiểm tra lại thông tin khách hàng");
                     return;
@@ -236,7 +234,6 @@ module.exports = {
             ws_data['tenkh'] = ''
 
 
-        // console.log(ws_data)
         res.render('exportsuachua', ws_data);
     },
     exportBillNew: async function (req, res, next) {

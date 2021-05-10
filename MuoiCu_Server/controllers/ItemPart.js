@@ -76,7 +76,6 @@ module.exports = {
             }
             res.json({ message: "Thành công", type: "success" });
         } catch (error) {
-            console.log(error.message);
             res.status(400).json({
                 error: {
                     message: error.message

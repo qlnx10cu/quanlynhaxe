@@ -608,9 +608,15 @@ const RepairedBill = (props) => {
         props.confirmError(mess, length == 0 ? 1 : 0, () => {
             data.mahoadon = mMaHoaDon;
             UpdateBill(props.token, data).then(res => {
-                setUpdated(true);
-                props.history.push('/services/repairedbill/showbill?mahoadon=' + mMaHoaDon, { message: "Update hóa đơn " + mMaHoaDon + " thành công" });
-                props.history.go();
+                if (isUpdateBill == 4) {
+                    setUpdated(true);
+                    props.history.push('/services/repairedbill/showbill?mahoadon=' + mMaHoaDon, { message: "Update hóa đơn " + mMaHoaDon + " thành công" });
+                    props.history.go();
+                } else {
+                    props.success("Update hóa đơn " + mMaHoaDon + " thành công");
+                    setUpdated(true);
+                }
+
             }).catch(err => {
                 console.log(err);
                 props.error("Không thể  update hóa đơn " + mMaHoaDon + "\nVui lòng kiểm lại đường mạng");

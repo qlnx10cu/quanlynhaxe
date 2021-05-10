@@ -58,12 +58,16 @@ const CRepairItem = (props) => {
     let mIsWorking = props.working || 0;
     const handleBtnUseClick = () => {
         props.select(props.STT, null, () => {
-            if (props.history.location.pathname !== '/services/repairedbill')
+            if (props.history.location.pathname !== '/services/repairedbill'){
                 props.history.push(`/services/repairedbill/${props.STT}`)
+                props.history.go();
+            }
+
         });
     }
     const handleXemThongTin = () => {
         props.history.push(`/services/repairedbill/${props.STT}`)
+        props.history.go();
     }
 
     const handleThuHoi = () => {

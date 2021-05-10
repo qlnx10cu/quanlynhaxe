@@ -78,19 +78,15 @@ class Abstract {
         val = val.substr(0, val.length - 1);
 
         let sql = `INSERT INTO ${ClassTable.getNameTable()} (` + col + `) VALUES ${val}`;
-        console.log(sql);
         let res = await query(sql, params);
         return res;
     }
     static async update(ClassTable, paramSetValue, paramWhere) {
         if (!paramSetValue || (!paramWhere && !paramSetValue))
             return null;
-        console.log("update",paramSetValue)
 
         var colSet = ClassTable.getArrayParam(paramSetValue);
         var colWhere = ClassTable.getArrayParam(paramWhere);
-
-        console.log("colSet",colSet)
 
         if (!colSet || (!colWhere && !colSet))
             return null;

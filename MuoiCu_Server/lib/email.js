@@ -22,7 +22,6 @@ module.exports = {
             subject: subject,
             text: text
         };
-        console.log(from, to);
 
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {

@@ -40,7 +40,7 @@ const log = createLogger({
         }),
         new (winston.transports.DailyRotateFile)({
             filename: config.log+ '/log/info/quanlynhaxe-%DATE%.log',
-            datePattern: 'DD-MM-YYYY',
+            datePattern: 'YYYY-MM-DD',
             zippedArchive: true,
             maxSize: '1GB',
             maxFiles: '1d',
@@ -48,7 +48,7 @@ const log = createLogger({
         }),
         new (winston.transports.DailyRotateFile)({
             filename: config.log + '/log/error/quanlynhaxe-%DATE%.log',
-            datePattern: 'DD-MM-YYYY',
+            datePattern: 'YYYY-MM-DD',
             zippedArchive: true,
             maxSize: '1GB',
             maxFiles: '1d',
@@ -57,7 +57,7 @@ const log = createLogger({
         new (winston.transports.DailyRotateFile)({
             level: 'warn',
             filename: config.log + '/log/sql/sql-%DATE%.log',
-            datePattern: 'DD-MM-YYYY',
+            datePattern: 'YYYY-MM-DD',
             zippedArchive: true,
             maxSize: '1GB',
             maxFiles: '1d'

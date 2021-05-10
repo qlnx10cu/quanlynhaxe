@@ -34,7 +34,6 @@ class BillChan {
     static async delete(param) {
         let sql = "update hoadon set trangthai=2 where mahoadon= ?";
         var res = await query(sql, param);
-        console.log(res);
     }
     static async getChitiet(param) {
         let sql = "select * from hoadon where mahoadon= ? and trangthai!=2  and loaihoadon=0";

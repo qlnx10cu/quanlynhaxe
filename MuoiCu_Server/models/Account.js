@@ -30,9 +30,7 @@ class Account {
         if (!Username)
             return null;
         let sql = `SELECT * FROM nhanvien where username='${Username}'`;
-        console.log(sql);
         let res = await query(sql);
-        console.log('rows', res);
         if (res) return res[0];
         return null;
     }

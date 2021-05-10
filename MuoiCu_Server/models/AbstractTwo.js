@@ -79,10 +79,6 @@ class AbstractTwo {
 
         let param2 = ClassTableTwo.getArrayParam(param[0]);
         let index = 0;
-        console.log(param);
-        console.log(param1);
-        console.log(param2);
-
 
         let sql = "SELECT AUTO_INCREMENT as stt FROM  INFORMATION_SCHEMA.TABLES " +
             " WHERE TABLE_SCHEMA = '" + config.database.database + "' " +

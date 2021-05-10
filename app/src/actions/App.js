@@ -38,7 +38,7 @@ export const alert = (message) => {
         type: SWAP_ALERT,
         data: {
             isLoading: true,
-            error: false,
+            error: 0,
             message: message
         }
     };
@@ -49,7 +49,18 @@ export const error = (message, err) => {
         type: SWAP_ALERT,
         data: {
             isLoading: true,
-            error: true,
+            error: 1,
+            message: message
+        }
+    };
+}
+
+export const success = (message, err) => {
+    return {
+        type: SWAP_ALERT,
+        data: {
+            isLoading: true,
+            error: 2,
             message: message
         }
     };

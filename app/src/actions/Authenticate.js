@@ -17,10 +17,10 @@ export const authenticate = (username, password) => (dispatch) => {
                 type: GET_INFO_SUCCESS,
                 data: res.data,
             })
-        })
-        dispatch({
-            type: SUCCESS_AUTH,
-            data: response.data,
+            dispatch({
+                type: SUCCESS_AUTH,
+                data: response.data,
+            })
         })
     }).catch(error => {
         if (error) {

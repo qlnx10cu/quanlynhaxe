@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import lib from '../../lib'
-import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton, ButtonChooseFile } from '../../styles'
+import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton, ButtonChooseFile, Modal, ModalContent, CloseButton, Textarea } from '../../styles'
+import { getAllProduct } from '../../actions/Product';
 import PopupNewProduct from './PopupNewProduct'
 import PopupNewCuaHangNgoai from './PopupNewCuaHangNgoai'
 import { SaveBillBanLe } from '../../API/Bill'
@@ -8,15 +9,78 @@ import { UpdateBillBanLe } from '../../API/Bill'
 import { GetlistCustomer } from '../../API/Customer'
 import { connect } from 'react-redux'
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
-import { GetBillBanLeByMaHoaDon } from '../../API/Bill'
+import { GetBillBanLeByMaHoaDon, CheckUpdateBill } from '../../API/Bill'
 import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
 import Loading from "../Loading";
+import moment from 'moment'
 import XLSX from 'xlsx';
+
+const oneDay = 1000 * 3600 * 24;
+
+const ConfirmHoaDon = (props) => {
+    let [maBarcode, setMaBarcode] = useState("");
+
+    const UpdateHoaDon = (maHoaDon) => {
+        var date = new Date();
+        let url = `/banle?mahoadon=${maHoaDon}`;
+        props.history.push(url, { tokenTime: date.getTime() });
+        props.history.go();
+    }
+
+    const confirmBarCodeByServer = () => {
+        if (!maBarcode) {
+            props.alert("vui lòng nhập mã code");
+            return;
+        }
+
+        CheckUpdateBill(props.token, { ma: maBarcode, mahoadon: props.mahoadon }).then(res => {
+            if (res && res.data && res.data.error && res.data.error >= 1) {
+                setMaBarcode("")
+                UpdateHoaDon(props.mahoadon)
+                props.onCloseClick();
+            } else {
+                props.alert("Mã code không đúng, vui lòng nhập lại")
+            }
+        }).catch(err => {
+            props.alert("Lỗi : " + err.message)
+        })
+    }
+
+    const _handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            confirmBarCodeByServer();
+        }
+    };
+    return (
+        <Modal className={props.isShowing ? "active" : ""}>
+            <ModalContent style={{ width: '90%' }}>
+                <div style={{ paddingTop: 3, paddingBottom: 3 }}>
+                    <CloseButton onClick={() => { setMaBarcode(""); props.onCloseClick() }}>&times;</CloseButton>
+                    <h2> </h2>
+                </div>
+                <h3 style={{ textAlign: 'center' }}>HEAD TRUNG TRANG</h3>
+                <h4 style={{ textAlign: 'center' }}>612/31B Trần Hưng Đạo, phường Bình Khánh, TP Long Xuyên, An Giang</h4>
+                <h5 style={{ textAlign: 'center' }}> Bán hàng: 02963 603 828 - Phụ tùng: 02963 603 826 - Dịch vụ: 02963 957 669</h5>
+                <DivFlexRow style={{ alignItems: 'center', textAlign: 'center' }}>
+                    <label>Nhập barcode: </label>
+                    <Input type="password" autocomplete="off" value={maBarcode} onKeyPress={_handleKeyPress} style={{ marginLeft: 10 }} onChange={(e) => setMaBarcode(e.target.value)} />
+                    <Button style={{ marginLeft: 10 }} onClick={() => {
+                        confirmBarCodeByServer();
+                    }}>Thay đổi</Button>
+                </DivFlexRow>
+            </ModalContent>
+        </Modal>
+
+
+    );
+}
+
 
 const BanLe = (props) => {
 
     let mCustomerName = lib.handleInput("");
     let mDiaChi = lib.handleInput("");
+    let [ngaythanhtoan, setNgaythanhtoan] = useState("");
     let [makhachhang, setMaKhachHang] = useState("");
     let [sodienthoai, setSoDienThoai] = useState("");
     let [mProducts, setProducts] = useState([]);
@@ -26,10 +90,13 @@ const BanLe = (props) => {
     let [listCuaHangNgoai, setCuaHangNgoai] = useState([]);
     let [mTongTien, setTongTien] = useState(0);
     let [listCustomer, setListCustomer] = useState([]);
-    let [loai, setLoai] = useState(false);
+    let [listCustomerCurrent, setListCustomerCurrent] = useState([]);
+    let [loai, setLoai] = useState(0);
+    let [lydo, setLydo] = useState("");
     let [mahoadonUpdate, setmahoadonUpdate] = useState("");
     let [searchValue, setSearchValue] = useState("");
     let [mDataList, setDataList] = useState([]);
+    let [isShowingConfirm, setShowingConfirm] = useState(false);
 
 
     let [isShowChitiet, setShowChitiet] = useState(false);
@@ -64,55 +131,94 @@ const BanLe = (props) => {
     }
 
 
+    const getState = (name) => {
+        if (!window.history || !window.history.state || !window.history.state.state || !window.history.state.state[name])
+            return null;
+        return window.history.state.state[name];
+    }
+
+    const clearState = (name) => {
+        if (!window.history || !window.history.state || !window.history.state.state || !window.history.state.state[name])
+            return;
+        window.history.pushState(window.history.state.state, '', window.href);
+    }
+
     useEffect(() => {
-        props.setLoading(true, 2);
-        clearAll();
 
         var mhd = '';
-        var loai = false;
+        var loai = 0;
         let pathname = window.location.href;
         if (pathname.endsWith("/"))
             pathname = pathname.substring(0, pathname.length - 1);
-        if (pathname.endsWith("/banle")) {
-            loai = false;
+
+        if (!pathname.includes("/banle")) {
+            return;
         }
-        else {
+
+        props.setLoading(true, 2);
+        clearAll();
+
+        if (pathname.endsWith("/banle")) {
+            loai = 0;
+        } else if (pathname.includes("/banle/showbill")) {
             var queryParams = getQueryParams(window.location.href);
-            if (!queryParams || !queryParams.mahoadon || !queryParams.token) {
+            if (!queryParams || !queryParams.mahoadon) {
                 props.alert("Đường dẫn không đúng");
                 window.close()
                 return;
             }
-            if (!checkTokenDateTime(queryParams.token)) {
+            mhd = queryParams.mahoadon;
+            setmahoadonUpdate(queryParams.mahoadon)
+            loai = 2;
+        } else {
+
+            var queryParams = getQueryParams(window.location.href);
+            if (!queryParams || !queryParams.mahoadon) {
+                props.alert("Đường dẫn không đúng");
+                return;
+            }
+            if (!checkTokenDateTime(getState("tokenTime"))) {
                 props.alert("Update đã hết hiệu lực, vui lòng làm lại");
-                window.close()
                 return;
             }
 
             mhd = queryParams.mahoadon;
             setmahoadonUpdate(queryParams.mahoadon)
-            loai = true;
+            loai = 1;
         }
-        if (loai == true) {
+        if (loai != 0) {
             props.setLoading(true, 3);
         }
 
         GetListCuaHangNgoai(props.token).then(res => {
             setCuaHangNgoai(res.data);
             props.addLoading();
+
         });
         GetlistCustomer(props.token).then(res => {
             setListCustomer(res.data);
             props.addLoading();
+
         }).catch(err => {
             props.alert("Không thể lấy danh sách khách hàng")
         })
 
+        props.getAllProduct(props.token);
+
         setLoai(loai)
 
-        if (loai == true) {
+        if (loai != 0) {
             getBill(mhd)
         }
+
+        if (loai == 2) {
+            var message = getState("message");
+            if (message) {
+                clearState("message");
+                props.success(message);
+            }
+        }
+
 
 
     }, []);
@@ -137,6 +243,8 @@ const BanLe = (props) => {
                 newItem.tencongviec = newItem.tenphutung
                 newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
             }
+            setNgaythanhtoan(data.ngaythanhtoan);
+            setLydo(data.lydo);
             setTongTien(data.tongtien);
             setProducts(chitiet)
             props.addLoading();
@@ -170,6 +278,10 @@ const BanLe = (props) => {
 
         if (mTongTien === 0) {
             props.alert("Chưa có sản phẩm nào.")
+            return;
+        }
+        if (!lydo) {
+            props.alert('Phải nhập lý do tại sao phải thay đổi hóa đơn.');
             return;
         }
 
@@ -207,11 +319,13 @@ const BanLe = (props) => {
             manv: props.info.ma,
             tenkh: mCustomerName.value,
             tongtien: tongtien,
+            lydo: lydo,
             chitiet: chitiet,
         }
 
         UpdateBillBanLe(props.token, data).then(res => {
-            props.alert('Thành công. ');
+            props.history.push('/banle/showbill?mahoadon=' + mahoadonUpdate, { message: "Update hóa đơn " + mahoadonUpdate + " thành công" });
+            props.history.go();
         })
             .catch(err => {
                 props.error("Không update được hóa đơn.");
@@ -319,29 +433,46 @@ const BanLe = (props) => {
         setTongTien(mTongTien + tongtien);
     }
 
-    const handleChangeKH = (e) => {
-        setMaKhachHang(e.target.value);
+    const handleChangeKH = (value) => {
+        setMaKhachHang(value);
         let kq = null;
         kq = listCustomer.find(function (item) {
-            return item.ma && item.ma === parseInt(e.target.value)
+            return item.ma && item.ma === parseInt(value)
         });
+
+        if (value) {
+            let customers = listCustomer.filter(function (item) {
+                return (item.ma.toString().includes(value.toLowerCase()) || item.ten.toLowerCase().includes(value.toLowerCase()));
+            });
+            setListCustomerCurrent(customers.slice(0, 20));
+        }
+
         if (kq) {
             mCustomerName.setValue(kq.ten);
             mDiaChi.setValue(kq.diachi);
             setSoDienThoai(kq.sodienthoai);
         } else {
+
             mCustomerName.setValue("");
             mDiaChi.setValue("");
             setSoDienThoai("");
         }
     };
 
-    const handleChangeSDT = (e) => {
-        setSoDienThoai(e.target.value);
+    const handleChangeSDT = (value) => {
+        setSoDienThoai(value);
         let kq = null;
         kq = listCustomer.find(function (item) {
-            return item.sodienthoai && item.sodienthoai === e.target.value
+            return item.sodienthoai && item.sodienthoai === value
         });
+
+        if (value) {
+            let customers = listCustomer.filter(function (item) {
+                return item.sodienthoai.toLowerCase().includes(value.toLowerCase());
+            });
+            setListCustomerCurrent(customers.slice(0, 20));
+        }
+
         if (kq) {
             mCustomerName.setValue(kq.ten);
             mDiaChi.setValue(kq.diachi);
@@ -528,27 +659,27 @@ const BanLe = (props) => {
             {props.isLoading && <Loading />}
             {!props.isLoading &&
                 <div>
-                    {loai && <h1 style={{ textAlign: "center" }}> Hóa đơn {mahoadonUpdate}</h1>}
-                    {!loai && <h1 style={{ textAlign: "center" }}> Hóa đơn bán lẻ</h1>}
+                    {loai != 0 && <h1 style={{ textAlign: "center" }}> Hóa đơn {mahoadonUpdate}</h1>}
+                    {loai == 0 && <h1 style={{ textAlign: "center" }}> Hóa đơn bán lẻ</h1>}
                     <DivFlexRow>
                         <DivFlexColumn>
                             <label>Tên khách hàng: </label>
-                            <Input autocomplete="off" {...mCustomerName} readOnly={loai == true} />
+                            <Input autocomplete="off" {...mCustomerName} readOnly={loai != 0} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Mã khách hàng: </label>
-                            <Input list="customer" name="customer" autocomplete="off" value={makhachhang} onChange={(e) => handleChangeKH(e)} readOnly={loai == true} />
+                            <Input list="customer" name="customer" autocomplete="off" value={makhachhang} onChange={(e) => handleChangeKH(e.target.value)} readOnly={loai != 0} />
                             <datalist id="customer">
-                                {listCustomer.map((item, index) => (
+                                {listCustomerCurrent.map((item, index) => (
                                     <option key={index} value={item.ma} >{item.ten}</option>
                                 ))}
                             </datalist>
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Số điện thoại: </label>
-                            <Input list="sodienthoai" name="sodienthoai" autocomplete="off" value={sodienthoai} onChange={(e) => handleChangeSDT(e)} readOnly={loai == true} />
+                            <Input list="sodienthoai" name="sodienthoai" autocomplete="off" value={sodienthoai} onChange={(e) => handleChangeSDT(e.target.value)} readOnly={loai != 0} />
                             <datalist id="sodienthoai">
-                                {listCustomer.map((item, index) => (
+                                {listCustomerCurrent.map((item, index) => (
                                     <option key={index} value={item.sodienthoai} >{item.ten}</option>
                                 ))}
                             </datalist>
@@ -556,40 +687,52 @@ const BanLe = (props) => {
 
                         <DivFlexColumn style={{ marginLeft: 20 }} >
                             <label>Địa chỉ: </label>
-                            <Input autocomplete="off" {...mDiaChi} width='400px' readOnly readOnly={loai == true} />
+                            <Input autocomplete="off" {...mDiaChi} width='400px' readOnly={loai != 0} />
                         </DivFlexColumn>
                     </DivFlexRow>
-                    <DivFlexRow style={{ marginTop: 5, marginBottom: 5, justifyContent: 'space-between', alignItems: 'center' }}>
-                        <label>Bảng giá phụ tùng: </label>
-                        <Button onClick={() => setNewCuaHangNgoai(true)}>    Thêm Của Hàng Ngoài   </Button>
-                        <DivFlexRow>
-                            <ButtonChooseFile>
-                                <input type="file"
-                                    multiple
-                                    accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                    onChange={(e) => handleChoseFile(e)} />
-                                Import +
-                        </ButtonChooseFile>
-                            <Button style={{ marginLeft: 15 }} onClick={() => setNewProduct(true)}> Thêm Phụ Tùng  </Button>
+                    {loai != 0 &&
+                        <DivFlexRow style={{ alignItems: 'center' }}>
+                            <DivFlexColumn>
+                                <label>Lý do thay đổi: </label>
+                                <Textarea autocomplete="off" value={lydo} readOnly={loai == 2} onChange={(e => { setLydo(e.target.value) })} />
+                            </DivFlexColumn>
                         </DivFlexRow>
-                    </DivFlexRow>
-                    <DivFlexRow style={{ alignItems: 'center' }}>
-                        <Input autoFocus list="browser_search" onKeyPress={_handleKeyPress} value={searchValue} style={{ width: 250, marginRight: 15 }}
-                            onChange={(e) => searchMaPhuTung(e.target.value)} />
-                        <datalist id="browser_search">
-                            {mDataList.map((item, index) => (
-                                <option disabled={item.soluongtonkho === 0} key={index}
-                                    value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
-                            ))}
-                        </datalist>
-                        <Button onClick={() => {
-                            handleButtonSearch();
-                        }}>
+                    }
+                    {loai != 2 &&
+                        <DivFlexRow style={{ marginTop: 5, marginBottom: 5, justifyContent: 'space-between', alignItems: 'center' }}>
+                            <label>Bảng giá phụ tùng: </label>
+                            <Button onClick={() => setNewCuaHangNgoai(true)}>    Thêm Của Hàng Ngoài   </Button>
+                            <DivFlexRow>
+                                <ButtonChooseFile>
+                                    <input type="file"
+                                        multiple
+                                        accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                        onChange={(e) => handleChoseFile(e)} />
+                                    Import +
+                        </ButtonChooseFile>
+                                <Button style={{ marginLeft: 15 }} onClick={() => setNewProduct(true)}> Thêm Phụ Tùng  </Button>
+                            </DivFlexRow>
+                        </DivFlexRow>
+                    }
+                    {loai != 2 &&
+                        <DivFlexRow style={{ alignItems: 'center' }}>
+                            <Input autoFocus list="browser_search" onKeyPress={_handleKeyPress} value={searchValue} style={{ width: 250, marginRight: 15 }}
+                                onChange={(e) => searchMaPhuTung(e.target.value)} />
+                            <datalist id="browser_search">
+                                {mDataList.map((item, index) => (
+                                    <option disabled={item.soluongtonkho === 0} key={index}
+                                        value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
+                                ))}
+                            </datalist>
+                            <Button onClick={() => {
+                                handleButtonSearch();
+                            }}>
 
-                            Tìm Kiếm
+                                Tìm Kiếm
                         <i className="fas fa-search" />
-                        </Button>
-                    </DivFlexRow>
+                            </Button>
+                        </DivFlexRow>
+                    }
                     <Table>
                         <tbody>
                             <tr>
@@ -601,7 +744,7 @@ const BanLe = (props) => {
                                 <th>Nhà Cung Cấp</th>
                                 <th>Chiết khấu (%)</th>
                                 <th>Tổng tiền (VND)</th>
-                                <th><i className="far fa-trash-alt" /></th>
+                                {loai != 2 && <th><i className="far fa-trash-alt" /></th>}
                             </tr>
 
                             {mProducts.map((item, index) => (
@@ -610,17 +753,17 @@ const BanLe = (props) => {
                                     <td>{item.tencongviec}</td>
                                     <td>{item.maphutung}</td>
                                     <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                                    <td><input type="number" onChange={(e) => handleChangeSL(e, index)} value={mProducts[index].soluong} min="1" /></td>
+                                    <td><input type="number" readOnly={loai == 2} onChange={(e) => handleChangeSL(e, index)} value={mProducts[index].soluong} min="1" /></td>
                                     <td>{item.nhacungcap ? item.nhacungcap : "Trung Trang"}</td>
-                                    <td><input type="number" max={100} onChange={(e) => handleChangeChieuKhau(e, index)} value={mProducts[index].chietkhau} min="0" /></td>
+                                    <td><input type="number" max={100} readOnly={loai == 2} onChange={(e) => handleChangeChieuKhau(e, index)} value={mProducts[index].chietkhau} min="0" /></td>
                                     <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                                    <td>
+                                    {loai != 2 && <td>
                                         <DelButton onClick={() => {
                                             deleteProduct(item);
                                         }} title="Xóa">
                                             <i className="far fa-trash-alt" />
                                         </DelButton>
-                                    </td>
+                                    </td>}
                                 </tr>
 
                             ))}
@@ -632,16 +775,23 @@ const BanLe = (props) => {
                     </DivFlexRow>
                     <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
                         <label></label>
-                        {loai && <Button onClick={() => {
+                        {loai == 1 && <Button onClick={() => {
                             props.confirm("Bạn chắc muốn thay đổi hóa đơn " + mahoadonUpdate, () => {
                                 handleSaveBill();
                             })
                         }}>Thay đổi</Button>}
-                        {!loai && <Button onClick={() => {
+                        {loai == 0 && <Button onClick={() => {
                             props.confirm("Bạn muốn thanh toán", () => {
                                 handleAddBill();
                             })
                         }}>Thánh Toán</Button>}
+
+                        {loai == 2 && ngaythanhtoan && (moment().valueOf() - moment(ngaythanhtoan).valueOf()) <= oneDay &&
+                            <Button onClick={() => {
+                                setShowingConfirm(true);
+                            }}> Update </Button>
+                        }
+
                     </DivFlexRow>
                     <PopupNewProduct
                         isShowing={isShowNewProduct}
@@ -653,6 +803,14 @@ const BanLe = (props) => {
                         onCloseClick={() => setNewCuaHangNgoai(false)}
                         listCuaHangNgoai={listCuaHangNgoai}
                         addItemToHangNgoai={(item) => addItemToProduct(item)}
+                    />
+                    <ConfirmHoaDon
+                        isShowing={isShowingConfirm}
+                        onCloseClick={() => setShowingConfirm(false)}
+                        mahoadon={mahoadonUpdate}
+                        token={props.token}
+                        history={props.history}
+                        alert={(mess) => props.alert(mess)}
                     />
                     <ChiTietThongKe
                         isShowing={isShowChitiet}
@@ -674,5 +832,7 @@ const mapState = (state) => ({
     isLoading: state.App.isLoading
 
 })
-
-export default connect(mapState, null)(BanLe);
+const mapDispatch = (dispatch) => ({
+    getAllProduct: (token) => { dispatch(getAllProduct(token)) },
+})
+export default connect(mapState, mapDispatch)(BanLe);

@@ -6,7 +6,7 @@ import IO from 'socket.io-client';
 import { HOST } from '../Config'
 import LoadingComponent from './LoadingComponent';
 import { connect } from 'react-redux'
-import { alert, error, setLoading, addLoading, confirm, confirmError } from '../actions/App';
+import { alert, error, success, setLoading, addLoading, confirm, confirmError } from '../actions/App';
 const Staffs = React.lazy(() => import('./Admin/Staffs'));
 const Customer = React.lazy(() => import('./Admin/Customer'));
 const Products = React.lazy(() => import('./Products'));
@@ -71,6 +71,7 @@ const mapState = (state) => ({
 const mapDispatch = (dispatch) => ({
     alert: (mess) => { dispatch(alert(mess)) },
     error: (mess) => { dispatch(error(mess)) },
+    success: (mess) => { dispatch(success(mess)) },
     confirm: (mess, callback) => { dispatch(confirm(mess, callback)) },
     confirmError: (mess, error, callback) => { dispatch(confirmError(mess, error, callback)) },
     addLoading: () => { dispatch(addLoading()) },

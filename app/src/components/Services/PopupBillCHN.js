@@ -133,14 +133,10 @@ const PopupBillCHN = (props) => {
 
 const mapState = (state) => ({
     token: state.Authenticate.token,
-    listProduct: state.Product.listProduct,
     listBillProduct: state.Product.listBillProduct
 });
 
 const mapDispatch = (dispatch) => ({
-    getAllProduct: (token) => {
-        dispatch(getAllProduct(token))
-    },
     addBillProduct: (data) => { dispatch(addBillProduct(data)) },
 });
 

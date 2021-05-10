@@ -1,7 +1,7 @@
 import React, { } from 'react';
-import { DivFlexRow, DivFlexColumn, Table, Input,Button } from '../../styles'
+import { DivFlexRow, DivFlexColumn, Table, Input, Button, Textarea } from '../../styles'
 import moment from 'moment';
-import { HOST,HOST_SHEME } from '../../Config'
+import { HOST, HOST_SHEME } from '../../Config'
 
 const RenderTableBill = ({ list }) => {
 
@@ -15,6 +15,7 @@ const RenderTableBill = ({ list }) => {
                         <th>Mã phụ tùng</th>
                         <th>Đơn giá</th>
                         <th>SL</th>
+                        <th>Chiết khấu</th>
                         <th>Tiền phụ tùng</th>
                         <th>Tiền công</th>
                         <th>Tổng tiền công <br />+ phụ tùng</th>
@@ -23,13 +24,14 @@ const RenderTableBill = ({ list }) => {
                     {list && list.map((item, index) => (
                         <tr key={index}>
                             <td>{index + 1}</td>
-                            <td style={{textAlign: "left"}}>{item.tenphutungvacongviec}</td>
+                            <td style={{ textAlign: "left" }}>{item.tenphutungvacongviec}</td>
                             <td>{item.maphutung}</td>
-                            <td style={{textAlign: "right"}}>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td style={{textAlign: "right"}}>{item.soluongphutung}</td>
-                            <td style={{textAlign: "right"}}>{(item.dongia * item.soluongphutung).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td style={{textAlign: "right"}}>{item.tiencong && item.tiencong.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td style={{textAlign: "right"}}>{item.tongtien && item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td style={{ textAlign: "right" }}>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td style={{ textAlign: "right" }}>{item.soluongphutung}</td>
+                            <td style={{ textAlign: "right" }}>{item.chietkhau}%</td>
+                            <td style={{ textAlign: "right" }}>{(item.dongia * item.soluongphutung).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td style={{ textAlign: "right" }}>{item.tiencong && item.tiencong.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+                            <td style={{ textAlign: "right" }}>{item.tongtien && item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                         </tr>
 
                     ))}
@@ -82,10 +84,10 @@ const RenderBillChan = ({
                         <label>Ngày thanh toán: </label>
                         <Input readOnly value={moment(data.ngayban).format("hh:mm DD/MM/YYYY")} />
                     </DivFlexColumn>
-                    <Button onClick={exportBill} style={{ marginLeft: 20 ,marginTop:10}}>
+                    <Button onClick={exportBill} style={{ marginLeft: 20, marginTop: 10 }}>
                         Export
                     </Button>
-                    <Button onClick={exportBillExcel} style={{ marginLeft: 20 ,marginTop:10}}>
+                    <Button onClick={exportBillExcel} style={{ marginLeft: 20, marginTop: 10 }}>
                         Export Excel
                     </Button>
                 </DivFlexRow>
@@ -103,6 +105,16 @@ const RenderBillChan = ({
                         <Input readOnly value={data.tuvansuachua} />
                     </DivFlexColumn>
                 </DivFlexRow>
+                {data.lydo && <DivFlexRow>
+                    <DivFlexColumn>
+                        <label>Ngày thay đổi: </label>
+                        <Input readOnly value={data.ngaysuachua} />
+                    </DivFlexColumn>
+                    <DivFlexColumn style={{ marginLeft: 20 }}>
+                        <label>Lý do thay đổi: </label>
+                        <Textarea readOnly autocomplete="off" value={data.lydo} cols={53} />
+                    </DivFlexColumn>
+                </DivFlexRow>}
                 <DivFlexColumn style={{ marginTop: 10 }}>
                     <label>Tổng tiền: </label>
                     <Input readOnly value={data.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })} />

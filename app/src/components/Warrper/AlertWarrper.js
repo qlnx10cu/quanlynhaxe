@@ -5,15 +5,17 @@ import { connect } from 'react-redux'
 
 const AlertWarrper = (props) => {
     const onCloseClick = () => {
-        props.setAlert(false, null, false);
+        props.setAlert(false, null, 0);
     }
     var message = [];
+    var color = '#fefefe';
     if (props && props.alert && props.alert.message) {
         message = props.alert.message.split('\n');
+        color = props.alert.error == 2 ? '#00ff32' : props.alert.error == 1 ? '#ff4100' : "#fefefe";
     }
     return (
         <ModalAlert className={props.alert.isLoading ? "active" : ""}>
-            <ModalContent style={{ width: '50%' }} style={{ backgroundColor: props.alert.error ? '#ff4100' : "#fefefe" }}>
+            <ModalContent style={{ width: '50%' }} style={{ backgroundColor: color }}>
                 <div style={{ paddingTop: 3, paddingBottom: 3 }}>
                     <CloseButton onClick={() => onCloseClick()}>&times;</CloseButton>
                     <h2> </h2>

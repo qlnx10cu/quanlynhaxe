@@ -212,8 +212,6 @@ const ToolBar = (props) => {
     useEffect(() => {
         if (props.info !== null) {
             setRole(props.info.chucvu);
-            console.log(props.info.chucvu);
-            props.getAllProduct(props.token);
         }
     }, [props.info]);
 

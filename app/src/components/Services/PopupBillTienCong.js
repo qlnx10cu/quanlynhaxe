@@ -10,18 +10,11 @@ const PopupBillTienCong = (props) => {
 
     let [tentiencong, setTenTienCong] = useState("");
     let [dongia, setDonGia] = useState(0);
-    let [listGiaDichVu, setListGiaDichVu] = useState([]);
-    useEffect(() => {
-        props.getAllProduct(props.token);
-        GetListSalary(props.token).then(respose=>{
-            setListGiaDichVu(respose.data);
-        })
-    }, []);
-
+  
     const searchTenTienCong = (values) => {
         setTenTienCong(values);
         let item = null;
-        item = listGiaDichVu.find(function (e) {
+        item = props.listGiaDichVu.find(function (e) {
             return (e.ten.toLowerCase() === values.toLowerCase());
         });
 
@@ -82,7 +75,7 @@ const PopupBillTienCong = (props) => {
                             searchTenTienCong(e.target.value);
                         }} />
                         <datalist id="tien_cong_1">
-                            {listGiaDichVu.map((item, index) => (
+                            {props.listGiaDichVu.map((item, index) => (
                                 <option key={index} value={item.ten} >{item.ten} - {item.tien}</option>
                             ))}
                         </datalist>
@@ -101,14 +94,10 @@ const PopupBillTienCong = (props) => {
 
 const mapState = (state) => ({
     token: state.Authenticate.token,
-    listProduct: state.Product.listProduct,
     listBillProduct: state.Product.listBillProduct
 });
 
 const mapDispatch = (dispatch) => ({
-    getAllProduct: (token) => {
-        dispatch(getAllProduct(token))
-    },
     addBillProduct: (data) => { dispatch(addBillProduct(data)) },
 });
 

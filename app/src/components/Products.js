@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import styled from 'styled-components'
 import { DivFlexRow, ButtonChooseFile, Button } from '../styles'
 import PhuTung from './Products/PhuTung/index'
@@ -284,6 +284,9 @@ const Products = (props) => {
 
     let [mSanPham, setSanPham] = useState(PHU_TUNG);
 
+    useEffect(() => {
+        props.getAllProduct(props.token);
+    }, []);
 
     const handleChoseFile = async (e) => {
         var files = e.target.files;

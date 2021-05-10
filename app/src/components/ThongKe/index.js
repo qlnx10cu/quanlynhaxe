@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DivFlexRow, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Select } from '../../styles'
 import moment from 'moment'
 import { GetBillTheoNgay } from "../../API/ThongKeAPI"
@@ -7,7 +7,7 @@ import { GetListStaff } from '../../API/Staffs'
 import { HuyThanhToan, HuyThanhToanLe, CheckUpdateBill } from '../../API/Bill'
 import { HOST, HOST_SHEME } from '../../Config'
 import { connect } from 'react-redux'
-import { alert, setLoading } from "../../actions/App";
+import { alert, success, setLoading } from "../../actions/App";
 import _ from 'lodash'
 
 
@@ -18,20 +18,16 @@ const ConfirmHoaDon = (props) => {
 
     const UpdateHoaDon = (maHoaDon, loai) => {
         var date = new Date();
+        let url = "";
         if (loai == 0) {
-            let url = `/services/repairedbill/updatebill?mahoadon=${maHoaDon}&token=${date.getTime()}`;
-            window.open(
-                url,
-                '_blank' // <- This is what makes it open in a new window.
-            );
+            url = `/services/repairedbill/updatebill?mahoadon=${maHoaDon}`;
         }
         if (loai == 1) {
-            let url = `/banle?mahoadon=${maHoaDon}&token=${date.getTime()}`;
-            window.open(
-                url,
-                '_blank' // <- This is what makes it open in a new window.
-            );
+            url = `/banle?mahoadon=${maHoaDon}`;
         }
+        props.history.push(url, { tokenTime: date.getTime() });
+        props.history.go();
+
     }
 
     const confirmBarCodeByServer = () => {
@@ -42,8 +38,8 @@ const ConfirmHoaDon = (props) => {
 
         CheckUpdateBill(props.token, { ma: maBarcode, mahoadon: props.mahoadon }).then(res => {
             if (res && res.data && res.data.error && res.data.error >= 1) {
-                UpdateHoaDon(props.mahoadon, props.loaihoadon)
                 setMaBarcode("")
+                UpdateHoaDon(props.mahoadon, props.loaihoadon)
                 props.onCloseClick();
             } else {
                 props.alert("Mã code không đúng, vui lòng nhập lại")
@@ -102,6 +98,10 @@ const ThongKe = (props) => {
     let [maxSizePage, setMaxSizePage] = useState(20);
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
+
+    useEffect(() => {
+        // fetch your data when the props.location changes
+    }, [props.location]);
 
     const CallApiGetListStaff = () => {
         GetListStaff(props.token).then(res => {
@@ -208,6 +208,21 @@ const ThongKe = (props) => {
             handleSearchBienSoXe();
         }
     }
+
+    const showInfoHoaDon = (mhd, loai) => {
+        let url = '';
+        if (loai == 0) {
+            url = `/services/repairedbill/showbill?mahoadon=${mhd}`;
+        } else {
+            url = `/banle/showbill?mahoadon=${mhd}`;
+        }
+        if (url) {
+            props.history.push(url);
+            props.history.push(url);
+            props.history.goBack();
+        }
+    }
+
     return (
         <div>
             <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
@@ -266,6 +281,7 @@ const ThongKe = (props) => {
                         <th>Biển số xe</th>
                         <th>Tổng tiền</th>
                         <th>Ngày thanh toán</th>
+                        <th>Ngày thay đổi</th>
                         <th>Loại hóa đơn</th>
                         <th><i className="fas fa-info"></i></th>
                         <th><i className="fas fa-info"></i></th>
@@ -273,11 +289,12 @@ const ThongKe = (props) => {
 
                     {
                         mBills[page] && mBills[page].map((item, index) => (
-                            <tr key={index}>
+                            <tr key={index} style={{ backgroundColor: item.lydo ? '#ff0000' : '#ffffff' }} >
                                 <td>{item.mahoadon}</td>
                                 <td>{item.biensoxe}</td>
                                 <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                                 <td>{moment(item.ngaythanhtoan).format("hh:mm DD/MM/YYYY")}</td>
+                                <td>{item.lydo ? moment(item.ngaythaydoi).format("hh:mm DD/MM/YYYY") : ''}</td>
                                 <td>{item.loaihoadon === 0 ? "Sửa chữa" : "Bán lẻ"}</td>
                                 <td>
                                     <Button onClick={() => {
@@ -285,6 +302,9 @@ const ThongKe = (props) => {
                                         setShowing(true);
                                         setLoaiHoaDon(item.loaihoadon);
                                     }}>Chi tiết</Button>
+                                    <Button style={{ marginLeft: 15 }} onClick={() => {
+                                        showInfoHoaDon(item.mahoadon, item.loaihoadon);
+                                    }}>Show</Button>
                                 </td>
 
                                 {
@@ -317,6 +337,7 @@ const ThongKe = (props) => {
                 <Button style={{ marginLeft: 15 }} onClick={handleNextPage}><i className="fas fa-angle-double-right"></i></Button>
             </DivFlexRow>
             <ConfirmHoaDon
+                history={props.history}
                 isShowing={isShowingConfirm}
                 onCloseClick={() => setShowingConfirm(false)}
                 mahoadon={mMaHoaDon}
@@ -345,6 +366,7 @@ const mapState = (state) => ({
 
 const mapDispatch = (dispatch) => ({
     alert: (mess) => { dispatch(alert(mess)) },
+    success: (mess) => { dispatch(success(mess)) },
     setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
 })
 

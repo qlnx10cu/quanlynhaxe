@@ -100,9 +100,7 @@ const PopupAccessory = (props) => {
         mDonGia.setValue("");
         props.onCloseClick()
     }
-    useEffect(() => {
-        props.getAllProduct(props.token);
-    }, []);
+ 
     return (
         <Modal className={props.isShowing ? "active" : ""}>
             <ModalContent>
@@ -139,15 +137,7 @@ const PopupAccessory = (props) => {
                         <label>Số lượng: </label>
                         <Input type="Number" max={mTonKho.value} min={0} {...mSoLuong} />
                     </DivFlexColumn>
-                    {/* <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
-                        <label>Tiền công: </label>
-                        <Input list="tien_cong" name="tien_cong" type="number" {...mTienCong} />
-                        <datalist id="tien_cong">
-                        {listGiaDichVu.map((item, index) => (
-                                <option key={index} value={item.tien} >{item.ten}</option>
-                            ))}
-                        </datalist>
-                    </DivFlexColumn> */}
+                 
                 </DivFlexRow>
 
                 <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: 'flex-end' }}>
@@ -165,11 +155,9 @@ const PopupAccessory = (props) => {
 }
 const mapState = (state) => ({
     token: state.Authenticate.token,
-    listProduct: state.Product.listProduct,
     listBillProduct: state.Product.listBillProduct
 });
 const mapDispatch = (dispatch) => ({
-    getAllProduct: (token) => { dispatch(getAllProduct(token)) },
     addBillProduct: (data) => { dispatch(addBillProduct(data)) },
 });
 

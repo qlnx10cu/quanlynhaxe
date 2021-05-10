@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton } from '../../styles'
+import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Textarea } from '../../styles'
 import PopupAccessory from './PopupAccessory'
 import PopupBillTienCong from './PopupBillTienCong'
 import HistoryCustomer from '../Admin/HistoryCustomer'
 import lib from '../../lib'
 import { HOST } from '../../Config'
 import { connect } from 'react-redux'
-import { UpdateBill, SaveBill, ThanhToan, HuyThanhToan, GetBillSuaChuaByMaHoaDon } from '../../API/Bill'
+import { UpdateBill, SaveBill, ThanhToan, HuyThanhToan, GetBillSuaChuaByMaHoaDon, CheckUpdateBill } from '../../API/Bill'
 import { GetlistCustomer } from '../../API/Customer'
 import { GetListNVSuaChua } from '../../API/Staffs'
 import { deleteBillProduct, deleteItemBillProduct, setListBillProduct, updateBillProduct, deleteItemBillProductMa } from '../../actions/Product';
@@ -14,8 +14,11 @@ import { withRouter } from 'react-router-dom'
 import PopupBillCHN from './PopupBillCHN';
 import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
 import { GetListSalary } from '../../API/Salary'
-import { addBillProduct } from '../../actions/Product';
+import { addBillProduct, getAllProduct } from '../../actions/Product';
+import moment from 'moment'
 import Loading from '../Loading'
+
+const oneDay = 1000 * 3600 * 24;
 
 const listLoaiXe = [
     "Airblade",
@@ -43,6 +46,65 @@ const listLoaiXe = [
     "Khác",
 ]
 
+const ConfirmHoaDon = (props) => {
+    let [maBarcode, setMaBarcode] = useState("");
+
+    const UpdateHoaDon = (maHoaDon) => {
+        var date = new Date();
+        let url = `/services/repairedbill/updatebill?mahoadon=${maHoaDon}`;
+        props.history.push(url, { tokenTime: date.getTime() });
+        props.history.go();
+    }
+
+    const confirmBarCodeByServer = () => {
+        if (!maBarcode) {
+            props.alert("vui lòng nhập mã code");
+            return;
+        }
+
+        CheckUpdateBill(props.token, { ma: maBarcode, mahoadon: props.mahoadon }).then(res => {
+            if (res && res.data && res.data.error && res.data.error >= 1) {
+                setMaBarcode("")
+                UpdateHoaDon(props.mahoadon)
+                props.onCloseClick();
+            } else {
+                props.alert("Mã code không đúng, vui lòng nhập lại")
+            }
+        }).catch(err => {
+            props.alert("Lỗi : " + err.message)
+        })
+    }
+
+    const _handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            confirmBarCodeByServer();
+        }
+    };
+    return (
+        <Modal className={props.isShowing ? "active" : ""}>
+            <ModalContent style={{ width: '90%' }}>
+                <div style={{ paddingTop: 3, paddingBottom: 3 }}>
+                    <CloseButton onClick={() => { setMaBarcode(""); props.onCloseClick() }}>&times;</CloseButton>
+                    <h2> </h2>
+                </div>
+                <h3 style={{ textAlign: 'center' }}>HEAD TRUNG TRANG</h3>
+                <h4 style={{ textAlign: 'center' }}>612/31B Trần Hưng Đạo, phường Bình Khánh, TP Long Xuyên, An Giang</h4>
+                <h5 style={{ textAlign: 'center' }}> Bán hàng: 02963 603 828 - Phụ tùng: 02963 603 826 - Dịch vụ: 02963 957 669</h5>
+                <DivFlexRow style={{ alignItems: 'center', textAlign: 'center' }}>
+                    <label>Nhập barcode: </label>
+                    <Input type="password" autocomplete="off" value={maBarcode} onKeyPress={_handleKeyPress} style={{ marginLeft: 10 }} onChange={(e) => setMaBarcode(e.target.value)} />
+                    <Button style={{ marginLeft: 10 }} onClick={() => {
+                        confirmBarCodeByServer();
+                    }}>Thay đổi</Button>
+                </DivFlexRow>
+            </ModalContent>
+        </Modal>
+
+
+    );
+}
+
+
 const RepairedBill = (props) => {
 
     let mCustomerName = lib.handleInput("");
@@ -56,10 +118,12 @@ const RepairedBill = (props) => {
     let [isShowTienCong, setShowTienCong] = useState(false);
     let [isDisableEditInfo, setDisableEditInfo] = useState(false);
     let [isUpdated, setUpdated] = useState(true);
+    let [showInfoBill, setShowInfoBill] = useState(false);
 
     let [isShowCuaHangNgoai, setShowCuaHangNgoai] = useState(false);
 
     let [listBienSo, setListBienSo] = useState([]);
+    let [listBienSoCurrent, setListBienSoCurrent] = useState([]);
     let [listCuaHangNgoai, setCuaHangNgoai] = useState([]);
     let [listNhanVienSuaChua, setListNhanVienSuaChua] = useState([]);
     let [maban, setMaban] = useState(null);
@@ -71,13 +135,16 @@ const RepairedBill = (props) => {
     let mLoaiXe = lib.handleInput("");
     let mSoKhung = lib.handleInput("");
     let mSoMay = lib.handleInput("");
+    let ngaythanhtoan = lib.handleInput("");
 
     let [sokm, setSoKM] = useState("");
     let [yeucau, setYeuCau] = useState("");
     let [tuvan, setTuvan] = useState("");
+    let [lydo, setLydo] = useState("");
     let [searchValue, setSearchValue] = useState("");
     let [mDataList, setDataList] = useState([]);
     let [listGiaDichVu, setListGiaDichVu] = useState([]);
+    let [isShowingConfirm, setShowingConfirm] = useState(false);
 
     const getQueryParams = (url) => {
         let queryParams = {};
@@ -93,6 +160,8 @@ const RepairedBill = (props) => {
         return queryParams;
     };
     const checkTokenDateTime = (token) => {
+        if (token == null)
+            return false;
         var dateCurrent = new Date();
         var tokenCheck = 0;
         try {
@@ -106,29 +175,47 @@ const RepairedBill = (props) => {
         return true;
     }
 
+    const getState = (name) => {
+        if (!window.history || !window.history.state || !window.history.state.state || !window.history.state.state[name])
+            return null;
+        return window.history.state.state[name];
+    }
+
+    const clearState = (name) => {
+        if (!window.history || !window.history.state || !window.history.state.state || !window.history.state.state[name])
+            return;
+        window.history.pushState(window.history.state.state, '', window.href);
+    }
 
     useEffect(() => {
         props.setLoading(true);
-        var updateHoadon = false;
+        var updateHoadon = 0;
         var mahoadon = '';
         let mb = -1;
         let pathname = window.location.href;
         if (pathname.endsWith("/"))
             pathname = pathname.substring(0, pathname.length - 1);
-        if (pathname.indexOf("services/repairedbill/updatebill") !== -1) {
+        if (pathname.indexOf("services/repairedbill/showbill") !== -1) {
             var queryParams = getQueryParams(window.location.href);
-            if (!queryParams || !queryParams.mahoadon || !queryParams.token) {
+            if (!queryParams || !queryParams.mahoadon) {
                 props.alert("Đường dẫn không đúng");
-                window.close()
                 return;
             }
-            if (!checkTokenDateTime(queryParams.token)) {
-                props.alert("Update đã hết hiệu lực, vui lòng làm lại");
-                window.close()
+            updateHoadon = 2;
+            mahoadon = queryParams.mahoadon;
+        } else if (pathname.indexOf("services/repairedbill/updatebill") !== -1) {
+            var queryParams = getQueryParams(window.location.href);
+            if (!queryParams || !queryParams.mahoadon) {
+                props.alert("Đường dẫn không đúng");
                 return;
             }
 
-            updateHoadon = true;
+            if (!checkTokenDateTime(getState("tokenTime"))) {
+                props.alert("Update đã hết hiệu lực, vui lòng làm lại");
+                return;
+            }
+
+            updateHoadon = 1;
             mahoadon = queryParams.mahoadon;
 
         } else {
@@ -147,6 +234,8 @@ const RepairedBill = (props) => {
 
         props.setLoading(true, 5);
         try {
+            props.getAllProduct(props.token);
+
             GetlistCustomer(props.token).then(response => {
                 setListBienSo(response.data);
                 props.addLoading();
@@ -177,8 +266,18 @@ const RepairedBill = (props) => {
             return;
         }
 
-
-        if (updateHoadon) {
+        if (updateHoadon == 2) {
+            setUpdateBill(4);
+            setMaHoaDon(mahoadon)
+            showHoaDon(mahoadon);
+            setShowInfoBill(true);
+            var message = getState("message");
+            if (message) {
+                clearState("message");
+                props.success(message);
+            }
+        }
+        else if (updateHoadon == 1) {
             setUpdateBill(3);
             setMaHoaDon(mahoadon)
             showHoaDon(mahoadon);
@@ -260,9 +359,11 @@ const RepairedBill = (props) => {
             props.setListBillProduct(res.data.chitiet);
             mLoaiXe.setValue(res.data.loaixe);
             mMaKH.setValue(res.data.ma);
+            ngaythanhtoan.setValue(res.data.ngaythanhtoan);
             setTuvan(res.data.tuvansuachua);
             setYeuCau(res.data.yeucaukhachhang);
             setSoKM(res.data.sokm);
+            setLydo(res.data.lydo);
             props.addLoading();
         })
             .catch(err => {
@@ -284,6 +385,12 @@ const RepairedBill = (props) => {
             setDisableEditInfo(false);
         }
         else {
+            if (values) {
+                let customers = lbs.filter(function (item) {
+                    return (item.biensoxe.toLowerCase().includes(values.toLowerCase()));
+                });
+                setListBienSoCurrent(customers.slice(0, 20));
+            }
             mCustomerName.setValue("");
             mPhone.setValue("");
             mAddress.setValue("");
@@ -394,9 +501,14 @@ const RepairedBill = (props) => {
             props.alert('Nhân viên sữa chữa không tồn tại');
             return null;
         }
+        if (isUpdateBill == 3) {
+            if (!lydo) {
+                props.alert('Phải nhập lý do tại sao phải thay đổi hóa đơn.');
+                return null;
+            }
+        }
         var tong = 0;
         var listProduct = [];
-        console.log("listBill:", props.listBillProduct);
         for (let i = 0; i < props.listBillProduct.length; i++) {
             tong = tong + props.listBillProduct[i].tongtien;
             let temp = {
@@ -446,6 +558,7 @@ const RepairedBill = (props) => {
             manv: props.info.ma,
             yeucaukhachhang: yeucau,
             tuvansuachua: tuvan,
+            lydo: lydo,
             sokm: sokm ? sokm : 0
         }
         return data
@@ -495,9 +608,11 @@ const RepairedBill = (props) => {
         props.confirmError(mess, length == 0 ? 1 : 0, () => {
             data.mahoadon = mMaHoaDon;
             UpdateBill(props.token, data).then(res => {
-                props.alert("Update hóa đơn " + mMaHoaDon + " thành công");
                 setUpdated(true);
+                props.history.push('/services/repairedbill/showbill?mahoadon=' + mMaHoaDon, { message: "Update hóa đơn " + mMaHoaDon + " thành công" });
+                props.history.go();
             }).catch(err => {
+                console.log(err);
                 props.error("Không thể  update hóa đơn " + mMaHoaDon + "\nVui lòng kiểm lại đường mạng");
             })
         });
@@ -636,6 +751,9 @@ const RepairedBill = (props) => {
             return false;
         return true;
     };
+    const handleRedirectUpdate = () => {
+        setShowingConfirm(true);
+    }
 
     return (
         <div>
@@ -649,7 +767,7 @@ const RepairedBill = (props) => {
                     <DivFlexRow style={{ alignItems: 'center' }}>
                         <DivFlexColumn>
                             <label>Nhân viên sửa chữa: </label>
-                            <Input autocomplete="off" list="nv_suachua" name="nv_suachua" value={mMaNVSuaChua.value} onChange={(e) => {
+                            <Input readOnly={showInfoBill} autocomplete="off" list="nv_suachua" name="nv_suachua" value={mMaNVSuaChua.value} onChange={(e) => {
                                 searchNhanVienSuaChua(e.target.value);
                             }} />
                             <datalist id="nv_suachua">
@@ -667,32 +785,32 @@ const RepairedBill = (props) => {
                     <DivFlexRow style={{ alignItems: 'center' }}>
                         <DivFlexColumn>
                             <label>Biển số xe: </label>
-                            <Input autocomplete="off" list="bien_so" name="bien_so" value={biensoxe} onChange={(e) => {
+                            <Input readOnly={showInfoBill} autocomplete="off" list="bien_so" name="bien_so" value={biensoxe} onChange={(e) => {
                                 searchBienSoXe(e.target.value);
                             }} readOnly={isUpdateBill != 0} />
                             <datalist id="bien_so">
-                                {listBienSo.map((item, index) => (
+                                {listBienSoCurrent.map((item, index) => (
                                     <option key={index} value={item.biensoxe} >{item.ten}</option>
                                 ))}
                             </datalist>
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Tên khách hàng: </label>
-                            <Input disabled={isDisableEditInfo} autocomplete="off" {...mCustomerName} />
+                            <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mCustomerName} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Số điện thoại: </label>
-                            <Input disabled={isDisableEditInfo} autocomplete="off" {...mPhone} pattern="[0-9]{10}" />
+                            <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mPhone} pattern="[0-9]{10}" />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Địa chỉ: </label>
-                            <Input disabled={isDisableEditInfo} autocomplete="off" {...mAddress} />
+                            <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mAddress} />
                         </DivFlexColumn>
                     </DivFlexRow>
                     <DivFlexRow style={{ alignItems: 'center' }}>
                         <DivFlexColumn>
                             <label>Loại xe: </label>
-                            <Input autocomplete="off" list="loai_xe" name="loai_xe" readOnly={isUpdateBill != 0} {...mLoaiXe} />
+                            <Input readOnly={showInfoBill} autocomplete="off" list="loai_xe" name="loai_xe" readOnly={isUpdateBill != 0} {...mLoaiXe} />
                             <datalist id="loai_xe">
                                 {listLoaiXe.map((item, index) => (
                                     <option key={index} value={item} >{item}</option>
@@ -702,15 +820,15 @@ const RepairedBill = (props) => {
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Số khung: </label>
-                            <Input disabled={isDisableEditInfo} autocomplete="off" {...mSoKhung} />
+                            <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mSoKhung} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Số máy: </label>
-                            <Input disabled={isDisableEditInfo} autocomplete="off" {...mSoMay} />
+                            <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mSoMay} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Số km: </label>
-                            <Input disabled={isDisableEditInfo} autocomplete="off" value={sokm} type="Number" max={999999} min={0} onChange={(e => { setSoKM(e.target.value) })} />
+                            <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" value={sokm} type="Number" max={999999} min={0} onChange={(e => { setSoKM(e.target.value) })} />
                         </DivFlexColumn>
                         <Button disabled={isUpdateBill == 0} onClick={() => setShowHistoryCustomer(true)} style={{ marginLeft: 20, marginTop: 10 }}>
                             Chi tiết
@@ -719,54 +837,54 @@ const RepairedBill = (props) => {
                     <DivFlexRow style={{ alignItems: 'center' }}>
                         <DivFlexColumn>
                             <label>Yêu cầu khách hàng: </label>
-                            <Input autocomplete="off" value={yeucau} onChange={(e => { setYeuCau(e.target.value) })} />
+                            <Textarea readOnly={showInfoBill} autocomplete="off" value={yeucau} onChange={(e => { setYeuCau(e.target.value) })} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Tư vấn Sữa chữa: </label>
-                            <Input autocomplete="off" value={tuvan} onChange={(e => { setTuvan(e.target.value) })} />
+                            <Textarea readOnly={showInfoBill} autocomplete="off" value={tuvan} onChange={(e => { setTuvan(e.target.value) })} />
                         </DivFlexColumn>
                     </DivFlexRow>
-                    <DivFlexRow style={{ marginTop: 5, marginBottom: 5, alignItems: 'center', justifyContent: 'space-between', }}>
-                        {/* {isUpdateBill === 0 ? <div></div> :
-                    <Button onClick={exportBill}>
-                        Export
-                </Button>
-                } */}
+                    {(isUpdateBill == 3 || lydo) &&
                         <DivFlexRow style={{ alignItems: 'center' }}>
-                            <label> Bảng giá phụ tùng: </label>
-                            <Input autoFocus list="browser_search_suachua" onKeyPress={_handleKeyPress} value={searchValue} style={{ width: 250, marginRight: 15 }}
-                                onChange={(e) => searchMaPhuTung(e.target.value)} />
-                            <datalist id="browser_search_suachua">
-                                {mDataList.map((item, index) => (
-                                    <option disabled={item.soluongtonkho === 0} key={index}
-                                        value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
-                                ))}
-                            </datalist>
-                            <Button onClick={() => { handleButtonSearch(); }}>
-                                Tìm Kiếm <i className="fas fa-search" />
-                            </Button>
+                            <DivFlexColumn>
+                                <label>Lý do thay đổi: </label>
+                                <Textarea readOnly={showInfoBill} autocomplete="off" value={lydo} onChange={(e => { setLydo(e.target.value) })} />
+                            </DivFlexColumn>
                         </DivFlexRow>
-                        <DivFlexRow style={{ alignItems: 'center', float: 'right' }}>
-                            <Button onClick={() => {
-                                setShowTienCong(true);
-                                setUpdated(false)
-                            }}>
-                                Thêm Tiền Công
-                </Button>
-                            <Button onClick={() => {
-                                setShowCuaHangNgoai(true);
-                                setUpdated(false)
-                            }}>
-                                Thêm của hàng ngoài
-                </Button>
-                            <Button onClick={() => {
-                                setShowNewBill(true)
-                                setUpdated(false)
-                            }}>
-                                Thêm mới
-                </Button>
+                    }
+
+                    {isUpdateBill < 4 &&
+                        <DivFlexRow style={{ marginTop: 5, marginBottom: 5, alignItems: 'center', justifyContent: 'space-between', }}>
+                            <DivFlexRow style={{ alignItems: 'center' }}>
+                                <label> Bảng giá phụ tùng: </label>
+                                <Input autoFocus list="browser_search_suachua" onKeyPress={_handleKeyPress} value={searchValue} style={{ width: 250, marginRight: 15 }}
+                                    onChange={(e) => searchMaPhuTung(e.target.value)} />
+                                <datalist id="browser_search_suachua">
+                                    {mDataList.map((item, index) => (
+                                        <option disabled={item.soluongtonkho === 0} key={index}
+                                            value={item.maphutung}>{item.tentiengviet} ({item.soluongtonkho})</option>
+                                    ))}
+                                </datalist>
+                                <Button onClick={() => { handleButtonSearch(); }}>
+                                    Tìm Kiếm <i className="fas fa-search" />
+                                </Button>
+                            </DivFlexRow>
+                            <DivFlexRow style={{ alignItems: 'center', float: 'right' }}>
+                                <Button onClick={() => {
+                                    setShowTienCong(true);
+                                    setUpdated(false)
+                                }}> Thêm Tiền Công </Button>
+                                <Button onClick={() => {
+                                    setShowCuaHangNgoai(true);
+                                    setUpdated(false)
+                                }}> Thêm của hàng ngoài </Button>
+                                <Button onClick={() => {
+                                    setShowNewBill(true)
+                                    setUpdated(false)
+                                }}> Thêm mới </Button>
+                            </DivFlexRow>
                         </DivFlexRow>
-                    </DivFlexRow>
+                    }
                     <Table>
                         <tbody>
                             <tr>
@@ -779,7 +897,7 @@ const RepairedBill = (props) => {
                                 <th>Tiền phụ tùng</th>
                                 <th>Tiền công</th>
                                 <th>Tổng tiền công <br />+ phụ tùng</th>
-                                <th><i className="far fa-trash-alt"></i></th>
+                                {!showInfoBill && <th><i className="far fa-trash-alt"></i></th>}
                             </tr>
 
                             {props.listBillProduct && props.listBillProduct.map((item, index) => (
@@ -788,11 +906,11 @@ const RepairedBill = (props) => {
                                     <td>{item.tenphutungvacongviec}</td>
                                     <td>{item.maphutung}</td>
                                     <td>{item.dongia.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                                    <td><input type="number" onChange={(e) => handleChangeSL(e.target.value, index)} value={props.listBillProduct[index].soluongphutung} min="1" /></td>
-                                    <td><input type="number" max={100} onChange={(e) => handleChangeChieuKhau(e.target.value, index)} value={props.listBillProduct[index].chietkhau} min="0" /></td>
+                                    <td><input readOnly={showInfoBill} type="number" onChange={(e) => handleChangeSL(e.target.value, index)} value={props.listBillProduct[index].soluongphutung} min="1" /></td>
+                                    <td><input readOnly={showInfoBill} type="number" max={100} onChange={(e) => handleChangeChieuKhau(e.target.value, index)} value={props.listBillProduct[index].chietkhau} min="0" /></td>
                                     <td>{(Math.round((100 - item.chietkhau) * item.dongia * item.soluongphutung) / 100).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                                     <td>
-                                        <input list="tien_cong_bill" type="number" onChange={(e) => handleChangeTienCong(e.target.value, index)} value={props.listBillProduct[index].tiencong} min="0" />
+                                        <input readOnly={showInfoBill} list="tien_cong_bill" type="number" onChange={(e) => handleChangeTienCong(e.target.value, index)} value={props.listBillProduct[index].tiencong} min="0" />
                                         <datalist id="tien_cong_bill">
                                             {listGiaDichVu.map((item, index) => (
                                                 <option key={index} value={item.tien} >{item.ten}</option>
@@ -800,13 +918,14 @@ const RepairedBill = (props) => {
                                         </datalist>
                                     </td>
                                     <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                                    <td>
+                                    {!showInfoBill && <td>
                                         <DelButton onClick={() => {
                                             DelItem(item)
                                         }}>
                                             <i className="far fa-trash-alt"></i>
                                         </DelButton>
                                     </td>
+                                    }
                                 </tr>
 
                             ))}
@@ -817,37 +936,49 @@ const RepairedBill = (props) => {
                     <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
                         <h4 style={{ textAlign: "center" }}>Tong Tiền : {tongTienBill} VND</h4>
                     </DivFlexRow>
-                    <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
-                        <label></label>
-                        {isUpdateBill === 0 ?
-                            <Button onClick={() => {
-                                handleSaveBill();
-                            }}>
-                                Lưu
-                    </Button>
-                            :
-                            <DivFlexRow>
+
+                    {isUpdateBill < 4 ?
+                        <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
+                            <label></label>
+                            {isUpdateBill === 0 ?
                                 <Button onClick={() => {
-                                    UpdateHoaDon();
-                                }}>
-                                    Update
-                        </Button>
-                                {isUpdateBill != 3 && <Button style={{ marginLeft: 15 }} onClick={() => {
-                                    thanhToanHoaDon()
-                                }}>
-                                    Update và Thanh toán
-                        </Button>}
-                                {isUpdateBill != 3 && <DelButton style={{ marginLeft: 15 }} onClick={() => {
-                                    HuyHoaDon();
-                                }}>
-                                    Hủy
-                        </DelButton>}
-                            </DivFlexRow>
-                        }
-                    </DivFlexRow>
-                    <PopupBillTienCong addItemToProduct={(item) => addItemToProduct(item)} isShowing={isShowTienCong} onCloseClick={() => { setShowTienCong(false) }} />
-                    <PopupAccessory addItemToProduct={(item) => addItemToProduct(item)} isShowing={isShowNewBill} onCloseClick={() => { setShowNewBill(false) }} />
+                                    handleSaveBill();
+                                }}> Lưu   </Button>
+                                :
+                                <DivFlexRow>
+                                    <Button onClick={() => {
+                                        UpdateHoaDon();
+                                    }}>  Update  </Button>
+                                    {isUpdateBill != 3 && <Button style={{ marginLeft: 15 }} onClick={() => {
+                                        thanhToanHoaDon()
+                                    }}> Update và Thanh toán  </Button>}
+                                    {isUpdateBill != 3 && <DelButton style={{ marginLeft: 15 }} onClick={() => {
+                                        HuyHoaDon();
+                                    }}> Hủy </DelButton>}
+                                </DivFlexRow>
+                            }
+                        </DivFlexRow>
+                        : <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
+                            <label></label>
+                            {(moment().valueOf() - moment(ngaythanhtoan.value).valueOf()) <= oneDay &&
+                                <Button onClick={() => {
+                                    handleRedirectUpdate();
+                                }}> Update </Button>
+                            }
+                        </DivFlexRow>
+                    }
+                    <PopupBillTienCong addItemToProduct={(item) => addItemToProduct(item)} isShowing={isShowTienCong} listGiaDichVu={listGiaDichVu} onCloseClick={() => { setShowTienCong(false) }} />
                     <PopupBillCHN addItemToProduct={(item) => addItemToProduct(item)} isShowing={isShowCuaHangNgoai} listCuaHangNgoai={listCuaHangNgoai} onCloseClick={() => { setShowCuaHangNgoai(false) }} />
+                    <PopupAccessory addItemToProduct={(item) => addItemToProduct(item)} isShowing={isShowNewBill} listProduct={props.listProduct} onCloseClick={() => { setShowNewBill(false) }} />
+
+                    <ConfirmHoaDon
+                        isShowing={isShowingConfirm}
+                        onCloseClick={() => setShowingConfirm(false)}
+                        mahoadon={mMaHoaDon}
+                        token={props.token}
+                        history={props.history}
+                        alert={(mess) => props.alert(mess)}
+                    />
 
                     <HistoryCustomer isShowing={isShowHistoryCustomer} onCloseClick={() => {
                         setShowHistoryCustomer(false)
@@ -871,6 +1002,7 @@ const mapDispatch = (dispatch) => ({
     deleteItemBillProductMa: (key) => { dispatch(deleteItemBillProductMa(key)) },
     setListBillProduct: (arr) => { dispatch(setListBillProduct(arr)) },
     addBillProduct: (data) => { dispatch(addBillProduct(data)) },
+    getAllProduct: (token) => { dispatch(getAllProduct(token)) },
     updateBillProduct: (data, index) => { dispatch(updateBillProduct(data, index)) }
 })
 export default withRouter(connect(mapState, mapDispatch)(RepairedBill));

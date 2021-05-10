@@ -36,6 +36,7 @@ module.exports = {
     update: async function (req, res, next) {
         try {
             var param = Object.assign(req.params, req.query);
+            param['ngaysuachua'] = new Date();
             let resulft = await Abstract.update(Bill, req.body, req.params);
             res.json(resulft);
         } catch (error) {
@@ -60,6 +61,7 @@ module.exports = {
             if (check && check.trangthai == 0) {
                 var param = [];
                 param["ngaythanhtoan"] = new Date();
+                param['ngaysuachua'] = param["ngaythanhtoan"];
                 param["trangthai"] = 1;
                 let resulft = await Abstract.update(Bill, param, req.params);
                 await BillSuachua.giamSoLuongPhuTung(req.params.mahoadon);

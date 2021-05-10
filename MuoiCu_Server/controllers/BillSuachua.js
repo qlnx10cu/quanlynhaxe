@@ -5,6 +5,7 @@ const Customer = require("../models/Customer");
 const Abstract = require('../models/Abstract');
 const XLSX = require('xlsx');
 const librespone = require("../lib/respone");
+const email = require("../lib/email");
 var exec = require('child_process').exec;
 
 module.exports = {
@@ -119,26 +120,26 @@ module.exports = {
             data.ten = req.body.tenkh;
             data.manvsuachua = req.body.manvsuachua;
             var makh = req.body.makh;
-            console.log("ma khd", makh);
 
-            if (!makh) {
-                let r = await Abstract.add(Customer, data);
-                makh = r.insertId;
-                console.log(r.insertId);
-                if (!r || r == null) {
-                    librespone.error(req, res, "Kiểm tra lại thông tin khách hàng");
-                    return;
+            let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
+            if (hoaDon) {
+                if (!makh) {
+                    let r = await Abstract.add(Customer, data);
+                    makh = r.insertId;
+                    if (!r || r == null) {
+                        librespone.error(req, res, "Kiểm tra lại thông tin khách hàng");
+                        return;
+                    }
+                } else {
+                    let r = await Abstract.update(Customer, data, { ma: makh, biensoxe: data.biensoxe });
+                    if (!r || r == null) {
+                        librespone.error(req, res, "Kiểm tra lại thông tin khách hàng");
+                        return;
+                    }
                 }
-            } else {
-                let r = await Abstract.update(Customer, data, { ma: makh, biensoxe: data.biensoxe });
-                if (!r || r == null) {
-                    librespone.error(req, res, "Kiểm tra lại thông tin khách hàng");
-                    return;
+                if (hoaDon.trangthai == 1) {
+                    email.sendMail(req, res, "phanmem.ctytrungtrang@gmail.com", "taonuaa004@gmail.com", "Update hóa đơn sữa chữa", "Hệ thống vừa update hoá đơn với mã " + mahoadon + "\nLý do:\n" + conlai.lydo);
                 }
-            }
-
-            let check = await Abstract.getOne(Bill, { mahoadon: mahoadon });
-            if (check) {
                 var bodybill = conlai;
                 bodybill['ngaysuachua'] = new Date();
                 var detailbill = chitiet;
@@ -224,8 +225,8 @@ module.exports = {
         var chitiet = ws_data.chitiet;
         for (var i = 0; i < chitiet.length; i++) {
             var chietkhau = chitiet[i].chietkhau ? parseInt(chitiet[i].chietkhau) : 0;
-            chietkhau= 100- chietkhau;
-            chitiet[i].tinhtien =Math.round(chietkhau* parseInt(chitiet[i].dongia) * parseInt(chitiet[i].soluongphutung))/100;
+            chietkhau = 100 - chietkhau;
+            chitiet[i].tinhtien = Math.round(chietkhau * parseInt(chitiet[i].dongia) * parseInt(chitiet[i].soluongphutung)) / 100;
         }
         ws_data['tongtienpt'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.tinhtien, 0);
         ws_data['tongtiencong'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.tiencong, 0);

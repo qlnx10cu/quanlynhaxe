@@ -4,6 +4,7 @@ const AbstractTwo = require("../models/AbstractTwo");
 const Abstract = require('../models/Abstract');
 const librespone = require("../lib/respone");
 const Employee = require("../models/Employee");
+const email = require("../lib/email");
 
 module.exports = {
     getList: async function (req, res, next) {
@@ -45,7 +46,8 @@ module.exports = {
             bodybill['loaihoadon'] = 1;
             bodybill['mahoadon'] = mahoadon;
             bodybill['ngaythanhtoan'] = new Date();
-            bodybill['ngayban'] = new Date();
+            bodybill['ngaysuachua'] = bodybill['ngaythanhtoan'];
+            bodybill['ngayban'] = bodybill['ngaythanhtoan'];
             for (var k in detailbill) {
                 detailbill[k]['mahoadon'] = mahoadon;
             }
@@ -85,8 +87,8 @@ module.exports = {
                 ...conlai
             } = req.body;
             let resulft = await AbstractTwo.getList(Bill, BillLe, { mahoadon: req.body.mahoadon });
-            let check = await Abstract.getOne(Bill, { mahoadon: mahoadon });
-            if (resulft && check) {
+            let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
+            if (resulft && hoaDon) {
                 var bodybill = conlai;
                 bodybill['ngaysuachua'] = new Date();
                 var detailbill = chitiet;
@@ -94,7 +96,9 @@ module.exports = {
                     detailbill[k]['mahoadon'] = mahoadon;
                 }
                 var paramHoaDon = { mahoadon: mahoadon };
-
+                if (hoaDon.trangthai == 1) {
+                    email.sendMail(req, res, "phanmem.ctytrungtrang@gmail.com", "taonuaa004@gmail.com", "Update hóa đơn bán lẻ", "Hệ thống vừa update hoá đơn với mã " + mahoadon + "\nLý do:\n" + conlai.lydo);
+                }
                 let resulft1 = await Abstract.update(Bill, bodybill, paramHoaDon);
                 await BillLe.deleteMahoaDon(mahoadon);
                 await BillLe.tangSoLuongPhuTung(resulft);
@@ -103,8 +107,9 @@ module.exports = {
                     await BillLe.giamSoLuongPhuTung(detailbill);
                 }
                 res.json({ "mahoadon": mahoadon });
-            } else
+            } else {
                 librespone.error(req, res, 'Không update được hóa đơn');
+            }
 
         } catch (error) {
             res.status(400).json({

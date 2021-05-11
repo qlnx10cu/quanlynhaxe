@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { DivFlexRow, ButtonChooseFile, Button } from '../styles'
 import PhuTung from './Products/PhuTung/index'
@@ -39,18 +39,17 @@ const Select = styled.select`
 //     str = str.trim();
 //     return str;
 // }
-function stringToDate(_date,_format,_delimiter)
-{
-            var formatLowerCase=_format.toLowerCase();
-            var formatItems=formatLowerCase.split(_delimiter);
-            var dateItems=_date.split(_delimiter);
-            var monthIndex=formatItems.indexOf("mm");
-            var dayIndex=formatItems.indexOf("dd");
-            var yearIndex=formatItems.indexOf("yyyy");
-            var month=parseInt(dateItems[monthIndex]);
-            month-=1;
-            var formatedDate = new Date(dateItems[yearIndex],month,dateItems[dayIndex]);
-            return formatedDate;
+function stringToDate(_date, _format, _delimiter) {
+    var formatLowerCase = _format.toLowerCase();
+    var formatItems = formatLowerCase.split(_delimiter);
+    var dateItems = _date.split(_delimiter);
+    var monthIndex = formatItems.indexOf("mm");
+    var dayIndex = formatItems.indexOf("dd");
+    var yearIndex = formatItems.indexOf("yyyy");
+    var month = parseInt(dateItems[monthIndex]);
+    month -= 1;
+    var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
+    return formatedDate;
 }
 
 function readFile(file, token) {
@@ -105,8 +104,8 @@ function readFile(file, token) {
                         if (ws["H" + i] && ws["H" + i] !== null)
                             data.giaban_le = ws["H" + i].v;
                         if (ws["I" + i] && ws["I" + i] !== null) {
-                            var date=stringToDate(ws["I" + i].v, "DD/MM/YYYY","/");
-                            data.ngaycapnhat =  moment(date).format('MM/DD/YYYY');
+                            var date = stringToDate(ws["I" + i].v, "DD/MM/YYYY", "/");
+                            data.ngaycapnhat = moment(date).format('MM/DD/YYYY');
                         }
                         dataSend.chitiet.push(data);
 
@@ -265,7 +264,7 @@ function readFile(file, token) {
             }
             return ImportMuBH(token, dataSend).then(() => {
                 alert("Thêm thành công");
-                window.location.href="/products";
+                window.location.href = "/products";
             }).catch(() => {
                 alert("Lỗi khi thêm");
                 reject();
@@ -353,19 +352,19 @@ const Products = (props) => {
                     </DivFlexRow>
                     <div style={{ marginTop: 15 }}>
                         <PhuTung
-                            token={props.token}
+                            token={props.token} parent={props}
                             isActive={mSanPham === PHU_TUNG}
                         />
                         <PhuKien
-                            token={props.token}
+                            token={props.token} parent={props}
                             isActive={mSanPham === PHU_KIEN}
                         />
                         <NonBaoHiem
-                            token={props.token}
+                            token={props.token} parent={props}
                             isActive={mSanPham === NON_BH}
                         />
                         <DauNhot
-                            token={props.token}
+                            token={props.token} parent={props}
                             isActive={mSanPham === DAU_NHOT}
                         />
                     </div>

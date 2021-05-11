@@ -95,10 +95,10 @@ const Staffs = (props) => {
                                             setEditItem(item);
                                         }}><i className="fas fa-cog"></i></Button>
                                         <DelButton onClick={() => {
-                                            if (window.confirm("Bạn chắc muốn hủy") == true) {
+                                            props.confirmError("Bạn chắc muốn hủy", 2, () => {
                                                 DeleteStaff(props.token, item.ma);
                                                 getListStaff();
-                                            }
+                                            });
                                         }} style={{ marginLeft: 5 }}><i className="far fa-trash-alt"></i></DelButton>
                                     </td>
                                 </tr>

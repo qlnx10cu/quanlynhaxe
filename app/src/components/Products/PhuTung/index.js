@@ -13,6 +13,7 @@ const PhuTungItem = ({
     token,
     getList = () => {
     },
+    confirmErrorProps,
     alertProps,
     alertError,
     setShowing,
@@ -20,7 +21,7 @@ const PhuTungItem = ({
 }) => {
 
     const handleDelClick = () => {
-        if (window.confirm("Bạn chắc muốn hủy") == true) {
+        confirmErrorProps("Bạn chắc muốn hủy", 2, () => {
             DelPhuTung(token, item.maphutung).then(res => {
                 alertProps("Xóa thành công.");
                 getList();
@@ -28,7 +29,7 @@ const PhuTungItem = ({
                 .catch(err => {
                     alertError("Không xóa được phụ tùng " + item.maphutung)
                 })
-        }
+        })
     };
 
     return (
@@ -216,6 +217,8 @@ const PhuTung = (props) => {
                                 getList={() => {
                                 }}
                                 alertProps={props.alert}
+                                alertError={props.parent.error}
+                                confirmErrorProps={props.parent.confirmError}
                                 setShowing={setShowing}
                                 setItemEdit={
                                     setItemEdit

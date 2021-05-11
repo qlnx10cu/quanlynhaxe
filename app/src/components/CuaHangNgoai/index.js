@@ -15,7 +15,8 @@ const CuaHangNgoai = (props) => {
         DeleteItemCuaHangNgoai(props.token, tenphutung, nhacungcap).then(res => {
             loadCuaHangNgoai();
         }).catch(err => {
-            alert("Lỗi xóa item");
+            props.alert("Lỗi xóa item");
+            loadCuaHangNgoai();
         });
     };
     useEffect(() => {
@@ -61,9 +62,9 @@ const CuaHangNgoai = (props) => {
                                     setItem(item);
                                 }}><i className="fas fa-cog"></i></Button>
                                 <DelButton onClick={() => {
-                                    if (window.confirm("Bạn chắc muốn hủy") == true) {
+                                    props.confirmError("Bạn chắc muốn hủy phụ tùng: " + item.tenphutung, 2, () => {
                                         handleDelItem(item.tenphutung, item.nhacungcap);
-                                    }
+                                    });
                                 }} style={{ marginLeft: 5 }}><i className="far fa-trash-alt"></i></DelButton>
                             </td>
                         </tr>
@@ -76,6 +77,7 @@ const CuaHangNgoai = (props) => {
                 onCloseClick={() => { setIsShowing(false); setItem(null); }}
                 token={props.token}
                 item={item}
+                parent={props}
                 getList={() => loadCuaHangNgoai()}
             />
         </div>

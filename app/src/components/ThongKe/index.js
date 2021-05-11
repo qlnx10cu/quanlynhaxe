@@ -110,19 +110,31 @@ const ThongKe = (props) => {
             props.alert("Không lấy được danh sách nhân viên");
         })
     }
-    const HuyHoaDon = (mMaHoaDon, loaiHD) => {
+    const HuyHoaDon = (mMaHoaDon, loaiHD, cb) => {
         if (loaiHD == 0) {
             HuyThanhToan(props.token, mMaHoaDon).then(res => {
                 props.alert('Hủy hóa đơn ' + mMaHoaDon + ' đã thành công: ');
+                if (cb) {
+                    cb();
+                }
             }).catch(err => {
                 props.alert("Lỗi hủy hóa đơn " + mMaHoaDon)
+                if (cb) {
+                    cb();
+                }
             })
         }
         if (loaiHD == 1) {
             HuyThanhToanLe(props.token, mMaHoaDon).then(res => {
                 props.alert('Hủy hóa đơn ' + mMaHoaDon + ' đã thành công: ');
+                if (cb) {
+                    cb();
+                }
             }).catch(err => {
                 props.alert("Lỗi hủy hóa đơn " + mMaHoaDon)
+                if (cb) {
+                    cb();
+                }
             })
         }
     }
@@ -317,7 +329,11 @@ const ThongKe = (props) => {
                                             }}>Thay đổi</Button>
 
                                             <DelButton style={{ marginLeft: 15 }} onClick={() => {
-                                                if (window.confirm("Bạn chắc muốn hủy") == true) { HuyHoaDon(item.mahoadon, item.loaihoadon); handleLayDanhSach() }
+                                                props.confirmError("Bạn muốn hủy hóa đơn " + item.mahoadon, 2, () => {
+                                                    HuyHoaDon(item.mahoadon, item.loaihoadon, () => {
+                                                        handleLayDanhSach();
+                                                    });
+                                                })
                                             }}> Hủy</DelButton>
                                         </td>
                                         :

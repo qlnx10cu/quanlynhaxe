@@ -25,7 +25,6 @@ const RepairPriceDetail = (props) => {
             tien: mPrice
         }
         if (props.editItem) {
-            console.log("update")
             UpdateSalary(props.token, data, props.editItem.ma).then(() => {
                 setUpload(false);
                 props.onCloseClick();

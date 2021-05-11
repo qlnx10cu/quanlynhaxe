@@ -58,7 +58,7 @@ const CRepairItem = (props) => {
     let mIsWorking = props.working || 0;
     const handleBtnUseClick = () => {
         props.select(props.STT, null, () => {
-            if (props.history.location.pathname !== '/services/repairedbill'){
+            if (props.history.location.pathname !== '/services/repairedbill') {
                 props.history.push(`/services/repairedbill/${props.STT}`)
                 props.history.go();
             }
@@ -71,13 +71,13 @@ const CRepairItem = (props) => {
     }
 
     const handleThuHoi = () => {
-        if (window.confirm("Bạn có chắc muốn thu hồi")) {
+        props.parent.confirm("Bạn có chắc muốn thu hồi", () => {
             props.socket.emit('release', {
                 maban: props.STT - 1,
                 mahoadon: "",
                 biensoxe: "",
             })
-        }
+        })
     }
 
     return (
@@ -139,7 +139,7 @@ const Services = (props) => {
     };
     const updateBan = () => {
         props.socket.emit('update');
-        alert('Update thành công')
+        props.alert('Update thành công')
     }
     useEffect(() => {
         subscribe();
@@ -154,27 +154,27 @@ const Services = (props) => {
             }
             <RepairWraper>
                 {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index} STT={index} history={props.history} select={select} release={release} item={liftTable[index - 1]} working={liftTable[index - 1] && liftTable[index - 1].trangthai} />
+                    <CRepairItem parent={props} socket={props.socket} key={index} STT={index} history={props.history} select={select} release={release} item={liftTable[index - 1]} working={liftTable[index - 1] && liftTable[index - 1].trangthai} />
                 ))}
             </RepairWraper>
             <RepairWraper>
                 {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index + 4} STT={index + 4} history={props.history} select={select} release={release} item={liftTable[index + 3]} working={liftTable[index + 3] && liftTable[index + 3].trangthai} />
+                    <CRepairItem parent={props} socket={props.socket} key={index + 4} STT={index + 4} history={props.history} select={select} release={release} item={liftTable[index + 3]} working={liftTable[index + 3] && liftTable[index + 3].trangthai} />
                 ))}
             </RepairWraper>
             <RepairWraper>
                 {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index + 8} STT={index + 8} history={props.history} select={select} release={release} item={liftTable[index + 7]} working={liftTable[index + 7] && liftTable[index + 7].trangthai} />
+                    <CRepairItem parent={props} socket={props.socket} key={index + 8} STT={index + 8} history={props.history} select={select} release={release} item={liftTable[index + 7]} working={liftTable[index + 7] && liftTable[index + 7].trangthai} />
                 ))}
             </RepairWraper>
             <RepairWraper>
                 {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index + 12} STT={index + 12} history={props.history} select={select} release={release} item={liftTable[index + 11]} working={liftTable[index + 11] && liftTable[index + 11].trangthai} />
+                    <CRepairItem parent={props} socket={props.socket} key={index + 12} STT={index + 12} history={props.history} select={select} release={release} item={liftTable[index + 11]} working={liftTable[index + 11] && liftTable[index + 11].trangthai} />
                 ))}
             </RepairWraper>
             <RepairWraper>
                 {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index + 16} STT={index + 16} history={props.history} select={select} release={release} item={liftTable[index + 15]} working={liftTable[index + 15] && liftTable[index + 15].trangthai} />
+                    <CRepairItem parent={props} socket={props.socket} key={index + 16} STT={index + 16} history={props.history} select={select} release={release} item={liftTable[index + 15]} working={liftTable[index + 15] && liftTable[index + 15].trangthai} />
                 ))}
             </RepairWraper>
         </div>

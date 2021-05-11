@@ -91,13 +91,13 @@ const RepairPrice = (props) => {
                                     <td>
                                         <Button onClick={() => { handleButtonEdit(item) }} ><i className="fas fa-cog"></i></Button>
                                         <DelButton onClick={() => {
-                                            if (window.confirm("Bạn chắc muốn hủy") == true) {
+                                            props.confirmError("Bạn chắc muốn hủy", 2, () => {
                                                 DelSalary(props.token, item.ma).then(response => {
                                                     GetListSalary(props.token).then(response => {
                                                         setListSalary(response.data);
                                                     })
                                                 })
-                                            }
+                                            });
 
                                         }} style={{ marginLeft: 5 }}><i className="far fa-trash-alt"></i></DelButton>
                                     </td>
@@ -129,8 +129,5 @@ const mapState = (state) => ({
     isLoading: state.App.isLoading
 })
 const mapDispatch = (dispatch) => ({
-    alert: (mess) => { dispatch(alert(mess)) },
-    error: (mess) => { dispatch(error(mess)) },
-    setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
 })
 export default connect(mapState, mapDispatch)(RepairPrice);

@@ -271,11 +271,6 @@ const RepairedBill = (props) => {
             setMaHoaDon(mahoadon)
             showHoaDon(mahoadon);
             setShowInfoBill(true);
-            var message = getState("message");
-            if (message) {
-                clearState("message");
-                props.success(message);
-            }
         }
         else if (updateHoadon == 1) {
             setUpdateBill(3);
@@ -365,6 +360,12 @@ const RepairedBill = (props) => {
             setSoKM(res.data.sokm);
             setLydo(res.data.lydo);
             props.addLoading();
+
+            var message = getState("message");
+            if (message) {
+                clearState("message");
+                props.success(message);
+            }
         })
             .catch(err => {
                 props.alert("Không lấy được hóa đơn\nVui lòng kiểm tra đường mạng")
@@ -608,7 +609,7 @@ const RepairedBill = (props) => {
         props.confirmError(mess, length == 0 ? 1 : 0, () => {
             data.mahoadon = mMaHoaDon;
             UpdateBill(props.token, data).then(res => {
-                if (isUpdateBill == 4) {
+                if (isUpdateBill == 4 || isUpdateBill == 3) {
                     setUpdated(true);
                     props.history.push('/services/repairedbill/showbill?mahoadon=' + mMaHoaDon, { message: "Update hóa đơn " + mMaHoaDon + " thành công" });
                     props.history.go();

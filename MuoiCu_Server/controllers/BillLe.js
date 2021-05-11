@@ -97,7 +97,7 @@ module.exports = {
                 }
                 var paramHoaDon = { mahoadon: mahoadon };
                 if (hoaDon.trangthai == 1) {
-                    email.sendMail(req, res, "phanmem.ctytrungtrang@gmail.com", "taonuaa004@gmail.com", "Update hóa đơn bán lẻ", "Hệ thống vừa update hoá đơn với mã " + mahoadon + "\nLý do:\n" + conlai.lydo);
+                    email.sendMail(req, res, "Update hóa đơn bán lẻ", "Hệ thống vừa update hoá đơn với mã " + mahoadon + "\nLý do:\n" + conlai.lydo);
                 }
                 let resulft1 = await Abstract.update(Bill, bodybill, paramHoaDon);
                 await BillLe.deleteMahoaDon(mahoadon);

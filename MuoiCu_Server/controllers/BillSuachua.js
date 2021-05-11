@@ -136,7 +136,7 @@ module.exports = {
                     }
                 }
                 if (hoaDon.trangthai == 1) {
-                    email.sendMail(req, res, "phanmem.ctytrungtrang@gmail.com", "taonuaa004@gmail.com", "Update hóa đơn sữa chữa", "Hệ thống vừa update hoá đơn với mã " + mahoadon + "\nLý do:\n" + conlai.lydo);
+                    email.sendMail(req, res, "Update hóa đơn sữa chữa", "Hệ thống vừa update hoá đơn với mã " + mahoadon + "\nLý do:\n" + conlai.lydo);
                 }
                 var bodybill = conlai;
                 bodybill['ngaysuachua'] = new Date();

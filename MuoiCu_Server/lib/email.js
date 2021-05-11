@@ -13,12 +13,13 @@ var transporter = nodemailer.createTransport(smtpTransport({
 }));
 
 module.exports = {
-    
-    sendMail: function (req, res, from, to, subject, text) {
+
+    sendMail: function (req, res, subject, text) {
 
         var mailOptions = {
-            from: from,
-            to: to,
+            from: "phanmem.ctytrungtrang@gmail.com",
+            to: "ctytrungtrang@gmail.com",
+            cc: "dichvu.ctytrungtrang@gmail.com",
             subject: subject,
             text: text
         };

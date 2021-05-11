@@ -211,13 +211,7 @@ const BanLe = (props) => {
             getBill(mhd)
         }
 
-        if (loai == 2) {
-            var message = getState("message");
-            if (message) {
-                clearState("message");
-                props.success(message);
-            }
-        }
+
 
 
 
@@ -248,6 +242,12 @@ const BanLe = (props) => {
             setTongTien(data.tongtien);
             setProducts(chitiet)
             props.addLoading();
+
+            var message = getState("message");
+            if (message) {
+                clearState("message");
+                props.success(message);
+            }
 
         }).catch(err => {
             props.error("Không lấy được chi tiết hóa đơn:" + mahoadon);

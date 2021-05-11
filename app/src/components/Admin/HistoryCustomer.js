@@ -27,7 +27,11 @@ const RenderTableDetail = ({ list }) => {
                         <th>Xem chi tiết</th>
                     </tr>
 
-                    {list && list.map((item, index) => (
+                    {list && list.sort(function (a, b) {
+                        var x = a.ngaythanhtoan.toLowerCase();
+                        var y = b.ngaythanhtoan.toLowerCase();
+                        return x > y ? -1 : x < y ? 1 : 0;
+                    }).map((item, index) => (
                         <tr key={index}>
                             <td>{index + 1}</td>
                             <td>{item.ngaythanhtoan}</td>

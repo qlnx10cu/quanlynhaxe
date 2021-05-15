@@ -34,8 +34,23 @@ module.exports = {
     },
     add: async function (req, res, next) {
         try {
-            var str = new Date().getTime().toString();
-            var mahoadon = 'PT-' + str.substr(str.length - 8, str.length - 7);
+            var mahoadon = '';
+
+            for (var i = 0; i < 10; i++) {
+                var str = new Date().getTime().toString();
+                var mhd = 'PT-' + str.substr(str.length - 8, str.length - 7);
+                let checkHoaDon = await Abstract.getOne(Bill, { mahoadon: mhd });
+                if (!checkHoaDon) {
+                    mahoadon = mhd;
+                    break;
+                }
+            }
+
+            if (!mahoadon) {
+                librespone.error(req, res, "Không tìm thấy hóa đơn trống.");
+                return;
+            }
+
             let {
                 chitiet,
                 ...conlai
@@ -89,6 +104,9 @@ module.exports = {
             let resulft = await AbstractTwo.getList(Bill, BillLe, { mahoadon: req.body.mahoadon });
             let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
             if (resulft && hoaDon) {
+                if (hoaDon.trangthai == 1 && !conlai.lydo) {
+                    librespone.error(req, res, "Vui lòng nhập lý do hay đổi hóa đơn.");
+                }
                 var bodybill = conlai;
                 bodybill['ngaysuachua'] = new Date();
                 var detailbill = chitiet;

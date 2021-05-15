@@ -51,9 +51,8 @@ const ConfirmHoaDon = (props) => {
 
     const UpdateHoaDon = (maHoaDon) => {
         var date = new Date();
-        let url = `/services/repairedbill/updatebill?mahoadon=${maHoaDon}`;
-        props.history.push(url, { tokenTime: date.getTime() });
-        props.history.go();
+        let url = `/services/updatebill?mahoadon=${maHoaDon}`;
+        props.history.push(url, { tokenTime: date.getTime(), mhdToken: maHoaDon });
     }
 
     const confirmBarCodeByServer = () => {
@@ -187,15 +186,15 @@ const RepairedBill = (props) => {
         window.history.pushState(window.history.state.state, '', window.href);
     }
 
-    useEffect(() => {
-        props.setLoading(true);
+    const loadHoaDon = async () => {
+        isUpdateBill = 0;
         var updateHoadon = 0;
         var mahoadon = '';
         let mb = -1;
         let pathname = window.location.href;
         if (pathname.endsWith("/"))
             pathname = pathname.substring(0, pathname.length - 1);
-        if (pathname.indexOf("services/repairedbill/showbill") !== -1) {
+        if (pathname.indexOf("services/showbill") !== -1) {
             var queryParams = getQueryParams(window.location.href);
             if (!queryParams || !queryParams.mahoadon) {
                 props.alert("Đường dẫn không đúng");
@@ -203,13 +202,16 @@ const RepairedBill = (props) => {
             }
             updateHoadon = 2;
             mahoadon = queryParams.mahoadon;
-        } else if (pathname.indexOf("services/repairedbill/updatebill") !== -1) {
+        } else if (pathname.indexOf("services/updatebill") !== -1) {
             var queryParams = getQueryParams(window.location.href);
             if (!queryParams || !queryParams.mahoadon) {
                 props.alert("Đường dẫn không đúng");
                 return;
             }
-
+            if (queryParams.mahoadon != getState("mhdToken")) {
+                props.alert("Đường dẫn không đúng");
+                return;
+            }
             if (!checkTokenDateTime(getState("tokenTime"))) {
                 props.alert("Update đã hết hiệu lực, vui lòng làm lại");
                 return;
@@ -234,27 +236,29 @@ const RepairedBill = (props) => {
 
         props.setLoading(true, 5);
         try {
-            props.getAllProduct(props.token);
+            await props.getAllProduct(props.token);
 
-            GetlistCustomer(props.token).then(response => {
+            await GetlistCustomer(props.token).then(response => {
+                listBienSo = response.data;
                 setListBienSo(response.data);
                 props.addLoading();
             }).catch(err => {
                 props.alert("Không thể lấy danh sách khách hàng\nLỗi kết nối đến server\nVui lòng kiểm tra đường mạng")
             })
-            GetListNVSuaChua(props.token).then(response => {
+            await GetListNVSuaChua(props.token).then(response => {
+                listNhanVienSuaChua = response.data;
                 setListNhanVienSuaChua(response.data);
                 props.addLoading();
             }).catch(err => {
                 props.alert("Không thể lấy danh sách nhân viên sữa chữa\nLỗi kết nối đến server\nVui lòng kiểm tra đường mạng")
             })
-            GetListCuaHangNgoai(props.token).then(res => {
+            await GetListCuaHangNgoai(props.token).then(res => {
                 setCuaHangNgoai(res.data);
                 props.addLoading();
             }).catch(err => {
                 props.alert("Lỗi kết nối đến server\nVui lòng kiểm tra đường mạng")
             })
-            GetListSalary(props.token).then(respose => {
+            await GetListSalary(props.token).then(respose => {
                 setListGiaDichVu(respose.data);
                 props.addLoading();
             }).catch(err => {
@@ -262,17 +266,19 @@ const RepairedBill = (props) => {
             })
         } catch (ex) {
             props.alert("Lỗi kết nối đến server\nVui lòng kiểm tra đường mạng");
-            window.close()
             return;
         }
 
+
         if (updateHoadon == 2) {
+            isUpdateBill = 4;
             setUpdateBill(4);
             setMaHoaDon(mahoadon)
             showHoaDon(mahoadon);
             setShowInfoBill(true);
         }
         else if (updateHoadon == 1) {
+            isUpdateBill = 3;
             setUpdateBill(3);
             setMaHoaDon(mahoadon)
             showHoaDon(mahoadon);
@@ -306,6 +312,11 @@ const RepairedBill = (props) => {
 
             props.socket.emit("maban", mb);
         }
+    }
+
+    useEffect(() => {
+        props.setLoading(true);
+        loadHoaDon();
     }, [])
 
     const removeItemToProduct = (item) => {
@@ -406,15 +417,9 @@ const RepairedBill = (props) => {
     const searchBienSoXe = (values) => {
 
         setBienSoXe(values);
-        if (!listBienSo || listBienSo.length == 0) {
-            GetlistCustomer(props.token).then(response => {
-                setListBienSo(response.data);
-                setCustomer(response.data, values);
-            })
-        }
-        else
+        if (listBienSo && listBienSo.length != 0) {
             setCustomer(listBienSo, values);
-
+        }
     }
 
     const setNhanVienSuaChua = (lbs, values) => {
@@ -427,14 +432,9 @@ const RepairedBill = (props) => {
     };
     const searchNhanVienSuaChua = (values) => {
         mMaNVSuaChua.setValue(values);
-        if (!listNhanVienSuaChua || listNhanVienSuaChua.length == 0) {
-            GetListNVSuaChua(props.token).then(response => {
-                setListNhanVienSuaChua(response.data);
-                setNhanVienSuaChua(response.data, values);
-            })
-        }
-        else
+        if (listNhanVienSuaChua && listNhanVienSuaChua.length != 0) {
             setNhanVienSuaChua(listNhanVienSuaChua, values);
+        }
 
     };
 
@@ -573,10 +573,13 @@ const RepairedBill = (props) => {
         var length = data.chitiet.length;
         var mess = "Bạn muốn update và thanh toán hóa đơn " + mMaHoaDon + " với tổng tiền:" + data.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) + " VND";
         if (length == 0) {
-            mess = "Vui lòng lưu ý trước khi thánh toán\n Vì hóa đơn này có " + length + " phụ tùng"
+            mess = "Vui lòng lưu ý trước khi thanh toán hóa đơn " + mMaHoaDon + "\n Vì hóa đơn này có " + length + " phụ tùng"
+        }
+        if (!data.tenkh) {
+            mess = "Hóa đơn này không có tên khách hàng\n Lưu ý trước khi thanh toán hóa đơn " + mMaHoaDon;
         }
 
-        props.confirmError(mess, length == 0 ? 1 : 0, () => {
+        props.confirmError(mess, (!data.tenkh || length == 0) ? 1 : 0, () => {
             UpdateBill(props.token, data).then(res => {
                 ThanhToan(props.token, mMaHoaDon).then(res => {
                     props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
@@ -603,16 +606,17 @@ const RepairedBill = (props) => {
         var length = data.chitiet.length;
         var mess = "Bạn muốn update hóa đơn " + mMaHoaDon + " với tổng tiền:" + data.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) + " VND";
         if (length == 0) {
-            mess = "Vui lòng lưu ý trước khi update\n Vì hóa đơn này có " + length + " phụ tùng"
+            mess = "Vui lòng lưu ý trước khi thanh toán hóa đơn " + mMaHoaDon + "\n Vì hóa đơn này có " + length + " phụ tùng"
         }
-
-        props.confirmError(mess, length == 0 ? 1 : 0, () => {
+        if (!data.tenkh) {
+            mess = "Hóa đơn này không có tên khách hàng\n Lưu ý trước khi thanh toán hóa đơn " + mMaHoaDon;
+        }
+        props.confirmError(mess, (!data.tenkh || length == 0) ? 1 : 0, () => {
             data.mahoadon = mMaHoaDon;
             UpdateBill(props.token, data).then(res => {
                 if (isUpdateBill == 4 || isUpdateBill == 3) {
                     setUpdated(true);
-                    props.history.push('/services/repairedbill/showbill?mahoadon=' + mMaHoaDon, { message: "Update hóa đơn " + mMaHoaDon + " thành công" });
-                    props.history.go();
+                    props.history.push('/services/showbill?mahoadon=' + mMaHoaDon, { message: "Update hóa đơn " + mMaHoaDon + " thành công" });
                 } else {
                     props.success("Update hóa đơn " + mMaHoaDon + " thành công");
                     setUpdated(true);

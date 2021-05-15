@@ -60,7 +60,6 @@ const CRepairItem = (props) => {
         props.select(props.STT, null, () => {
             if (props.history.location.pathname !== '/services/repairedbill') {
                 props.history.push(`/services/repairedbill/${props.STT}`)
-                props.history.go();
             }
 
         });

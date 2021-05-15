@@ -42,8 +42,24 @@ module.exports = {
                 return;
             }
 
-            var str = new Date().getTime().toString();
-            var mahoadon = 'DV-' + str.substr(str.length - 8, str.length - 7);
+            var mahoadon = '';
+
+            for (var i = 0; i < 10; i++) {
+                var str = new Date().getTime().toString();
+                var mhd = 'DV-' + str.substr(str.length - 8, str.length - 7);
+                let checkHoaDon = await Abstract.getOne(Bill, { mahoadon: mhd });
+                if (!checkHoaDon) {
+                    mahoadon = mhd;
+                    break;
+                }
+            }
+
+            if (!mahoadon) {
+                librespone.error(req, res, "Không tìm thấy hóa đơn trống.");
+                return;
+            }
+
+
             var data = {};
             data.sodienthoai = req.body.sodienthoai;
             data.diachi = req.body.diachi;
@@ -121,6 +137,10 @@ module.exports = {
 
             let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
             if (hoaDon) {
+                if (hoaDon.trangthai == 1 && !conlai.lydo) {
+                    librespone.error(req, res, "Vui lòng nhập lý do hay đổi hóa đơn.");
+                    return;
+                }
                 if (!makh) {
                     let r = await Abstract.add(Customer, data);
                     makh = r.insertId;

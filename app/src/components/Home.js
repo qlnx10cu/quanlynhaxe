@@ -46,6 +46,13 @@ const Home = (props) => {
                 {props.info != null &&
                     <Route path="/services/repairedbill" component={LoadingComponent(() => <RepairedBill socket={socket} {...props} />)} />
                 }
+                {props.info != null &&
+                    <Route path="/services/updatebill" component={LoadingComponent(() => <RepairedBill socket={socket} {...props} />)} />
+                }
+                {props.info != null &&
+                    <Route path="/services/showbill" component={LoadingComponent(() => <RepairedBill socket={socket} {...props} />)} />
+                }
+                
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") &&
                     <Route path="/banle" component={LoadingComponent(BanLe, props)} />
                 }

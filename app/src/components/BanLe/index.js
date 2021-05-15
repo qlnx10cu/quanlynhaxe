@@ -23,8 +23,7 @@ const ConfirmHoaDon = (props) => {
     const UpdateHoaDon = (maHoaDon) => {
         var date = new Date();
         let url = `/banle?mahoadon=${maHoaDon}`;
-        props.history.push(url, { tokenTime: date.getTime() });
-        props.history.go();
+        props.history.push(url, { tokenTime: date.getTime(), mhdToken: maHoaDon });
     }
 
     const confirmBarCodeByServer = () => {
@@ -140,6 +139,7 @@ const BanLe = (props) => {
     const clearState = (name) => {
         if (!window.history || !window.history.state || !window.history.state.state || !window.history.state.state[name])
             return;
+        delete window.history.state.state[name];
         window.history.pushState(window.history.state.state, '', window.href);
     }
 
@@ -174,6 +174,10 @@ const BanLe = (props) => {
 
             var queryParams = getQueryParams(window.location.href);
             if (!queryParams || !queryParams.mahoadon) {
+                props.alert("Đường dẫn không đúng");
+                return;
+            }
+            if (queryParams.mahoadon != getState("mhdToken")) {
                 props.alert("Đường dẫn không đúng");
                 return;
             }
@@ -324,8 +328,8 @@ const BanLe = (props) => {
         }
 
         UpdateBillBanLe(props.token, data).then(res => {
+            clearState("tokenTime");
             props.history.push('/banle/showbill?mahoadon=' + mahoadonUpdate, { message: "Update hóa đơn " + mahoadonUpdate + " thành công" });
-            props.history.go();
         })
             .catch(err => {
                 props.error("Không update được hóa đơn.");
@@ -690,7 +694,7 @@ const BanLe = (props) => {
                             <Input autocomplete="off" {...mDiaChi} width='400px' readOnly={loai != 0} />
                         </DivFlexColumn>
                     </DivFlexRow>
-                    {loai != 0 &&
+                    {(loai == 2 && lydo || loai == 1) &&
                         <DivFlexRow style={{ alignItems: 'center' }}>
                             <DivFlexColumn>
                                 <label>Lý do thay đổi: </label>

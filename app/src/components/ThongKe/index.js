@@ -20,14 +20,13 @@ const ConfirmHoaDon = (props) => {
         var date = new Date();
         let url = "";
         if (loai == 0) {
-            url = `/services/repairedbill/updatebill?mahoadon=${maHoaDon}`;
+            url = `/services/updatebill?mahoadon=${maHoaDon}`;
         }
         if (loai == 1) {
             url = `/banle?mahoadon=${maHoaDon}`;
         }
-        props.history.push(url, { tokenTime: date.getTime() });
+        props.history.push(url, { tokenTime: date.getTime(), mhdToken: maHoaDon });
         props.history.go();
-
     }
 
     const confirmBarCodeByServer = () => {
@@ -224,14 +223,13 @@ const ThongKe = (props) => {
     const showInfoHoaDon = (mhd, loai) => {
         let url = '';
         if (loai == 0) {
-            url = `/services/repairedbill/showbill?mahoadon=${mhd}`;
+            url = `/services/showbill?mahoadon=${mhd}`;
         } else {
             url = `/banle/showbill?mahoadon=${mhd}`;
         }
         if (url) {
             props.history.push(url);
-            props.history.push(url);
-            props.history.goBack();
+            props.history.go();
         }
     }
 

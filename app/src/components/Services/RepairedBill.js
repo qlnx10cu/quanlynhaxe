@@ -145,6 +145,8 @@ const RepairedBill = (props) => {
     let [listGiaDichVu, setListGiaDichVu] = useState([]);
     let [isShowingConfirm, setShowingConfirm] = useState(false);
 
+    var connectSocket = false;
+
     const getQueryParams = (url) => {
         let queryParams = {};
         var tmp = url.substring(url.lastIndexOf('?') + 1, url.length);
@@ -285,16 +287,21 @@ const RepairedBill = (props) => {
         }
         else {
             props.socket.on("mahoadon", (data) => {
+                if (!connectSocket)
+                    return;
 
                 if (pathname.indexOf("services/repairedbill") !== -1) {
+
                     if (data && data.trangthai === 0) {
                         props.history.goBack();
+
                     }
 
                     if (data && data.trangthai && data.trangthai === 2) {
                         setUpdateBill(2);
                         setMaHoaDon(data.mahoadon);
                         showHoaDon(data.mahoadon);
+
                     }
                     else {
                         mCustomerName.setValue("");
@@ -315,8 +322,12 @@ const RepairedBill = (props) => {
     }
 
     useEffect(() => {
+        connectSocket = true;
         props.setLoading(true);
         loadHoaDon();
+        return () => {
+            connectSocket = false;
+        }
     }, [])
 
     const removeItemToProduct = (item) => {
@@ -456,8 +467,7 @@ const RepairedBill = (props) => {
                 props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon, biensoxe: bsx });
                 props.alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.data.mahoadon);
                 props.history.push("/services")
-                props.history.push("/services")
-                props.history.goBack();
+                props.history.go();
             }).catch(err => {
                 props.error("Không thể lưu phiếu sữa chưa: ");
                 console.log(err);

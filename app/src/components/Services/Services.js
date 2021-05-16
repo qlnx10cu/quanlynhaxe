@@ -66,7 +66,6 @@ const CRepairItem = (props) => {
     }
     const handleXemThongTin = () => {
         props.history.push(`/services/repairedbill/${props.STT}`)
-        props.history.go();
     }
 
     const handleThuHoi = () => {
@@ -105,6 +104,7 @@ const CRepairItem = (props) => {
 const Services = (props) => {
 
     let [liftTable, setLiftTable] = useState([]);
+    let connected = false;
     const subscribe = () => {
         props.socket.emit('connected', () => {
             //setLiftTable(data);
@@ -112,11 +112,14 @@ const Services = (props) => {
     }
 
     props.socket.on('connected', (data) => {
-        setLiftTable(data);
+        if (connected) {
+            setLiftTable(data);
+        }
     })
-    props.socket.on('lifttableFull', async data => {
-        await setLiftTable(data);
-        console.log(data);
+    props.socket.on('lifttableFull', data => {
+        if (connected) {
+            setLiftTable(data);
+        }
     })
     const select = (stt, mahoadon, cb) => {
         props.socket.emit('select', {
@@ -125,7 +128,9 @@ const Services = (props) => {
             biensoxe: "",
         })
         props.socket.on('lifttable', async data => {
-            await setLiftTable(data);
+            if(connected){
+                await setLiftTable(data);
+            }
             cb();
         })
     };
@@ -141,8 +146,11 @@ const Services = (props) => {
         props.alert('Update thành công')
     }
     useEffect(() => {
+        connected = true;
         subscribe();
-        return () => subscribe();
+        return () => {
+            connected = false;
+        };
     }, [])
     return (
         <div>

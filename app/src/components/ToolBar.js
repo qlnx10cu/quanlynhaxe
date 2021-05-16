@@ -135,11 +135,13 @@ const ListToolBar = [
         img: ImgBanLe,
         Roles: ["Admin", "Phụ Tùng"],
         onClick: (history, setIndex) => {
-            if (history.location.pathname !== '/banle') {
+            if (!history.location.pathname.includes('/banle')) {
                 history.push("/banle");
             } else {
                 if (history.location.search.indexOf("mahoadon")) {
-                    window.location.href = "/banle"
+                    history.push("/banle");
+                    history.push("/banle");
+                    history.goBack();
                 }
             }
 

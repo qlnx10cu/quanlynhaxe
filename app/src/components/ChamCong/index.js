@@ -1,43 +1,13 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import RenderChamCong from './ChamCong'
 import TheoDoi from './TheoDoi'
+import { Tab, TabContent } from '../../styles'
 
-const Tab = styled.div`
-        overflow: hidden;
-        border-bottom: 1px solid #ccc;
-        
-        button {
-            background-color: inherit;
-            float: left;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 14px 16px;
-            transition: 0.3s;
-            font-size: 17px;
-            
-            :hover {
-                background-color: #ddd;
-            }
-            
-            &.active {
-                background-color: #ccc;
-            }
-        }
-`;
-
-const TabContent = styled.div`
-       display: none;
-       
-       &.active {
-        display: block;
-       }
-`;
 
 const ChamCong = () => {
 
-    let [activePage,setActive] = useState(1);
+    let [activePage, setActive] = useState(1);
 
     return (
         <div>
@@ -47,11 +17,11 @@ const ChamCong = () => {
             </Tab>
 
             <TabContent className={activePage === 1 ? "active" : ""}>
-                <RenderChamCong/>
+                <RenderChamCong />
             </TabContent>
 
             <TabContent className={activePage === 2 ? "active" : ""}>
-                <TheoDoi/>
+                <TheoDoi />
             </TabContent>
 
         </div>

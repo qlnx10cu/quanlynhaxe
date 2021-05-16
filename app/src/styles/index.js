@@ -225,6 +225,39 @@ const ButtonChooseFile = styled.label`
     }
 `;
 
+const Tab = styled.div`
+        overflow: hidden;
+        border-bottom: 1px solid #ccc;
+        
+        button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+            
+            :hover {
+                background-color: #ddd;
+            }
+            
+            &.active {
+                background-color: #ccc;
+            }
+        }
+`;
+
+const TabContent = styled.div`
+       display: none;
+       
+       &.active {
+        display: block;
+       }
+`;
+
+
 export {
     WraperToolBar,
     DivFlexRow,
@@ -237,6 +270,8 @@ export {
     Input,
     Textarea,
     Table,
+    Tab,
+    TabContent,
     Select,
     CloseButton,
     ProductContainer,

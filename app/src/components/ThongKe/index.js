@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DivFlexRow, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Select } from '../../styles'
+import { DivFlexRow, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Select, Tab, TabContent } from '../../styles'
 import moment from 'moment'
 import { GetBillTheoNgay } from "../../API/ThongKeAPI"
 import ChiTietThongKe from './ChiTietThongKe'
@@ -98,6 +98,7 @@ const ThongKe = (props) => {
     let [maxSizePage, setMaxSizePage] = useState(20);
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
+    let [activePage, setActive] = useState(0);
 
     useEffect(() => {
         // fetch your data when the props.location changes
@@ -144,7 +145,7 @@ const ThongKe = (props) => {
         let start = moment(dateStart).format("YYYY/MM/DD");
         let end = moment(dateEnd).format("YYYY/MM/DD");
         GetBillTheoNgay(props.token, start, end).then(res => {
-            tachList(res.data, maxSizePage);
+            tachList(res.data, maxSizePage, activePage);
             setBillCurrents([...res.data]);
             CallApiGetListStaff();
         })
@@ -173,10 +174,15 @@ const ThongKe = (props) => {
 
     const handleChangeSoHang = (e) => {
         setMaxSizePage(parseInt(e));
-        tachList(mBillCurrents, e);
+        tachList(mBillCurrents, e, activePage);
     }
 
-    const tachList = (list, size) => {
+    const tachList = (list, size, tab) => {
+        if (tab != 0)
+            list = list.filter(x => x && x.loaihoadon == (tab - 1));
+        if (searchBSX != "") {
+            list = list.filter(bill => searchBSX == "" || bill && bill.biensoxe && bill.biensoxe.toLowerCase().includes(searchBSX.toLowerCase()) || bill && bill.mahoadon && bill.mahoadon.toLowerCase().includes(searchBSX.toLowerCase()));
+        }
         let tmp = _.chunk(list, size);
         setBills(tmp);
         setMaxPage(tmp.length);
@@ -209,10 +215,7 @@ const ThongKe = (props) => {
     }
 
     const handleSearchBienSoXe = () => {
-        if (mBillCurrents) {
-            const result = mBillCurrents.filter(bill => searchBSX == "" || bill && bill.biensoxe && bill.biensoxe.toLowerCase().includes(searchBSX.toLowerCase()) || bill && bill.mahoadon && bill.mahoadon.toLowerCase().includes(searchBSX.toLowerCase()));
-            tachList(result, maxSizePage)
-        }
+        tachList(mBillCurrents, maxSizePage, activePage)
     }
 
     const _handleKeyPressBSX = (e) => {
@@ -235,8 +238,17 @@ const ThongKe = (props) => {
         }
     }
 
+    const setTab = (tab) => {
+        if (mBillCurrents) {
+            setActive(tab);
+            tachList(mBillCurrents, maxSizePage, tab);
+        }
+
+    }
+
     return (
         <div>
+
             <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                 <DivFlexRow style={{ alignItems: 'center' }}>
                     <h3>Danh sách bill.</h3>
@@ -261,6 +273,14 @@ const ThongKe = (props) => {
                 </DivFlexRow>
 
             </DivFlexRow>
+            <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+
+            </DivFlexRow>
+            <Tab>
+                <button className={activePage === 0 ? "active" : ""} onClick={() => setTab(0)}>Tất cả</button>
+                <button className={activePage === 1 ? "active" : ""} onClick={() => setTab(1)}>Sữa chữa</button>
+                <button className={activePage === 2 ? "active" : ""} onClick={() => setTab(2)}>Bán lẻ</button>
+            </Tab>
             <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                 <DivFlexRow style={{ alignItems: 'center' }}>
                     <label style={{ marginLeft: 10 }}>Search MHD,BSX: </label>

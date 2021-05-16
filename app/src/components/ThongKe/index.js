@@ -26,7 +26,8 @@ const ConfirmHoaDon = (props) => {
             url = `/banle?mahoadon=${maHoaDon}`;
         }
         props.history.push(url, { tokenTime: date.getTime(), mhdToken: maHoaDon });
-        props.history.go();
+        props.history.push(url, { tokenTime: date.getTime(), mhdToken: maHoaDon });
+        props.history.goBack();
     }
 
     const confirmBarCodeByServer = () => {
@@ -229,7 +230,8 @@ const ThongKe = (props) => {
         }
         if (url) {
             props.history.push(url);
-            props.history.go();
+            props.history.push(url);
+            props.history.goBack();
         }
     }
 

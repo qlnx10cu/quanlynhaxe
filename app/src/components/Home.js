@@ -26,7 +26,7 @@ const Home = (props) => {
 
     return (
         <Router>
-            <ToolBar socket={socket} />
+            <ToolBar/>
             <BaseContainer>
                 {props.info != null &&
                     <Route exact path="/products" component={LoadingComponent(() => <Products chucvu={props.info.chucvu} {...props} />)} />

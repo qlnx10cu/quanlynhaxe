@@ -6,10 +6,24 @@ module.exports = {
         host: process.env.HOST,
         limit: process.env.LIMIT
     },
+    email: {
+        enable: true,
+        auth: {
+            user: 'phanmem.ctytrungtrang@gmail.com',
+            pass: 'Trungtrang123@'
+        },
+        option: {
+            from: "phanmem.ctytrungtrang@gmail.com",
+            to: "ctytrungtrang@gmail.com",
+            cc: "dichvu.ctytrungtrang@gmail.com",
+        }
+
+
+    },
     token_generator: {
         secret_key: process.env.secret_key,
         expires_in: process.env.expires_in
     },
     port: process.env.PORT,
-    log:process.env.LOG,
+    log: process.env.LOG,
 }

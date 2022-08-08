@@ -1,25 +1,25 @@
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 const logger = require("../lib/logger");
+const config = require('../config');
 
 var transporter = nodemailer.createTransport(smtpTransport({
     pool: true,
     service: 'gmail',
     host: 'smtp.gmail.com',
-    auth: {
-        user: 'phanmem.ctytrungtrang@gmail.com',
-        pass: 'Trungtrang123@'
-    }
+    auth: config.email.auth
 }));
 
 module.exports = {
 
     sendMail: function (req, res, subject, text) {
+        if (!config.email.enable)
+            return;
 
         var mailOptions = {
-            from: "phanmem.ctytrungtrang@gmail.com",
-            to: "ctytrungtrang@gmail.com",
-            cc: "dichvu.ctytrungtrang@gmail.com",
+            from: config.email.option.from,
+            to: config.email.option.to,
+            cc: config.email.option.cc,
             subject: subject,
             text: text
         };

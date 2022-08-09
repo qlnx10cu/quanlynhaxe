@@ -25,17 +25,18 @@ const Customer = (props) => {
         getlistCustomer();
     }, []);
 
-    const getlistCustomer = () => {
+    const getlistCustomer = (query = '') => {
         props.setLoading(true);
-        GetlistCustomer(props.token).then(Response => {
-            var dataCustomer = Response.data.reverse();
-            setlistCustomerFull(dataCustomer);
-            setlistCustomerTemp(dataCustomer)
-            tachList(dataCustomer, maxSizePage);
-            props.setLoading(false);
-        }).catch(err => {
-            props.alert("Không thể load danh sách khách hàng");
-        })
+        GetlistCustomer(props.token, `ma=${query}&ten=${query}&sodienthoai=${query}&biensoxe=${query}&sokhung=${query}&somay=${query}`)
+            .then(Response => {
+                var dataCustomer = Response.data;
+                setlistCustomerFull(dataCustomer);
+                setlistCustomerTemp(dataCustomer)
+                tachList(dataCustomer, maxSizePage);
+                props.setLoading(false);
+            }).catch(err => {
+                props.alert("Không thể load danh sách khách hàng");
+            })
     }
 
     const tachList = (list, size) => {
@@ -67,12 +68,10 @@ const Customer = (props) => {
     // };
     const handleButtonSearch = () => {
         if (searchValue == "") {
+            getlistCustomer()
             return;
         }
-        var arr = []
-        arr = listCustomerFull.filter(e => e.ten.toLowerCase().includes(searchValue.toLowerCase()) || e.biensoxe.toLowerCase().includes(searchValue.toLowerCase()) || e.sodienthoai.toLowerCase().includes(searchValue.toLowerCase()));
-        setlistCustomerTemp(arr);
-        tachList(arr, maxSizePage);
+        getlistCustomer(searchValue);
     };
     const _handleKeyPress = (e) => {
         if (e.key === 'Enter') {
@@ -101,7 +100,7 @@ const Customer = (props) => {
                     </DivFlexRow>
                     <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                         <DivFlexRow style={{ alignItems: 'center', marginTop: 5, marginBottom: 10 }}>
-                            <Input onKeyPress={_handleKeyPress} style={{ width: 250, marginRight: 15 }} onChange={(e) => setSearchValue(e.target.value)} />
+                            <Input onKeyPress={_handleKeyPress} style={{ width: 250, marginRight: 15 }} value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
                             <Button onClick={() => {
                                 handleButtonSearch();
                             }}> Tìm Kiếm   <i className="fas fa-search"></i>
@@ -129,39 +128,41 @@ const Customer = (props) => {
                     <Table>
                         <thead>
                             <tr>
-                                <th>STT</th>
-                                <th>Mã</th>
+                                <th>Mã KH</th>
                                 <th>Tên</th>
                                 <th>SDT</th>
-                                <th style={{ width: 320 }}>Địa Chỉ</th>
+                                <th>GT</th>
+                                <th style={{ width: 175 }}>Địa Chỉ</th>
+                                <th>Thành phố</th>
                                 <th>Biển Số Xe</th>
                                 <th>Loại Xe</th>
                                 <th>Số  Khung</th>
                                 <th>Số  Máy</th>
-                                <th>Chi tiết | Cập nhập | Xóa</th>
+                                <th style={{ width: 140 }}>Xem|Sữa|Xóa</th>
                             </tr>
                         </thead>
                         <tbody>
                             {listCustomer[page] && listCustomer[page].map((item, index) => (
                                 <tr key={index}>
-                                    <td style={{ fontSize: 14 }}>{index + 1}</td>
-                                    <td style={{ fontSize: 14 }}>{item.ma}</td>
-                                    <td style={{ fontSize: 14 }}>{item.ten}</td>
-                                    <td style={{ fontSize: 14 }}>{item.sodienthoai}</td>
-                                    <td style={{ fontSize: 14 }}>{item.diachi}</td>
-                                    <td style={{ fontSize: 14 }}>{item.biensoxe}</td>
-                                    <td style={{ fontSize: 14 }}>{item.loaixe}</td>
-                                    <td style={{ fontSize: 14 }}>{item.sokhung}</td>
-                                    <td style={{ fontSize: 14 }}>{item.somay}</td>
-                                    <td style={{ fontSize: 14 }}>
+                                    <td style={{ fontSize: 12 }}>{item.ma}</td>
+                                    <td style={{ fontSize: 12 }}>{item.ten}</td>
+                                    <td style={{ fontSize: 12 }}>{item.sodienthoai}</td>
+                                    <td style={{ fontSize: 12 }}>{item.gioitinh == '1' ? 'Nữ' : item.gioitinh == '0' ? 'Nam' : ''}</td>
+                                    <td style={{ fontSize: 12 }}>{item.diachi}</td>
+                                    <td style={{ fontSize: 12 }}>{item.thanhpho}</td>
+                                    <td style={{ fontSize: 12 }}>{item.biensoxe}</td>
+                                    <td style={{ fontSize: 12 }}>{item.loaixe}</td>
+                                    <td style={{ fontSize: 12 }}>{item.sokhung}</td>
+                                    <td style={{ fontSize: 12 }}>{item.somay}</td>
+                                    <td style={{ fontSize: 12 }}>
                                         <Button onClick={() => {
                                             setShowHistoryCustomer(true);
                                             setEditItem(item);
-                                        }} title="Xem chi tiết"><i className="fas fa-address-book"></i> </Button>
+                                        }} style={{ height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Xem chi tiết"><i className="fas fa-eye"></i> </Button>
                                         <Button onClick={() => {
                                             setShowCustomerDetail(true);
                                             setEditItem(item);
-                                        }} style={{ marginLeft: 5 }} title="Cập nhập thông tin khách hàng"><i className="fas fa-edit"></i></Button>
+                                        }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Cập nhập thông tin khách hàng"><i className="fas fa-edit"></i></Button>
                                         <DelButton onClick={() => {
                                             props.confirm("Bạn chắc muốn xóa khách hàng này", () => {
                                                 DeleteCustomer(props.token, item.ma).then(() => {
@@ -170,7 +171,7 @@ const Customer = (props) => {
                                                     props.error('Xoa that bai');
                                                 });
                                             })
-                                        }} style={{ marginLeft: 5 }} title="Xóa Khách hàng"><i className="far fa-trash-alt"></i></DelButton>
+                                        }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Xóa Khách hàng"><i className="far fa-trash-alt"></i></DelButton>
                                     </td>
                                 </tr>
 

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Modal, ModalContent, CloseButton, DivFlexRow, Button, DivFlexColumn, Input } from '../../styles'
+import { Modal, ModalContent, CloseButton, DivFlexRow, Button, DivFlexColumn, Input, Select } from '../../styles'
 // import { showNoti } from '../../../Actions/Notification';
 import { AddCustomer, UpdateCustomer } from '../../API/Customer'
 import { connect } from 'react-redux'
 
-
+const ListThanhPho = ['An Giang', 'Bà Rịa - Vũng Tàu', 'Bắc Giang', 'Bắc Kạn', 'Bạc Liêu', 'Bắc Ninh', 'Bến Tre', 'Bình Định', 'Bình Dương', 'Bình Phước', 'Bình Thuận', 'Cà Mau', 'Cần Thơ', 'Cao Bằng', 'Đà Nẵng', 'Đắk Lắk', 'Đắk Nông', 'Điện Biên', 'Đồng Nai', 'Đồng Tháp', 'Gia Lai', 'Hà Giang', 'Hà Nam', 'Hà Nội', 'Hà Tĩnh', 'Hải Dương', 'Hải Phòng', 'Hậu Giang', 'Hồ Chí Minh', 'Hoà Bình', 'Hưng Yên', 'Khánh Hòa', 'Kiên Giang', 'Kon Tum', 'Lai Châu', 'Lâm Đồng', 'Lạng Sơn', 'Lào Cai', 'Long An', 'Nam Định', 'Nghệ An', 'Ninh Bình', 'Ninh Thuận', 'Phú Thọ', 'Phú Yên', 'Quảng Bình', 'Quảng Nam', 'Quảng Ngãi', 'Quảng Ninh', 'Quảng Trị', 'Sóc Trăng', 'Sơn La', 'Tây Ninh', 'Thái Bình', 'Thái Nguyên', 'Thanh Hóa', 'Thừa Thiên Huế', 'Tiền Giang', 'Trà Vinh', 'Tuyên Quang', 'Vĩnh Long', 'Vĩnh Phúc', 'Yên Bái'];
 
 const CustomerDetail = (props) => {
 
@@ -16,7 +16,8 @@ const CustomerDetail = (props) => {
     let [mLoaiXe, setLoaiXe] = useState("");
     let [mSoKhung, setSoKhung] = useState("");
     let [mSoMay, setSoMay] = useState("");
-
+    let [mGioiTinh, setGioiTinh] = useState("");
+    let [mThanhPho, setThanhPho] = useState("An Giang");
 
     let item = props.editItem;
     useEffect(() => {
@@ -28,6 +29,8 @@ const CustomerDetail = (props) => {
             setLoaiXe(item.loaixe);
             setSoKhung(item.sokhung);
             setSoMay(item.somay);
+            setGioiTinh(item.gioitinh || 'Nam');
+            setThanhPho(item.thanhpho);
         }
         else {
             setCustomerName('');
@@ -37,6 +40,8 @@ const CustomerDetail = (props) => {
             setLoaiXe('');
             setSoKhung('');
             setSoMay('');
+            setGioiTinh('Nam');
+            setThanhPho('An Giang');
         }
     }, [item])
 
@@ -53,6 +58,8 @@ const CustomerDetail = (props) => {
             loaixe: mLoaiXe,
             sokhung: mSoKhung,
             somay: mSoMay,
+            gioitinh: mGioiTinh || 'Nam',
+            thanhpho: mThanhPho || 'An Giang',
         }
         setUpload(true);
         AddCustomer(props.token, data).then(Response => {
@@ -76,6 +83,8 @@ const CustomerDetail = (props) => {
             loaixe: mLoaiXe,
             sokhung: mSoKhung,
             somay: mSoMay,
+            gioitinh: mGioiTinh || 'Nam',
+            thanhpho: mThanhPho
         }
         setUpload(true);
         UpdateCustomer(props.token, data, item.ma).then(Response => {
@@ -104,9 +113,24 @@ const CustomerDetail = (props) => {
                             Số Điện Thoại
                                 <Input width='auto' type="Number" value={mSDT} onChange={(e) => setSDT(e.target.value)} />
                         </DivFlexColumn>
+                        <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
+                            Giói tính
+                                <Select width='auto' value={mGioiTinh} onChange={(e) => setGioiTinh(e.target.value)}>
+                                <option value='0'>Nam</option>
+                                <option value='1'>Nữ</option>
+                            </Select>
+                        </DivFlexColumn>
                         <DivFlexColumn style={{ fontSize: 20, marginBottom: 5 }}>
                             Địa Chỉ
                                 <Input width='auto' value={mAddress} onChange={(e) => setAddress(e.target.value)} />
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
+                            Thành phố
+                            <Select autocomplete="off" width='auto' value={mThanhPho} onChange={(e) => setThanhPho(e.target.value)}>
+                                {ListThanhPho.map((item, index) => (
+                                    <option key={index} value={item} >{item}</option>
+                                ))}
+                            </Select>
                         </DivFlexColumn>
                         <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                             Biển Số Xe

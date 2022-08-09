@@ -24,6 +24,7 @@ const RenderTableDetail = ({ list }) => {
                         <th>Nhân viên sữa chữa</th>
                         <th>Yêu cầu khách hàng</th>
                         <th>Tư vấn sữa chữa</th>
+                        <th>KTDK</th>
                         <th>Xem chi tiết</th>
                     </tr>
 
@@ -39,6 +40,7 @@ const RenderTableDetail = ({ list }) => {
                             <td>{item.tennvsuachua}</td>
                             <td>{item.yeucaukhachhang}</td>
                             <td>{item.tuvansuachua}</td>
+                            <td>{(!item.kiemtradinhky || item.kiemtradinhky == "0") ? "Không" : ("Lần " + (item.kiemtradinhky || ""))}</td>
                             <td><Button title="Xem chi tiết" onClick={() => {
                                 setShowChitiet(true);
                                 setMaHoaDon(item.mahoadon);
@@ -74,6 +76,8 @@ const HistoryCustomer = (props) => {
                 alert('không thể xem được chi tiết');
                 console.log(err);
             })
+        } else {
+            setData({});
         }
     }, [ma])
 
@@ -91,7 +95,15 @@ const HistoryCustomer = (props) => {
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Số Điện Thoại
-                                <Input readOnly width='auto' type="Number" value={mData.sodienthoai || ''} />
+                                <Input readOnly width='100px' type="Number" value={mData.sodienthoai || ''} />
+                    </DivFlexColumn>
+                    <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
+                        Giới Tính
+                                <Input readOnly width='100px' value={mData.gioitinh == '1' ? 'Nữ' : mData.gioitinh == '0' ? 'Nam' : ''} />
+                    </DivFlexColumn>
+                    <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
+                        Thành Phố
+                                <Input readOnly width='150px' value={mData.thanhpho} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 5, width: 400 }}>
                         Địa Chỉ

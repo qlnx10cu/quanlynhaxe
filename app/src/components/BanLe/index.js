@@ -109,7 +109,7 @@ const BanLe = (props) => {
         let params = tmp.split('&');
         for (var i = 0; i < params.length; i++) {
             var pair = params[i].split('=');
-            var value = pair.lenght == 0 ? "" : pair[1];
+            var value = pair.length == 0 ? "" : pair[1];
             queryParams[pair[0]] = decodeURIComponent(value);
         }
         return queryParams;
@@ -436,8 +436,13 @@ const BanLe = (props) => {
         setProducts(product.concat(items));
         setTongTien(mTongTien + tongtien);
     }
+    const _handleKeyPressKH = (e) => {
+        if (e.key === 'Enter') {
+            handleChangeKH(e.target.value, true);
+        }
+    };
 
-    const handleChangeKH = (value) => {
+    const handleChangeKH = (value, enter) => {
         setMaKhachHang(value);
         let kq = null;
         kq = listCustomer.find(function (item) {
@@ -455,15 +460,52 @@ const BanLe = (props) => {
             mCustomerName.setValue(kq.ten);
             mDiaChi.setValue(kq.diachi);
             setSoDienThoai(kq.sodienthoai);
-        } else {
+        } else if (enter) {
+            var resCheck = 0;
+            GetlistCustomer(props.token, `ma=${value}`).then(res => {
+                try {
+                    if (res.data && res.data[0]) {
+                        mCustomerName.setValue(res.data[0].ten);
+                        mDiaChi.setValue(res.data[0].diachi);
+                        setSoDienThoai(res.data[0].sodienthoai);
+                    } else {
+                        mCustomerName.setValue("");
+                        mDiaChi.setValue("");
+                        setSoDienThoai("");
+                    }
+                } catch (ex) {
 
+                }
+                if (resCheck != 0)
+                    props.addLoading();
+                else
+                    resCheck = 1;
+            }).catch(err => {
+                if (resCheck != 0)
+                    props.addLoading();
+                else
+                    resCheck = 1;
+            })
+            setTimeout(function () {
+                if (resCheck == 0) {
+                    resCheck = 1;
+                    props.setLoading(true, 1);
+                }
+            }, 500);
+        } else {
             mCustomerName.setValue("");
             mDiaChi.setValue("");
             setSoDienThoai("");
         }
     };
 
-    const handleChangeSDT = (value) => {
+    const _handleKeyPressSDT = (e) => {
+        if (e.key === 'Enter') {
+            handleChangeSDT(e.target.value, true);
+        }
+    };
+
+    const handleChangeSDT = (value, enter) => {
         setSoDienThoai(value);
         let kq = null;
         kq = listCustomer.find(function (item) {
@@ -481,6 +523,38 @@ const BanLe = (props) => {
             mCustomerName.setValue(kq.ten);
             mDiaChi.setValue(kq.diachi);
             setMaKhachHang(kq.ma);
+        } else if (enter || value.length == 10) {
+            var resCheck = 0;
+            GetlistCustomer(props.token, `sodienthoai=${value}`).then(res => {
+                try {
+                    if (res.data && res.data[0]) {
+                        mCustomerName.setValue(res.data[0].ten);
+                        mDiaChi.setValue(res.data[0].diachi);
+                        setMaKhachHang(res.data[0].ma);
+                    } else {
+                        mCustomerName.setValue("");
+                        mDiaChi.setValue("");
+                        setMaKhachHang("");
+                    }
+                } catch (ex) {
+
+                }
+                if (resCheck != 0)
+                    props.addLoading();
+                else
+                    resCheck = 1;
+            }).catch(err => {
+                if (resCheck != 0)
+                    props.addLoading();
+                else
+                    resCheck = 1;
+            })
+            setTimeout(function () {
+                if (resCheck == 0) {
+                    resCheck = 1;
+                    props.setLoading(true, 1);
+                }
+            }, 500);
         } else {
             mCustomerName.setValue("");
             mDiaChi.setValue("");
@@ -493,7 +567,7 @@ const BanLe = (props) => {
         newItem.soluong = soluong;
         let tongTien = mTongTien - newItem.tongtien;
         newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
-        let newProduct = [...mProducts.slice(0, index), newItem, ...mProducts.slice(index + 1, mProducts.lenght)];
+        let newProduct = [...mProducts.slice(0, index), newItem, ...mProducts.slice(index + 1, mProducts.length)];
         setProducts(newProduct);
         setTongTien(tinhTongTien(newProduct));
     }
@@ -508,7 +582,7 @@ const BanLe = (props) => {
             newItem.chietkhau = parseInt(e.target.value);
             let tongTien = mTongTien - newItem.tongtien;
             newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
-            let newProduct = [...mProducts.slice(0, index), newItem, ...mProducts.slice(index + 1, mProducts.lenght)];
+            let newProduct = [...mProducts.slice(0, index), newItem, ...mProducts.slice(index + 1, mProducts.length)];
             setProducts(newProduct);
             setTongTien(tinhTongTien(newProduct));
         } catch (ex) {
@@ -672,7 +746,9 @@ const BanLe = (props) => {
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Mã khách hàng: </label>
-                            <Input list="customer" name="customer" autocomplete="off" value={makhachhang} onChange={(e) => handleChangeKH(e.target.value)} readOnly={loai != 0} />
+                            <Input list="customer" name="customer" autocomplete="off"
+                                onKeyPress={_handleKeyPressKH}
+                                value={makhachhang} onChange={(e) => handleChangeKH(e.target.value, false)} readOnly={loai != 0} />
                             <datalist id="customer">
                                 {listCustomerCurrent.map((item, index) => (
                                     <option key={index} value={item.ma} >{item.ten}</option>
@@ -681,7 +757,9 @@ const BanLe = (props) => {
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Số điện thoại: </label>
-                            <Input list="sodienthoai" name="sodienthoai" autocomplete="off" value={sodienthoai} onChange={(e) => handleChangeSDT(e.target.value)} readOnly={loai != 0} />
+                            <Input list="sodienthoai" name="sodienthoai" autocomplete="off"
+                                onKeyPress={_handleKeyPressSDT}
+                                value={sodienthoai} onChange={(e) => handleChangeSDT(e.target.value, false)} readOnly={loai != 0} />
                             <datalist id="sodienthoai">
                                 {listCustomerCurrent.map((item, index) => (
                                     <option key={index} value={item.sodienthoai} >{item.ten}</option>

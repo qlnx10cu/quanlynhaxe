@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Textarea } from '../../styles'
+import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Textarea, Select } from '../../styles'
 import PopupAccessory from './PopupAccessory'
 import PopupBillTienCong from './PopupBillTienCong'
 import HistoryCustomer from '../Admin/HistoryCustomer'
@@ -19,6 +19,8 @@ import moment from 'moment'
 import Loading from '../Loading'
 
 const oneDay = 1000 * 3600 * 24;
+
+const ListThanhPho = ['An Giang', 'Bà Rịa - Vũng Tàu', 'Bắc Giang', 'Bắc Kạn', 'Bạc Liêu', 'Bắc Ninh', 'Bến Tre', 'Bình Định', 'Bình Dương', 'Bình Phước', 'Bình Thuận', 'Cà Mau', 'Cần Thơ', 'Cao Bằng', 'Đà Nẵng', 'Đắk Lắk', 'Đắk Nông', 'Điện Biên', 'Đồng Nai', 'Đồng Tháp', 'Gia Lai', 'Hà Giang', 'Hà Nam', 'Hà Nội', 'Hà Tĩnh', 'Hải Dương', 'Hải Phòng', 'Hậu Giang', 'Hồ Chí Minh', 'Hoà Bình', 'Hưng Yên', 'Khánh Hòa', 'Kiên Giang', 'Kon Tum', 'Lai Châu', 'Lâm Đồng', 'Lạng Sơn', 'Lào Cai', 'Long An', 'Nam Định', 'Nghệ An', 'Ninh Bình', 'Ninh Thuận', 'Phú Thọ', 'Phú Yên', 'Quảng Bình', 'Quảng Nam', 'Quảng Ngãi', 'Quảng Ninh', 'Quảng Trị', 'Sóc Trăng', 'Sơn La', 'Tây Ninh', 'Thái Bình', 'Thái Nguyên', 'Thanh Hóa', 'Thừa Thiên Huế', 'Tiền Giang', 'Trà Vinh', 'Tuyên Quang', 'Vĩnh Long', 'Vĩnh Phúc', 'Yên Bái'];
 
 const listLoaiXe = [
     "Airblade",
@@ -109,6 +111,8 @@ const RepairedBill = (props) => {
     let mCustomerName = lib.handleInput("");
     let mPhone = lib.handleInput("");
     let mAddress = lib.handleInput("");
+    let mThanhPho = lib.handleInput("An Giang");
+    let mGioiTinh = lib.handleInput("0");
     let mMaKH = lib.handleInput("");
     let mMaNVSuaChua = lib.handleInput("");
     let [biensoxe, setBienSoXe] = useState("");
@@ -130,6 +134,8 @@ const RepairedBill = (props) => {
     let [mMaHoaDon, setMaHoaDon] = useState("");
     let [manhanvien, setMaNhanVien] = useState(-1);
     let [tongTienBill, setTongTienBill] = useState(0);
+    let [tongTienCong, setTongTienCong] = useState(0);
+    let [tongTienPT, setTongTienPT] = useState(0);
     let tennhanvien = lib.handleInput("");
     let mLoaiXe = lib.handleInput("");
     let mSoKhung = lib.handleInput("");
@@ -140,6 +146,11 @@ const RepairedBill = (props) => {
     let [yeucau, setYeuCau] = useState("");
     let [tuvan, setTuvan] = useState("");
     let [lydo, setLydo] = useState("");
+    let [trangthai, setTrangThai] = useState("0");
+    let [kiemtradinhky, setKiemTraDinhKy] = useState("0");
+    let [kiemtralantoi, setKiemTraLanToi] = useState("");
+    let [thoigianhen, setThoiGianHen] = useState("");
+
     let [searchValue, setSearchValue] = useState("");
     let [mDataList, setDataList] = useState([]);
     let [listGiaDichVu, setListGiaDichVu] = useState([]);
@@ -307,6 +318,8 @@ const RepairedBill = (props) => {
                         mCustomerName.setValue("");
                         mPhone.setValue("");
                         mAddress.setValue("");
+                        mThanhPho.setValue("An Giang");
+                        mGioiTinh.setValue("0");
                         mMaKH.setValue("");
                         mSoKhung.setValue("");
                         mSoMay.setValue("");
@@ -332,10 +345,16 @@ const RepairedBill = (props) => {
 
     const removeItemToProduct = (item) => {
         var tong = 0;
+        var tongCong = 0;
         props.listBillProduct.forEach(element => {
             tong += element.tongtien;
+            tongCong += element.tiencong;
         });
         tong -= item.tongtien;
+        tongCong -= item.tiencong;
+
+        setTongTienCong(tongCong);
+        setTongTienPT(tong - tongCong);
         setTongTienBill(tong);
     }
 
@@ -348,12 +367,19 @@ const RepairedBill = (props) => {
             }
         }
         var tong = 0;
+        var tongCong = 0;
         props.listBillProduct.forEach(element => {
             tong += element.tongtien;
+            tongCong += element.tiencong;
         });
 
         if (i == props.listBillProduct.length) {
-            setTongTienBill(tong + item.tongtien);
+            tong = tong + item.tongtien;
+            tongCong = tongCong + item.tiencong;
+
+            setTongTienCong(tongCong);
+            setTongTienPT(tong - tongCong);
+            setTongTienBill(tong);
             props.addBillProduct(item);
         }
         else {
@@ -377,8 +403,12 @@ const RepairedBill = (props) => {
             mLoaiXe.setValue(res.data.loaixe);
             mMaKH.setValue(res.data.ma);
             ngaythanhtoan.setValue(res.data.ngaythanhtoan);
+            setTrangThai(res.data.trangthai);
             setTuvan(res.data.tuvansuachua);
             setYeuCau(res.data.yeucaukhachhang);
+            setKiemTraDinhKy(res.data.kiemtradinhky);
+            setKiemTraLanToi(res.data.kiemtralantoi);
+            setThoiGianHen(res.data.thoigianhen);
             setSoKM(res.data.sokm);
             setLydo(res.data.lydo);
             props.addLoading();
@@ -393,43 +423,75 @@ const RepairedBill = (props) => {
                 props.alert("Không lấy được hóa đơn\nVui lòng kiểm tra đường mạng")
             })
     }
-    const setCustomer = (lbs, values) => {
+    const setCustomer = (lbs, values, enter) => {
         let customer = lbs.find(function (item) {
             return item.biensoxe === values;
         });
         if (customer !== undefined) {
-            mCustomerName.setValue(customer.ten);
-            mPhone.setValue(customer.sodienthoai);
-            mAddress.setValue(customer.diachi);
-            mMaKH.setValue(customer.ma);
-            mSoKhung.setValue(customer.sokhung);
-            mSoMay.setValue(customer.somay);
-            mLoaiXe.setValue(customer.loaixe);
-            setDisableEditInfo(false);
+            updateCustomer(customer);
         }
-        else {
-            if (values) {
-                let customers = lbs.filter(function (item) {
-                    return (item.biensoxe.toLowerCase().includes(values.toLowerCase()));
-                });
-                setListBienSoCurrent(customers.slice(0, 20));
-            }
-            mCustomerName.setValue("");
-            mPhone.setValue("");
-            mAddress.setValue("");
-            mMaKH.setValue("");
-            mSoKhung.setValue("");
-            mSoMay.setValue("");
-            mLoaiXe.setValue("");
-            setDisableEditInfo(false);
+        else if (values && (enter || values.length == 10)) {
+            GetlistCustomer(props.token, `biensoxe=${values}`).then(response => {
+                if (biensoxe != values)
+                    return;
+                if (response.data && response.data[0] && response.data[0].biensoxe == values) {
+                    updateCustomer(response.data[0]);
+                } else {
+                    resetCustomer(lbs, values);
+                }
+            }).catch(err => {
+                if (biensoxe != values)
+                    return;
+                resetCustomer(lbs, values);
+            })
+        } else {
+            resetCustomer(lbs, values);
         }
     };
 
-    const searchBienSoXe = (values) => {
+    const updateCustomer = (customer) => {
+        mCustomerName.setValue(customer.ten);
+        mPhone.setValue(customer.sodienthoai);
+        mAddress.setValue(customer.diachi);
+        mThanhPho.setValue(customer.thanhpho || 'An Giang');
+        mGioiTinh.setValue(customer.gioitinh || "0")
+        mMaKH.setValue(customer.ma);
+        mSoKhung.setValue(customer.sokhung);
+        mSoMay.setValue(customer.somay);
+        mLoaiXe.setValue(customer.loaixe);
+        setDisableEditInfo(false);
+    }
+    const resetCustomer = (lbs, values) => {
+        if (values) {
+            let customers = lbs.filter(function (item) {
+                return (item.biensoxe.toLowerCase().includes(values.toLowerCase()));
+            });
+            setListBienSoCurrent(customers.slice(0, 20));
+        }
+        mCustomerName.setValue("");
+        mPhone.setValue("");
+        mAddress.setValue("");
+        mThanhPho.setValue('An Giang');
+        mGioiTinh.setValue("0")
+        mMaKH.setValue("");
+        mSoKhung.setValue("");
+        mSoMay.setValue("");
+        mLoaiXe.setValue("");
+        setDisableEditInfo(false);
+    }
 
+    const _handleKeyPressBSX = (e) => {
+        if (e.key === 'Enter') {
+            searchBienSoXe(e.target.value, true);
+        }
+    };
+
+    const searchBienSoXe = (values, enter) => {
+
+        biensoxe = values;
         setBienSoXe(values);
         if (listBienSo && listBienSo.length != 0) {
-            setCustomer(listBienSo, values);
+            setCustomer(listBienSo, values, enter);
         }
     }
 
@@ -559,6 +621,8 @@ const RepairedBill = (props) => {
             tenkh: mCustomerName.value,
             sodienthoai: mPhone.value,
             diachi: mAddress.value,
+            thanhpho: mThanhPho.value,
+            gioitinh: mGioiTinh.value,
             loaixe: mLoaiXe.value,
             somay: mSoMay.value,
             sokhung: mSoKhung.value,
@@ -570,6 +634,9 @@ const RepairedBill = (props) => {
             yeucaukhachhang: yeucau,
             tuvansuachua: tuvan,
             lydo: lydo,
+            kiemtradinhky: kiemtradinhky ? kiemtradinhky : '0',
+            kiemtralantoi: kiemtralantoi,
+            thoigianhen: thoigianhen,
             sokm: sokm ? sokm : 0
         }
         return data
@@ -641,9 +708,14 @@ const RepairedBill = (props) => {
 
     const updateTongTienBill = (product) => {
         var tong = 0;
+        var tongCong = 0;
         product.forEach(element => {
             tong += element.tongtien;
+            tongCong += element.tiencong;
         });
+
+        setTongTienCong(tongCong);
+        setTongTienPT(tong - tongCong);
         setTongTienBill(tong);
     }
 
@@ -806,9 +878,11 @@ const RepairedBill = (props) => {
                     <DivFlexRow style={{ alignItems: 'center' }}>
                         <DivFlexColumn>
                             <label>Biển số xe: </label>
-                            <Input readOnly={showInfoBill} autocomplete="off" list="bien_so" name="bien_so" value={biensoxe} onChange={(e) => {
-                                searchBienSoXe(e.target.value);
-                            }} readOnly={isUpdateBill != 0} />
+                            <Input readOnly={showInfoBill} autocomplete="off" list="bien_so" name="bien_so"
+                                onKeyPress={_handleKeyPressBSX}
+                                value={biensoxe} onChange={(e) => {
+                                    searchBienSoXe(e.target.value, false);
+                                }} readOnly={isUpdateBill != 0} />
                             <datalist id="bien_so">
                                 {listBienSoCurrent.map((item, index) => (
                                     <option key={index} value={item.biensoxe} >{item.ten}</option>
@@ -826,6 +900,21 @@ const RepairedBill = (props) => {
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Địa chỉ: </label>
                             <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mAddress} />
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <label>Giới Tính: </label>
+                            <Select {...mGioiTinh} style={{ width: 100 }}>
+                                <option value='0'>Nam</option>
+                                <option value='1'>Nữ</option>
+                            </Select>
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <label>Thành Phố: </label>
+                            <Select readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mThanhPho}>
+                                {ListThanhPho.map((item, index) => (
+                                    <option key={index} value={item} >{item}</option>
+                                ))}
+                            </Select>
                         </DivFlexColumn>
                     </DivFlexRow>
                     <DivFlexRow style={{ alignItems: 'center' }}>
@@ -851,7 +940,19 @@ const RepairedBill = (props) => {
                             <label>Số km: </label>
                             <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" value={sokm} type="Number" max={999999} min={0} onChange={(e => { setSoKM(e.target.value) })} />
                         </DivFlexColumn>
-                        <Button disabled={isUpdateBill == 0} onClick={() => setShowHistoryCustomer(true)} style={{ marginLeft: 20, marginTop: 10 }}>
+                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <label>Kiểm tra định kỳ: </label>
+                            <Select readOnly={showInfoBill} disabled={isDisableEditInfo || showInfoBill} autocomplete="off" value={kiemtradinhky} onChange={(e => { setKiemTraDinhKy(e.target.value) })}>
+                                <option value="0">Không có</option>
+                                <option value="1">Lần 1</option>
+                                <option value="2">Lần 2</option>
+                                <option value="3">Lần 3</option>
+                                <option value="4">Lần 4</option>
+                                <option value="5">Lần 5</option>
+                                <option value="6">Lần 6</option>
+                            </Select>
+                        </DivFlexColumn>
+                        <Button disabled={!biensoxe} onClick={() => setShowHistoryCustomer(true)} style={{ marginLeft: 20, marginTop: 10 }}>
                             Chi tiết
                 </Button>
                     </DivFlexRow>
@@ -863,6 +964,29 @@ const RepairedBill = (props) => {
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Tư vấn Sữa chữa: </label>
                             <Textarea readOnly={showInfoBill} autocomplete="off" value={tuvan} onChange={(e => { setTuvan(e.target.value) })} />
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <label>Kiểm Tra Lần Tới: </label>
+                            <Textarea readOnly={showInfoBill} autocomplete="off" value={kiemtralantoi} onChange={(e => { setKiemTraLanToi(e.target.value) })} />
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <label>Thời Gian Hẹn: </label>
+                            <Select readOnly={showInfoBill} disabled={showInfoBill} autocomplete="off" value={thoigianhen} onChange={(e => { setThoiGianHen(e.target.value) })}>
+                                <option value="0">Không hẹn</option>
+                                <option value="5">5 Ngày Sau</option>
+                                <option value="7">7 Ngày Sau</option>
+                                <option value="10">10 Ngày Sau</option>
+                                <option value="14">2 Tuần Sau</option>
+                                <option value="21">3 Tuần Sau</option>
+                                <option value="28">1 Tháng Sau</option>
+                                <option value="91">3 Tháng Sau</option>
+                                <option value="182">6 Tháng Sau</option>
+                                <option value="364">1 Năm Sau</option>
+                            </Select>
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <label>Ngày Hẹn: </label>
+                            <Input readOnly autocomplete="off" value={(thoigianhen && thoigianhen != "0") ? moment((trangthai == 1 && ngaythanhtoan.value) ? ngaythanhtoan.value : new Date()).add('days', thoigianhen).format("DD/MM/YYYY") : ""} />
                         </DivFlexColumn>
                     </DivFlexRow>
                     {(isUpdateBill == 3 || lydo) &&
@@ -954,8 +1078,16 @@ const RepairedBill = (props) => {
                         </tbody>
                     </Table>
 
-                    <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
-                        <h4 style={{ textAlign: "center" }}>Tong Tiền : {tongTienBill} VND</h4>
+                    <DivFlexRow style={{ marginTop: 15, marginBottom: 5, justifyContent: 'end' }}>
+                        <DivFlexColumn style={{ marginTop: 10, marginRight: 20 }}>
+                            <h4 style={{ textAlign: "center" }}>Tiền PT: {tongTienPT} VND,</h4>
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ marginTop: 10, marginRight: 20 }}>
+                            <h4 style={{ textAlign: "center" }}>Tiền Công : {tongTienCong} VND,</h4>
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ marginTop: 10, marginRight: 5 }}>
+                            <h4 style={{ textAlign: "center" }}>Tổng Tiền : {tongTienBill} VND</h4>
+                        </DivFlexColumn>
                     </DivFlexRow>
 
                     {isUpdateBill < 4 ?

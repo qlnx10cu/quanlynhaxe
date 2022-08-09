@@ -1,8 +1,8 @@
 import { HOST } from '../Config'
 import axios from 'axios'
 
-export const GetlistCustomer = (token) => {
-    let url = `${HOST}/customer`
+export const GetlistCustomer = (token, query = '') => {
+    let url = `${HOST}/customer?${query}`
     let headers = {
         'Authorization': 'Bearer ' + token
     }

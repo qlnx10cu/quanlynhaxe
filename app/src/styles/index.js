@@ -45,6 +45,8 @@ const Button = styled.button`
     }
 `
 const DelButton = styled(Button)`
+  width: ${props => props.width || 'auto'}
+  height: ${props => props.height || '38px'}
   background-color: #ff8080;
   :hover {
     background-color: #ff9999;
@@ -175,13 +177,19 @@ const DivFlexRow = styled.div`
 
 const Select = styled.select`
     border-radius: 3px;
-    border: 1px solid rgba(0,0,0);
+    border: 1px solid rgba(0,0,0, 0.8);
     height: 38px;
-    padding: 0 10px;
+    padding: 8px 20px;
+    margin: 8px 0;
     font-size: 16px;
-    color: gray;
+    background: white;
     width: ${props => props.width || '200px'};
     min-width: 100px;
+    
+    :disabled  {
+      color: black;
+      opacity: 1;
+    }
 `;
 
 const Input = styled.input`

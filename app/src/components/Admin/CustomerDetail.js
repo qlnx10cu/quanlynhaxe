@@ -104,50 +104,57 @@ const CustomerDetail = (props) => {
                     <h2> </h2>
                 </div>
                 <DivFlexRow style={{ marginTop: 10 }}>
-                    <DivFlexColumn style={{ marginLeft: 25, width: '100%' }}>
-                        <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
-                            Tên Khách Hàng
+                    <DivFlexColumn style={{ marginLeft: 25, width: "100%" }}>
+                        <DivFlexRow style={{ justifyContent: 'space-between' }}>
+                            <DivFlexColumn style={{ fontSize: 20, marginBottom: 2, width: "100%" }}>
+                                Tên Khách Hàng
                                 <Input width='auto' value={mCustomerName} onChange={(e) => setCustomerName(e.target.value)} />
-                        </DivFlexColumn>
-                        <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
-                            Số Điện Thoại
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ fontSize: 20, marginBottom: 2, marginLeft: 50, width: "100%" }}>
+                                Số Điện Thoại
                                 <Input width='auto' type="Number" value={mSDT} onChange={(e) => setSDT(e.target.value)} />
-                        </DivFlexColumn>
-                        <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
-                            Giói tính
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ fontSize: 20, marginBottom: 2, marginLeft: 50, width: "100%" }}>
+                                Giói tính
                                 <Select width='auto' value={mGioiTinh} onChange={(e) => setGioiTinh(e.target.value)}>
-                                <option value='0'>Nam</option>
-                                <option value='1'>Nữ</option>
-                            </Select>
-                        </DivFlexColumn>
-                        <DivFlexColumn style={{ fontSize: 20, marginBottom: 5 }}>
-                            Địa Chỉ
+                                    <option value='0'>Nam</option>
+                                    <option value='1'>Nữ</option>
+                                </Select>
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ fontSize: 20, marginBottom: 2, marginLeft: 50, width: "100%" }}>
+                                Thành phố
+                            <Select autocomplete="off" width='100%' value={mThanhPho} onChange={(e) => setThanhPho(e.target.value)}>
+                                    {ListThanhPho.map((item, index) => (
+                                        <option key={index} value={item} >{item}</option>
+                                    ))}
+                                </Select>
+                            </DivFlexColumn>
+                        </DivFlexRow>
+
+                        <DivFlexRow style={{ justifyContent: 'space-between' }}>
+                            <DivFlexColumn style={{ fontSize: 20, marginBottom: 5, width: "100%" }}>
+                                Địa Chỉ
                                 <Input width='auto' value={mAddress} onChange={(e) => setAddress(e.target.value)} />
-                        </DivFlexColumn>
-                        <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
-                            Thành phố
-                            <Select autocomplete="off" width='auto' value={mThanhPho} onChange={(e) => setThanhPho(e.target.value)}>
-                                {ListThanhPho.map((item, index) => (
-                                    <option key={index} value={item} >{item}</option>
-                                ))}
-                            </Select>
-                        </DivFlexColumn>
-                        <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
-                            Biển Số Xe
+                            </DivFlexColumn>
+                        </DivFlexRow>
+                        <DivFlexRow style={{ justifyContent: 'space-between' }}>
+                            <DivFlexColumn style={{ fontSize: 20, marginBottom: 2, width: "100%" }}>
+                                Biển Số Xe
                                 <Input width='auto' value={mSoXe} onChange={(e) => setSoXe(e.target.value)} />
-                        </DivFlexColumn>
-                        <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
-                            Loại Xe
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ fontSize: 20, marginBottom: 2, marginLeft: 50, width: "100%" }}>
+                                Loại Xe
                                 <Input width='auto' value={mLoaiXe} onChange={(e) => setLoaiXe(e.target.value)} />
-                        </DivFlexColumn>
-                        <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
-                            Số  Khung
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ fontSize: 20, marginBottom: 2, marginLeft: 50, width: "100%" }}>
+                                Số  Khung
                                 <Input width='auto' value={mSoKhung} onChange={(e) => setSoKhung(e.target.value)} />
-                        </DivFlexColumn>
-                        <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
-                            Số  Máy
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ fontSize: 20, marginBottom: 2, marginLeft: 50, width: "100%" }}>
+                                Số  Máy
                                 <Input width='auto' value={mSoMay} onChange={(e) => setSoMay(e.target.value)} />
-                        </DivFlexColumn>
+                            </DivFlexColumn>
+                        </DivFlexRow>
                     </DivFlexColumn>
                 </DivFlexRow>
                 <DivFlexRow style={{ justifyContent: 'flex-end' }}>

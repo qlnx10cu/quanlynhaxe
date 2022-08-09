@@ -130,14 +130,14 @@ const Customer = (props) => {
                             <tr>
                                 <th>Mã KH</th>
                                 <th>Tên</th>
-                                <th>SDT</th>
+                                <th>SĐT</th>
                                 <th>GT</th>
                                 <th style={{ width: 175 }}>Địa Chỉ</th>
                                 <th>Thành phố</th>
-                                <th>Biển Số Xe</th>
+                                <th>BSX</th>
                                 <th>Loại Xe</th>
-                                <th>Số  Khung</th>
-                                <th>Số  Máy</th>
+                                <th>Số Khung</th>
+                                <th>Số Máy</th>
                                 <th style={{ width: 140 }}>Xem|Sữa|Xóa</th>
                             </tr>
                         </thead>

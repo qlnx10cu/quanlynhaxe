@@ -2,7 +2,7 @@ const query = require('../lib/db')
 const Encrypt = require('../lib/encryptPassword');
 
 class Abstract {
-    static async getList(ClassTable, param) {
+    static async getList(ClassTable, param, whereOrder = '') {
         let where = ' 1=? ';
         let wherevalue = [
             1,
@@ -19,7 +19,29 @@ class Abstract {
                 }
             }
         }
-        let sql = `SELECT * FROM ${ClassTable.getNameTable()} where ${where} `;
+        let sql = `SELECT * FROM ${ClassTable.getNameTable()} where ${where} ${whereOrder}`;
+        let res = await query(sql, wherevalue);
+        return res;
+    }
+    static async search(ClassTable, param, whereOrder = '') {
+        let where = ' 1=? ';
+        let wherevalue = [
+            1,
+        ];
+        if (param && Object.keys(param).length != 0) {
+            wherevalue = [0];
+            for (var k in param) {
+                if (ClassTable.getLike(k)) {
+                    where = where + " OR " + k + ' LIKE ? ';
+                    wherevalue.push("%" + param[k] + "%");
+                }
+                else {
+                    where = where + " OR " + k + ' = ? ';
+                    wherevalue.push(param[k]);
+                }
+            }
+        }
+        let sql = `SELECT * FROM ${ClassTable.getNameTable()} where ${where} ${whereOrder}`;
         let res = await query(sql, wherevalue);
         return res;
     }
@@ -136,7 +158,7 @@ class Abstract {
         let res = await query(sql, wherevalue);
         return res;
     }
-    
+
 }
 
 module.exports = Abstract;

@@ -6,30 +6,30 @@ class Customer {
     }
     static getColmun(param) {
         if (param) {
-            let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay'];
+            let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay', 'gioitinh', 'thanhpho', 'updatetime'];
             return tmp.filter(e => Object.keys(param).includes(e));
         }
-        return "`ten`,`sodienthoai`,diachi`,`biensoxe`,`loaixe,`sokhung`,`somay`";
+        return "`ten`,`sodienthoai`,diachi`,`biensoxe`,`loaixe,`sokhung`,`somay`,`gioitinh`,`thanhpho`,`updatetime`";
     }
     static getLike(k) {
-        let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe'];
+        let tmp = ['ten', 'sodienthoai', 'biensoxe', 'sokhung', 'somay'];
         return tmp.includes(k);
     }
     static getDuplicate() {
         return "";
     }
     static async getChitiet(param) {
-        let sql = "SELECT mahoadon,manvsuachua,ngaythanhtoan,yeucaukhachhang,tuvansuachua,sokm FROM hoadon where makh=? AND trangthai=1 AND loaihoadon=0 order by mahoadon DESC";
+        let sql = "SELECT mahoadon,manvsuachua,ngaythanhtoan,yeucaukhachhang,tuvansuachua,sokm,kiemtradinhky FROM hoadon where makh=? AND trangthai=1 AND loaihoadon=0 order by mahoadon DESC";
         var res = await query(sql, [param]);
         return res;
     }
     static getParam(param) {
-        let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay'];
+        let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay', 'gioitinh', 'thanhpho', 'updatetime'];
         let arr = Object.keys(param).filter(e => tmp.includes(e)).map(e => param[e])
         return arr;
     }
     static getArrayParam(param) {
-        let tmp = ['ma', 'ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay'];
+        let tmp = ['ma', 'ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay', 'gioitinh', 'thanhpho', 'updatetime'];
         let obj = {};
         let arr = Object.keys(param).filter(e => tmp.includes(e));
         arr.forEach(e => {

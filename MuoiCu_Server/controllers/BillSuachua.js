@@ -4,9 +4,11 @@ const AbstractTwo = require("../models/AbstractTwo");
 const Customer = require("../models/Customer");
 const Abstract = require('../models/Abstract');
 const XLSX = require('xlsx');
+const moment = require("moment");
 const librespone = require("../lib/respone");
 const email = require("../lib/email");
 var exec = require('child_process').exec;
+const utils = require("../lib/utils");
 
 module.exports = {
 
@@ -65,6 +67,8 @@ module.exports = {
             data.diachi = req.body.diachi;
             data.loaixe = req.body.loaixe;
             data.sokhung = req.body.sokhung;
+            data.gioitinh = req.body.gioitinh;
+            data.thanhpho = req.body.thanhpho;
             data.somay = req.body.somay;
             data.biensoxe = req.body.biensoxe;
             data.ten = req.body.tenkh;
@@ -96,6 +100,8 @@ module.exports = {
             bodybill['mahoadon'] = mahoadon;
             bodybill['ngayban'] = new Date();
             bodybill['ngaysuachua'] = new Date();
+            bodybill['thoigianhen'] = utils.parseInteger(bodybill.thoigianhen);
+            bodybill['ngayhen'] = utils.ngayHen(bodybill.thoigianhen);
             for (var k in detailbill) {
                 detailbill[k]['mahoadon'] = mahoadon;
             }
@@ -128,6 +134,8 @@ module.exports = {
             data.sodienthoai = req.body.sodienthoai;
             data.diachi = req.body.diachi;
             data.loaixe = req.body.loaixe;
+            data.gioitinh = req.body.gioitinh;
+            data.thanhpho = req.body.thanhpho;
             data.sokhung = req.body.sokhung;
             data.somay = req.body.somay;
             data.biensoxe = req.body.biensoxe;
@@ -160,6 +168,8 @@ module.exports = {
                 }
                 var bodybill = conlai;
                 bodybill['ngaysuachua'] = new Date();
+                bodybill['thoigianhen'] = utils.parseInteger(bodybill.thoigianhen);
+                bodybill['ngayhen'] = utils.ngayHen(bodybill.thoigianhen);
                 var detailbill = chitiet;
                 for (var k in detailbill) {
                     detailbill[k]['mahoadon'] = mahoadon;

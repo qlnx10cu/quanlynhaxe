@@ -143,8 +143,8 @@ module.exports = {
     },
     getBillByEmployee: async function (praram) {
         var param = [];
-        var sql = "select A.*,kh.sodienthoai,kh.diachi,kh.loaixe,kh.sokhung,kh.somay from ("
-        sql = sql + "select makh,tenkh,biensoxe,sum(tongtien) as tongtien from hoadon where trangthai=1 ";
+        var sql = "select A.*,nv.ten as tennvsuachua, kh.gioitinh,kh.sodienthoai,kh.diachi,kh.thanhphokh.loaixe,kh.sokhung,kh.somay from ("
+        sql = sql + "select makh,tenkh,biensoxe,tongtien, tienpt,tiencong,sokm,yeucaukhachhang,kiemtralantoi from hoadon where trangthai=1 ";
         if (praram.start) {
             param.push(praram.start);
             sql = sql + "AND DATEDIFF(ngaythanhtoan,?) >= 0 ";
@@ -153,14 +153,18 @@ module.exports = {
             param.push(praram.end);
             sql = sql + "AND DATEDIFF(?,ngaythanhtoan) >= 0 ";
         }
-        sql = sql + " group by makh,biensoxe,tenkh";
         sql = sql + " ) as A "
 
         sql = sql + " left join khachhang kh on kh.ma=A.makh and A.biensoxe=kh.biensoxe and A.makh != ''"
+        sql = sql + " left join nhanvien nv on nv.ma=A.manvsuachua and A.manvsuachua != ''"
 
         let res = await query(sql, param);
         let i = 1;
-        res = res.map(e => [i++, e.makh, e.tenkh, e.sodienthoai, e.diachi, e.biensoxe, e.loaixe, e.sokhung, e.somay, e.tongtien]);
+        res = res.map(e => [
+            i++, e.makh, e.tenkh, e.gioitinh, e.sodienthoai, '',
+            e.diachi, e.thanhpho, e.biensoxe, e.loaixe, e.sokhung, e.somay, e.sokm,
+            e.tiencong, e.tienpt, e.tongtien, e.tennvsuachua, e.yeucaukhachhang, kiemtralantoi
+        ]);
         return res;
     },
 };

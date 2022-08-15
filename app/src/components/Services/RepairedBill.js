@@ -1088,13 +1088,13 @@ const RepairedBill = (props) => {
 
                     <DivFlexRow style={{ marginTop: 15, marginBottom: 5, justifyContent: 'end' }}>
                         <DivFlexColumn style={{ marginTop: 10, marginRight: 20 }}>
-                            <h4 style={{ textAlign: "center" }}>Tiền PT: {tongTienPT.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })} VND,</h4>
+                            <h4 style={{ textAlign: "center" }}>Tiền PT: {tongTienPT.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })} ,</h4>
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginTop: 10, marginRight: 20 }}>
-                            <h4 style={{ textAlign: "center" }}>Tiền Công : {tongTienCong.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })} VND,</h4>
+                            <h4 style={{ textAlign: "center" }}>Tiền Công : {tongTienCong.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })} ,</h4>
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginTop: 10, marginRight: 5 }}>
-                            <h4 style={{ textAlign: "center" }}>Tổng Tiền : {tongTienBill.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })} VND</h4>
+                            <h4 style={{ textAlign: "center" }}>Tổng Tiền : {tongTienBill.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })} </h4>
                         </DivFlexColumn>
                     </DivFlexRow>
 

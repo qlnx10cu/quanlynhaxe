@@ -143,8 +143,8 @@ module.exports = {
     },
     getBillByEmployee: async function (praram) {
         var param = [];
-        var sql = "select A.*,nv.ten as tennvsuachua, kh.gioitinh,kh.sodienthoai,kh.diachi,kh.thanhphokh.loaixe,kh.sokhung,kh.somay from ("
-        sql = sql + "select makh,tenkh,biensoxe,tongtien, tienpt,tiencong,sokm,yeucaukhachhang,kiemtralantoi from hoadon where trangthai=1 ";
+        var sql = "select A.*,nv.ten as tennvsuachua, kh.gioitinh,kh.sodienthoai,kh.diachi,kh.thanhpho,kh.loaixe,kh.sokhung,kh.somay from ("
+        sql = sql + "select manvsuachua,makh,tenkh,biensoxe,tongtien, tienpt,tiencong,sokm,yeucaukhachhang,kiemtralantoi from hoadon where trangthai=1 ";
         if (praram.start) {
             param.push(praram.start);
             sql = sql + "AND DATEDIFF(ngaythanhtoan,?) >= 0 ";
@@ -163,7 +163,7 @@ module.exports = {
         res = res.map(e => [
             i++, e.makh, e.tenkh, e.gioitinh, e.sodienthoai, '',
             e.diachi, e.thanhpho, e.biensoxe, e.loaixe, e.sokhung, e.somay, e.sokm,
-            e.tiencong, e.tienpt, e.tongtien, e.tennvsuachua, e.yeucaukhachhang, kiemtralantoi
+            e.tiencong, e.tienpt, e.tongtien, e.tennvsuachua, e.yeucaukhachhang, e.kiemtralantoi
         ]);
         return res;
     },

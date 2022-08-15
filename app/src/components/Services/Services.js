@@ -186,47 +186,37 @@ const Services = (props) => {
             </RepairWraper>
             <RepairWraper>
                 {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index + 12} STT={index + 12} history={props.history} select={select} release={release} item={liftTable[index + 11]} working={liftTable[index + 11] && liftTable[index + 11].trangthai} />
+                    <CRepairItem parent={props} socket={props.socket} key={index + 20} STT={index + 20} history={props.history} select={select} release={release} item={liftTable[index + 19]} working={liftTable[index + 19] && liftTable[index + 19].trangthai} />
                 ))}
             </RepairWraper>
             <RepairWraper>
                 {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index + 16} STT={index + 16} history={props.history} select={select} release={release} item={liftTable[index + 15]} working={liftTable[index + 15] && liftTable[index + 15].trangthai} />
+                    <CRepairItem parent={props} socket={props.socket} key={index + 24} STT={index + 24} history={props.history} select={select} release={release} item={liftTable[index + 23]} working={liftTable[index + 23] && liftTable[index + 23].trangthai} />
                 ))}
             </RepairWraper>
             <RepairWraper>
                 {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index + 20} STT={index + 20} history={props.history} select={select} release={release} item={liftTable[index + 19]} working={liftTable[index + 19] && liftTable[index + 19].trangthai} />
+                    <CRepairItem parent={props} socket={props.socket} key={index + 28} STT={index + 28} history={props.history} select={select} release={release} item={liftTable[index + 27]} working={liftTable[index + 27] && liftTable[index + 27].trangthai} />
                 ))}
             </RepairWraper>
             <RepairWraper>
                 {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index + 24} STT={index + 24} history={props.history} select={select} release={release} item={liftTable[index + 23]} working={liftTable[index + 23] && liftTable[index + 23].trangthai} />
+                    <CRepairItem parent={props} socket={props.socket} key={index + 32} STT={index + 32} history={props.history} select={select} release={release} item={liftTable[index + 31]} working={liftTable[index + 31] && liftTable[index + 31].trangthai} />
                 ))}
             </RepairWraper>
             <RepairWraper>
                 {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index + 28} STT={index + 28} history={props.history} select={select} release={release} item={liftTable[index + 27]} working={liftTable[index + 27] && liftTable[index + 27].trangthai} />
+                    <CRepairItem parent={props} socket={props.socket} key={index + 36} STT={index + 36} history={props.history} select={select} release={release} item={liftTable[index + 35]} working={liftTable[index + 35] && liftTable[index + 35].trangthai} />
                 ))}
             </RepairWraper>
             <RepairWraper>
                 {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index + 32} STT={index + 32} history={props.history} select={select} release={release} item={liftTable[index + 31]} working={liftTable[index + 31] && liftTable[index + 31].trangthai} />
+                    <CRepairItem parent={props} socket={props.socket} key={index + 40} STT={index + 40} history={props.history} select={select} release={release} item={liftTable[index + 39]} working={liftTable[index + 39] && liftTable[index + 39].trangthai} />
                 ))}
             </RepairWraper>
             <RepairWraper>
                 {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index + 36} STT={index + 36} history={props.history} select={select} release={release} item={liftTable[index + 35]} working={liftTable[index + 35] && liftTable[index + 35].trangthai} />
-                ))}
-            </RepairWraper>
-            <RepairWraper>
-                {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index + 40} STT={index + 40} history={props.history} select={select} release={release} item={liftTable[index + 39]} working={liftTable[index + 39] && liftTable[index + 39].trangthai} />
-                ))}
-            </RepairWraper>
-            <RepairWraper>
-                {ARR.map(index => (
-                    <CRepairItem socket={props.socket} key={index + 44} STT={index + 44} history={props.history} select={select} release={release} item={liftTable[index + 43]} working={liftTable[index + 43] && liftTable[index + 43].trangthai} />
+                    <CRepairItem parent={props} socket={props.socket} key={index + 44} STT={index + 44} history={props.history} select={select} release={release} item={liftTable[index + 43]} working={liftTable[index + 43] && liftTable[index + 43].trangthai} />
                 ))}
             </RepairWraper>
         </div>

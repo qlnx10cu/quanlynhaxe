@@ -890,7 +890,7 @@ const RepairedBill = (props) => {
                                 onKeyPress={_handleKeyPressBSX}
                                 value={biensoxe} onChange={(e) => {
                                     searchBienSoXe(e.target.value, false);
-                                }} readOnly={isUpdateBill != 0} />
+                                }}/>
                             <datalist id="bien_so">
                                 {listBienSoCurrent.map((item, index) => (
                                     <option key={index} value={item.biensoxe} >{item.ten}</option>
@@ -928,7 +928,7 @@ const RepairedBill = (props) => {
                     <DivFlexRow style={{ alignItems: 'center' }}>
                         <DivFlexColumn>
                             <label>Loại xe: </label>
-                            <Input readOnly={showInfoBill} autocomplete="off" list="loai_xe" name="loai_xe" readOnly={isUpdateBill != 0} {...mLoaiXe} />
+                            <Input readOnly={showInfoBill} autocomplete="off" list="loai_xe" name="loai_xe" {...mLoaiXe} />
                             <datalist id="loai_xe">
                                 {listLoaiXe.map((item, index) => (
                                     <option key={index} value={item} >{item}</option>

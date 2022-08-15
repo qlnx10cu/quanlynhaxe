@@ -581,9 +581,12 @@ const RepairedBill = (props) => {
             }
         }
         var tong = 0;
+        var tienpt = 0;
+        var tiencong = 0;
         var listProduct = [];
         for (let i = 0; i < props.listBillProduct.length; i++) {
             tong = tong + props.listBillProduct[i].tongtien;
+            tiencong = tiencong + props.listBillProduct[i].tiencong;
             let temp = {
                 tenphutungvacongviec: props.listBillProduct[i].tenphutungvacongviec,
                 maphutung: props.listBillProduct[i].maphutung,
@@ -616,6 +619,9 @@ const RepairedBill = (props) => {
                 return null;
             }
         }
+
+        tienpt = tong - tiencong;
+
         var data = {
             manvsuachua: mMaNVSuaChua.value,
             tenkh: mCustomerName.value,
@@ -628,6 +634,8 @@ const RepairedBill = (props) => {
             sokhung: mSoKhung.value,
             makh: mMaKH.value && mMaKH.value != '' ? mMaKH.value : null,
             tongtien: tong,
+            tienpt: tienpt,
+            tiencong: tiencong,
             biensoxe: biensoxe,
             chitiet: listProduct,
             manv: props.info.ma,
@@ -954,7 +962,7 @@ const RepairedBill = (props) => {
                         </DivFlexColumn>
                         <Button disabled={!biensoxe} onClick={() => setShowHistoryCustomer(true)} style={{ marginLeft: 20, marginTop: 10 }}>
                             Chi tiết
-                </Button>
+                        </Button>
                     </DivFlexRow>
                     <DivFlexRow style={{ alignItems: 'center' }}>
                         <DivFlexColumn>

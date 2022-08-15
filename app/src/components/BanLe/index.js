@@ -323,6 +323,8 @@ const BanLe = (props) => {
             manv: props.info.ma,
             tenkh: mCustomerName.value,
             tongtien: tongtien,
+            tienpt: tongtien,
+            tiencong: 0,
             lydo: lydo,
             chitiet: chitiet,
         }
@@ -375,6 +377,8 @@ const BanLe = (props) => {
             manv: props.info.ma,
             tenkh: mCustomerName.value,
             tongtien: tongtien,
+            tiencong: 0,
+            tienpt: tongtien,
             chitiet: chitiet,
         }
         if (makhachhang)
@@ -791,7 +795,7 @@ const BanLe = (props) => {
                                         accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                         onChange={(e) => handleChoseFile(e)} />
                                     Import +
-                        </ButtonChooseFile>
+                                </ButtonChooseFile>
                                 <Button style={{ marginLeft: 15 }} onClick={() => setNewProduct(true)}> Thêm Phụ Tùng  </Button>
                             </DivFlexRow>
                         </DivFlexRow>
@@ -811,7 +815,7 @@ const BanLe = (props) => {
                             }}>
 
                                 Tìm Kiếm
-                        <i className="fas fa-search" />
+                                <i className="fas fa-search" />
                             </Button>
                         </DivFlexRow>
                     }

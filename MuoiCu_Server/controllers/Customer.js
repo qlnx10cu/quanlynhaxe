@@ -78,7 +78,13 @@ module.exports = {
                 if (item.manvsuachua) {
                     var param = { ma: item.manvsuachua };
                     var nhanvien = await Abstract.getOne(Employee, param);
-                    item.tennvsuachua = nhanvien.ten;
+                    if (nhanvien){
+                        item.tennvsuachua = nhanvien.ten;
+                    }
+                    else {
+                        item.tennvsuachua = '';
+                    }
+
                 }
             }
             res.json(resulft);

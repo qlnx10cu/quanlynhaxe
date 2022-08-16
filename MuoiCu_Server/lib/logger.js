@@ -11,8 +11,8 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
         var str = `${moment(timestamp).format('HH:mm:ss DD-MM-YYYY')} : ${level} :${message.query} `
         if (message.param) {
             var param = JSON.stringify(message.param);
-            if (param.length > 1000)
-                param = param.substring(0, 1000);
+            if (param.length > 3000)
+                param = param.substring(0, 3000);
             str = str + " - Data: " + param;
         }
         return str;

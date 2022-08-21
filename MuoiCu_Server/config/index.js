@@ -1,13 +1,13 @@
 module.exports = {
     database: {
-        username: 'root',
-        password: 'TrungTrang@Head123456!',
-        database: process.env.DATABASE,
+        username: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: process.env.DB_NAME,
         host: process.env.HOST,
         limit: process.env.LIMIT
     },
     email: {
-        enable: true,
+        enable: process.env.ENABLE_EMAIL == 'true' ? true : false,
         auth: {
             user: 'phanmem.ctytrungtrang@gmail.com',
             pass: 'Trungtrang123@'

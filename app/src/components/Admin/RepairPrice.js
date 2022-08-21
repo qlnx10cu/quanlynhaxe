@@ -29,7 +29,7 @@ const RepairPrice = (props) => {
             props.setLoading(false)
         }).catch((e) => {
             props.setLoading(true)
-            props.error(true, 'Kết nối server có vấn đề, vui lòng kiểm tra đường mạng');
+            props.error('Kết nối server có vấn đề, vui lòng kiểm tra đường mạng');
         })
     }, [])
 

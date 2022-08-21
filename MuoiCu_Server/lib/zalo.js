@@ -34,8 +34,8 @@ module.exports = {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'secret_key': config.zalo.secret_key
                 },
-                url: 'https://oauth.zaloapp.com/v4/oa/access_token',
-                body: "grant_type=refresh_token&app_id=619166244360530229&refresh_token=" + refresh_token
+                url: config.zalo.oaDomain,
+                body: `grant_type=refresh_token&app_id=${config.zalo.appId}&refresh_token=${refresh_token}`
             }, function (error, response, body) {
                 logger.info("Body Get Access Token: " + error + " body: " + body);
                 try {
@@ -84,14 +84,14 @@ module.exports = {
             tonghoadon: body.tongtien
         };
 
-        var body =JSON.stringify({  phone: "84375310697", template_id: 231675, template_data: template_data, tracking_id: body.mahoadon });
+        var body = JSON.stringify({ phone: phone, template_id: 231675, template_data: template_data, tracking_id: body.mahoadon });
 
         request.post({
             headers: {
                 'Content-Type': 'application/json',
                 'access_token': access_token
             },
-            url: 'https://business.openapi.zalo.me/message/template',
+            url: config.zalo.busDomain,
             body: body
         }, function (error, response, body) {
             logger.info("sendZNS_suachua: " + error + " body: " + body);

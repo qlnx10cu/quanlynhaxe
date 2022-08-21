@@ -20,6 +20,11 @@ module.exports = {
 
 
     },
+    zalo: {
+        zns: true,
+        zcc: false,
+        secret_key: 'F2OX72FsA5QO8LE3w75D'
+    },
     token_generator: {
         secret_key: process.env.secret_key,
         expires_in: process.env.expires_in

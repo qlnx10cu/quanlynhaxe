@@ -4,6 +4,9 @@ const AbstractTwo = require("../models/AbstractTwo");
 const Abstract = require('../models/Abstract');
 const Option = require("../models/Option")
 const librespone = require("../lib/respone");
+const Customer = require("../models/Customer");
+const zalo = require("../lib/zalo");
+const utils = require("../lib/utils");
 
 module.exports = {
     getList: async function (req, res, next) {
@@ -57,14 +60,25 @@ module.exports = {
     },
     thanhtoan: async function (req, res, next) {
         try {
-            let check = await Abstract.getOne(Bill, req.params);
-            if (check && check.trangthai == 0) {
+            let hoadon = await Abstract.getOne(Bill, req.params);
+            if (hoadon && hoadon.trangthai == 0) {
                 var param = [];
                 param["ngaythanhtoan"] = new Date();
                 param['ngaysuachua'] = param["ngaythanhtoan"];
                 param["trangthai"] = 1;
                 let resulft = await Abstract.update(Bill, param, req.params);
                 await BillSuachua.giamSoLuongPhuTung(req.params.mahoadon);
+                setTimeout(async function () {
+                    try {
+                        var kh = await Abstract.getOne(Customer, { ma: hoadon.makh });
+                        if (kh == null) return;
+                        hoadon.sodienthoai = kh.sodienthoai;
+                        hoadon.loaixe = kh.loaixe;
+                        zalo.sendZNS_suachua(hoadon);
+                    } catch (ex) {
+
+                    }
+                });
                 res.json(resulft);
             }
             else
@@ -76,7 +90,7 @@ module.exports = {
     checkupdate: async function (req, res, next) {
         try {
             let check = await Option.getValue("barcode");
-            if (check && check.value && check.value == req.body.ma) {
+            if (check && check == req.body.ma) {
                 res.json({ error: 1 });
             }
             else

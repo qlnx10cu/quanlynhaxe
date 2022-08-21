@@ -38,8 +38,18 @@ const RenderTableDetail = ({ list }) => {
                             <td>{item.ngaythanhtoan}</td>
                             <td>{item.mahoadon}</td>
                             <td>{item.tennvsuachua}</td>
-                            <td>{item.yeucaukhachhang}</td>
-                            <td>{item.tuvansuachua}</td>
+                            <td style={{
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                maxWidth: '200px'
+                            }}>{item.yeucaukhachhang}</td>
+                            <td style={{
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                maxWidth: '200px'
+                            }}>{item.tuvansuachua}</td>
                             <td>{(!item.kiemtradinhky || item.kiemtradinhky == "0") ? "Không" : ("Lần " + (item.kiemtradinhky || ""))}</td>
                             <td><Button title="Xem chi tiết" onClick={() => {
                                 setShowChitiet(true);
@@ -91,41 +101,41 @@ const HistoryCustomer = (props) => {
                 <DivFlexRow style={{ marginTop: 10, width: '100%' }}>
                     <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                         Tên Khách Hàng
-                                <Input readOnly width='auto' value={mData.ten || ''} />
+                        <Input readOnly width='auto' value={mData.ten || ''} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Số Điện Thoại
-                                <Input readOnly width='100px' type="Number" value={mData.sodienthoai || ''} />
+                        <Input readOnly width='100px' type="Number" value={mData.sodienthoai || ''} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Giới Tính
-                                <Input readOnly width='100px' value={mData.gioitinh == '1' ? 'Nữ' : mData.gioitinh == '0' ? 'Nam' : ''} />
+                        <Input readOnly width='100px' value={mData.gioitinh == '1' ? 'Nữ' : mData.gioitinh == '0' ? 'Nam' : ''} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Thành Phố
-                                <Input readOnly width='150px' value={mData.thanhpho} />
+                        <Input readOnly width='150px' value={mData.thanhpho} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 5, width: 400 }}>
                         Địa Chỉ
-                                <Input readOnly width='auto' value={mData.diachi || ''} />
+                        <Input readOnly width='auto' value={mData.diachi || ''} />
                     </DivFlexColumn>
                 </DivFlexRow>
                 <DivFlexRow style={{ marginTop: 10, width: '100%' }}>
                     <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                         Biển Số Xe
-                                <Input readOnly width='auto' value={mData.biensoxe || ''} />
+                        <Input readOnly width='auto' value={mData.biensoxe || ''} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Loại Xe
-                                <Input readOnly width='auto' value={mData.loaixe || ''} />
+                        <Input readOnly width='auto' value={mData.loaixe || ''} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Số  Khung
-                                <Input readOnly width='auto' value={mData.sokhung || ''} />
+                        <Input readOnly width='auto' value={mData.sokhung || ''} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Số  Máy
-                                <Input readOnly width='auto' value={mData.somay || ''} />
+                        <Input readOnly width='auto' value={mData.somay || ''} />
                     </DivFlexColumn>
                 </DivFlexRow>
                 <RenderTableDetail list={mData.chitiet} />

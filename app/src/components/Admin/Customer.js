@@ -95,7 +95,7 @@ const Customer = (props) => {
                             setEditItem(null);
                         }}>
                             Thêm mới
-              <i className="fas fa-plus"></i>
+                            <i className="fas fa-plus"></i>
                         </Button>
                     </DivFlexRow>
                     <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
@@ -145,10 +145,26 @@ const Customer = (props) => {
                             {listCustomer[page] && listCustomer[page].map((item, index) => (
                                 <tr key={index}>
                                     <td style={{ fontSize: 12 }}>{item.ma}</td>
-                                    <td style={{ fontSize: 12 }}>{item.ten}</td>
+                                    <td
+                                        style={{
+                                            fontSize: 12,
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            maxWidth: '200px',
+                                        }}
+                                    >{item.ten}</td>
                                     <td style={{ fontSize: 12 }}>{item.sodienthoai}</td>
                                     <td style={{ fontSize: 12 }}>{item.gioitinh == '1' ? 'Nữ' : item.gioitinh == '0' ? 'Nam' : ''}</td>
-                                    <td style={{ fontSize: 12 }}>{item.diachi}</td>
+                                    <td
+                                        style={{
+                                            fontSize: 12,
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            maxWidth: '200px'
+                                        }}
+                                    >{item.diachi}</td>
                                     <td style={{ fontSize: 12 }}>{item.thanhpho}</td>
                                     <td style={{ fontSize: 12 }}>{item.biensoxe}</td>
                                     <td style={{ fontSize: 12 }}>{item.loaixe}</td>

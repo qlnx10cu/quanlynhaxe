@@ -35,7 +35,7 @@ const Home = (props) => {
                 {props.info != null && props.info.chucvu === "Admin" &&
                     <Route path="/staffs" component={LoadingComponent(Staffs, props)} />
                 }
-                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ") &&
+                {props.info != null && 
                     <Route path="/repairPrice" component={LoadingComponent(RepairPrice, props)} />
                 }
                 {props.info != null &&

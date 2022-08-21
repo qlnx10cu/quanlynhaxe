@@ -33,6 +33,7 @@ const app = express();
 let server = http.createServer(app);
 let io = require('./lib/socket')(server);
 app.io = io;
+app.use(express.static('public'));
 require('./lib/express')(app, logger, express, path, cookieParser, passport, hbs, cors, bodyParser);
 require('./lib/passport')(passport);
 require('./routes')(app);

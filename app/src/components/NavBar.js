@@ -1,17 +1,16 @@
 import React from 'react';
 import styled from 'styled-components'
-
+import Logo from '../img/logo.png'
 
 const NavBarContainer = styled.div`
     min-height: 50px;
     padding: 0px 15px;
-    background-color: white;
+    background-color: #99ddff;
     display: flex;
     font-size: 20px;
     color: gray;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
     position: relative;
     z-index: 1
 `
@@ -54,10 +53,24 @@ const DropdownContent = styled.div`
 `
 
 const Title = styled.div`
-    i {
-        :hover {
-            cursor: pointer;
-        }
+    display: flex;
+    align-items: center;
+
+    :hover {
+        cursor: pointer;
+    }
+
+    span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+    }
+
+    img {
+        width: 70px;
+        height: 70px;
+        margin-right: 10px;
     }
 `
 
@@ -70,7 +83,7 @@ class NavBar extends React.Component {
     }
 
     handleClickOut = () => {
-        this.setState({show: false})
+        this.setState({ show: false })
         document.removeEventListener('click', this.handleClickOut)
     }
 
@@ -95,20 +108,19 @@ class NavBar extends React.Component {
 
     render() {
         return (
-            <NavBarContainer>
+            <NavBarContainer onClick={this.handleOptionClick}>
                 <Title>
-                    <i className="fas fa-bars" style={{ marginLeft: 5, marginRight: 15 }} onClick={this.props.handleOnOffClick}></i>
-                    <span>{this.props.title}</span>
+                    <img src={Logo} alt="HEAD Trung Trang" />
+                    <span>{this.props.ten || 'Loading ...'}</span>
                 </Title>
 
                 <RightContainer>
-                    <Dropdown onClick={this.handleOptionClick}>
+                    <Dropdown>
                         <span>{this.props.userName}</span>
                         <i className="fas fa-caret-down" style={{ marginLeft: 5 }}></i>
 
                         <DropdownContent show={this.state.show} >
-                            <span>Trang cá nhân</span>
-                            <span>Đổi mật khẩu</span>
+                            <span onClick={this.props.handleCaiDat}>Cài Đặt</span>
                             <span onClick={this.props.logout}>Đăng xuất</span>
                         </DropdownContent>
                     </Dropdown>

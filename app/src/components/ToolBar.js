@@ -15,6 +15,7 @@ import ImgBack from '../icon/back.svg'
 import ImgCustomer from '../icon/customer.svg'
 import { logout } from '../actions/Authenticate';
 import { getAllProduct } from '../actions/Product'
+import NavBar from './NavBar'
 
 const ToolBarItem = styled.div`
     display: flex;
@@ -216,7 +217,10 @@ const ToolBar = (props) => {
             setRole(props.info.chucvu);
         }
     }, [props.info]);
-
+    const handleCaiDat = () => {
+        props.history.push("/caidat");
+        document.title = "Cài Đặt";
+    }
     return (
         <WraperToolBar>
             <DivFlexRow>
@@ -234,7 +238,9 @@ const ToolBar = (props) => {
                     ))
                 }
             </DivFlexRow>
-            <CToolBarItem title={"Đăng xuất"} img={ImgLogout} onClick={() => props.logout()} />
+            {/* <CToolBarItem title={"Thông Tin"} img={ImgLogout} onClick={() => props.logout()} /> */}
+            <NavBar ten={props.info && props.info.ten} logout={() => props.logout()} handleCaiDat={handleCaiDat} />
+
         </WraperToolBar>
     )
 };

@@ -9,6 +9,7 @@ const librespone = require("../lib/respone");
 const email = require("../lib/email");
 var exec = require('child_process').exec;
 const utils = require("../lib/utils");
+var isServerUpdate = false;
 
 module.exports = {
 
@@ -39,6 +40,7 @@ module.exports = {
     },
     add: async function (req, res, next) {
         try {
+            isServerUpdate = false;
             if (!req.body.biensoxe) {
                 librespone.error(req, res, "Không có biển số xe");
                 return;
@@ -72,6 +74,7 @@ module.exports = {
             data.somay = req.body.somay;
             data.biensoxe = req.body.biensoxe;
             data.ten = req.body.tenkh;
+            data.updatetime = new Date();
             var makh = req.body.makh;
 
             if (!makh) {
@@ -141,6 +144,7 @@ module.exports = {
             data.biensoxe = req.body.biensoxe;
             data.ten = req.body.tenkh;
             data.manvsuachua = req.body.manvsuachua;
+            data.updatetime = new Date();
             var makh = req.body.makh;
 
             let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
@@ -163,6 +167,11 @@ module.exports = {
                         return;
                     }
                 }
+                if (isServerUpdate) {
+                    librespone.error(req, res, "Thao tác quá nhanh. Vui lòng thử lại");
+                    return;
+                }
+                isServerUpdate = true;
                 if (hoaDon.trangthai == 1) {
                     email.sendMail(req, res, "Update hóa đơn sữa chữa", "Hệ thống vừa update hoá đơn với mã " + mahoadon + "\nLý do:\n" + conlai.lydo);
                 }
@@ -182,11 +191,15 @@ module.exports = {
                     resulft = await Abstract.addMutil(BillSuachua, detailbill);
                 await BillSuachua.giamSoLuongPhuTung(mahoadon);
                 res.json({ "mahoadon": mahoadon });
-            } else
+                isServerUpdate = false;
+            } else {
                 librespone.error(req, res, 'Không update được hóa đơn');
+                isServerUpdate = false;
+            }
 
         } catch (error) {
             librespone.error(req, res, error.message);
+            isServerUpdate = false;
         }
     },
     delete: async function (req, res, next) {

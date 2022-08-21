@@ -7,6 +7,7 @@ import { HOST } from '../Config'
 import LoadingComponent from './LoadingComponent';
 import { connect } from 'react-redux'
 import { alert, error, success, setLoading, addLoading, confirm, confirmError } from '../actions/App';
+import CaiDat from './CaiDat';
 const Staffs = React.lazy(() => import('./Admin/Staffs'));
 const Customer = React.lazy(() => import('./Admin/Customer'));
 const Products = React.lazy(() => import('./Products'));
@@ -26,7 +27,7 @@ const Home = (props) => {
 
     return (
         <Router>
-            <ToolBar/>
+            <ToolBar />
             <BaseContainer>
                 {props.info != null &&
                     <Route exact path="/products" component={LoadingComponent(() => <Products chucvu={props.info.chucvu} {...props} />)} />
@@ -52,7 +53,7 @@ const Home = (props) => {
                 {props.info != null &&
                     <Route path="/services/showbill" component={LoadingComponent(() => <RepairedBill socket={socket} {...props} />)} />
                 }
-                
+
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") &&
                     <Route path="/banle" component={LoadingComponent(BanLe, props)} />
                 }
@@ -64,6 +65,9 @@ const Home = (props) => {
                 }
                 {props.info != null &&
                     <Route path="/cuahangngoai" component={LoadingComponent(CuaHangNgoai, props)} />
+                }
+                {props.info != null &&
+                    <Route path="/caidat" component={LoadingComponent(CaiDat, props)} />
                 }
             </BaseContainer>
         </Router>

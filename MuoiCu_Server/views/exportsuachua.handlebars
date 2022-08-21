@@ -261,9 +261,32 @@
 
     .tennvsuachua {
       position: absolute;
-      top: 1480px;
-      left: 900px;
-      text-align: left;
+      top: 1450px;
+      left: 880px;
+      min-width: 120px;
+      max-width: 120px;
+      height: 78px;
+      font-size: 22px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .kiemtralantoi {
+      position: absolute;
+      top: 1357px;
+      left: 530px;
+      text-align: center;
+      min-width: 250px;
+      max-width: 250px;
+      font-size: 22px;
+    }
+
+    .ngayhen {
+      position: absolute;
+      top: 1357px;
+      left: 790px;
+      text-align: center;
       min-width: 160px;
       max-width: 160px;
       font-size: 22px;
@@ -308,6 +331,9 @@
   <div class="cell row-20 tiencong">{{tongtiencong}}</div>
   <div class="cell row-20 tong">{{tongtongtien}}</div>
   <div class="cell row-20 tongTest">{{tongtongtien}}</div>
+  <div class="kiemtralantoi">{{kiemtralantoi}}</div>
+  <div class="ngayhen">{{ngayhen}}</div>
+
   <div class="tennvsuachua" id="tennvsuachua">{{tennvsuachua}}</div>
 
   <script>

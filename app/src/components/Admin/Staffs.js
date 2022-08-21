@@ -75,6 +75,7 @@ const Staffs = (props) => {
                                 <th>Số CMND</th>
                                 <th>Số điện thoại</th>
                                 <th>Email</th>
+                                <th>Account Sip</th>
                                 <th>Chức vụ</th>
                                 <th></th>
                             </tr>
@@ -87,6 +88,7 @@ const Staffs = (props) => {
                                     <td>{item.cmnd}</td>
                                     <td>{item.sdt}</td>
                                     <td>{item.gmail}</td>
+                                    <td>{item.accountsip}</td>
                                     <td>{item.chucvu}</td>
 
                                     <td>

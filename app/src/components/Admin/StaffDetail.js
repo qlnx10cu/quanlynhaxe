@@ -13,6 +13,7 @@ const StaffDetail = (props) => {
     let [mEmail, setEmail] = useState("");
     let [mUserName, setUserName] = useState("");
     let [mPassword, setPassword] = useState("");
+    let [mAccountSip, setAccountSip] = useState("");
     let [mRole, setRole] = useState("Dịch Vụ");
     let item = props.editItem;
     useEffect(() => {
@@ -22,6 +23,7 @@ const StaffDetail = (props) => {
             setSDT(item.sdt);
             setEmail(item.gmail);
             setRole(item.chucvu);
+            setAccountSip(item.accountsip);
             setUserName(item.username);
         }
     }, [item])
@@ -53,6 +55,7 @@ const StaffDetail = (props) => {
             gmail: mEmail,
             username: mUserName,
             password: mPassword,
+            accountsip: mAccountSip,
             chucvu: mRole
         }
         setUpload(true);
@@ -76,6 +79,7 @@ const StaffDetail = (props) => {
             cmnd: mCMND,
             sdt: mSDT,
             gmail: mEmail,
+            accountsip: mAccountSip,
             chucvu: mRole
         }
         setUpload(true);
@@ -113,6 +117,10 @@ const StaffDetail = (props) => {
                         <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                             Email
                                 <Input type="Email" width='auto' value={mEmail} onChange={(e) => setEmail(e.target.value)} />
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ fontSize: 20, marginBottom: 5 }}>
+                            Account Sip
+                                <Input width='auto' type="" value={mAccountSip} onChange={(e) => setAccountSip(e.target.value)} />
                         </DivFlexColumn>
                         {
                             !item && <React.Fragment>

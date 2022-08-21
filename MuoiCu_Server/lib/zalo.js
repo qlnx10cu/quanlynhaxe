@@ -17,6 +17,11 @@ module.exports = {
 
     },
     updateAccessToken: async function () {
+
+        if (!config.zalo.zns && !config.zalo.zcc) {
+            return;
+        }
+
         access_token = '';
 
         let access_date = await Option.getValue("access_date");

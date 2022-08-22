@@ -32,7 +32,20 @@ module.exports = {
     getByTaikhoan: async function (req, res, next) {
         try {
             var param = Object.assign(req.params, req.query);
-            let resulft = await Abstract.getOne(Employee,param);
+            let resulft = await Abstract.getOne(Employee, param);
+            res.json(resulft);
+        } catch (error) {
+            res.status(400).json({
+                error: {
+                    message: error.message
+                }
+            })
+        }
+    },
+    getByAccountSip: async function (req, res, next) {
+        try {
+            var param = Object.assign(req.params, req.query);
+            let resulft = await Abstract.getOne(Employee, param);
             res.json(resulft);
         } catch (error) {
             res.status(400).json({
@@ -44,7 +57,7 @@ module.exports = {
     },
     add: async function (req, res, next) {
         try {
-            var body=req.body;
+            var body = req.body;
             body["password"] = new Encrypt(body["password"]).hash();
             let resulft = await Abstract.add(Employee, req.body);
             res.json(resulft);

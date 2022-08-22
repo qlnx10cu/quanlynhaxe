@@ -3,7 +3,7 @@ const HistoryCall = require('../controllers/HistoryCall');
 
 router.get('/', HistoryCall.getList);
 router.get('/ma/:ma', HistoryCall.getByMa);
-router.get('/uploadlog', HistoryCall.uploadlog);
+router.post('/uploadlog', HistoryCall.uploadlog);
 router.post('/', HistoryCall.add);
 router.put('/ma/:ma', HistoryCall.update);
 router.delete('/ma/:ma', HistoryCall.delete);

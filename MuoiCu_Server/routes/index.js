@@ -2,6 +2,7 @@ const AccountRouter = require('./Account');
 const CustomerRouter = require('./Customer');
 const SalaryRouter = require('./Salary');
 const EmpoyeeRouter = require('./Employee')
+const HistoryCallRouter = require('./HistoryCall')
 const ItemRouter = require('./Item');
 const ItemPartRouter = require('./ItemPart');
 const ItemAccessaryRouter = require('./ItemAccessary');
@@ -29,6 +30,7 @@ module.exports = (app) => {
   app.use('/customer', CustomerRouter);
   app.use('/salary', SalaryRouter);
   app.use('/employee', EmpoyeeRouter);
+  app.use('/historycall', HistoryCallRouter);
   app.use('/item', ItemRouter);
   app.use('/itempart', ItemPartRouter);
   app.use('/itemaccessary', ItemAccessaryRouter);

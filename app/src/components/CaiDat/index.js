@@ -19,7 +19,6 @@ const CaiDat = (props) => {
         let url = `${HOST}/dowload/MicroSIPFileSetup.msi`;
         window.open(
             url,
-            '_blank' // <- This is what makes it open in a new window.
         );
     }
 
@@ -38,7 +37,6 @@ const CaiDat = (props) => {
         let url = `microsip://init:${info.accountsip}`;
         window.open(
             url,
-            '_blank' // <- This is what makes it open in a new window.
         );
     }
 

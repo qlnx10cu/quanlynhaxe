@@ -1,3 +1,5 @@
+const query = require('../lib/db')
+
 class HistosipryCall {
     static getNameTable() {
         return "lichsucuocgoi";
@@ -32,7 +34,21 @@ class HistosipryCall {
         });
         return obj;
     }
-
+    static async bydate(praram) {
+        var param = [];
+        var sql = "select * from lichsucuocgoi where 1=1 ";
+        if (praram.start) {
+            param.push(praram.start);
+            sql = sql + "AND DATEDIFF(starttime,?) >= 0 ";
+        }
+        if (praram.end) {
+            param.push(praram.end);
+            sql = sql + "AND DATEDIFF(?,starttime) >= 0 ";
+        }
+        sql = sql + " ORDER BY starttime desc";
+        let res = await query(sql, param);
+        return res;
+    }
 }
 
 module.exports = HistosipryCall;

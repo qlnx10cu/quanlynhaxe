@@ -41,6 +41,18 @@ module.exports = {
             })
         }
     },
+    bydate: async function (req, res, next) {
+        try {
+            let resulft = await HistoryCall.bydate(req.query);
+            res.json(resulft);
+        } catch (error) {
+            res.status(400).json({
+                error: {
+                    message: error.message
+                }
+            })
+        }
+    },
     add: async function (req, res, next) {
         try {
             var body = req.body;
@@ -103,5 +115,5 @@ module.exports = {
                 }
             })
         }
-    },
+    }
 }

@@ -87,7 +87,6 @@ const Customer = (props) => {
         let url = `microsip://callto:${e}`;
         window.open(
             url,
-            '_blank' // <- This is what makes it open in a new window.
         );
     }
 

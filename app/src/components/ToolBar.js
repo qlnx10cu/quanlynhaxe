@@ -193,8 +193,8 @@ const ListToolBar = [
     },
     {
         index: 9,
-        title: "Cửa hàng ngoài",
-        img: ImgThongKe,
+        title: "Hàng ngoài",
+        img: ImgBanLe,
         Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng", "CSKH"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/cuahangngoai') {
@@ -202,7 +202,20 @@ const ListToolBar = [
             }
 
             setIndex(9);
-            document.title = "Cửa hàng ngoài";
+            document.title = "Hàng ngoài";
+        },
+    }, {
+        index: 10,
+        title: "Cuộc gọi",
+        img: ImgStaff,
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng", "CSKH"],
+        onClick: (history, setIndex) => {
+            if (history.location.pathname !== '/cuocgoi') {
+                history.push("/cuocgoi");
+            }
+
+            setIndex(10);
+            document.title = "Cuộc gọi";
         },
     },
 ];

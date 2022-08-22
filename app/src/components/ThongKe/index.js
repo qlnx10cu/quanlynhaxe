@@ -82,6 +82,7 @@ const ConfirmHoaDon = (props) => {
 
 const ThongKe = (props) => {
 
+    // let [dateStart, setDateStart] = useState(moment().subtract(1, 'day').format("YYYY-MM-DD"));
     let [dateStart, setDateStart] = useState(moment().format("YYYY-MM-DD"));
     let [dateEnd, setDateEnd] = useState(moment().format("YYYY-MM-DD"));
     let [searchBSX, setSearchBSX] = useState("");
@@ -101,16 +102,15 @@ const ThongKe = (props) => {
     let [activePage, setActive] = useState(0);
 
     useEffect(() => {
-        // fetch your data when the props.location changes
-    }, [props.location]);
-
-    const CallApiGetListStaff = () => {
+        setLoading(true)
         GetListStaff(props.token).then(res => {
             setListStaff(res.data);
+            handleLayDanhSach();
         }).catch(err => {
             props.alert("Không lấy được danh sách nhân viên");
         })
-    }
+    }, []);
+
     const HuyHoaDon = (mMaHoaDon, loaiHD, cb) => {
         if (loaiHD == 0) {
             HuyThanhToan(props.token, mMaHoaDon).then(res => {
@@ -147,13 +147,11 @@ const ThongKe = (props) => {
         GetBillTheoNgay(props.token, start, end).then(res => {
             tachList(res.data, maxSizePage, activePage);
             setBillCurrents([...res.data]);
-            CallApiGetListStaff();
+        }).catch(err => {
+            props.alert("Có lỗi không thể lấy danh sách");
+        }).finally(() => {
+            setLoading(false);
         })
-            .catch(err => {
-                props.alert("Có lỗi không thể lấy danh sách");
-            }).finally(() => {
-                setLoading(false);
-            })
     }
 
     const handleNextPage = () => {

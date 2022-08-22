@@ -77,7 +77,7 @@ module.exports = {
             })
         }
     },
-    log: async function (req, res, next) {
+    uploadlog: async function (req, res, next) {
         try {
             var body = req.body;
             let bill = await Abstract.getOne(HistoryCall, { callid: body.callid });

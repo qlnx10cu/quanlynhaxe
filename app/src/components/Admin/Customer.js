@@ -83,6 +83,14 @@ const Customer = (props) => {
         tachList(listCustomerTemp, e);
     }
 
+    const goiKhachHang = (e) => {
+        let url = `microsip://callto:${e}`;
+        window.open(
+            url,
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    }
+
     return (
         <React.Fragment>
             {props.isLoading && <Loading />}
@@ -138,7 +146,9 @@ const Customer = (props) => {
                                 <th>Loại Xe</th>
                                 <th>Số Khung</th>
                                 <th>Số Máy</th>
-                                <th style={{ width: 140 }}>Xem|Sữa|Xóa</th>
+                                <th style={{ width: 140 }}>Xem|Sữa|Gọi</th>
+                                <th style={{ width: 30 }}>Xóa</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -179,6 +189,15 @@ const Customer = (props) => {
                                             setShowCustomerDetail(true);
                                             setEditItem(item);
                                         }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Cập nhập thông tin khách hàng"><i className="fas fa-edit"></i></Button>
+                                        <Button onClick={() => {
+
+                                            props.confirm(`Bạn muốn gọi ${item.ten} (${item.sodienthoai}) `, () => {
+                                                goiKhachHang(item.sodienthoai);
+                                            })
+
+                                        }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Gọi khách hàng"><i className="fas fa-phone"></i></Button>
+                                    </td>
+                                    <td style={{ fontSize: 12 }}>
                                         <DelButton onClick={() => {
                                             props.confirm("Bạn chắc muốn xóa khách hàng này", () => {
                                                 DeleteCustomer(props.token, item.ma).then(() => {

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import lib from '../../lib'
 import { Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButton } from '../../styles'
 import { HOST, HOST_SHEME } from '../../Config'
+import { authenticate } from '../../actions/Authenticate';
 
 const CaiDat = (props) => {
 
@@ -22,10 +23,17 @@ const CaiDat = (props) => {
         );
     }
 
-    const handleInstallMicroSip = () => {
-        if (!info || !info.accountsip) {
+    const handleInstallMicroSip = async () => {
+        if (!info) {
             props.alert('Vui lòng đăng nhập để cài đặt.');
             return;
+        }
+        if (!info.accountsip) {
+            var res = await props.authenticate(info.username, '123456');
+            if (!res || !res.accountsip) {
+                props.alert('Bạn không đủ quyền để sài trước năng này.');
+                return;
+            }
         }
         let url = `microsip://init:${info.accountsip}`;
         window.open(
@@ -66,5 +74,6 @@ const mapState = (state) => ({
 
 })
 const mapDispatch = (dispatch) => ({
+    authenticate: (username, password) => { dispatch(authenticate(username, password)) }
 })
 export default connect(mapState, mapDispatch)(CaiDat);

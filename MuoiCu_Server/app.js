@@ -37,6 +37,7 @@ app.use(express.static('public'));
 require('./lib/express')(app, logger, express, path, cookieParser, passport, hbs, cors, bodyParser);
 require('./lib/passport')(passport);
 require('./routes')(app);
+require('./lib/zalo').init();
 
 const port = normalizePort(config.port)
 server.port = port;

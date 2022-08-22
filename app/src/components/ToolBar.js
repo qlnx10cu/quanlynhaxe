@@ -75,7 +75,7 @@ const ListToolBar = [
         index: 0,
         title: "Back",
         img: ImgBack,
-        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng"],
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng", "CSKH"],
         onClick: (history) => {
             history.goBack();
         },
@@ -84,7 +84,7 @@ const ListToolBar = [
         index: 1,
         title: "Sản Phẩm",
         img: ImgProduct,
-        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng"],
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng", "CSKH"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/products') {
                 history.push("/products");
@@ -109,7 +109,7 @@ const ListToolBar = [
         index: 3,
         title: "Tiền Công",
         img: ImgRepairPrice,
-        Roles: ["Admin", "Dịch Vụ", "Văn Phòng"],
+        Roles: ["Admin", "Dịch Vụ", "Văn Phòng", "CSKH"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/repairPrice')
                 history.push("/repairPrice");
@@ -154,7 +154,7 @@ const ListToolBar = [
         index: 6,
         title: "Khách Hàng",
         img: ImgCustomer,
-        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng"],
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng", "CSKH"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/customer') {
                 history.push("/customer");
@@ -181,7 +181,7 @@ const ListToolBar = [
         index: 8,
         title: "Thống kê",
         img: ImgThongKe,
-        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng"],
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng", "CSKH"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/thongke') {
                 history.push("/thongke");
@@ -195,7 +195,7 @@ const ListToolBar = [
         index: 9,
         title: "Cửa hàng ngoài",
         img: ImgThongKe,
-        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng"],
+        Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng", "CSKH"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/cuahangngoai') {
                 history.push("/cuahangngoai");

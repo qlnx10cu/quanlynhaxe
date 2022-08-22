@@ -863,7 +863,7 @@ const RepairedBill = (props) => {
                 <div>
                     {isUpdateBill === 0 ?
                         <h1 style={{ textAlign: "center" }}>Phiếu sửa chữa (Bàn số: {maban})</h1> :
-                        <h1 style={{ textAlign: "center" }}>Phiếu sửa chữa (Mã Hóa Đơn: {mMaHoaDon})</h1>}
+                        <h1 style={{ textAlign: "center" }}>Phiếu sửa chữa (Mã Hóa Đơn: {mMaHoaDon}) {maban > 0 ? `(Bàn số: ${maban})` : ''}</h1>}
 
                     <DivFlexRow style={{ alignItems: 'center' }}>
                         <DivFlexColumn>
@@ -890,7 +890,7 @@ const RepairedBill = (props) => {
                                 onKeyPress={_handleKeyPressBSX}
                                 value={biensoxe} onChange={(e) => {
                                     searchBienSoXe(e.target.value, false);
-                                }}/>
+                                }} />
                             <datalist id="bien_so">
                                 {listBienSoCurrent.map((item, index) => (
                                     <option key={index} value={item.biensoxe} >{item.ten}</option>

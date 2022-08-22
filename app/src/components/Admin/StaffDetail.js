@@ -141,6 +141,7 @@ const StaffDetail = (props) => {
                                 <option value="Phụ Tùng">Phụ Tùng</option>
                                 <option value="Sửa Chữa">Sửa Chữa</option>
                                 <option value="Văn Phòng">Văn Phòng</option>
+                                <option value="CSKH">CSKH</option>
                             </Select>
                         </DivFlexColumn>
                     </DivFlexColumn>

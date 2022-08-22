@@ -80,9 +80,9 @@ module.exports = {
         }
     },
     uploadlog: async function (req, res, next) {
-        try {
-            if (!req.body.callid || !req.body.from || !req.body.to) {
-                librespone.error(req, res, "Thiếu param callid ,from ,to");
+        try {tosip
+            if (!req.body.callid || !req.body.fromsip || !req.body.fromsip) {
+                librespone.error(req, res, "Thiếu param callid ,fromsip ,tosip");
                 return;
             }
 

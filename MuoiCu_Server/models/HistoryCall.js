@@ -16,8 +16,14 @@ class HistosipryCall {
         let tmp = ['fromsip', 'tosip'];
         return tmp.includes(k);
     }
-    static getDuplicate() {
-        return "";
+    static getDuplicate(param) {
+        let tmp = ['manv', 'tennv', 'makh', 'tenkh', 'fromsip', 'tosip', 'starttime', 'endtime', 'status', 'durationms', 'direction', 'note', 'type', 'accountsip'];
+        var sql = "ON DUPLICATE KEY UPDATE";
+        let arr = Object.keys(param).filter(e => tmp.includes(e));
+        arr.forEach(e => {
+            sql = sql + " " + e + " = VALUES(" + e + ")";
+        });
+        return sql;
     }
 
     static getParam(param) {

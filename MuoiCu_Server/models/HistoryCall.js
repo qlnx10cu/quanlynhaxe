@@ -17,18 +17,19 @@ class HistosipryCall {
         return tmp.includes(k);
     }
     static getDuplicate(param) {
-        let tmp = ['manv', 'tennv', 'makh', 'tenkh', 'fromsip', 'tosip', 'starttime', 'endtime', 'status', 'durationms', 'direction', 'note', 'type', 'accountsip'];
-        var sql = "ON DUPLICATE KEY UPDATE";
-        let arr = Object.keys(param).filter(e => tmp.includes(e));
-        var start = false;
-        arr.forEach(e => {
-            if (start) {
-                sql = sql + ",";
-            }
-            start = true;
-            sql = sql + " " + e + " = VALUES(" + e + ")";
-        });
-        return sql;
+        return "";
+        // let tmp = ['manv', 'tennv', 'makh', 'tenkh', 'fromsip', 'tosip', 'starttime', 'endtime', 'status', 'durationms', 'direction', 'note', 'type', 'accountsip'];
+        // var sql = "ON DUPLICATE KEY UPDATE";
+        // let arr = Object.keys(param).filter(e => tmp.includes(e));
+        // var start = false;
+        // arr.forEach(e => {
+        //     if (start) {
+        //         sql = sql + ",";
+        //     }
+        //     start = true;
+        //     sql = sql + " " + e + " = VALUES(" + e + ")";
+        // });
+        // return sql;
     }
 
     static getParam(param) {

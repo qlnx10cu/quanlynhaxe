@@ -61,7 +61,7 @@ class Abstract {
             params.push(param[col[k]]);
         }
         values = values.substr(0, values.length - 1);
-        let sql = `INSERT INTO ${ClassTable.getNameTable()} (` + col + `) VALUES (${values}) ${ClassTable.getDuplicate()}`;
+        let sql = `INSERT INTO ${ClassTable.getNameTable()} (` + col + `) VALUES (${values}) ${ClassTable.getDuplicate(param)}`;
         let res = await query(sql, params);
         return res;
     }

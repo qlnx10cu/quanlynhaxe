@@ -224,7 +224,7 @@ const CuocGoi = (props) => {
                                     onClick={copyCallId(item.callid)}
                                 >{item.callid}</td>
                                 <td>{item.tennv}</td>
-                                <td style={{ color: item.status == 1 ? 'green' : item.status == 2 ? 'red' : 'yellow' }}>
+                                <td style={{ color: item.status == 1 ? 'green' : item.status == 2 ? 'red' : '#00ffd0' }}>
                                     {
                                         item.direction == 'agent2user' ? <i className='fa fa-arrow-right'></i> :
                                             <i className='fa fa-arrow-left'></i>
@@ -234,7 +234,7 @@ const CuocGoi = (props) => {
                                 <td>{item.sodienthoai || item.zaloid}</td>
                                 <td>{item.biensoxe}</td>
                                 <td>
-                                    <IconCircle style={{ marginRight: '10px', color: item.status == 1 ? 'green' : item.status == 2 ? 'red' : 'yellow' }} />
+                                    <IconCircle style={{ marginRight: '10px', color: item.status == 1 ? 'green' : item.status == 2 ? 'red' : '#00ffd0' }} />
                                     {item.status == 1 ? 'Thành công' : item.status == 2 ? 'Gọi nhỡ' : 'Đang gọi'}
                                 </td>
                                 <td>{item.starttime}</td>

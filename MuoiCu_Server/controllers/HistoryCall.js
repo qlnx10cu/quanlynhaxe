@@ -93,13 +93,15 @@ module.exports = {
     },
     uploadlog: async function (req, res, next) {
         try {
-            if (!req.body.callid || !req.body.fromsip || !req.body.tosip) {
+            if (!req.body || !req.body.callid || !req.body.fromsip || !req.body.tosip) {
                 librespone.error(req, res, "Thiếu param callid ,fromsip ,tosip");
                 return;
             }
-            var params = { callid: body.callid }
 
             var body = req.body;
+            var params = { callid: body.callid };
+
+
             let bill = await Abstract.getOne(HistoryCall, params);
             if (!bill) {
                 let resulft = await Abstract.add(HistoryCall, req.body);

@@ -97,14 +97,15 @@ module.exports = {
                 librespone.error(req, res, "Thiếu param callid ,fromsip ,tosip");
                 return;
             }
+            var params = { callid: body.callid }
 
             var body = req.body;
-            let bill = await Abstract.getOne(HistoryCall, { callid: body.callid });
+            let bill = await Abstract.getOne(HistoryCall, params);
             if (!bill) {
                 let resulft = await Abstract.add(HistoryCall, req.body);
                 res.json(resulft);
             } else {
-                let resulft = await Abstract.update(HistoryCall, req.body, req.params);
+                let resulft = await Abstract.update(HistoryCall, req.body, params);
                 res.json(resulft);
             }
 

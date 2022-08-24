@@ -1,3 +1,4 @@
+const APIRouter = require('./API');
 const AccountRouter = require('./Account');
 const CustomerRouter = require('./Customer');
 const SalaryRouter = require('./Salary');
@@ -26,6 +27,7 @@ module.exports = (app) => {
     next();
   });
   LiftTable(app.io);
+  app.use('/api', APIRouter);
   app.use('/account', AccountRouter);
   app.use('/customer', CustomerRouter);
   app.use('/salary', SalaryRouter);

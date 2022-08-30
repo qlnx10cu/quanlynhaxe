@@ -6,10 +6,10 @@ class HistosipryCall {
     }
     static getColmun(param) {
         if (param) {
-            let tmp = ['callid', 'manv', 'tennv', 'makh', 'tenkh', 'fromsip', 'tosip', 'starttime', 'endtime', 'status', 'durationms', 'direction', 'note', 'type', 'accountsip'];
+            let tmp = ['callid', 'breachsip', 'manv', 'tennv', 'makh', 'tenkh', 'fromsip', 'tosip', 'starttime', 'endtime', 'status', 'durationms', 'direction', 'note', 'type', 'accountsip'];
             return tmp.filter(e => Object.keys(param).includes(e));
         }
-        return "`callid`,`manv`,`tennv`,`makh`,`tenkh`,`fromsip`,`tosip`,`starttime`,`endtime`,`status`,`durationms`,`direction`,`note`,`type`,`accountsip`";
+        return "`callid`,`breachsip`,`manv`,`tennv`,`makh`,`tenkh`,`fromsip`,`tosip`,`starttime`,`endtime`,`status`,`durationms`,`direction`,`note`,`type`,`accountsip`";
     }
 
     static getLike(k) {
@@ -33,12 +33,12 @@ class HistosipryCall {
     }
 
     static getParam(param) {
-        let tmp = ['callid', 'manv', 'tennv', 'makh', 'tenkh', 'fromsip', 'tosip', 'starttime', 'endtime', 'status', 'durationms', 'direction', 'note', 'type', 'accountsip'];
+        let tmp = ['callid', 'breachsip', 'manv', 'tennv', 'makh', 'tenkh', 'fromsip', 'tosip', 'starttime', 'endtime', 'status', 'durationms', 'direction', 'note', 'type', 'accountsip'];
         let arr = Object.keys(param).filter(e => tmp.includes(e)).map(e => param[e])
         return arr;
     }
     static getArrayParam(param) {
-        let tmp = ['callid', 'manv', 'tennv', 'makh', 'tenkh', 'fromsip', 'tosip', 'starttime', 'endtime', 'status', 'durationms', 'direction', 'note', 'type', 'accountsip'];
+        let tmp = ['callid', 'breachsip', 'manv', 'tennv', 'makh', 'tenkh', 'fromsip', 'tosip', 'starttime', 'endtime', 'status', 'durationms', 'direction', 'note', 'type', 'accountsip'];
         let obj = {};
         let arr = Object.keys(param).filter(e => tmp.includes(e));
         arr.forEach(e => {
@@ -48,7 +48,10 @@ class HistosipryCall {
     }
     static async bydate(praram) {
         var param = [];
-        var sql = "select * from lichsucuocgoi where 1=1 ";
+        var sql = "select A.*,B.sodienthoai, B.zaloid, B.biensoxe from (";
+
+        sql = sql + "select * from lichsucuocgoi where 1=1 ";
+
         if (praram.start) {
             param.push(praram.start);
             sql = sql + "AND DATEDIFF(starttime,?) >= 0 ";
@@ -57,7 +60,10 @@ class HistosipryCall {
             param.push(praram.end);
             sql = sql + "AND DATEDIFF(?,starttime) >= 0 ";
         }
-        sql = sql + " ORDER BY starttime desc";
+        sql = sql + " and direction != 'pbx2agent') A";
+        sql = sql + " left join khachhang B on B.ma = A.makh";
+        sql = sql + " ORDER BY A.starttime desc";
+
         let res = await query(sql, param);
         return res;
     }

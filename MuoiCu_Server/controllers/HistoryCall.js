@@ -1,5 +1,9 @@
 const HistoryCall = require("../models/HistoryCall");
+const Employee = require('../models/Employee');
+const Customer = require('../models/Customer');
 const Abstract = require('../models/Abstract');
+const Option = require('../models/Option');
+
 const librespone = require("../lib/respone");
 
 module.exports = {
@@ -93,21 +97,69 @@ module.exports = {
     },
     uploadlog: async function (req, res, next) {
         try {
-            if (!req.body || !req.body.callid || !req.body.fromsip || !req.body.tosip) {
-                librespone.error(req, res, "Thiếu param callid ,fromsip ,tosip");
+            if (!req.body || !req.body.callid || !req.body.fromsip || !req.body.tosip || !req.body.direction) {
+                librespone.error(req, res, "Thiếu param callid ,fromsip ,tosip, direction");
                 return;
             }
 
             var body = req.body;
             var params = { callid: body.callid };
 
+            var nv = null;
+            var kh = null;
+            var breachsip = null;
 
-            let bill = await Abstract.getOne(HistoryCall, params);
-            if (!bill) {
-                let resulft = await Abstract.add(HistoryCall, req.body);
+            if (body.accountsip) {
+                nv = await Abstract.getOne(Employee, { accountsip: body.accountsip });
+            }
+
+
+            switch (req.body.direction) {
+                case 'user2pbx': {
+                    kh = await Abstract.getOne(Customer, { zaloid: body.fromsip });
+                    var breach = Option.getValueJson('breachsip');
+
+                    if (breach && breach[body.tosip]) {
+                        breachsip = breach[body.tosip];
+                    }
+                    break;
+                }
+                case 'agent2user': {
+                    var khs = await Abstract.search(Customer, { sodienthoai: body.tosip, zaloid: body.tosip });
+                    if (khs) {
+                        for (var k in khs) {
+                            if (khs[k] && (khs[k].sodienthoai == body.tosip || khs[k].zaloid == body.tosip)) {
+                                kh = khs[k];
+                            }
+                        }
+                    }
+                    if (breach && breach[body.fromsip]) {
+                        breachsip = breach[body.fromsip];
+                    }
+                    break;
+                }
+            }
+
+            if (nv) {
+                body.manv = nv.ma;
+                body.tennv = nv.ten;
+            }
+
+            if (kh) {
+                body.makh = kh.ma;
+                body.tenkh = kh.ten;
+            }
+
+            if (breachsip) {
+                body.breachsip = breachsip;
+            }
+
+            let historyCall = await Abstract.getOne(HistoryCall, params);
+            if (!historyCall) {
+                let resulft = await Abstract.add(HistoryCall, body);
                 res.json(resulft);
             } else {
-                let resulft = await Abstract.update(HistoryCall, req.body, params);
+                let resulft = await Abstract.update(HistoryCall, body, params);
                 res.json(resulft);
             }
 

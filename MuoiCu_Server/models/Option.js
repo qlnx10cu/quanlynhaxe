@@ -39,6 +39,18 @@ class Option {
         }
         return null;
     }
+    static async getValueJson(key) {
+        try {
+            var sql = "select caidat.key,caidat.value from caidat where caidat.key=?";
+            let res = await query(sql, [key]);
+            if (res && res[0] && res[0].value) {
+                return JSON.parse(res[0].value);
+            }
+        } catch (ex) {
+
+        }
+        return {};
+    }
     static async setValue(key, value) {
         var sql = "update caidat set value = ? where `key` = ?";
         let res = await query(sql, [value, key]);

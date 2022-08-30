@@ -199,15 +199,17 @@ const CuocGoi = (props) => {
                 <tbody>
                     <tr>
                         <th style={{ width: 100 }}>CallId</th>
+                        <th style={{ width: 100 }}>Nhánh</th>
                         <th>Tên NV</th>
-                        <th>Chiều gọi</th>
+                        <th style={{ width: 100 }}>Chiều gọi</th>
                         <th>Tên KH</th>
                         <th>SDT /ZaloId</th>
                         <th>BSX</th>
-                        <th>Kết quả</th>
-                        <th>Thời gian</th>
-                        <th style={{ width: 100 }}>Thời gian gọi</th>
-                        <th>Xem | Gọi</th>
+                        <th style={{ width: 160 }}>Kết quả</th>
+                        <th style={{ width: 180 }}>Thời gian</th>
+                        <th style={{ width: 120 }}>Thời gian gọi</th>
+                        <th style={{ width: 120 }}>Ghi Chú</th>
+                        <th style={{ width: 120 }}>Xem | Gọi</th>
                     </tr>
 
                     {
@@ -223,6 +225,7 @@ const CuocGoi = (props) => {
                                     }}
                                     onClick={copyCallId(item.callid)}
                                 >{item.callid}</td>
+                                <td>{item.breachsip}</td>
                                 <td>{item.tennv}</td>
                                 <td style={{ color: item.status == 1 ? 'green' : item.status == 2 ? 'red' : '#00ffd0' }}>
                                     {
@@ -231,7 +234,7 @@ const CuocGoi = (props) => {
                                     }
                                 </td>
                                 <td>{item.tenkh}</td>
-                                <td>{item.sodienthoai || item.zaloid}</td>
+                                <td>{item.sodienthoai || item.zaloid || (item.direction == 'agent2user' ? item.tosip : item.fromsip)}</td>
                                 <td>{item.biensoxe}</td>
                                 <td>
                                     <IconCircle style={{ marginRight: '10px', color: item.status == 1 ? 'green' : item.status == 2 ? 'red' : '#00ffd0' }} />
@@ -239,13 +242,21 @@ const CuocGoi = (props) => {
                                 </td>
                                 <td>{item.starttime}</td>
                                 <td>{parseInt(item.durationms / 1000)}</td>
+                                <td
+                                    style={{
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        maxWidth: '100px'
+                                    }}
+                                >{item.note || ''}</td>
                                 <td>
                                     <Button onClick={() => {
                                     }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Xem chi tiết"><i className="fas fa-eye"></i></Button>
                                     <Button onClick={() => {
 
-                                        props.confirm(`Bạn muốn gọi ${item.tenkh} (${item.sodienthoai || ''} - ${item.zaloid || ''}) `, () => {
-                                            goiKhachHang(item.sodienthoai || item.zaloid || '');
+                                        props.confirm(`Bạn muốn gọi ${item.tenkh || ''} (${item.sodienthoai || item.zaloid || (item.direction == 'agent2user' ? item.tosip : item.fromsip)}) `, () => {
+                                            goiKhachHang(item.sodienthoai || item.zaloid || (item.direction == 'agent2user' ? item.tosip : item.fromsip));
                                         })
 
                                     }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Gọi khách hàng"><i className="fas fa-phone"></i></Button>

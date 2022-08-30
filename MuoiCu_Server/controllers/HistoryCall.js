@@ -109,19 +109,18 @@ module.exports = {
             var kh = null;
             var breachsip = null;
 
-            if (body.accountsip) {
-                nv = await Abstract.getOne(Employee, { accountsip: body.accountsip });
-            }
-
+            var breach = await Option.getValueJson('breachsip');
 
             switch (req.body.direction) {
                 case 'user2pbx': {
                     kh = await Abstract.getOne(Customer, { zaloid: body.fromsip });
-                    var breach = Option.getValueJson('breachsip');
-
                     if (breach && breach[body.tosip]) {
                         breachsip = breach[body.tosip];
                     }
+                    if (!body.accountsip && body.tosip && body.tosip.startsWith('28677359939585145679')) {
+                        body.accountsip = body.tosip.replace('28677359939585145679', '1');
+                    }
+
                     break;
                 }
                 case 'agent2user': {
@@ -133,11 +132,20 @@ module.exports = {
                             }
                         }
                     }
+
                     if (breach && breach[body.fromsip]) {
                         breachsip = breach[body.fromsip];
                     }
+
+                    if (!body.accountsip && body.fromsip && body.fromsip.startsWith('28677359939585145679')) {
+                        body.accountsip = body.tosip.replace('28677359939585145679', '1');
+                    }
                     break;
                 }
+            }
+
+            if (body.accountsip) {
+                nv = await Abstract.getOne(Employee, { accountsip: body.accountsip });
             }
 
             if (nv) {

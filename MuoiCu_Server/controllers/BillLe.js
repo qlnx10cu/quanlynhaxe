@@ -3,8 +3,10 @@ const BillLe = require("../models/BillLe");
 const AbstractTwo = require("../models/AbstractTwo");
 const Abstract = require('../models/Abstract');
 const librespone = require("../lib/respone");
+const Option = require("../models/Option");
 const Employee = require("../models/Employee");
 const email = require("../lib/email");
+var isBillLeUpdate = false;
 
 module.exports = {
     getList: async function (req, res, next) {
@@ -12,11 +14,7 @@ module.exports = {
             let resulft = await AbstractTwo.getList(Bill, BillLe, req.query);
             res.json(resulft);
         } catch (error) {
-            res.status(400).json({
-                error: {
-                    message: error.message
-                }
-            })
+            librespone.error(req, res, error.message);
         }
     },
     getByMa: async function (req, res, next) {
@@ -25,29 +23,24 @@ module.exports = {
             let resulft = await AbstractTwo.getList(Bill, BillLe, param);
             res.json(resulft);
         } catch (error) {
-            res.status(400).json({
-                error: {
-                    message: error.message
-                }
-            })
+            librespone.error(req, res, error.message);
         }
     },
     add: async function (req, res, next) {
         try {
-            var mahoadon = '';
-
-            for (var i = 0; i < 10; i++) {
-                var str = new Date().getTime().toString();
-                var mhd = 'PT-' + str.substr(str.length - 8, str.length - 7);
-                let checkHoaDon = await Abstract.getOne(Bill, { mahoadon: mhd });
-                if (!checkHoaDon) {
-                    mahoadon = mhd;
-                    break;
-                }
+            if (isBillLeUpdate) {
+                librespone.error(req, res, "Thao tác quá nhanh. Vui lòng thử lại");
+                return;
             }
 
-            if (!mahoadon) {
-                librespone.error(req, res, "Không tìm thấy hóa đơn trống.");
+            isBillLeUpdate = true;
+            var mhd = await Option.incrementAndGet("mabanle") + '';
+            var mahoadon = 'PT-' + mhd.padStart(8, '0');
+            let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
+
+            if (hoaDon) {
+                librespone.error(req, res, "Hóa đơn đã tồn tại vui lòng thủ lại.");
+                isBillLeUpdate = false;
                 return;
             }
 
@@ -70,12 +63,10 @@ module.exports = {
             resulft = await Abstract.addMutil(BillLe, detailbill);
             await BillLe.giamSoLuongPhuTung(detailbill);
             res.json({ "mahoadon": mahoadon });
+            isBillLeUpdate = false;
         } catch (error) {
-            res.status(400).json({
-                error: {
-                    message: error.message
-                }
-            })
+            librespone.error(req, res, error.message);
+            isBillLeUpdate = false;
         }
     },
     getChitiet: async function (req, res, next) {

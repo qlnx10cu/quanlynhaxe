@@ -13,7 +13,8 @@ const RepairWraper = styled.div`
 `
 
 const RepairItem = styled.div`
-    width: 250px;
+    max-width: 300px;
+    width: 20%;
     height: 180px;
     background-color: #e6e6e6;
     display: flex;

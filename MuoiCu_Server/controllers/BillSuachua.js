@@ -2,6 +2,7 @@ const Bill = require("../models/Bill");
 const BillSuachua = require("../models/BillSuachua");
 const AbstractTwo = require("../models/AbstractTwo");
 const Customer = require("../models/Customer");
+const Option = require("../models/Option");
 const Abstract = require('../models/Abstract');
 const XLSX = require('xlsx');
 const moment = require("moment");
@@ -40,29 +41,11 @@ module.exports = {
     },
     add: async function (req, res, next) {
         try {
-            isServerUpdate = false;
+
             if (!req.body.biensoxe) {
                 librespone.error(req, res, "Không có biển số xe");
                 return;
             }
-
-            var mahoadon = '';
-
-            for (var i = 0; i < 10; i++) {
-                var str = new Date().getTime().toString();
-                var mhd = 'DV-' + str.substr(str.length - 8, str.length - 7);
-                let checkHoaDon = await Abstract.getOne(Bill, { mahoadon: mhd });
-                if (!checkHoaDon) {
-                    mahoadon = mhd;
-                    break;
-                }
-            }
-
-            if (!mahoadon) {
-                librespone.error(req, res, "Không tìm thấy hóa đơn trống.");
-                return;
-            }
-
 
             var data = {};
             data.sodienthoai = req.body.sodienthoai;
@@ -76,6 +59,13 @@ module.exports = {
             data.ten = req.body.tenkh;
             data.updatetime = new Date();
             var makh = req.body.makh;
+
+            if (!makh && data.biensoxe) {
+                let r = await Abstract.getOne(Customer, { biensoxe: data.biensoxe });
+                if (r && r.biensoxe == data.biensoxe) {
+                    makh = r.ma;
+                }
+            }
 
             if (!makh) {
                 let r = await Abstract.add(Customer, data);
@@ -91,6 +81,23 @@ module.exports = {
                     return;
                 }
             }
+
+            if (isServerUpdate) {
+                librespone.error(req, res, "Thao tác quá nhanh. Vui lòng thử lại");
+                return;
+            }
+            isServerUpdate = true;
+
+            var mhd = await Option.incrementAndGet("masuachua") + '';
+            var mahoadon = 'DV-' + mhd.padStart(8, '0');;
+            let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
+
+            if (hoaDon) {
+                librespone.error(req, res, "Hóa đơn đã tồn tại vui lòng thủ lại.");
+                isServerUpdate = false;
+                return;
+            }
+
             let {
                 chitiet,
                 ...conlai
@@ -108,13 +115,17 @@ module.exports = {
             for (var k in detailbill) {
                 detailbill[k]['mahoadon'] = mahoadon;
             }
+
             let resulft = await Abstract.add(Bill, bodybill);
             if (detailbill.length != 0)
                 resulft = await Abstract.addMutil(BillSuachua, detailbill);
             await BillSuachua.giamSoLuongPhuTung(mahoadon);
+
+            isServerUpdate = false;
             res.json({ "mahoadon": mahoadon });
         } catch (error) {
             librespone.error(req, res, error.message);
+            isServerUpdate = false;
         }
     },
     update: async function (req, res, next) {
@@ -153,6 +164,13 @@ module.exports = {
                     librespone.error(req, res, "Vui lòng nhập lý do hay đổi hóa đơn.");
                     return;
                 }
+                if (!makh && data.biensoxe) {
+                    let r = await Abstract.getOne(Customer, { biensoxe: data.biensoxe });
+                    if (r && r.biensoxe == data.biensoxe) {
+                        makh = r.ma;
+                    }
+                }
+
                 if (!makh) {
                     let r = await Abstract.add(Customer, data);
                     makh = r.insertId;

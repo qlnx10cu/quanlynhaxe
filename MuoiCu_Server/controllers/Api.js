@@ -2,6 +2,8 @@ const logger = require("../lib/logger");
 const config = require('../config');
 const Option = require("../models/Option")
 const utils = require("../lib/utils");
+const Bill = require("../models/Bill");
+const Customer = require("../models/Customer");
 const Abstract = require('../models/Abstract');
 const Webhook = require('../models/Webhook');
 
@@ -68,8 +70,21 @@ module.exports = {
 					if (!req.body || !req.body.event_name) {
 						return;
 					}
-					var body = parseBodyWebhook(req.body);
+					var body = req.body;
+					var data = parseBodyWebhook(body);
 					await Abstract.add(Webhook, data);
+
+					switch (body.event_name) {
+						case 'user_received_message': {
+							if (body.recipient && body.message && body.message.tracking_id) {
+								var hoadon = await Abstract.getOne(Bill, { mahoadon: body.message.tracking_id });
+								if (hoadon && hoadon.makh) {
+									await Abstract.update(Customer, { zaloid: body.recipient.id }, { ma: hoadon.makh });
+								}
+							}
+							break;
+						}
+					}
 				});
 			} catch (ex) {
 

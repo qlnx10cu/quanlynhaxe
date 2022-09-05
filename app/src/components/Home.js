@@ -9,6 +9,7 @@ import { connect } from 'react-redux'
 import { alert, error, success, setLoading, addLoading, confirm, confirmError } from '../actions/App';
 import CaiDat from './CaiDat';
 import CuocGoi from './CuocGoi';
+import CSKH from './CSKH';
 const Staffs = React.lazy(() => import('./Admin/Staffs'));
 const Customer = React.lazy(() => import('./Admin/Customer'));
 const Products = React.lazy(() => import('./Products'));
@@ -57,6 +58,9 @@ const Home = (props) => {
 
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") &&
                     <Route path="/banle" component={LoadingComponent(BanLe, props)} />
+                }
+                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "CSKH") &&
+                    <Route path="/chamsockhachhang" component={LoadingComponent(CSKH, props)} />
                 }
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ" || props.info.chucvu === "Văn Phòng") &&
                     <Route path="/chamcong" component={LoadingComponent(ChamCong, props)} />

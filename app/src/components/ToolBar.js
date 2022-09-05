@@ -217,6 +217,19 @@ const ListToolBar = [
             setIndex(10);
             document.title = "Cuộc gọi";
         },
+    }, {
+        index: 11,
+        title: "CSKH",
+        img: ImgStaff,
+        Roles: ["Admin", "CSKH"],
+        onClick: (history, setIndex) => {
+            if (history.location.pathname !== '/chamsockhachhang') {
+                history.push("/chamsockhachhang");
+            }
+
+            setIndex(11);
+            document.title = "CSKH";
+        },
     },
 ];
 

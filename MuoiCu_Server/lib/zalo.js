@@ -81,6 +81,7 @@ module.exports = {
         if (!phone)
             return false;
 
+        var template_id = 231675;
         var template_data = {
             phone: phone,
             biensoxe: body.biensoxe,
@@ -89,7 +90,44 @@ module.exports = {
             tonghoadon: body.tongtien
         };
 
-        var body = JSON.stringify({ phone: phone, template_id: 231675, template_data: template_data, tracking_id: body.mahoadon });
+        if (body.thoigianhen && body.thoigianhen > 0) {
+            template_id = 232656;
+            template_data['kiemtralantoi'] = body.kiemtralantoi;
+            switch (body.thoigianhen) {
+                case 5:
+                    template_data['ngayhen'] = '5 ngày';
+                    break;
+                case 7:
+                    template_data['ngayhen'] = '7 ngày';
+                    break;
+                case 10:
+                    template_data['ngayhen'] = '10 ngày';
+                    break;
+                case 14:
+                    template_data['ngayhen'] = '2 tuàn';
+                    break;
+                case 21:
+                    template_data['ngayhen'] = '3 tuàn';
+                    break;
+                case 28:
+                    template_data['ngayhen'] = '1 tháng';
+                    break;
+                case 91:
+                    template_data['ngayhen'] = '3 tháng';
+                    break;
+                case 182:
+                    template_data['ngayhen'] = '6 tháng';
+                    break;
+                case 364:
+                    template_data['ngayhen'] = '1 năm';
+                    break;
+                default:
+                    template_data['ngayhen'] = body.thoigianhen + ' ngày';
+                    break;
+            }
+        }
+
+        var body = JSON.stringify({ phone: phone, template_id: template_id, template_data: template_data, tracking_id: body.mahoadon });
 
         request.post({
             headers: {

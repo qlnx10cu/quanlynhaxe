@@ -17,8 +17,8 @@ const IconCircle = (props) => {
 
 const CSKH = (props) => {
 
-    let [dateStart, setDateStart] = useState(moment().format("YYYY-MM-DD"));
-    let [dateEnd, setDateEnd] = useState(moment().format("YYYY-MM-DD"));
+    let [dateStart, setDateStart] = useState(moment().subtract(5,'days').format("YYYY-MM-DD"));
+    let [dateEnd, setDateEnd] = useState(moment().add('days', 5).format("YYYY-MM-DD"));
     let [searchName, setSearchName] = useState("");
     let [mHistoryCalls, setHistoryCalls] = useState([]);
     let [mHistoryCallCurrents, setHistoryCallCurrents] = useState([]);

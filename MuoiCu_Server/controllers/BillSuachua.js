@@ -10,6 +10,8 @@ const librespone = require("../lib/respone");
 const email = require("../lib/email");
 var exec = require('child_process').exec;
 const utils = require("../lib/utils");
+const { UV_FS_O_FILEMAP } = require("constants");
+const ChamSoc = require("../models/ChamSoc");
 var isServerUpdate = false;
 
 module.exports = {
@@ -168,6 +170,8 @@ module.exports = {
                     let r = await Abstract.getOne(Customer, { biensoxe: data.biensoxe });
                     if (r && r.biensoxe == data.biensoxe) {
                         makh = r.ma;
+                        conlai['zaloid'] = r.zaloid;
+                        conlai['loaixe'] = r.loaixe;
                     }
                 }
 
@@ -208,6 +212,14 @@ module.exports = {
                 if (detailbill.length != 0)
                     resulft = await Abstract.addMutil(BillSuachua, detailbill);
                 await BillSuachua.giamSoLuongPhuTung(mahoadon);
+
+                if (hoaDon.trangthai == 1) {
+                    var chamsoc = { ...bodybill };
+                    delete chamsoc['trangthai'];
+                    delete chamsoc['ma'];
+                    await Abstract.update(ChamSoc, bodybill, { mahoadon: mahoadon });
+                }
+
                 res.json({ "mahoadon": mahoadon });
                 isServerUpdate = false;
             } else {

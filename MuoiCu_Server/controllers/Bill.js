@@ -1,5 +1,6 @@
 const Bill = require("../models/Bill");
 const BillSuachua = require("../models/BillSuachua");
+const ChamSoc = require("../models/ChamSoc");
 const AbstractTwo = require("../models/AbstractTwo");
 const Abstract = require('../models/Abstract');
 const Option = require("../models/Option")
@@ -49,11 +50,21 @@ module.exports = {
     delete: async function (req, res, next) {
         try {
             var data = {};
-            data['ngaysuachua'] = new Date();
-            data["trangthai"] = 2;
-            let resulft = await Abstract.update(Bill, data, req.params);
-            await BillSuachua.tangSoLuongPhuTung(req.params.mahoadon);
-            res.json(resulft);
+
+            let hoadon = await Abstract.getOne(Bill, req.params);
+            if (hoadon && hoadon.trangthai != 2) {
+                data['ngaysuachua'] = new Date();
+                data["trangthai"] = 2;
+                let resulft = await Abstract.update(Bill, data, req.params);
+                await BillSuachua.tangSoLuongPhuTung(req.params.mahoadon);
+                await Abstract.delete(ChamSoc, { mahoadon: req.params.mahoadon });
+                res.json(resulft);
+            } else {
+                librespone.error(req, res, 'Không thể xóa hóa đơn');
+            }
+
+
+
         } catch (error) {
             librespone.error(req, res, error.message);
         }
@@ -73,11 +84,20 @@ module.exports = {
                         var kh = await Abstract.getOne(Customer, { ma: hoadon.makh });
                         if (kh == null) return;
                         hoadon.sodienthoai = kh.sodienthoai;
+                        hoadon.zaloid = kh.zaloid;
                         hoadon.loaixe = kh.loaixe;
-                        zalo.sendZNS_suachua(hoadon);
-                    } catch (ex) {
+                        try {
+                            if (hoadon.thoigianhen > 0) {
+                                var chamsoc = { ...hoadon };
+                                chamsoc.trangthai = 0;
+                                await Abstract.add(ChamSoc, chamsoc);
+                            }
+                        } catch (ex) { }
 
-                    }
+                        try {
+                            zalo.sendZNS_suachua(hoadon);
+                        } catch (ex) { }
+                    } catch (ex) { }
                 });
                 res.json(resulft);
             }

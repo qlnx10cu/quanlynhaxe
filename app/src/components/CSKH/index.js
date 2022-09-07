@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { DivFlexRow, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Select, Tab, TabContent } from '../../styles'
+import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Select, Tab, TabContent, Textarea } from '../../styles'
 import moment from 'moment'
-import { GetCuocGoiTheoNgay } from "../../API/CuocGoi"
-// import ChiTietThongKe from './ChiTietThongKe'
+import { GetChamSocTheoNgay } from "../../API/ChamSoc"
+import HistoryCustomer from '../Admin/HistoryCustomer'
+import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
+
+
+import { UpdateChamSoc } from '../../API/ChamSoc'
+
 import { GetListStaff } from '../../API/Staffs'
 import { HOST, HOST_SHEME } from '../../Config'
 import { connect } from 'react-redux'
@@ -15,15 +20,123 @@ const IconCircle = (props) => {
     )
 }
 
+
+const getTrangThai = (e) => {
+    switch (e) {
+        case -1:
+            return "Tất cả";
+        case 0:
+            return "Chưa chăm sóc";
+        case 1:
+            return "Đang chăm sóc";
+        case 2:
+            return "Thành công";
+        case 3:
+            return "Thất bại";
+        default:
+            return "Không biết";
+    }
+}
+
+const NoteCSKH = (props) => {
+
+    let [data, setData] = useState({});
+    let [isUpload, setUpload] = useState(false);
+    let [note, setNote] = useState('');
+    let [trangthai, setTrangThai] = useState(0);
+
+    useEffect(() => {
+        if (props.data) {
+            setData(props.data);
+            setNote(props.data.ghichu);
+            setTrangThai(props.data.trangthai);
+        } else {
+            setData({});
+        }
+    }, [data])
+
+    const handleButtonUpdate = () => {
+        if (isUpload == true || !data || !data.ma) {
+            props.alert("Thao tác quá nhanh");
+            return;
+        }
+        var dataUpdate = {
+            ma: data.ma,
+            ghichu: note,
+            trangthai: trangthai
+        }
+        setUpload(true);
+        UpdateChamSoc(props.token, dataUpdate, data.ma).then(Response => {
+            setUpload(false);
+            props.onCloseClick(true);
+        }).catch(err => {
+            setUpload(false);
+            props.alert("Cập nhập thông in thất bại \n Error:" + err.response.data.error.message);
+        });
+    };
+
+    return (
+        <Modal className={props.isShowing ? "active" : ""}>
+            <ModalContent>
+                <div style={{ paddingTop: 3, paddingBottom: 3 }}>
+                    <CloseButton onClick={props.onCloseClick}>&times;</CloseButton>
+                    <h2> </h2>
+                </div>
+                <DivFlexRow style={{ marginTop: 10, width: '100%' }}>
+                    <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
+                        Tên Khách Hàng
+                        <Input readOnly width='auto' value={data.tenkh || ''} />
+                    </DivFlexColumn>
+                    <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
+                        Số Điện Thoại
+                        <Input readOnly width='auto' value={data.sodienthoai || ''} />
+                    </DivFlexColumn>
+                    <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
+                        Hóa đơn
+                        <Input readOnly width='auto' value={data.mahoadon || ''} />
+                    </DivFlexColumn>
+                    <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
+                        Trạng thái
+                        <Select width='auto' value={trangthai || 0} onChange={(e) => setTrangThai(e.target.value)} >
+                            <option value="0">{getTrangThai(0)}</option>
+                            <option value="1">{getTrangThai(1)}</option>
+                            <option value="2">{getTrangThai(2)}</option>
+                            <option value="3">{getTrangThai(3)}</option>
+                        </Select>
+                    </DivFlexColumn>
+                </DivFlexRow>
+                <DivFlexRow style={{ marginTop: 10, width: '100%' }}>
+                    <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
+                        Ghi chú
+                        <Textarea width='100%' value={note || ''} onChange={(e) => setNote(e.target.value)} />
+                    </DivFlexColumn>
+                </DivFlexRow>
+
+                <DivFlexRow style={{ justifyContent: 'flex-end' }}>
+                    <Button width='150px' onClick={() => handleButtonUpdate()}>
+                        {isUpload ? "" : "Cập nhật"}
+                        {isUpload ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-edit"></i>}
+                    </Button>
+                </DivFlexRow>
+            </ModalContent>
+        </Modal>
+    )
+}
+
 const CSKH = (props) => {
 
-    let [dateStart, setDateStart] = useState(moment().subtract(5,'days').format("YYYY-MM-DD"));
+    let [dateStart, setDateStart] = useState(moment().subtract(5, 'days').format("YYYY-MM-DD"));
     let [dateEnd, setDateEnd] = useState(moment().add('days', 5).format("YYYY-MM-DD"));
     let [searchName, setSearchName] = useState("");
     let [mHistoryCalls, setHistoryCalls] = useState([]);
     let [mHistoryCallCurrents, setHistoryCallCurrents] = useState([]);
     let [isShowing, setShowing] = useState(false);
     let [isLoading, setLoading] = useState(false);
+    let [isShowHistoryCustomer, setShowHistoryCustomer] = useState(false);
+    let [maKHHistoryCustomer, setMaKHHistoryCustomer] = useState(null);
+    let [isShowChitiet, setShowChitiet] = useState(false);
+    let [isShowNote, setShowNote] = useState(false);
+    let [dataCSKH, setDataCSKH] = useState("");
 
     let [listStaff, setListStaff] = useState([]);
     let [mMaHoaDon, setMaHoaDon] = useState("");
@@ -49,7 +162,7 @@ const CSKH = (props) => {
         setLoading(true)
         let start = moment(dateStart).format("YYYY/MM/DD");
         let end = moment(dateEnd).format("YYYY/MM/DD");
-        GetCuocGoiTheoNgay(props.token, start, end).then(res => {
+        GetChamSocTheoNgay(props.token, start, end).then(res => {
             tachList(res.data, maxSizePage, activePage);
             setHistoryCallCurrents([...res.data]);
         }).catch(err => {
@@ -92,10 +205,9 @@ const CSKH = (props) => {
 
     const tachList = (list, size, tab) => {
         if (tab != 0)
-            list = list.filter(x => x && x.direction == convertDirection(tab));
+            list = list.filter(x => x && x.trangthai == (tab - 1));
         if (searchName != "") {
             list = list.filter(bill => searchName == ""
-                || (bill && bill.callid && bill.callid.toLowerCase().includes(searchName.toLowerCase()))
                 || (bill && bill.tenkh && bill.tenkh.toLowerCase().includes(searchName.toLowerCase()))
                 || (bill && bill.sodienthoai && bill.sodienthoai.toLowerCase().includes(searchName.toLowerCase()))
                 || (bill && bill.biensoxe && bill.biensoxe.toLowerCase().includes(searchName.toLowerCase()))
@@ -144,6 +256,7 @@ const CSKH = (props) => {
         );
     }
 
+
     return (
         <div>
 
@@ -174,7 +287,7 @@ const CSKH = (props) => {
             </Tab>
             <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                 <DivFlexRow style={{ alignItems: 'center' }}>
-                    <label style={{ marginLeft: 10 }}>Search SDT,Tên,BSX,ZaloID: </label>
+                    <label style={{ marginLeft: 10 }}>Search SDT,Tên,BSX: </label>
                     <Input type="text" onKeyPress={_handleKeyPress} value={searchName} style={{ marginLeft: 10 }} onChange={(e) => setSearchName(e.target.value)} />
                     <Button style={{ marginLeft: 10 }} onClick={handleSearchName}>Search </Button>
                 </DivFlexRow>
@@ -205,15 +318,73 @@ const CSKH = (props) => {
                         <th>SDT /ZaloId</th>
                         <th>BSX</th>
                         <th>Hóa đơn</th>
-                        <th>Thời Gian Sữa chữa</th>
-                        <th>Số lượt gọi</th>
+                        <th style={{ width: 200 }}>Kiểm tra lần tới</th>
+                        <th>Số lần gọi</th>
                         <th>Trạng thái</th>
                         <th style={{ width: 200 }}>Ghi Chú</th>
                         <th style={{ width: 120 }}>Xem | Gọi</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {
+                        mHistoryCalls[page] && mHistoryCalls[page].map((item, index) => (
+                            <tr key={index}>
+                                <td>{moment(item.ngayhen).format("DD/MM/YYYY")}</td>
+                                <td>{item.tenkh}</td>
+                                <td>
+                                    {item.sodienthoai || item.zaloid}</td>
+                                <td><a style={{
+                                    borderBottom: "1px solid blue",
+                                    color: "blue",
+                                    cursor: "pointer"
+                                }} onClick={() => {
+                                    setMaKHHistoryCustomer(item.makh);
+                                    setShowHistoryCustomer(true);
+                                }}> {item.biensoxe}</a></td>
+                                <td><a style={{
+                                    borderBottom: "1px solid blue",
+                                    color: "blue",
+                                    cursor: "pointer"
+                                }} onClick={() => {
+                                    setShowChitiet(true);
+                                    setMaHoaDon(item.mahoadon);
+                                }}> {item.mahoadon}</a></td>
+                                <td
+                                    style={{
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        maxWidth: '100px'
+                                    }}
+                                >{item.kiemtralantoi || ''}</td>
+                                <td>{item.solangoi}</td>
+                                <td>
+                                    {getTrangThai(item.trangthai)}
+                                </td>
+                                <td
+                                    style={{
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        maxWidth: '100px'
+                                    }}
+                                >{item.ghichu || ''}</td>
+                                <td>
+                                    <Button onClick={() => {
+                                        setDataCSKH(item);
+                                        setShowNote(true);
+                                    }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Xem chi tiết"><i className="fas fa-eye"></i></Button>
+                                    <Button onClick={() => {
 
+                                        props.confirm(`Bạn muốn gọi ${item.tenkh || ''} (${item.sodienthoai || item.zaloid || (item.direction == 'agent2user' ? item.tosip : item.fromsip)}) `, () => {
+                                            goiKhachHang(item.sodienthoai || item.zaloid || (item.direction == 'agent2user' ? item.tosip : item.fromsip));
+                                        })
+
+                                    }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Gọi khách hàng"><i className="fas fa-phone"></i></Button>
+                                </td>
+                            </tr>
+                        ))
+                    }
                 </tbody>
             </Table>
             <DivFlexRow style={{ alignItems: ' center', justifyContent: 'flex-end', marginTop: 15 }}>
@@ -224,7 +395,33 @@ const CSKH = (props) => {
                 <Button style={{ marginLeft: 15 }} onClick={handleNextPage}><i className="fas fa-angle-double-right"></i></Button>
             </DivFlexRow>
 
+            <HistoryCustomer isShowing={isShowHistoryCustomer} onCloseClick={() => {
+                setShowHistoryCustomer(false)
+                setMaKHHistoryCustomer(null);
+            }
+            } ma={maKHHistoryCustomer} />
 
+            <ChiTietThongKe
+                isShowing={isShowChitiet}
+                onCloseClick={() => { setShowChitiet(false); setMaHoaDon("") }}
+                mahoadon={mMaHoaDon}
+                token={""}
+                loaihoadon={0}
+            />
+
+            <NoteCSKH
+                isShowing={isShowNote}
+                onCloseClick={(upload) => {
+                    setShowNote(false);
+                    setDataCSKH("");
+                    if (upload) {
+                        handleLayDanhSach()
+                    }
+                }}
+                data={dataCSKH}
+                token={""}
+                alert={props.alert}
+            />
         </div>
     );
 }

@@ -6,6 +6,7 @@ const Bill = require("../models/Bill");
 const Customer = require("../models/Customer");
 const Abstract = require('../models/Abstract');
 const Webhook = require('../models/Webhook');
+const ChamSoc = require("../models/ChamSoc");
 
 function parseBodyWebhook(body) {
 	var data = {
@@ -80,6 +81,7 @@ module.exports = {
 								var hoadon = await Abstract.getOne(Bill, { mahoadon: body.message.tracking_id });
 								if (hoadon && hoadon.makh) {
 									await Abstract.update(Customer, { zaloid: body.recipient.id }, { ma: hoadon.makh });
+									await Abstract.update(ChamSoc, { zaloid: body.recipient.id }, { mahoadon: hoadon.mahoadon });
 								}
 							}
 							break;

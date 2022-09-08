@@ -334,7 +334,7 @@ const CSKH = (props) => {
                         <th>Số lần gọi</th>
                         <th>Trạng thái</th>
                         <th style={{ width: 200 }}>Ghi Chú</th>
-                        <th style={{ width: 120 }}>Xem | Gọi</th>
+                        <th style={{ width: 120 }}>Xem | Chat | Gọi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -387,6 +387,14 @@ const CSKH = (props) => {
                                         setDataCSKH(item);
                                         setShowNote(true);
                                     }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Xem chi tiết"><i className="fas fa-eye"></i></Button>
+                                    <Button onClick={() => {
+                                        if (!item.zaloid) {
+                                            props.alert('Chưa có thông tin zalo từ khách hàng này')
+                                        } else {
+                                            window.open(`https://oa.zalo.me/chatv2?uid=${item.zaloid}&oaid=2867735993958514567`, '_blank');
+                                        }
+                                    }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Nhắn tin với khách hàng"><i className="fas fa-comment"></i></Button>
+
                                     <Button onClick={() => {
 
                                         props.confirm(`Bạn muốn gọi ${item.tenkh || ''} (${item.sodienthoai || item.zaloid || (item.direction == 'agent2user' ? item.tosip : item.fromsip)}) `, () => {

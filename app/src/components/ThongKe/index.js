@@ -3,11 +3,12 @@ import { DivFlexRow, Button, Input, Table, DelButton, Modal, ModalContent, Close
 import moment from 'moment'
 import { GetBillTheoNgay } from "../../API/ThongKeAPI"
 import ChiTietThongKe from './ChiTietThongKe'
+import HistoryCustomer from '../Admin/HistoryCustomer';
 import { GetListStaff } from '../../API/Staffs'
 import { HuyThanhToan, HuyThanhToanLe, CheckUpdateBill } from '../../API/Bill'
 import { HOST, HOST_SHEME } from '../../Config'
 import { connect } from 'react-redux'
-import { alert, success, setLoading } from "../../actions/App";
+import { alert, success, setLoading, error, confirm } from "../../actions/App";
 import _ from 'lodash'
 
 
@@ -90,7 +91,8 @@ const ThongKe = (props) => {
     let [mBillCurrents, setBillCurrents] = useState([]);
     let [isShowing, setShowing] = useState(false);
     let [isShowingConfirm, setShowingConfirm] = useState(false);
-
+    let [isShowHistoryCustomer, setShowHistoryCustomer] = useState(false);
+    let [maKHHistoryCustomer, setMaKHHistoryCustomer] = useState(null);
 
     let [mMaHoaDon, setMaHoaDon] = useState("");
     let [loaihoadon, setLoaiHoaDon] = useState("");
@@ -308,38 +310,38 @@ const ThongKe = (props) => {
                 <tbody>
                     <tr>
                         <th>Mã hóa đơn</th>
+                        <th>Mã KH</th>
+                        <th>Tên KH</th>
                         <th>Biển số xe</th>
                         <th>Tổng tiền</th>
                         <th>Ngày thanh toán</th>
-                        <th>Ngày thay đổi</th>
                         <th>Loại hóa đơn</th>
-                        <th><i className="fas fa-info"></i></th>
                         <th><i className="fas fa-info"></i></th>
                     </tr>
 
                     {
                         mBills[page] && mBills[page].map((item, index) => (
                             <tr key={index} style={{ backgroundColor: item.lydo ? '#ff0000' : '#ffffff' }} >
-                                <td>{item.mahoadon}</td>
+                                <td><a onClick={() => {
+                                    setMaHoaDon(item.mahoadon)
+                                    setShowing(true);
+                                    setLoaiHoaDon(item.loaihoadon);
+                                }}>{item.mahoadon}</a></td>
+                                <td><a onClick={() => {
+                                    setMaKHHistoryCustomer(item.makh);
+                                    setShowHistoryCustomer(true);
+                                }}>{item.makh}</a></td>
+                                <td>{item.tenkh}</td>
                                 <td>{item.biensoxe}</td>
                                 <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
                                 <td>{moment(item.ngaythanhtoan).format("hh:mm DD/MM/YYYY")}</td>
-                                <td>{item.lydo ? moment(item.ngaythaydoi).format("hh:mm DD/MM/YYYY") : ''}</td>
                                 <td>{item.loaihoadon === 0 ? "Sửa chữa" : "Bán lẻ"}</td>
-                                <td>
-                                    <Button onClick={() => {
-                                        setMaHoaDon(item.mahoadon)
-                                        setShowing(true);
-                                        setLoaiHoaDon(item.loaihoadon);
-                                    }}>Chi tiết</Button>
-                                    <Button style={{ marginLeft: 15 }} onClick={() => {
-                                        showInfoHoaDon(item.mahoadon, item.loaihoadon);
-                                    }}>Show</Button>
-                                </td>
-
                                 {
                                     (moment().valueOf() - moment(item.ngaythanhtoan).valueOf()) <= oneDay ?
                                         <td>
+                                            <Button style={{ marginLeft: 15 }} onClick={() => {
+                                                showInfoHoaDon(item.mahoadon, item.loaihoadon);
+                                            }}>Show</Button>
                                             <Button style={{ marginLeft: 15 }} onClick={() => {
                                                 setMaHoaDon(item.mahoadon)
                                                 setShowingConfirm(true);
@@ -355,7 +357,12 @@ const ThongKe = (props) => {
                                             }}> Hủy</DelButton>
                                         </td>
                                         :
-                                        <td></td>
+                                        <td>
+                                            <Button style={{ marginLeft: 15 }} onClick={() => {
+                                                showInfoHoaDon(item.mahoadon, item.loaihoadon);
+                                            }}>Show</Button>
+
+                                        </td>
                                 }
 
                             </tr>
@@ -389,6 +396,13 @@ const ThongKe = (props) => {
                 listStaff={listStaff}
             />
 
+            <HistoryCustomer alert={props.alert} error={props.error} confirm={props.confirm} isShowing={isShowHistoryCustomer} onCloseClick={() => {
+                setShowHistoryCustomer(false)
+                setMaKHHistoryCustomer(null);
+            }
+            } ma={maKHHistoryCustomer} />
+
+
         </div>
     );
 }
@@ -401,6 +415,8 @@ const mapState = (state) => ({
 const mapDispatch = (dispatch) => ({
     alert: (mess) => { dispatch(alert(mess)) },
     success: (mess) => { dispatch(success(mess)) },
+    error: (mess) => { dispatch(error(mess)) },
+    confirm: (mess, callback) => { dispatch(confirm(mess, callback)) },
     setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
 })
 

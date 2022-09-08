@@ -23,10 +23,9 @@ const ToolBarItem = styled.div`
     align-items: center;
     justify-content: center;
     border-right: 1px solid white;
-    padding: 0px 10px;
     cursor: pointer;
-    width: 85px;
-    min-width: 85px;
+    width: 95px;
+    min-width: 95px;
 
     span {
         text-align: center;
@@ -41,8 +40,8 @@ const ToolBarItem = styled.div`
 `;
 
 const Icon = styled.img`
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
 `;
 
 const CToolBarItem = (props) => {

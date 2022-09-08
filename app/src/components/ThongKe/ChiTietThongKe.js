@@ -18,6 +18,17 @@ const ChiTietThongKe = (props) => {
     let [staff, setStaff] = useState(null);
 
     useEffect(() => {
+        function handleEscapeKey(event) {
+            if (event.code === 'Escape') {
+                props.onCloseClick(false);
+            }
+        }
+
+        document.addEventListener('keydown', handleEscapeKey)
+        return () => document.removeEventListener('keydown', handleEscapeKey)
+    }, [])
+
+    useEffect(() => {
         if (props.isShowing) {
             if (props.loaihoadon === 1) {
                 //Bill le

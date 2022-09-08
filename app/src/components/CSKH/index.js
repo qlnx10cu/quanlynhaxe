@@ -11,7 +11,7 @@ import { UpdateChamSoc } from '../../API/ChamSoc'
 import { GetListStaff } from '../../API/Staffs'
 import { HOST, HOST_SHEME } from '../../Config'
 import { connect } from 'react-redux'
-import { alert, success, setLoading } from "../../actions/App";
+import { alert, success, setLoading, confirm, error } from "../../actions/App";
 import _ from 'lodash'
 
 const IconCircle = (props) => {
@@ -74,6 +74,17 @@ const NoteCSKH = (props) => {
             props.alert("Cập nhập thông in thất bại \n Error:" + err.response.data.error.message);
         });
     };
+
+    useEffect(() => {
+        function handleEscapeKey(event) {
+            if (event.code === 'Escape') {
+                props.onCloseClick(false);
+            }
+        }
+
+        document.addEventListener('keydown', handleEscapeKey)
+        return () => document.removeEventListener('keydown', handleEscapeKey)
+    }, [])
 
     return (
         <Modal className={props.isShowing ? "active" : ""}>
@@ -313,7 +324,8 @@ const CSKH = (props) => {
             <Table style={{ marginTop: 15 }}>
                 <thead>
                     <tr>
-                        <th>Thời gian Hẹn</th>
+                        <th>Mgày Hẹn</th>
+                        <th>Mã KH</th>
                         <th>Tên KH</th>
                         <th>SDT /ZaloId</th>
                         <th>BSX</th>
@@ -330,9 +342,6 @@ const CSKH = (props) => {
                         mHistoryCalls[page] && mHistoryCalls[page].map((item, index) => (
                             <tr key={index}>
                                 <td>{moment(item.ngayhen).format("DD/MM/YYYY")}</td>
-                                <td>{item.tenkh}</td>
-                                <td>
-                                    {item.sodienthoai || item.zaloid}</td>
                                 <td><a style={{
                                     borderBottom: "1px solid blue",
                                     color: "blue",
@@ -340,7 +349,11 @@ const CSKH = (props) => {
                                 }} onClick={() => {
                                     setMaKHHistoryCustomer(item.makh);
                                     setShowHistoryCustomer(true);
-                                }}> {item.biensoxe}</a></td>
+                                }}> {item.makh}</a></td>
+                                <td>{item.tenkh}</td>
+                                <td>
+                                    {item.sodienthoai || item.zaloid}</td>
+                                <td>{item.biensoxe}</td>
                                 <td><a style={{
                                     borderBottom: "1px solid blue",
                                     color: "blue",
@@ -395,7 +408,7 @@ const CSKH = (props) => {
                 <Button style={{ marginLeft: 15 }} onClick={handleNextPage}><i className="fas fa-angle-double-right"></i></Button>
             </DivFlexRow>
 
-            <HistoryCustomer isShowing={isShowHistoryCustomer} onCloseClick={() => {
+            <HistoryCustomer alert={props.alert} error={props.error} confirm={props.confirm} isShowing={isShowHistoryCustomer} onCloseClick={() => {
                 setShowHistoryCustomer(false)
                 setMaKHHistoryCustomer(null);
             }
@@ -433,6 +446,8 @@ const mapState = (state) => ({
 
 const mapDispatch = (dispatch) => ({
     alert: (mess) => { dispatch(alert(mess)) },
+    error: (mess) => { dispatch(error(mess)) },
+    confirm: (mess, callback) => { dispatch(confirm(mess, callback)) },
     success: (mess) => { dispatch(success(mess)) },
     setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
 })

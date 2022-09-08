@@ -23,6 +23,18 @@ class Customer {
         var res = await query(sql, [param]);
         return res;
     }
+    static async getHistoryCall(param) {
+        let sql = "SELECT * FROM lichsucuocgoi where makh=? order by starttime DESC";
+        var res = await query(sql, [param]);
+        return res;
+    }
+    static async getHistoryCSKH(param) {
+        let sql = "SELECT * FROM chamsoc where makh=? order by ngayhen DESC";
+        var res = await query(sql, [param]);
+        return res;
+    }
+
+
     static getParam(param) {
         let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay', 'gioitinh', 'thanhpho', 'updatetime', 'zaloid', 'tenzalo'];
         let arr = Object.keys(param).filter(e => tmp.includes(e)).map(e => param[e])

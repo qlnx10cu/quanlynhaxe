@@ -78,8 +78,10 @@ module.exports = {
         if (!body || !config.zalo.zns)
             return false;
         var phone = utils.formatSDT(body.sodienthoai);
-        if (!phone)
+        if (!phone) {
+            logger.info("sendZNS_suachua: error phone : " + body.mahoadon);
             return false;
+        }
 
         var template_id = 231675;
         var template_data = {

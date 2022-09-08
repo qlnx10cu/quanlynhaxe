@@ -1141,7 +1141,7 @@ const RepairedBill = (props) => {
                         alert={(mess) => props.alert(mess)}
                     />
 
-                    <HistoryCustomer isShowing={isShowHistoryCustomer} onCloseClick={() => {
+                    <HistoryCustomer alert={props.alert} error={props.error} confirm={props.confirm} isShowing={isShowHistoryCustomer} onCloseClick={() => {
                         setShowHistoryCustomer(false)
                     }
                     } ma={mMaKH.value && mMaKH.value !== "" ? mMaKH.value : null} />

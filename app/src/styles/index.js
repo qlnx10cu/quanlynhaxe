@@ -5,7 +5,7 @@ const WraperToolBar = styled.div`
     height: 60px;
     min-height: 60px;
     background-color: #99ddff;
-    padding: 15px 10px;
+    padding: 5px 5px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -128,7 +128,13 @@ const Table = styled.table`
     td {
         border: 1px solid #ddd;
         padding: 8px;
-        font-size: 16px;
+        font-size: 14px;
+    }
+    
+    a {
+      border-bottom: 1px solid blue;
+      color: blue;
+      cursor: pointer;
     }
 
     tr:hover {background-color: #ddd;}
@@ -144,6 +150,7 @@ const Table = styled.table`
         color: white;
         border: 1px solid #ddd;
         padding: 8px;
+        font-size: 14px;
     }
 
     input[type=text], select, textarea {

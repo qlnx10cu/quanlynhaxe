@@ -76,8 +76,8 @@ module.exports = {
             for (var i = 0; i < resulft["chitiet"].length; i++) {
                 var item = resulft["chitiet"][i];
                 if (item.manvsuachua) {
-                    var param = { ma: item.manvsuachua };
-                    var nhanvien = await Abstract.getOne(Employee, param);
+                    var paramNV = { ma: item.manvsuachua };
+                    var nhanvien = await Abstract.getOne(Employee, paramNV);
                     if (nhanvien){
                         item.tennvsuachua = nhanvien.ten;
                     }
@@ -87,6 +87,9 @@ module.exports = {
 
                 }
             }
+            resulft["historycall"] = await Customer.getHistoryCall(param.ma);
+            resulft["historycskh"] = await Customer.getHistoryCSKH(param.ma);
+
             res.json(resulft);
         } catch (error) {
             res.status(400).json({

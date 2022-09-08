@@ -140,14 +140,13 @@ const Customer = (props) => {
                                 <th>SĐT</th>
                                 <th>GT</th>
                                 <th style={{ width: 175 }}>Địa Chỉ</th>
-                                <th>Thành phố</th>
+                                <th>T.Phố</th>
                                 <th>BSX</th>
                                 <th>Loại Xe</th>
                                 <th>Số Khung</th>
                                 <th>Số Máy</th>
-                                <th style={{ width: 140 }}>Xem|Sữa|Gọi</th>
+                                <th style={{ width: 140 }}>Xem|Sữa|Chat|Gọi</th>
                                 <th style={{ width: 30 }}>Xóa</th>
-
                             </tr>
                         </thead>
                         <tbody>
@@ -189,6 +188,14 @@ const Customer = (props) => {
                                             setEditItem(item);
                                         }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Cập nhập thông tin khách hàng"><i className="fas fa-edit"></i></Button>
                                         <Button onClick={() => {
+                                            if (!item.zaloid) {
+                                                props.alert('Chưa có thông tin zalo từ khách hàng này')
+                                            } else {
+                                                window.open(`https://oa.zalo.me/chatv2?uid=${item.zaloid}&oaid=2867735993958514567`, '_blank');
+                                            }
+                                        }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Nhắn tin với khách hàng"><i className="fas fa-comment"></i></Button>
+
+                                        <Button onClick={() => {
 
                                             props.confirm(`Bạn muốn gọi ${item.ten} (${item.sodienthoai}) `, () => {
                                                 goiKhachHang(item.sodienthoai);
@@ -228,7 +235,7 @@ const Customer = (props) => {
                     }
                     } editItem={editItem} />
 
-                    <HistoryCustomer token={props.token} isShowing={isShowHistoryCustomer} onCloseClick={() => {
+                    <HistoryCustomer alert={props.alert} error={props.error} confirm={props.confirm} token={props.token} isShowing={isShowHistoryCustomer} onCloseClick={() => {
                         setShowHistoryCustomer(false)
                         setEditItem(null);
                     }

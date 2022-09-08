@@ -16,8 +16,9 @@ const CustomerDetail = (props) => {
     let [mLoaiXe, setLoaiXe] = useState("");
     let [mSoKhung, setSoKhung] = useState("");
     let [mSoMay, setSoMay] = useState("");
-    let [mGioiTinh, setGioiTinh] = useState("");
+    let [mGioiTinh, setGioiTinh] = useState("Nam");
     let [mThanhPho, setThanhPho] = useState("An Giang");
+    let [mZaloId, setZaloId] = useState("");
 
     let item = props.editItem;
     useEffect(() => {
@@ -31,6 +32,7 @@ const CustomerDetail = (props) => {
             setSoMay(item.somay);
             setGioiTinh(item.gioitinh || 'Nam');
             setThanhPho(item.thanhpho);
+            setZaloId(item.zaloid);
         }
         else {
             setCustomerName('');
@@ -42,6 +44,7 @@ const CustomerDetail = (props) => {
             setSoMay('');
             setGioiTinh('Nam');
             setThanhPho('An Giang');
+            setZaloId('');
         }
     }, [item])
 
@@ -58,6 +61,7 @@ const CustomerDetail = (props) => {
             loaixe: mLoaiXe,
             sokhung: mSoKhung,
             somay: mSoMay,
+            zaloid: mZaloId,
             gioitinh: mGioiTinh || 'Nam',
             thanhpho: mThanhPho || 'An Giang',
         }
@@ -83,6 +87,7 @@ const CustomerDetail = (props) => {
             loaixe: mLoaiXe,
             sokhung: mSoKhung,
             somay: mSoMay,
+            zaloid: mZaloId,
             gioitinh: mGioiTinh || 'Nam',
             thanhpho: mThanhPho
         }
@@ -95,6 +100,18 @@ const CustomerDetail = (props) => {
             props.alert("Cập nhập tài khoản thất bại \n Error:" + err.response.data.error.message);
         });
     };
+
+    useEffect(() => {
+        function handleEscapeKey(event) {
+            if (event.code === 'Escape') {
+                props.onCloseClick();
+            }
+        }
+
+        document.addEventListener('keydown', handleEscapeKey)
+        return () => document.removeEventListener('keydown', handleEscapeKey)
+    }, [])
+
 
     return (
         <Modal className={props.isShowing ? "active" : ""}>
@@ -115,6 +132,10 @@ const CustomerDetail = (props) => {
                                 <Input width='auto' type="Number" value={mSDT} onChange={(e) => setSDT(e.target.value)} />
                             </DivFlexColumn>
                             <DivFlexColumn style={{ fontSize: 20, marginBottom: 2, marginLeft: 50, width: "100%" }}>
+                                Zalo Id
+                                <Input width='auto' type="" value={mZaloId} onChange={(e) => setZaloId(e.target.value)} />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ fontSize: 20, marginBottom: 2, marginLeft: 50, width: "100%" }}>
                                 Giói tính
                                 <Select width='auto' value={mGioiTinh} onChange={(e) => setGioiTinh(e.target.value)}>
                                     <option value='0'>Nam</option>
@@ -123,7 +144,7 @@ const CustomerDetail = (props) => {
                             </DivFlexColumn>
                             <DivFlexColumn style={{ fontSize: 20, marginBottom: 2, marginLeft: 50, width: "100%" }}>
                                 Thành phố
-                            <Select autocomplete="off" width='100%' value={mThanhPho} onChange={(e) => setThanhPho(e.target.value)}>
+                                <Select autocomplete="off" width='100%' value={mThanhPho} onChange={(e) => setThanhPho(e.target.value)}>
                                     {ListThanhPho.map((item, index) => (
                                         <option key={index} value={item} >{item}</option>
                                     ))}

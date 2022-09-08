@@ -65,11 +65,12 @@ const Title = styled.div`
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 200px;
+        font-size: 14px;
     }
 
     img {
-        width: 70px;
-        height: 70px;
+        width: 50px;
+        height: 50px;
         margin-right: 10px;
     }
 `

@@ -8,7 +8,7 @@ const XLSX = require('xlsx');
 module.exports = {
     getBill: async function (praram) {
         var param = [];
-        var sql = "select mahoadon,biensoxe,tongtien,ngaythanhtoan,loaihoadon,lydo,ngaysuachua from hoadon where trangthai=1 ";
+        var sql = "select mahoadon,makh,tenkh,biensoxe,tongtien,ngaythanhtoan,loaihoadon,lydo,ngaysuachua from hoadon where trangthai=1 ";
         if (praram.start) {
             param.push(praram.start);
             sql = sql + "AND DATEDIFF(ngaythanhtoan,?) >= 0 ";

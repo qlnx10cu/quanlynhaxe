@@ -1,5 +1,4 @@
 import React from 'react'
-import "./ldStyle.css"
 import { connect } from 'react-redux'
 
 const LoadingWarrper = () => {

@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components'
-import Logo from '../img/logo.png'
 
 const NavBarContainer = styled.div`
     min-height: 50px;
@@ -110,7 +109,7 @@ class NavBar extends React.Component {
         return (
             <NavBarContainer onClick={this.handleOptionClick}>
                 <Title>
-                    <img src={Logo} alt="HEAD Trung Trang" />
+                    <img src="/resources/img/logo.png" alt="HEAD Trung Trang" />
                     <span>{this.props.ten || 'Loading ...'}</span>
                 </Title>
 

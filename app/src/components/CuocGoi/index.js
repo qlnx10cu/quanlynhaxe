@@ -3,8 +3,6 @@ import { DivFlexRow, Button, Input, Table, Select, Tab } from '../../styles'
 import moment from 'moment'
 import { GetCuocGoiTheoNgay } from "../../API/CuocGoi"
 // import ChiTietThongKe from './ChiTietThongKe'
-import { GetListStaff } from '../../API/Staffs'
-import { HOST, HOST_SHEME } from '../../Config'
 import { connect } from 'react-redux'
 import { alert, success, setLoading } from "../../actions/App";
 import _ from 'lodash'
@@ -22,12 +20,8 @@ const CuocGoi = (props) => {
     let [searchName, setSearchName] = useState("");
     let [mHistoryCalls, setHistoryCalls] = useState([]);
     let [mHistoryCallCurrents, setHistoryCallCurrents] = useState([]);
-    let [isShowing, setShowing] = useState(false);
     let [isLoading, setLoading] = useState(false);
 
-    let [listStaff, setListStaff] = useState([]);
-    let [mMaHoaDon, setMaHoaDon] = useState("");
-    let [loaihoadon, setLoaiHoaDon] = useState("");
     let [maxSizePage, setMaxSizePage] = useState(20);
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
@@ -36,12 +30,8 @@ const CuocGoi = (props) => {
 
     useEffect(() => {
         setLoading(true)
-        GetListStaff(props.token).then(res => {
-            setListStaff(res.data);
-            handleLayDanhSach();
-        }).catch(err => {
-            props.alert("Không lấy được danh sách nhân viên");
-        })
+        handleLayDanhSach();
+
     }, []);
 
 

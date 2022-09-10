@@ -28,7 +28,6 @@ const StaffDetail = (props) => {
         }
     }, [item])
     const check = (loai) => {
-        var format = /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
         if (!mStaffName || mStaffName.length == 0)
             return 'Tên nhân viên không được để trống';
         if(loai)

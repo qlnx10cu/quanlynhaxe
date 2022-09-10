@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Select, Tab, Link, Textarea } from '../../styles'
+import { DivFlexRow, DivFlexColumn, Button, Input, Table, Modal, ModalContent, CloseButton, Select, Tab, Link, Textarea } from '../../styles'
 import moment from 'moment'
 import { GetChamSocTheoNgay } from "../../API/ChamSoc"
 import HistoryCustomer from '../Admin/HistoryCustomer'
@@ -9,17 +9,9 @@ import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
 import { UpdateChamSoc } from '../../API/ChamSoc'
 
 import { GetListStaff } from '../../API/Staffs'
-import { HOST, HOST_SHEME } from '../../Config'
 import { connect } from 'react-redux'
 import { alert, success, setLoading, confirm, error } from "../../actions/App";
 import _ from 'lodash'
-
-const IconCircle = (props) => {
-    return (
-        <i className='fa fa-circle' style={props.style}></i>
-    )
-}
-
 
 const getTrangThai = (e) => {
     switch (e) {
@@ -141,7 +133,6 @@ const CSKH = (props) => {
     let [searchName, setSearchName] = useState("");
     let [mHistoryCalls, setHistoryCalls] = useState([]);
     let [mHistoryCallCurrents, setHistoryCallCurrents] = useState([]);
-    let [isShowing, setShowing] = useState(false);
     let [isLoading, setLoading] = useState(false);
     let [isShowHistoryCustomer, setShowHistoryCustomer] = useState(false);
     let [maKHHistoryCustomer, setMaKHHistoryCustomer] = useState(null);
@@ -149,9 +140,7 @@ const CSKH = (props) => {
     let [isShowNote, setShowNote] = useState(false);
     let [dataCSKH, setDataCSKH] = useState("");
 
-    let [listStaff, setListStaff] = useState([]);
     let [mMaHoaDon, setMaHoaDon] = useState("");
-    let [loaihoadon, setLoaiHoaDon] = useState("");
     let [maxSizePage, setMaxSizePage] = useState(20);
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
@@ -160,12 +149,7 @@ const CSKH = (props) => {
 
     useEffect(() => {
         setLoading(true)
-        GetListStaff(props.token).then(res => {
-            setListStaff(res.data);
-            handleLayDanhSach();
-        }).catch(err => {
-            props.alert("Không lấy được danh sách nhân viên");
-        })
+        handleLayDanhSach();
     }, []);
 
 
@@ -202,16 +186,6 @@ const CSKH = (props) => {
     const handleChangeSoHang = (e) => {
         setMaxSizePage(parseInt(e));
         tachList(mHistoryCallCurrents, e, activePage);
-    }
-
-    const convertDirection = (tab) => {
-        if (tab == 1) {
-            return 'agent2user';
-        }
-        if (tab == 2) {
-            return 'user2agent';
-        }
-        return '';
     }
 
     const tachList = (list, size, tab) => {

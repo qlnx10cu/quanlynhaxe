@@ -4,7 +4,6 @@ import { Input } from '../../styles'
 import axios from 'axios';
 import { HOST,HOST_SHEME } from '../../Config'
 import moment from 'moment'
-import styled from 'styled-components';
 // const NewInput = styled(Input)`
 //     background-color: transparent;
 //     outline: none;

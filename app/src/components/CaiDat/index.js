@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux'
-import lib from '../../lib'
-import { Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButton } from '../../styles'
-import { HOST, HOST_SHEME } from '../../Config'
+import { DivFlexColumn, DivFlexRow, Button } from '../../styles'
+import { HOST } from '../../Config'
 import { authenticate } from '../../actions/Authenticate';
 
 const CaiDat = (props) => {

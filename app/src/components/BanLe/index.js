@@ -83,7 +83,6 @@ const BanLe = (props) => {
     let [makhachhang, setMaKhachHang] = useState("");
     let [sodienthoai, setSoDienThoai] = useState("");
     let [mProducts, setProducts] = useState([]);
-    let [mHangNgoais, setHangNgoais] = useState([]);
     let [isShowNewProduct, setNewProduct] = useState(false);
     let [isShowCuaHangNgoai, setNewCuaHangNgoai] = useState(false);
     let [listCuaHangNgoai, setCuaHangNgoai] = useState([]);
@@ -416,11 +415,7 @@ const BanLe = (props) => {
         }
 
     }
-    const deleteHangNgoai = (maphutung) => {
-        setProducts(mHangNgoais.filter(function (item) {
-            return item.maphutung !== maphutung;
-        }))
-    }
+
     const addItemToProduct = (item) => {
         var i = 0;
         for (i = 0; i < mProducts.length; i++) {
@@ -577,7 +572,6 @@ const BanLe = (props) => {
     const updateChangSL = (index, soluong) => {
         let newItem = mProducts[index];
         newItem.soluong = soluong;
-        let tongTien = mTongTien - newItem.tongtien;
         newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
         let newProduct = [...mProducts.slice(0, index), newItem, ...mProducts.slice(index + 1, mProducts.length)];
         setProducts(newProduct);
@@ -592,7 +586,6 @@ const BanLe = (props) => {
         try {
             let newItem = mProducts[index];
             newItem.chietkhau = parseInt(e.target.value);
-            let tongTien = mTongTien - newItem.tongtien;
             newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
             let newProduct = [...mProducts.slice(0, index), newItem, ...mProducts.slice(index + 1, mProducts.length)];
             setProducts(newProduct);

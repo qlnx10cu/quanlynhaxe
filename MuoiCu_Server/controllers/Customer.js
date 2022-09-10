@@ -1,6 +1,7 @@
 const Customer = require("../models/Customer");
 const Abstract = require("../models/Abstract");
 const Employee = require("../models/Employee");
+const utils = require("../lib/utils");
 
 module.exports = {
     getList: async function (req, res, next) {
@@ -31,6 +32,9 @@ module.exports = {
     add: async function (req, res, next) {
         try {
             req.body['updatetime'] = new Date();
+            req.body['biensoxe'] = utils.normalizeStr(req.body.biensoxe);
+            req.body['sokhung'] = utils.normalizeStr(req.body.sokhung);
+            req.body['somay'] = utils.normalizeStr(req.body.somay);
             let resulft = await Abstract.add(Customer, req.body);
             res.json(resulft);
         } catch (error) {
@@ -44,6 +48,9 @@ module.exports = {
     update: async function (req, res, next) {
         try {
             req.body['updatetime'] = new Date();
+            req.body['biensoxe'] = utils.normalizeStr(req.body.biensoxe);
+            req.body['sokhung'] = utils.normalizeStr(req.body.sokhung);
+            req.body['somay'] = utils.normalizeStr(req.body.somay);
             var param = Object.assign(req.params, req.query);
             let resulft = await Abstract.update(Customer, req.body, { ma: param.ma });
             res.json(resulft);
@@ -78,7 +85,7 @@ module.exports = {
                 if (item.manvsuachua) {
                     var paramNV = { ma: item.manvsuachua };
                     var nhanvien = await Abstract.getOne(Employee, paramNV);
-                    if (nhanvien){
+                    if (nhanvien) {
                         item.tennvsuachua = nhanvien.ten;
                     }
                     else {

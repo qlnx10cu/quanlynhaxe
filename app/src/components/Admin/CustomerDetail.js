@@ -49,10 +49,6 @@ const CustomerDetail = (props) => {
     }, [item])
 
     const handleButtonSave = () => {
-        if (mSoXe == "") {
-            props.alert("Không thể để biển số xe trống");
-            return;
-        }
         var data = {
             ten: mCustomerName,
             sodienthoai: mSDT,
@@ -75,10 +71,6 @@ const CustomerDetail = (props) => {
         });
     };
     const handleButtonUpdate = () => {
-        if (mSoXe == "") {
-            props.alert("Không thể để biển số xe trống");
-            return;
-        }
         var data = {
             ten: mCustomerName,
             sodienthoai: mSDT,

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButton } from '../../styles'
 import lib from '../../lib'
-import { GetListSalary } from '../../API/Salary'
 import { connect } from 'react-redux'
-import { getAllProduct, addBillProduct } from '../../actions/Product';
+import { addBillProduct } from '../../actions/Product';
 
 const PopupAccessory = (props) => {
 

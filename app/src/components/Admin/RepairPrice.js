@@ -4,14 +4,11 @@ import { GetListSalary, DelSalary } from '../../API/Salary'
 import RepairPriceDetail from './RepairPriceDetail'
 // import DeleteDialog from './DeleteDialog'
 import { connect } from 'react-redux'
-import { setLoading } from "../../actions/App";
 import Loading from "../Loading";
-import { alert, error } from "../../actions/App";
 
 const RepairPrice = (props) => {
     let [editItem, setEditItem] = useState(null);
     let [isShowRepairPriceDetail, setShowRepairPriceDetail] = useState(false);
-    // let [isShowDeleteDialog, setShowDeleteDialog] = useState(false);
     let [listSalary, setListSalary] = useState([]);
     let [listSalaryAll, setListSalaryAll] = useState([]);
     var [searchValue, setSearchValue] = useState("");

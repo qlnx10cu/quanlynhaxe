@@ -42,7 +42,7 @@ export default () => {
                     delete _tmp['ma'];
                     return _tmp;
                 });
-                let res = await axios.post(`${HOST}/chamcong/theongay/ngay/${ngay}`, {
+                await axios.post(`${HOST}/chamcong/theongay/ngay/${ngay}`, {
                     chitiet: tmp
                 });
                 alert('Thành công!');

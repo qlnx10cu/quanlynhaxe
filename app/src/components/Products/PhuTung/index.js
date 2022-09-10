@@ -112,7 +112,7 @@ const PhuTung = (props) => {
     };
 
     const handleXoaHetPhutung = () => {
-        if (window.confirm("Bạn chắc muốn hủy") == true) {
+        if (window.confirm("Bạn chắc muốn hủy")) {
             DelAllPhuTung(props.token).then(res => {
                 props.alert("Xóa thành công.");
                 window.location.reload();

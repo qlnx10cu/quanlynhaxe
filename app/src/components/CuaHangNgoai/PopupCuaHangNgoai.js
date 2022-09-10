@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, Input, DivFlexColumn, DivFlexRow, Button, DelButton } from '../../styles'
 import { SaveItemCuaHangNgoai, UpdateItemCuaHangNgoai } from '../../API/CuaHangNgoai'
-import { GetListCuaHangNgoai } from '../../API/CuaHangNgoai'
 
 const PopupCuaHangNgoai = (props) => {
 

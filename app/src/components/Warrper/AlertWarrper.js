@@ -15,7 +15,7 @@ const AlertWarrper = (props) => {
     }
     return (
         <ModalAlert className={props.alert.isLoading ? "active" : ""}>
-            <ModalContent style={{ width: '50%' }} style={{ backgroundColor: color }}>
+            <ModalContent style={{ width: '600px', backgroundColor: color }}>
                 <div style={{ paddingTop: 3, paddingBottom: 3 }}>
                     <CloseButton onClick={() => onCloseClick()}>&times;</CloseButton>
                     <h2> </h2>

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import RenderChamCong from './ChamCong'
 import TheoDoi from './TheoDoi'
 import { Tab, TabContent } from '../../styles'

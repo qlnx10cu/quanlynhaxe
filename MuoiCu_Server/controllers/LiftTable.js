@@ -61,7 +61,7 @@ module.exports = function(io) {
                         liftTable[index].mahoadon = data.mahoadon;
                         liftTable[index].biensoxe = data.biensoxe;
                         liftTable[index].trangthai = 2;
-                        socket.emit('lifttable', liftTable);
+                        socket.emit('lifttableFull', liftTable);
                         socket.broadcast.emit('lifttableFull', liftTable);
                     });
             } catch (e) {}
@@ -75,7 +75,6 @@ module.exports = function(io) {
                         liftTable[index].mahoadon = "";
                         liftTable[index].biensoxe = "";
                         socket.emit('lifttableFull', liftTable);
-                        socket.broadcast.emit('lifttableFull', liftTable);
                         socket.broadcast.emit('lifttableBill', liftTable);
                     });
             } catch (e) {

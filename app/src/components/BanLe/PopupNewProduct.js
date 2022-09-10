@@ -70,6 +70,11 @@ const PopupNewProduct = (props) => {
             return;
         }
 
+        if (!mTonKho.value || mTonKho.value < mSoLuong.value) {
+            alert("Số lượng tồn kho không đủ");
+            return;
+        }
+
         if (chietkhau < 0 || chietkhau>100) {
             alert("Chiết khấu không hợp lệ");
             return;

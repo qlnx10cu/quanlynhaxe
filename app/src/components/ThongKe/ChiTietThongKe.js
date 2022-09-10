@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, ModalContent, Table, CloseButton } from '../../styles'
+import { Modal, ModalContent, CloseButton } from '../../styles'
 import { GetBillBanLeByMaHoaDon, GetBillSuaChuaByMaHoaDon } from '../../API/Bill'
 import RenderBillLe from './RenderBillLe'
 import RenderBillChan from './RenderBillChan'

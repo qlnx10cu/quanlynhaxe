@@ -14,7 +14,6 @@ const Customer = (props) => {
 
     var [listCustomer, setlistCustomer] = useState([]);
     var [listCustomerTemp, setlistCustomerTemp] = useState([]);
-    var [listCustomerFull, setlistCustomerFull] = useState([]);
     var [searchValue, setSearchValue] = useState("");
     let [maxSizePage, setMaxSizePage] = useState(50);
     let [maxPage, setMaxPage] = useState(0);
@@ -30,7 +29,6 @@ const Customer = (props) => {
         GetlistCustomer(props.token, `ma=${query}&ten=${query}&sodienthoai=${query}&biensoxe=${query}&sokhung=${query}&somay=${query}`)
             .then(Response => {
                 var dataCustomer = Response.data;
-                setlistCustomerFull(dataCustomer);
                 setlistCustomerTemp(dataCustomer)
                 tachList(dataCustomer, maxSizePage);
                 props.setLoading(false);

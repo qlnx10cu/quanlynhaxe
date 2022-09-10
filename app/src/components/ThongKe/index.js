@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DivFlexRow, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Select, Tab, TabContent } from '../../styles'
+import { DivFlexRow, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Select, Tab, Link } from '../../styles'
 import moment from 'moment'
 import { GetBillTheoNgay } from "../../API/ThongKeAPI"
 import ChiTietThongKe from './ChiTietThongKe'
@@ -9,6 +9,7 @@ import { HuyThanhToan, HuyThanhToanLe, CheckUpdateBill } from '../../API/Bill'
 import { HOST, HOST_SHEME } from '../../Config'
 import { connect } from 'react-redux'
 import { alert, success, setLoading, error, confirm } from "../../actions/App";
+import { withRouter } from 'react-router-dom'
 import _ from 'lodash'
 
 
@@ -27,8 +28,6 @@ const ConfirmHoaDon = (props) => {
             url = `/banle?mahoadon=${maHoaDon}`;
         }
         props.history.push(url, { tokenTime: date.getTime(), mhdToken: maHoaDon });
-        props.history.push(url, { tokenTime: date.getTime(), mhdToken: maHoaDon });
-        props.history.goBack();
     }
 
     const confirmBarCodeByServer = () => {
@@ -83,8 +82,8 @@ const ConfirmHoaDon = (props) => {
 
 const ThongKe = (props) => {
 
-    // let [dateStart, setDateStart] = useState(moment().subtract(1, 'day').format("YYYY-MM-DD"));
-    let [dateStart, setDateStart] = useState(moment().format("YYYY-MM-DD"));
+    let [dateStart, setDateStart] = useState(moment().subtract(45, 'day').format("YYYY-MM-DD"));
+    // let [dateStart, setDateStart] = useState(moment().format("YYYY-MM-DD"));
     let [dateEnd, setDateEnd] = useState(moment().format("YYYY-MM-DD"));
     let [searchBSX, setSearchBSX] = useState("");
     let [mBills, setBills] = useState([]);
@@ -181,7 +180,9 @@ const ThongKe = (props) => {
         if (tab != 0)
             list = list.filter(x => x && x.loaihoadon == (tab - 1));
         if (searchBSX != "") {
-            list = list.filter(bill => searchBSX == "" || bill && bill.biensoxe && bill.biensoxe.toLowerCase().includes(searchBSX.toLowerCase()) || bill && bill.mahoadon && bill.mahoadon.toLowerCase().includes(searchBSX.toLowerCase()));
+            list = list.filter(bill => searchBSX == ""
+                || (bill && bill.biensoxe && bill.biensoxe.toLowerCase().includes(searchBSX.toLowerCase()))
+                || (bill && bill.mahoadon && bill.mahoadon.toLowerCase().includes(searchBSX.toLowerCase())));
         }
         let tmp = _.chunk(list, size);
         setBills(tmp);
@@ -233,8 +234,6 @@ const ThongKe = (props) => {
         }
         if (url) {
             props.history.push(url);
-            props.history.push(url);
-            props.history.goBack();
         }
     }
 
@@ -322,15 +321,15 @@ const ThongKe = (props) => {
                     {
                         mBills[page] && mBills[page].map((item, index) => (
                             <tr key={index} style={{ backgroundColor: item.lydo ? '#ff0000' : '#ffffff' }} >
-                                <td><a onClick={() => {
+                                <td><Link onClick={() => {
                                     setMaHoaDon(item.mahoadon)
                                     setShowing(true);
                                     setLoaiHoaDon(item.loaihoadon);
-                                }}>{item.mahoadon}</a></td>
-                                <td><a onClick={() => {
+                                }}>{item.mahoadon}</Link></td>
+                                <td><Link onClick={() => {
                                     setMaKHHistoryCustomer(item.makh);
                                     setShowHistoryCustomer(true);
-                                }}>{item.makh}</a></td>
+                                }}>{item.makh}</Link></td>
                                 <td>{item.tenkh}</td>
                                 <td>{item.biensoxe}</td>
                                 <td>{item.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
@@ -420,4 +419,4 @@ const mapDispatch = (dispatch) => ({
     setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
 })
 
-export default connect(mapState, mapDispatch)(ThongKe);
+export default withRouter(connect(mapState, mapDispatch)(ThongKe));

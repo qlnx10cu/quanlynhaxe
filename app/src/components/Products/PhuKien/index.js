@@ -13,7 +13,7 @@ const PhuKienItem = ({
     setItem
 }) => {
     const handleDelItem = () => {
-        if (window.confirm("Bạn chắc muốn hủy") == true) {
+        if (window.confirm("Bạn chắc muốn hủy")) {
             DelPhuKien(token, item.maphutung).then(res => {
                 alert("Xóa thành công.");
                 getList();

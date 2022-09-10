@@ -529,7 +529,6 @@ const RepairedBill = (props) => {
                 props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon, biensoxe: bsx });
                 props.alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.data.mahoadon);
                 props.history.push("/services")
-                props.history.go();
             }).catch(err => {
                 props.error("Không thể lưu phiếu sữa chưa: ");
                 console.log(err);
@@ -544,8 +543,6 @@ const RepairedBill = (props) => {
                 setMaHoaDon("");
                 props.alert('Hủy hóa đơn ' + mMaHoaDon + ' thành công');
                 props.history.push("/services")
-                props.history.push("/services")
-                props.history.goBack();
             }).catch(err => {
                 props.error('Hủy hóa đơn ' + mMaHoaDon + ' thất bại');
                 console.log(err);
@@ -670,9 +667,8 @@ const RepairedBill = (props) => {
                     props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
                     setMaHoaDon("");
                     exportBill()
+                    props.alert('Thanh toán hóa đơn ' + mMaHoaDon + ' thành công');
                     props.history.push("/services")
-                    props.history.push("/services")
-                    props.history.goBack();
                 }).catch(err => {
                     console.log(err);
                     props.error("Không thể  thanh toán hóa đơn " + mMaHoaDon + "\nVui lòng kiểm lại đường mạng")
@@ -994,7 +990,7 @@ const RepairedBill = (props) => {
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Ngày Hẹn: </label>
-                            <Input readOnly autocomplete="off" value={(thoigianhen && thoigianhen != "0") ? moment((trangthai == 1 && ngaythanhtoan.value) ? ngaythanhtoan.value : new Date()).add(thoigianhen,'days').format("DD/MM/YYYY") : ""} />
+                            <Input readOnly autocomplete="off" value={(thoigianhen && thoigianhen != "0") ? moment((trangthai == 1 && ngaythanhtoan.value) ? ngaythanhtoan.value : new Date()).add(thoigianhen, 'days').format("DD/MM/YYYY") : ""} />
                         </DivFlexColumn>
                     </DivFlexRow>
                     {(isUpdateBill == 3 || lydo) &&

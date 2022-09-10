@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import lib from '../../lib'
+import React, { useState } from 'react'
 import { Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButton } from '../../styles'
 import { connect } from 'react-redux'
-import { GetListSalary } from '../../API/Salary'
-import { getAllProduct, addBillProduct } from '../../actions/Product';
+import { addBillProduct } from '../../actions/Product';
 
 
 const PopupBillTienCong = (props) => {
 
     let [tentiencong, setTenTienCong] = useState("");
     let [dongia, setDonGia] = useState(0);
-  
+
     const searchTenTienCong = (values) => {
         setTenTienCong(values);
         let item = null;
@@ -20,7 +18,7 @@ const PopupBillTienCong = (props) => {
 
         if (item) {
             setDonGia(item.tien);
-        }else{
+        } else {
             setDonGia(0);
         }
     };
@@ -31,26 +29,25 @@ const PopupBillTienCong = (props) => {
             return;
         }
 
-        if(!dongia || dongia<0)
-        {
+        if (!dongia || dongia < 0) {
             alert("Đơn giá phải >= 0");
             return;
         }
 
-    
+
 
         var data = {
             key: props.listBillProduct.length + 1,
             tenphutungvacongviec: tentiencong,
             maphutung: "",
             dongia: 0,
-            chietkhau:0,
+            chietkhau: 0,
             soluongphutung: 0,
             tiencong: parseInt(dongia) || 0,
             tongtien: parseInt(dongia) || 0,
-            nhacungcap:"Trung Trang"
+            nhacungcap: "Trung Trang"
         }
-        props.addItemToProduct(data,true);
+        props.addItemToProduct(data, true);
         // props.addBillProduct(data);
         clearData();
         props.onCloseClick();

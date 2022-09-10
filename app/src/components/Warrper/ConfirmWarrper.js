@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Modal, ModalContent, CloseButton, Button, DivFlexRow } from '../../styles'
+import React from 'react';
+import { ModalAlert, ModalContent, CloseButton, CancleButton, Button, DivFlexRow } from '../../styles'
 import { setConfirm } from "../../actions/App";
 import { connect } from 'react-redux'
 
@@ -19,8 +19,8 @@ const ConfirmWarrper = (props) => {
     }
 
     return (
-        <Modal className={props.confirm.isLoading ? "active" : ""}>
-            <ModalContent style={{ width: '50%' }} style={{ backgroundColor: props.confirm.error == 0 ? "#fefefe" : (props.confirm.error == 1 ? '#fcff40fc' : '#ff4100' )}} >
+        <ModalAlert className={props.confirm.isLoading ? "active" : ""}>
+            <ModalContent style={{ width: '600px', backgroundColor: props.confirm.error == 0 ? "#fefefe" : (props.confirm.error == 1 ? '#fcff40fc' : '#ff4100') }} >
                 <div style={{ paddingTop: 3, paddingBottom: 3 }}>
                     <CloseButton onClick={() => onCloseClick()}>&times;</CloseButton>
                     <h2> </h2>
@@ -28,16 +28,16 @@ const ConfirmWarrper = (props) => {
                 {message.map((mess, index) => (
                     <h3 key={index} style={{ textAlign: 'center' }}>{mess}</h3>
                 ))}
-                <DivFlexRow style={{ marginTop: 50, marginBottom: 5, justifyContent: 'space-between', alignItems: 'center' }}>
+                <DivFlexRow style={{ marginTop: 50, marginBottom: 5, justifyContent: 'flex-end', alignItems: 'center' }}>
                     <DivFlexRow></DivFlexRow>
-                    <Button onClick={() => handleCallback(props.confirm.callback)}>
+                    <CancleButton onClick={() => onCloseClick()}>
+                        Hủy </CancleButton>
+                    <DivFlexRow></DivFlexRow>
+                    <Button style={{ marginLeft: '15px' }} onClick={() => handleCallback(props.confirm.callback)}>
                         Đồng ý  </Button>
-                    <Button onClick={() => onCloseClick()}>
-                        Hủy </Button>
-                    <DivFlexRow></DivFlexRow>
                 </DivFlexRow>
             </ModalContent>
-        </Modal>
+        </ModalAlert>
     );
 }
 const mapState = (state) => ({

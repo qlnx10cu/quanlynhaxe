@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import lib from '../../lib'
 import { Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButton } from '../../styles'
 import { connect } from 'react-redux'
-import { GetListSalary } from '../../API/Salary'
-import { getAllProduct, addBillProduct } from '../../actions/Product';
+import { addBillProduct } from '../../actions/Product';
 
 
 const PopupBillCHN = (props) => {
@@ -12,7 +10,6 @@ const PopupBillCHN = (props) => {
     let [tenphutung, setTenPhuTung] = useState("");
     let [dongia, setDonGia] = useState(0);
     let [soluong, setSoLuong] = useState(1);
-    let [chietkhau, setChietkhau] = useState(0);
 
     const searchTenPhuTung = (values) => {
         setTenPhuTung(values);
@@ -72,7 +69,6 @@ const PopupBillCHN = (props) => {
         setTenPhuTung("");
         setDonGia("");
         setSoLuong(1);
-        setChietkhau(0);
     };
 
 

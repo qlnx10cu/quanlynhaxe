@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Modal, ModalContent, CloseButton, DivFlexRow, Button, DivFlexColumn, Input, Table, Tab } from '../../styles'
+import { Modal, ModalContent, CloseButton, DivFlexRow, Button, DivFlexColumn, Input, Table, Tab, Link } from '../../styles'
 // import { showNoti } from '../../../Actions/Notification';
 import { GetCustomerDetail } from '../../API/Customer'
 import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
@@ -57,10 +57,10 @@ const RenderTableDetail = ({ list }) => {
                         <tr key={index} style={{ fontSize: 14 }}>
                             <td>{index + 1}</td>
                             <td>{moment(item.ngaythanhtoan).format('DD/MM/YYYY')}</td>
-                            <td><a onClick={() => {
+                            <td><Link onClick={() => {
                                 setShowChitiet(true);
                                 setMaHoaDon(item.mahoadon);
-                            }}>{item.mahoadon}</a></td>
+                            }}>{item.mahoadon}</Link></td>
                             <td>{item.tennvsuachua}</td>
                             <td style={{
                                 whiteSpace: 'nowrap',
@@ -125,14 +125,14 @@ const RenderTableCSKH = ({ list }) => {
                             <td>{index + 1}</td>
                             <td>{moment(item.ngayhen).format('DD/MM/YYYY')}</td>
 
-                            <td><a style={{
+                            <td><Link style={{
                                 borderBottom: "1px solid blue",
                                 color: "blue",
                                 cursor: "pointer"
                             }} onClick={() => {
                                 setShowChitiet(true);
                                 setMaHoaDon(item.mahoadon);
-                            }}> {item.mahoadon}</a></td>
+                            }}> {item.mahoadon}</Link></td>
                             <td
                                 style={{
                                     whiteSpace: 'nowrap',

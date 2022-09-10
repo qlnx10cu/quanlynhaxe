@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Select, Tab, TabContent, Textarea } from '../../styles'
+import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Select, Tab, Link, Textarea } from '../../styles'
 import moment from 'moment'
 import { GetChamSocTheoNgay } from "../../API/ChamSoc"
 import HistoryCustomer from '../Admin/HistoryCustomer'
@@ -342,26 +342,26 @@ const CSKH = (props) => {
                         mHistoryCalls[page] && mHistoryCalls[page].map((item, index) => (
                             <tr key={index}>
                                 <td>{moment(item.ngayhen).format("DD/MM/YYYY")}</td>
-                                <td><a style={{
+                                <td><Link style={{
                                     borderBottom: "1px solid blue",
                                     color: "blue",
                                     cursor: "pointer"
                                 }} onClick={() => {
                                     setMaKHHistoryCustomer(item.makh);
                                     setShowHistoryCustomer(true);
-                                }}> {item.makh}</a></td>
+                                }}> {item.makh}</Link></td>
                                 <td>{item.tenkh}</td>
                                 <td>
                                     {item.sodienthoai || item.zaloid}</td>
                                 <td>{item.biensoxe}</td>
-                                <td><a style={{
+                                <td><Link style={{
                                     borderBottom: "1px solid blue",
                                     color: "blue",
                                     cursor: "pointer"
                                 }} onClick={() => {
                                     setShowChitiet(true);
                                     setMaHoaDon(item.mahoadon);
-                                }}> {item.mahoadon}</a></td>
+                                }}> {item.mahoadon}</Link></td>
                                 <td
                                     style={{
                                         whiteSpace: 'nowrap',

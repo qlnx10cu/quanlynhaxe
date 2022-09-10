@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import ToolBar from './ToolBar'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import styled from 'styled-components'

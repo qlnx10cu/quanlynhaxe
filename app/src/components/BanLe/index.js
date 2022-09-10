@@ -155,6 +155,8 @@ const BanLe = (props) => {
             return;
         }
 
+        let isMouted = true;
+
         props.setLoading(true, 2);
         clearAll();
 
@@ -195,11 +197,15 @@ const BanLe = (props) => {
         }
 
         GetListCuaHangNgoai(props.token).then(res => {
+            if (!isMouted)
+                return;
             setCuaHangNgoai(res.data);
             props.addLoading();
 
         });
         GetlistCustomer(props.token).then(res => {
+            if (!isMouted)
+                return;
             setListCustomer(res.data);
             props.addLoading();
 
@@ -212,52 +218,54 @@ const BanLe = (props) => {
         setLoai(loai)
 
         if (loai != 0) {
-            getBill(mhd)
+            GetBillBanLeByMaHoaDon(props.token, mhd).then(res => {
+                if (!isMouted)
+                    return;
+                let data = res.data;
+                if (data.makh) {
+                    setMaKhachHang(data.makh)
+                }
+                if (data.tenkh) {
+                    mCustomerName.setValue(data.tenkh)
+                }
+                if (data.sodienthoai) {
+                    setSoDienThoai(data.sodienthoai);
+                }
+                if (data.diachi) {
+                    mDiaChi.setValue(data.diachi);
+                }
+                var chitiet = [...data.chitiet]
+                for (var k in chitiet) {
+                    var newItem = chitiet[k];
+                    newItem.tencongviec = newItem.tenphutung
+                    newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
+                }
+                setNgaythanhtoan(data.ngaythanhtoan);
+                setLydo(data.lydo);
+                setTongTien(data.tongtien);
+                setProducts(chitiet)
+                props.addLoading();
+
+                var message = getState("message");
+                if (message) {
+                    clearState("message");
+                    props.success(message);
+                }
+
+            }).catch(err => {
+                props.error("Không lấy được chi tiết hóa đơn:" + mhd);
+                window.location.href = "/thongke";
+            })
         }
 
 
-
+        return () => {
+            isMouted = false;
+        }
 
 
     }, []);
-    const getBill = (mahoadon) => {
-        GetBillBanLeByMaHoaDon(props.token, mahoadon).then(res => {
-            let data = res.data;
-            if (data.makh) {
-                setMaKhachHang(data.makh)
-            }
-            if (data.tenkh) {
-                mCustomerName.setValue(data.tenkh)
-            }
-            if (data.sodienthoai) {
-                setSoDienThoai(data.sodienthoai);
-            }
-            if (data.diachi) {
-                mDiaChi.setValue(data.diachi);
-            }
-            var chitiet = [...data.chitiet]
-            for (var k in chitiet) {
-                var newItem = chitiet[k];
-                newItem.tencongviec = newItem.tenphutung
-                newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100)
-            }
-            setNgaythanhtoan(data.ngaythanhtoan);
-            setLydo(data.lydo);
-            setTongTien(data.tongtien);
-            setProducts(chitiet)
-            props.addLoading();
 
-            var message = getState("message");
-            if (message) {
-                clearState("message");
-                props.success(message);
-            }
-
-        }).catch(err => {
-            props.error("Không lấy được chi tiết hóa đơn:" + mahoadon);
-            window.location.href = "/thongke";
-        })
-    }
     const clearAll = () => {
         setTongTien(0);
         setProducts([]);
@@ -280,7 +288,7 @@ const BanLe = (props) => {
 
     const handleSaveBill = () => {
 
-        if (mTongTien === 0) {
+        if (mProducts.length === 0) {
             props.alert("Chưa có sản phẩm nào.")
             return;
         }
@@ -339,7 +347,7 @@ const BanLe = (props) => {
     }
 
     const handleAddBill = () => {
-        if (mTongTien === 0) {
+        if (mProducts.length === 0) {
             props.alert("Chưa có sản phẩm nào.")
             return;
         }

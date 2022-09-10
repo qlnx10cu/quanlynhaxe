@@ -23,6 +23,12 @@ const WraperToolBar = styled.div`
 //     height: 100%;
 // `
 
+const Link = styled.a`
+  border-bottom: 1px solid blue;
+  color: blue;
+  cursor: pointer;
+`
+
 const Button = styled.button`
     width: ${props => props.width || 'auto'}
     height: ${props => props.height || '38px'}
@@ -37,6 +43,27 @@ const Button = styled.button`
 
     :hover {
       background-color: #99ddff;
+    }
+
+    i {
+      padding: 5px;
+      font-size: 14px;
+    }
+`
+const CancleButton = styled.button`
+    width: ${props => props.width || 'auto'}
+    height: ${props => props.height || '38px'}
+    outline: none;
+    border-radius: 5px;
+    color: #001a33;
+    border: none;
+    font-size: 16px;
+    background-color: #e5e7eb;
+    cursor: pointer;
+    padding: 0 15px;
+
+    :hover {
+      background-color: #e1e4ea;
     }
 
     i {
@@ -289,6 +316,8 @@ export {
     TabContent,
     Select,
     CloseButton,
+    Link,
+    CancleButton,
     ProductContainer,
     ButtonChooseFile,
 }

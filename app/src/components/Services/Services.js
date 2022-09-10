@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import { Button, DivFlexRow } from '../../styles'
+import { connect } from 'react-redux'
 
 const RepairWraper = styled.div`
     width: 100%;
@@ -223,4 +224,4 @@ const Services = (props) => {
     )
 }
 
-export default withRouter(Services);
+export default withRouter(connect()(Services));

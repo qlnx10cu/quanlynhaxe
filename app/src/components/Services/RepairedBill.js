@@ -994,7 +994,7 @@ const RepairedBill = (props) => {
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Ngày Hẹn: </label>
-                            <Input readOnly autocomplete="off" value={(thoigianhen && thoigianhen != "0") ? moment((trangthai == 1 && ngaythanhtoan.value) ? ngaythanhtoan.value : new Date()).add('days', thoigianhen).format("DD/MM/YYYY") : ""} />
+                            <Input readOnly autocomplete="off" value={(thoigianhen && thoigianhen != "0") ? moment((trangthai == 1 && ngaythanhtoan.value) ? ngaythanhtoan.value : new Date()).add(thoigianhen,'days').format("DD/MM/YYYY") : ""} />
                         </DivFlexColumn>
                     </DivFlexRow>
                     {(isUpdateBill == 3 || lydo) &&

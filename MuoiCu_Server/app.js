@@ -8,11 +8,11 @@ const bodyParser = require('body-parser');
 const path = require('path')
 const hbs = require('express-handlebars').create({
   helpers: {
-    format_tien: function(a){
+    format_tien: function (a) {
       return a.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })
     },
-    log: function(a){
-      console.log("item",a)
+    log: function (a) {
+      console.log("item", a)
     }
   }
 });
@@ -47,5 +47,17 @@ server.on('error', onError.bind(server));
 server.on('listening', onListening.bind(server));
 
 require('./models/test');
+
+
+const app2 = express();
+let server2 = http.createServer(app2);
+server2.port = normalizePort(config.portApp);
+app2.use(express.static(__dirname + '/public'));
+app2.use(function (req, res, next) {
+  res.sendFile(__dirname + '/public/index.html')
+});
+server2.listen(server2.port);
+server2.on('error', onError.bind(server2));
+server2.on('listening', onListening.bind(server2));
 
 module.exports = app;

@@ -38,5 +38,6 @@ module.exports = {
         expires_in: process.env.expires_in
     },
     port: process.env.PORT,
+    portApp: process.env.PORT_APP,
     log: process.env.LOG,
 }

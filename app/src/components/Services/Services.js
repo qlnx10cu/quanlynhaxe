@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import { Button, DivFlexRow } from '../../styles'
-import ImgRepair from '../../icon/repair.svg'
 
 const RepairWraper = styled.div`
     width: 100%;
@@ -82,7 +81,7 @@ const CRepairItem = (props) => {
     return (
         <RepairItem className={mIsWorking === 0 ? "" : mIsWorking === 1 ? "dangnhap" : "working"}>
             <div className="STT">{props.STT}</div>
-            <img alt="img repair" src={ImgRepair} />
+            <img alt="img repair" src="/resources/icon/repair.svg" />
             <span>{mIsWorking === 2 ? `BSX: ${props.item && props.item.biensoxe} (${props.item && props.item.mahoadon})` : mIsWorking === 1 ? "Đang nhập thông tin" : "Trống"}</span>
             <DivFlexRow>
                 {mIsWorking === 2 ? <Button style={{ marginTop: 10, color: "black" }} onClick={handleXemThongTin}>

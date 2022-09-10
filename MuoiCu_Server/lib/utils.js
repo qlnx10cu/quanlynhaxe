@@ -14,7 +14,7 @@ module.exports = {
     ngayHen: function (thoigianhen) {
         try {
             if (thoigianhen != 0) {
-                return moment().add('days', thoigianhen).format("YYYY-MM-DD");
+                return moment().add(thoigianhen, 'days').format("YYYY-MM-DD");
             }
         } catch (error) {
 

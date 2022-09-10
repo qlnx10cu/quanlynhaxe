@@ -165,7 +165,7 @@ module.exports = {
 
             if (body.status != 0 && req.body.direction == 'agent2user' && kh) {
                 try {
-                    var chamsocs = await ChamSoc.bydate({ start: moment().subtract(5, 'days').format("YYYY/MM/DD"), end: moment().add('days', 5).format("YYYY/MM/DD") })
+                    var chamsocs = await ChamSoc.bydate({ start: moment().subtract(5, 'days').format("YYYY/MM/DD"), end: moment().add(5,'days').format("YYYY/MM/DD") })
                     var chamsoc = {};
                     if (chamsocs && chamsocs.length > 0) {
                         for (var k in chamsocs) {

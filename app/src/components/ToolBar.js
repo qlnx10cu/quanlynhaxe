@@ -3,16 +3,6 @@ import { WraperToolBar, DivFlexRow } from '../styles'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import ImgStaff from '../icon/staff.svg'
-import ImgProduct from '../icon/product.svg'
-import ImgRepairPrice from '../icon/repairPrice.svg'
-import ImgLogout from '../icon/logout.svg'
-import ImgServices from '../icon/services.svg'
-import ImgBanLe from '../icon/banle.svg'
-import ImgChamCong from '../icon/chamcong.svg'
-import ImgThongKe from '../icon/thongke.svg'
-import ImgBack from '../icon/back.svg'
-import ImgCustomer from '../icon/customer.svg'
 import { logout } from '../actions/Authenticate';
 import { getAllProduct } from '../actions/Product'
 import NavBar from './NavBar'
@@ -73,7 +63,7 @@ const ListToolBar = [
     {
         index: 0,
         title: "Back",
-        img: ImgBack,
+        img: "/resources/icon/back.svg",
         Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng", "CSKH"],
         onClick: (history) => {
             history.goBack();
@@ -82,7 +72,7 @@ const ListToolBar = [
     {
         index: 1,
         title: "Sản Phẩm",
-        img: ImgProduct,
+        img: "/resources/icon/product.svg",
         Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng", "CSKH"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/products') {
@@ -95,7 +85,7 @@ const ListToolBar = [
     {
         index: 2,
         title: "Nhân Viên",
-        img: ImgStaff,
+        img: "/resources/icon/staff.svg",
         Roles: ["Admin"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/staffs')
@@ -107,7 +97,7 @@ const ListToolBar = [
     {
         index: 3,
         title: "Tiền Công",
-        img: ImgRepairPrice,
+        img: "/resources/icon/repairPrice.svg",
         Roles: ["Admin", "Dịch Vụ", "Văn Phòng", "CSKH"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/repairPrice')
@@ -119,7 +109,7 @@ const ListToolBar = [
     {
         index: 4,
         title: "Dịch vụ",
-        img: ImgServices,
+        img: "/resources/icon/services.svg",
         Roles: ["Admin", "Dịch Vụ", "Phụ Tùng"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/services') {
@@ -132,7 +122,7 @@ const ListToolBar = [
     {
         index: 5,
         title: "Bán Lẻ",
-        img: ImgBanLe,
+        img: "/resources/icon/banle.svg",
         Roles: ["Admin", "Phụ Tùng"],
         onClick: (history, setIndex) => {
             if (!history.location.pathname.includes('/banle')) {
@@ -152,7 +142,7 @@ const ListToolBar = [
     {
         index: 6,
         title: "Khách Hàng",
-        img: ImgCustomer,
+        img: "/resources/icon/customer.svg",
         Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng", "CSKH"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/customer') {
@@ -166,7 +156,7 @@ const ListToolBar = [
     {
         index: 7,
         title: "Chấm công",
-        img: ImgChamCong,
+        img: "/resources/icon/chamcong.svg",
         Roles: ["Admin", "Dịch Vụ", "Văn Phòng"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/chamcong') {
@@ -179,7 +169,7 @@ const ListToolBar = [
     }, {
         index: 8,
         title: "Thống kê",
-        img: ImgThongKe,
+        img: "/resources/icon/thongke.svg",
         Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng", "CSKH"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/thongke') {
@@ -193,7 +183,7 @@ const ListToolBar = [
     {
         index: 9,
         title: "Hàng ngoài",
-        img: ImgBanLe,
+        img: "/resources/icon/banle.svg",
         Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng", "CSKH"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/cuahangngoai') {
@@ -206,7 +196,7 @@ const ListToolBar = [
     }, {
         index: 10,
         title: "Cuộc gọi",
-        img: ImgStaff,
+        img: "/resources/icon/staff.svg",
         Roles: ["Admin", "Dịch Vụ", "Phụ Tùng", "Văn Phòng", "CSKH"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/cuocgoi') {
@@ -219,7 +209,7 @@ const ListToolBar = [
     }, {
         index: 11,
         title: "CSKH",
-        img: ImgStaff,
+        img: "/resources/icon/staff.svg",
         Roles: ["Admin", "CSKH"],
         onClick: (history, setIndex) => {
             if (history.location.pathname !== '/chamsockhachhang') {
@@ -263,7 +253,7 @@ const ToolBar = (props) => {
                     ))
                 }
             </DivFlexRow>
-            {/* <CToolBarItem title={"Thông Tin"} img={ImgLogout} onClick={() => props.logout()} /> */}
+            {/* <CToolBarItem title={"Thông Tin"} img={"/resources/icon/logout.svg"} onClick={() => props.logout()} /> */}
             <NavBar ten={props.info && props.info.ten} logout={() => props.logout()} handleCaiDat={handleCaiDat} />
 
         </WraperToolBar>

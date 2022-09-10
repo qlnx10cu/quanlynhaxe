@@ -137,7 +137,6 @@ module.exports = {
             await BillLe.tangSoLuongPhuTungByMaHD(param.mahoadon)
             let resulft = await Abstract.delete(Bill, param);
             res.json(resulft);
-            res.json(resulft);
         } catch (error) {
             librespone.error(req, res, error.message);
         }

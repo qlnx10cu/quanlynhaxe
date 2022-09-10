@@ -7,6 +7,7 @@
     "@rescripts/rescript-env": "0.0.10",
     "axios": "^0.18.0",
     "dotenv": "^7.0.0",
+    "fs": "^0.0.1-security",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "react": "^16.8.6",
@@ -24,16 +25,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "rescripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "electron": "electron .",
-    "postinstall": "electron-builder install-app-deps",
-    "preelectron-pack": "npm run build",
-    "electron-pack": "build -w"
+    "build": "gulp dev",
+    "gulp": "gulp",
+    "dev": "gulp dev",
+    "prod": "gulp prod"
   },
   "homepage": "./",
-  "main": "public/electron.js",
+  "main": "src/index.js",
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -76,10 +74,42 @@
     }
   },
   "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/plugin-proposal-object-rest-spread": "^7.11.0",
+    "@babel/plugin-transform-runtime": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
+    "autoprefixer-stylus": "^0.14.0",
+    "babel-plugin-jsx-control-statements": "^4.1.0",
+    "babelify": "^10.0.0",
+    "browser-sync": "^2.26.12",
+    "browserify": "^16.5.2",
+    "del": "^3.0.0",
     "electron": "^4.1.1",
     "electron-builder": "^20.39.0",
     "electron-prebuilt": "^1.4.13",
+    "envify": "^4.1.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-control-statements": "^2.2.1",
+    "eslint-plugin-react": "^7.20.5",
+    "gulp": "^4.0.2",
+    "gulp-css-base64": "^1.3.4",
+    "gulp-eslint": "^6.0.0",
+    "gulp-header": "^2.0.7",
+    "gulp-if": "^2.0.2",
+    "gulp-plumber": "^1.2.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-stylus": "^2.7.0",
+    "gulp-touch-cmd": "0.0.1",
+    "gulp-uglify-es": "^1.0.4",
+    "gulp-util": "^3.0.8",
+    "mkdirp": "^0.5.1",
+    "ncp": "^2.0.0",
     "tslint": "^5.15.0",
-    "typescript": "^3.4.3"
+    "typescript": "^3.4.3",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.11.1"
   }
 }

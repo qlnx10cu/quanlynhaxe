@@ -42,6 +42,8 @@ class BillLe {
             if (res && res[0]) {
                 result.diachi = res[0].diachi;
                 result.sodienthoai = res[0].sodienthoai;
+                result.thanhpho = res[0].thanhpho;
+                result.gioitinh = res[0].gioitinh;
             }
         }
 
@@ -66,6 +68,8 @@ class BillLe {
                 if (res && res[0]) {
                     result.diachi = res[0].diachi;
                     result.sodienthoai = res[0].sodienthoai;
+                    result.thanhpho = res[0].thanhpho;
+                    result.gioitinh = res[0].gioitinh;
                 }
             }
 

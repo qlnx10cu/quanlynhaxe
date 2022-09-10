@@ -55,7 +55,7 @@ class Customer {
             if (!makh) {
                 let r = null;
                 if (data.biensoxe || data.somay || data.sokhung) {
-                    r = await Abstract.getOneSearch(Customer, { biensoxe: data.biensoxe, somay: data.somay, sokhung: data.sokhung });
+                    r = await Abstract.getOneSearch(Customer, { biensoxe: data.biensoxe, somay: data.somay, sokhung: data.sokhung }, ' ORDER BY updatetime desc, ma desc limit 10');
                 }
                 if (r) {
                     makh = r.ma;
@@ -78,6 +78,46 @@ class Customer {
         return null;
     }
 
+    static async addOrUpdateBanLe(body) {
+        try {
+            var data = {};
+            data.sodienthoai = utils.normalizeStr(body.sodienthoai);
+            data.diachi = body.diachi;
+            data.gioitinh = body.gioitinh;
+            data.thanhpho = body.thanhpho;
+            data.ten = body.tenkh;
+            data.updatetime = new Date();
+
+            var makh = body.makh;
+
+            if (!data.sodienthoai)
+                return makh;
+
+            if (!makh) {
+                let r = null;
+                if (data.sodienthoai) {
+                    r = await Abstract.getOneSearch(Customer, { sodienthoai: data.sodienthoai }, ' ORDER BY updatetime desc, ma desc limit 10');
+                }
+                if (r) {
+                    makh = r.ma;
+                }
+            }
+
+            if (!makh) {
+                let r = await Abstract.add(Customer, data);
+                if (!r || r == null) {
+                    return null;
+                }
+                makh = r.insertId;
+            } else {
+                await Abstract.update(Customer, data, { ma: makh });
+            }
+            return makh;
+        } catch (ex) {
+
+        }
+        return body ? body.makh : null;
+    }
 
     static getParam(param) {
         let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay', 'gioitinh', 'thanhpho', 'updatetime', 'zaloid', 'tenzalo'];

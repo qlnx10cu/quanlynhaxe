@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import lib from '../../lib'
-import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton, ButtonChooseFile, Modal, ModalContent, CloseButton, Textarea } from '../../styles'
+import { DivFlexRow, DivFlexColumn, Button, Input, Select, Table, DelButton, ButtonChooseFile, Modal, ModalContent, CloseButton, Textarea } from '../../styles'
 import { getAllProduct } from '../../actions/Product';
 import PopupNewProduct from './PopupNewProduct'
 import PopupNewCuaHangNgoai from './PopupNewCuaHangNgoai'
@@ -16,6 +16,7 @@ import moment from 'moment'
 import XLSX from 'xlsx';
 
 const oneDay = 1000 * 3600 * 24;
+const ListThanhPho = ['An Giang', 'Bà Rịa - Vũng Tàu', 'Bắc Giang', 'Bắc Kạn', 'Bạc Liêu', 'Bắc Ninh', 'Bến Tre', 'Bình Định', 'Bình Dương', 'Bình Phước', 'Bình Thuận', 'Cà Mau', 'Cần Thơ', 'Cao Bằng', 'Đà Nẵng', 'Đắk Lắk', 'Đắk Nông', 'Điện Biên', 'Đồng Nai', 'Đồng Tháp', 'Gia Lai', 'Hà Giang', 'Hà Nam', 'Hà Nội', 'Hà Tĩnh', 'Hải Dương', 'Hải Phòng', 'Hậu Giang', 'Hồ Chí Minh', 'Hoà Bình', 'Hưng Yên', 'Khánh Hòa', 'Kiên Giang', 'Kon Tum', 'Lai Châu', 'Lâm Đồng', 'Lạng Sơn', 'Lào Cai', 'Long An', 'Nam Định', 'Nghệ An', 'Ninh Bình', 'Ninh Thuận', 'Phú Thọ', 'Phú Yên', 'Quảng Bình', 'Quảng Nam', 'Quảng Ngãi', 'Quảng Ninh', 'Quảng Trị', 'Sóc Trăng', 'Sơn La', 'Tây Ninh', 'Thái Bình', 'Thái Nguyên', 'Thanh Hóa', 'Thừa Thiên Huế', 'Tiền Giang', 'Trà Vinh', 'Tuyên Quang', 'Vĩnh Long', 'Vĩnh Phúc', 'Yên Bái'];
 
 const ConfirmHoaDon = (props) => {
     let [maBarcode, setMaBarcode] = useState("");
@@ -79,6 +80,8 @@ const BanLe = (props) => {
 
     let mCustomerName = lib.handleInput("");
     let mDiaChi = lib.handleInput("");
+    let mThanhPho = lib.handleInput("An Giang");
+    let mGioiTinh = lib.handleInput("0");
     let [ngaythanhtoan, setNgaythanhtoan] = useState("");
     let [makhachhang, setMaKhachHang] = useState("");
     let [sodienthoai, setSoDienThoai] = useState("");
@@ -230,6 +233,12 @@ const BanLe = (props) => {
                 if (data.sodienthoai) {
                     setSoDienThoai(data.sodienthoai);
                 }
+                if (data.gioitinh) {
+                    mGioiTinh.setValue(data.gioitinh)
+                }
+                if (data.thanhpho) {
+                    mThanhPho.setValue(data.thanhpho)
+                }
                 if (data.diachi) {
                     mDiaChi.setValue(data.diachi);
                 }
@@ -273,6 +282,8 @@ const BanLe = (props) => {
         mCustomerName.setValue("");
         setMaKhachHang("");
         mDiaChi.setValue("");
+        mThanhPho.setValue("An Giang");
+        mGioiTinh.setValue("0");
         setSoDienThoai("");
     }
 
@@ -329,6 +340,10 @@ const BanLe = (props) => {
             mahoadon: mahoadonUpdate,
             manv: props.info.ma,
             tenkh: mCustomerName.value,
+            sodienthoai: sodienthoai,
+            diachi: mDiaChi.value,
+            gioitinh: mGioiTinh.value,
+            thanhpho: mThanhPho.value,
             tongtien: tongtien,
             tienpt: tongtien,
             tiencong: 0,
@@ -376,6 +391,12 @@ const BanLe = (props) => {
                 props.alert(" SP: " + item.tenphutung + " co chietkhau < 0% or > 100%")
                 return;
             }
+            let product = props.listProduct.filter(function (p) {
+                return item.maphutung && (p.maphutung.toLowerCase() == item.maphutung.toLowerCase());
+            });
+            if (product && product.soluongtonkho && product.soluongtonkho < item.soluong) {
+                props.alert(" SP: " + item.tenphutung + " không còn đủ tồn khô")
+            }
         }
 
         var tongtien = tinhTongTien(chitiet)
@@ -383,6 +404,10 @@ const BanLe = (props) => {
         let data = {
             manv: props.info.ma,
             tenkh: mCustomerName.value,
+            sodienthoai: sodienthoai,
+            diachi: mDiaChi.value,
+            gioitinh: mGioiTinh.value,
+            thanhpho: mThanhPho.value,
             tongtien: tongtien,
             tiencong: 0,
             tienpt: tongtien,
@@ -466,6 +491,8 @@ const BanLe = (props) => {
         if (kq) {
             mCustomerName.setValue(kq.ten);
             mDiaChi.setValue(kq.diachi);
+            mGioiTinh.setValue(kq.gioitinh);
+            mThanhPho.setValue(kq.thanhpho);
             setSoDienThoai(kq.sodienthoai);
         } else if (enter) {
             var resCheck = 0;
@@ -474,10 +501,14 @@ const BanLe = (props) => {
                     if (res.data && res.data[0]) {
                         mCustomerName.setValue(res.data[0].ten);
                         mDiaChi.setValue(res.data[0].diachi);
+                        mGioiTinh.setValue(res.data[0].gioitinh);
+                        mThanhPho.setValue(res.data[0].thanhpho);
                         setSoDienThoai(res.data[0].sodienthoai);
                     } else {
                         mCustomerName.setValue("");
                         mDiaChi.setValue("");
+                        mGioiTinh.setValue("0");
+                        mThanhPho.setValue("An Giang");
                         setSoDienThoai("");
                     }
                 } catch (ex) {
@@ -502,6 +533,8 @@ const BanLe = (props) => {
         } else {
             mCustomerName.setValue("");
             mDiaChi.setValue("");
+            mGioiTinh.setValue("0");
+            mThanhPho.setValue("An Giang");
             setSoDienThoai("");
         }
     };
@@ -529,6 +562,8 @@ const BanLe = (props) => {
         if (kq) {
             mCustomerName.setValue(kq.ten);
             mDiaChi.setValue(kq.diachi);
+            mGioiTinh.setValue(kq.gioitinh);
+            mThanhPho.setValue(kq.thanhpho);
             setMaKhachHang(kq.ma);
         } else if (enter || value.length == 10) {
             var resCheck = 0;
@@ -537,10 +572,14 @@ const BanLe = (props) => {
                     if (res.data && res.data[0]) {
                         mCustomerName.setValue(res.data[0].ten);
                         mDiaChi.setValue(res.data[0].diachi);
+                        mGioiTinh.setValue(res.data[0].gioitinh);
+                        mThanhPho.setValue(res.data[0].thanhpho);
                         setMaKhachHang(res.data[0].ma);
                     } else {
                         mCustomerName.setValue("");
                         mDiaChi.setValue("");
+                        mGioiTinh.setValue("0");
+                        mThanhPho.setValue("An Giang");
                         setMaKhachHang("");
                     }
                 } catch (ex) {
@@ -565,6 +604,8 @@ const BanLe = (props) => {
         } else {
             mCustomerName.setValue("");
             mDiaChi.setValue("");
+            mGioiTinh.setValue("0");
+            mThanhPho.setValue("An Giang");
             setMaKhachHang("");
         }
     };
@@ -744,13 +785,9 @@ const BanLe = (props) => {
                 <div>
                     {loai != 0 && <h1 style={{ textAlign: "center" }}> Hóa đơn {mahoadonUpdate}</h1>}
                     {loai == 0 && <h1 style={{ textAlign: "center" }}> Hóa đơn bán lẻ</h1>}
-                    <DivFlexRow>
-                        <DivFlexColumn>
-                            <label>Tên khách hàng: </label>
-                            <Input autocomplete="off" {...mCustomerName} readOnly={loai != 0} />
-                        </DivFlexColumn>
-                        <DivFlexColumn style={{ marginLeft: 20 }}>
-                            <label>Mã khách hàng: </label>
+                    <DivFlexRow style={{ justifyContent: 'space-between' }}>
+                        <DivFlexColumn style={{ width: '120px' }}>
+                            <label>Mã KH: </label>
                             <Input list="customer" name="customer" autocomplete="off"
                                 onKeyPress={_handleKeyPressKH}
                                 value={makhachhang} onChange={(e) => handleChangeKH(e.target.value, false)} readOnly={loai != 0} />
@@ -759,6 +796,10 @@ const BanLe = (props) => {
                                     <option key={index} value={item.ma} >{item.ten}</option>
                                 ))}
                             </datalist>
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <label>Tên khách hàng: </label>
+                            <Input autocomplete="off" {...mCustomerName} readOnly={loai != 0} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Số điện thoại: </label>
@@ -772,6 +813,21 @@ const BanLe = (props) => {
                             </datalist>
                         </DivFlexColumn>
 
+                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <label>Giới Tính: </label>
+                            <Select readOnly={loai != 0} disabled={loai != 0} {...mGioiTinh} style={{ width: 100 }}>
+                                <option value='0'>Nam</option>
+                                <option value='1'>Nữ</option>
+                            </Select>
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <label>Thành Phố: </label>
+                            <Select readOnly={loai != 0} disabled={loai != 0} autocomplete="off" {...mThanhPho}>
+                                {ListThanhPho.map((item, index) => (
+                                    <option key={index} value={item} >{item}</option>
+                                ))}
+                            </Select>
+                        </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }} >
                             <label>Địa chỉ: </label>
                             <Input autocomplete="off" {...mDiaChi} width='400px' readOnly={loai != 0} />

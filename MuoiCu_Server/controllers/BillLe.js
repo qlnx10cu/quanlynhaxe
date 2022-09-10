@@ -5,6 +5,7 @@ const Abstract = require('../models/Abstract');
 const librespone = require("../lib/respone");
 const Option = require("../models/Option");
 const Employee = require("../models/Employee");
+const Customer = require("../models/Customer");
 const email = require("../lib/email");
 var isBillLeUpdate = false;
 
@@ -33,6 +34,8 @@ module.exports = {
                 return;
             }
 
+            var makh = await Customer.addOrUpdateBanLe(req.body);
+
             isBillLeUpdate = true;
             var mhd = await Option.incrementAndGet("mabanle") + '';
             var mahoadon = 'PT-' + mhd.padStart(8, '0');
@@ -50,6 +53,7 @@ module.exports = {
             } = req.body;
             var bodybill = conlai;
             var detailbill = chitiet;
+            bodybill['makh'] = makh;
             bodybill['trangthai'] = 1;
             bodybill['loaihoadon'] = 1;
             bodybill['mahoadon'] = mahoadon;

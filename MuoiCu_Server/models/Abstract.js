@@ -31,6 +31,8 @@ class Abstract {
         if (param && Object.keys(param).length != 0) {
             wherevalue = [0];
             for (var k in param) {
+                if (param[k] === null)
+                    continue;
                 if (ClassTable.getLike(k)) {
                     where = where + " OR " + k + ' LIKE ? ';
                     wherevalue.push("%" + param[k] + "%");
@@ -49,6 +51,23 @@ class Abstract {
         let res = await Abstract.getList(ClassTable, param);
         if (!res)
             return null;
+        return res[0];
+    }
+    static async getOneSearch(ClassTable, param, whereOrder = '') {
+        let res = await Abstract.search(ClassTable, param, whereOrder);
+        if (!res || res.length == 0)
+            return null;
+        for (var r in res) {
+            var val = res[r];
+            if (!val)
+                continue;
+            for (var k in param) {
+                if (!param[k] || !val[k])
+                    continue;
+                if (val[k] == param[k])
+                    return val;
+            }
+        }
         return res[0];
     }
     static async add(ClassTable, param) {

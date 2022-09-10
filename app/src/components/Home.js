@@ -6,7 +6,7 @@ import IO from 'socket.io-client';
 import { HOST } from '../Config'
 import LoadingComponent from './LoadingComponent';
 import { connect } from 'react-redux'
-import { alert, error, success, setLoading, addLoading, confirm, confirmError } from '../actions/App';
+import { alert, error, errorHttp, success, setLoading, addLoading, confirm, confirmError } from '../actions/App';
 import CaiDat from './CaiDat';
 import CuocGoi from './CuocGoi';
 import CSKH from './CSKH';
@@ -37,7 +37,7 @@ const Home = (props) => {
                 {props.info != null && props.info.chucvu === "Admin" &&
                     <Route path="/staffs" component={LoadingComponent(Staffs, props)} />
                 }
-                {props.info != null && 
+                {props.info != null &&
                     <Route path="/repairPrice" component={LoadingComponent(RepairPrice, props)} />
                 }
                 {props.info != null &&
@@ -65,7 +65,7 @@ const Home = (props) => {
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ" || props.info.chucvu === "Văn Phòng") &&
                     <Route path="/chamcong" component={LoadingComponent(ChamCong, props)} />
                 }
-                 {props.info != null &&
+                {props.info != null &&
                     <Route path="/cuocgoi" component={LoadingComponent(CuocGoi, props)} />
                 }
                 {props.info != null &&
@@ -90,6 +90,7 @@ const mapState = (state) => ({
 const mapDispatch = (dispatch) => ({
     alert: (mess) => { dispatch(alert(mess)) },
     error: (mess) => { dispatch(error(mess)) },
+    errorHttp: (res, mess) => { dispatch(errorHttp(res, mess)) },
     success: (mess) => { dispatch(success(mess)) },
     confirm: (mess, callback) => { dispatch(confirm(mess, callback)) },
     confirmError: (mess, error, callback) => { dispatch(confirmError(mess, error, callback)) },

@@ -1,6 +1,11 @@
 var moment = require('moment');
 module.exports = {
 
+    normalizeStr: function (value) {
+        if (value && value != '')
+            return value;
+        return null;
+    },
     parseInteger: function (value) {
         try {
             if (!value)

@@ -1,4 +1,6 @@
 const query = require('../lib/db')
+const utils = require('../lib/utils')
+const Abstract = require('./Abstract')
 
 class Customer {
     static getNameTable() {
@@ -32,6 +34,48 @@ class Customer {
         let sql = "SELECT * FROM chamsoc where makh=? order by ngayhen DESC";
         var res = await query(sql, [param]);
         return res;
+    }
+
+    static async addOrUpdateSuaChua(body) {
+        try {
+            var data = {};
+            data.sodienthoai = body.sodienthoai;
+            data.diachi = body.diachi;
+            data.loaixe = body.loaixe;
+            data.gioitinh = body.gioitinh;
+            data.thanhpho = body.thanhpho;
+            data.ten = body.tenkh;
+            data.biensoxe = utils.normalizeStr(body.biensoxe);
+            data.somay = utils.normalizeStr(body.somay);
+            data.sokhung = utils.normalizeStr(body.sokhung);
+            data.updatetime = new Date();
+
+            var makh = body.makh;
+
+            if (!makh) {
+                let r = null;
+                if (data.biensoxe || data.somay || data.sokhung) {
+                    r = await Abstract.getOneSearch(Customer, { biensoxe: data.biensoxe, somay: data.somay, sokhung: data.sokhung });
+                }
+                if (r) {
+                    makh = r.ma;
+                }
+            }
+
+            if (!makh) {
+                let r = await Abstract.add(Customer, data);
+                if (!r || r == null) {
+                    return null;
+                }
+                makh = r.insertId;
+            } else {
+                await Abstract.update(Customer, data, { ma: makh });
+            }
+            return makh;
+        } catch (ex) {
+
+        }
+        return null;
     }
 
 

@@ -44,44 +44,16 @@ module.exports = {
     add: async function (req, res, next) {
         try {
 
-            if (!req.body.biensoxe) {
-                librespone.error(req, res, "Không có biển số xe");
+            if (!req.body|| !req.body.biensoxe && !req.body.sokhung && !req.body.somay) {
+                librespone.error(req, res, "Phải có ít nhất biển số xe, hoặc số khung, hoặc số máy");
                 return;
             }
 
-            var data = {};
-            data.sodienthoai = req.body.sodienthoai;
-            data.diachi = req.body.diachi;
-            data.loaixe = req.body.loaixe;
-            data.sokhung = req.body.sokhung;
-            data.gioitinh = req.body.gioitinh;
-            data.thanhpho = req.body.thanhpho;
-            data.somay = req.body.somay;
-            data.biensoxe = req.body.biensoxe;
-            data.ten = req.body.tenkh;
-            data.updatetime = new Date();
-            var makh = req.body.makh;
-
-            if (!makh && data.biensoxe) {
-                let r = await Abstract.getOne(Customer, { biensoxe: data.biensoxe });
-                if (r && r.biensoxe == data.biensoxe) {
-                    makh = r.ma;
-                }
-            }
+            var makh = await Customer.addOrUpdateSuaChua(req.body);
 
             if (!makh) {
-                let r = await Abstract.add(Customer, data);
-                makh = r.insertId;
-                if (!r || r == null) {
-                    librespone.error(req, res, "Kiểm tra lại thông tin khách hàng");
-                    return;
-                }
-            } else {
-                let r = await Abstract.update(Customer, data, { ma: makh, biensoxe: data.biensoxe });
-                if (!r || r == null) {
-                    librespone.error(req, res, "Kiểm tra lại thông tin khách hàng");
-                    return;
-                }
+                librespone.error(req, res, "Không thể tạo khách hàng");
+                return;
             }
 
             if (isServerUpdate) {
@@ -132,14 +104,23 @@ module.exports = {
     },
     update: async function (req, res, next) {
         try {
+            if (!req.body|| !req.body.biensoxe && !req.body.sokhung && !req.body.somay) {
+                librespone.error(req, res, "Phải có ít nhất biển số xe, hoặc số khung, hoặc số máy");
+                return;
+            }
+
             if (!req.body.mahoadon) {
                 librespone.error(req, res, "Không tồn tại mã hóa đơn");
                 return;
             }
-            if (!req.body.biensoxe || !req.body.makh) {
-                librespone.error(req, res, "Không có biển số xe");
+            
+            var makh = await Customer.addOrUpdateSuaChua(req.body);
+
+            if (!makh) {
+                librespone.error(req, res, "Không thể tạo khách hàng");
                 return;
             }
+            
             let {
                 mahoadon,
                 chitiet,

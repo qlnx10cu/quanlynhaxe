@@ -55,6 +55,20 @@ export const error = (message, err) => {
     };
 }
 
+export const errorHttp = (res, message, err) => {
+    if (typeof res === 'object' && !Array.isArray(res) && res && res.response && res.response.data && res.response.data.error && res.response.data.error.message) {
+        message = res.response.data.error.message;
+    }
+    return {
+        type: SWAP_ALERT,
+        data: {
+            isLoading: true,
+            error: 1,
+            message: message
+        }
+    };
+}
+
 export const success = (message, err) => {
     return {
         type: SWAP_ALERT,
@@ -83,18 +97,18 @@ export const confirm = (message, callback) => {
         type: SWAP_CONFIRM,
         data: {
             isLoading: true,
-            error:0,
+            error: 0,
             callback: callback,
             message: message
         }
     };
 }
-export const confirmError = (message,error, callback) => {
+export const confirmError = (message, error, callback) => {
     return {
         type: SWAP_CONFIRM,
         data: {
             isLoading: true,
-            error:error,
+            error: error,
             callback: callback,
             message: message
         }

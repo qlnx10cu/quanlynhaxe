@@ -316,7 +316,7 @@ const HistoryCustomer = (props) => {
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 14, marginLeft: 10, marginBottom: 2, width: '150px' }}>
                         Thành Phố
-                        <Input readOnly value={mData.thanhpho} />
+                        <Input readOnly value={mData.thanhpho || ''} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 14, marginLeft: 10, marginBottom: 2, width: '150px', justifyContent: "space-around" }}>
                         <DivFlexColumn style={{ display: "inline", width: "100%" }}>

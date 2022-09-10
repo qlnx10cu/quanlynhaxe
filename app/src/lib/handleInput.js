@@ -5,13 +5,13 @@ import {
 export default function (init) {
     let [value, setValue] = useState(init);
 
-    const onChange = function(e){
+    const onChange = function (e) {
         setValue(e.target.value)
     }
 
     return {
-        value,
-        onChange,
-        setValue,
+        value: value || '',
+        onChange: onChange,
+        setValue: setValue
     }
 }

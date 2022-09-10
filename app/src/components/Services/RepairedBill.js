@@ -72,7 +72,7 @@ const ConfirmHoaDon = (props) => {
                 props.alert("Mã code không đúng, vui lòng nhập lại")
             }
         }).catch(err => {
-            props.alert("Lỗi : " + err.message)
+            props.errorHttp(err, "Lỗi : " + err.message)
         })
     }
 
@@ -256,26 +256,26 @@ const RepairedBill = (props) => {
                 setListBienSo(response.data);
                 props.addLoading();
             }).catch(err => {
-                props.alert("Không thể lấy danh sách khách hàng\nLỗi kết nối đến server\nVui lòng kiểm tra đường mạng")
+                props.errorHttp(err, "Không thể lấy danh sách khách hàng\nLỗi kết nối đến server\nVui lòng kiểm tra đường mạng")
             })
             await GetListNVSuaChua(props.token).then(response => {
                 listNhanVienSuaChua = response.data;
                 setListNhanVienSuaChua(response.data);
                 props.addLoading();
             }).catch(err => {
-                props.alert("Không thể lấy danh sách nhân viên sữa chữa\nLỗi kết nối đến server\nVui lòng kiểm tra đường mạng")
+                props.errorHttp(err, "Không thể lấy danh sách nhân viên sữa chữa\nLỗi kết nối đến server\nVui lòng kiểm tra đường mạng")
             })
             await GetListCuaHangNgoai(props.token).then(res => {
                 setCuaHangNgoai(res.data);
                 props.addLoading();
             }).catch(err => {
-                props.alert("Lỗi kết nối đến server\nVui lòng kiểm tra đường mạng")
+                props.aerrorHttp(err, "Lỗi kết nối đến server\nVui lòng kiểm tra đường mạng")
             })
             await GetListSalary(props.token).then(respose => {
                 setListGiaDichVu(respose.data);
                 props.addLoading();
             }).catch(err => {
-                props.alert("Lỗi kết nối đến server\nVui lòng kiểm tra đường mạng")
+                props.errorHttp(err, "Lỗi kết nối đến server\nVui lòng kiểm tra đường mạng")
             })
         } catch (ex) {
             props.alert("Lỗi kết nối đến server\nVui lòng kiểm tra đường mạng");
@@ -295,6 +295,7 @@ const RepairedBill = (props) => {
             setUpdateBill(3);
             setMaHoaDon(mahoadon)
             showHoaDon(mahoadon);
+
         }
         else {
             props.socket.on("mahoadon", (data) => {
@@ -464,7 +465,7 @@ const RepairedBill = (props) => {
     const resetCustomer = (lbs, values) => {
         if (values) {
             let customers = lbs.filter(function (item) {
-                return (item.biensoxe.toLowerCase().includes(values.toLowerCase()));
+                return (item.biensoxe && item.biensoxe.toLowerCase().includes(values.toLowerCase()));
             });
             setListBienSoCurrent(customers.slice(0, 20));
         }
@@ -514,7 +515,6 @@ const RepairedBill = (props) => {
     const handleSaveBill = () => {
         var data = getData()
         if (data == null) {
-            props.error("Không thể lưu phiếu sữa chưa: ");;
             return;
         }
         var length = data.chitiet.length;
@@ -530,7 +530,7 @@ const RepairedBill = (props) => {
                 props.alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.data.mahoadon);
                 props.history.push("/services")
             }).catch(err => {
-                props.error("Không thể lưu phiếu sữa chưa: ");
+                props.errorHttp(err, "Không thể lưu phiếu sữa chưa: ");
                 console.log(err);
             })
         });
@@ -544,8 +544,7 @@ const RepairedBill = (props) => {
                 props.alert('Hủy hóa đơn ' + mMaHoaDon + ' thành công');
                 props.history.push("/services")
             }).catch(err => {
-                props.error('Hủy hóa đơn ' + mMaHoaDon + ' thất bại');
-                console.log(err);
+                props.errorHttp(err, 'Hủy hóa đơn ' + mMaHoaDon + ' thất bại');
             })
         })
     }
@@ -559,8 +558,10 @@ const RepairedBill = (props) => {
         setUpdated(false);
     }
     const getData = () => {
-        if (!biensoxe || biensoxe == "" || biensoxe == undefined) {
-            props.alert('Vui lòng điền biển số xe');
+        if ((!biensoxe || biensoxe == "" || biensoxe == undefined)
+            && (!mSoKhung.value || mSoKhung.value == "" || mSoKhung.value == undefined)
+            && (!mSoMay.value || mSoMay.value == "" || mSoMay.value == undefined)) {
+            props.alert('Phải có ít nhất biển số xe hoặc số khung hoặc số máy');
             return null;
         }
         if (!mMaNVSuaChua.value || mMaNVSuaChua.value == "") {
@@ -670,12 +671,10 @@ const RepairedBill = (props) => {
                     props.alert('Thanh toán hóa đơn ' + mMaHoaDon + ' thành công');
                     props.history.push("/services")
                 }).catch(err => {
-                    console.log(err);
-                    props.error("Không thể  thanh toán hóa đơn " + mMaHoaDon + "\nVui lòng kiểm lại đường mạng")
+                    props.errorHttp(err, "Không thể  thanh toán hóa đơn " + mMaHoaDon + "\nVui lòng kiểm lại đường mạng")
                 })
             }).catch(err => {
-                console.log(err);
-                props.error("Không thể  update hóa đơn " + mMaHoaDon + "\nVui lòng kiểm lại đường mạng");
+                props.errorHttp(err, "Không thể  update hóa đơn " + mMaHoaDon + "\nVui lòng kiểm lại đường mạng");
             })
         })
     }
@@ -704,8 +703,7 @@ const RepairedBill = (props) => {
                 }
 
             }).catch(err => {
-                console.log(err);
-                props.error("Không thể  update hóa đơn " + mMaHoaDon + "\nVui lòng kiểm lại đường mạng");
+                props.errorHttp(err, "Không thể  update hóa đơn " + mMaHoaDon + "\nVui lòng kiểm lại đường mạng");
             })
         });
     }
@@ -884,7 +882,7 @@ const RepairedBill = (props) => {
                             <label>Biển số xe: </label>
                             <Input readOnly={showInfoBill} autocomplete="off" list="bien_so" name="bien_so"
                                 onKeyPress={_handleKeyPressBSX}
-                                value={biensoxe} onChange={(e) => {
+                                value={biensoxe || ''} onChange={(e) => {
                                     searchBienSoXe(e.target.value, false);
                                 }} />
                             <datalist id="bien_so">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Textarea, Select } from '../../styles'
+import { DivFlexRow, DivFlexColumn, Button, Input, Table, DelButton, Modal, ModalContent, CloseButton, Textarea, Select, CancleButton } from '../../styles'
 import PopupAccessory from './PopupAccessory'
 import PopupBillTienCong from './PopupBillTienCong'
 import HistoryCustomer from '../Admin/HistoryCustomer'
@@ -298,6 +298,8 @@ const RepairedBill = (props) => {
 
         }
         else {
+            if (!connectSocket || !props.socket)
+                return;
             props.socket.on("mahoadon", (data) => {
                 if (!connectSocket)
                     return;
@@ -305,8 +307,10 @@ const RepairedBill = (props) => {
                 if (pathname.indexOf("services/repairedbill") !== -1) {
 
                     if (data && data.trangthai === 0) {
-                        props.history.goBack();
-
+                        props.alert('Bạn đã bị ai đó hủy bàn này');
+                        props.setLoading(false);
+                        props.history.push('/service');
+                        return;
                     }
 
                     if (data && data.trangthai && data.trangthai === 2) {
@@ -526,7 +530,8 @@ const RepairedBill = (props) => {
         props.confirmError(mess, length == 0 ? 1 : 0, () => {
             SaveBill(props.token, data).then(Response => {
                 props.deleteBillProduct();
-                props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon, biensoxe: bsx });
+                if (props.socket)
+                    props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon, biensoxe: bsx });
                 props.alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.data.mahoadon);
                 props.history.push("/services")
             }).catch(err => {
@@ -539,7 +544,8 @@ const RepairedBill = (props) => {
     const HuyHoaDon = () => {
         props.confirmError("Bạn chắc muốn hủy hóa đơn " + mMaHoaDon, 2, () => {
             HuyThanhToan(props.token, mMaHoaDon).then(res => {
-                props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
+                if (props.socket)
+                    props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
                 setMaHoaDon("");
                 props.alert('Hủy hóa đơn ' + mMaHoaDon + ' thành công');
                 props.history.push("/services")
@@ -548,6 +554,16 @@ const RepairedBill = (props) => {
             })
         })
     }
+
+    const handleHuyBan = () => {
+        props.confirmError("Bạn chắc muốn hủy bàn này", 2, () => {
+            if (props.socket)
+                props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
+            setMaHoaDon("");
+            props.history.push("/services")
+        });
+    }
+
 
     const DelItem = (item) => {
         removeItemToProduct(item)
@@ -654,7 +670,7 @@ const RepairedBill = (props) => {
         data.mahoadon = mMaHoaDon;
 
         var length = data.chitiet.length;
-        var mess = "Bạn muốn update và thanh toán hóa đơn " + mMaHoaDon + " với tổng tiền:" + data.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) + " VND";
+        var mess = "Bạn muốn thanh toán hóa đơn " + mMaHoaDon + " với tổng tiền: " + data.tongtien.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' }) + " VND";
         if (length == 0) {
             mess = "Vui lòng lưu ý trước khi thanh toán hóa đơn " + mMaHoaDon + "\n Vì hóa đơn này có " + length + " phụ tùng"
         }
@@ -665,7 +681,8 @@ const RepairedBill = (props) => {
         props.confirmError(mess, (!data.tenkh || length == 0) ? 1 : 0, () => {
             UpdateBill(props.token, data).then(res => {
                 ThanhToan(props.token, mMaHoaDon).then(res => {
-                    props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
+                    if (props.socket)
+                        props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
                     setMaHoaDon("");
                     exportBill()
                     props.alert('Thanh toán hóa đơn ' + mMaHoaDon + ' thành công');
@@ -1096,9 +1113,14 @@ const RepairedBill = (props) => {
                         <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: 'space-between' }}>
                             <label></label>
                             {isUpdateBill === 0 ?
-                                <Button onClick={() => {
-                                    handleSaveBill();
-                                }}> Lưu   </Button>
+                                <DivFlexRow>
+                                    <CancleButton onClick={() => {
+                                        handleHuyBan();
+                                    }}> Hủy bàn   </CancleButton>
+                                    <Button onClick={() => {
+                                        handleSaveBill();
+                                    }}> Lưu   </Button>
+                                </DivFlexRow>
                                 :
                                 <DivFlexRow>
                                     <Button onClick={() => {

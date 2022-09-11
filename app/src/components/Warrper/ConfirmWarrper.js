@@ -20,7 +20,7 @@ const ConfirmWarrper = (props) => {
 
     return (
         <ModalAlert className={props.confirm.isLoading ? "active" : ""}>
-            <ModalContent style={{ width: '600px', backgroundColor: props.confirm.error == 0 ? "#fefefe" : (props.confirm.error == 1 ? '#fcff40fc' : '#ff4100') }} >
+            <ModalContent style={{ width: '700px', backgroundColor: props.confirm.error == 0 ? "#fefefe" : (props.confirm.error == 1 ? '#fcff40fc' : '#ff4100') }} >
                 <div style={{ paddingTop: 3, paddingBottom: 3 }}>
                     <CloseButton onClick={() => onCloseClick()}>&times;</CloseButton>
                     <h2> </h2>
@@ -33,7 +33,7 @@ const ConfirmWarrper = (props) => {
                     <CancleButton onClick={() => onCloseClick()}>
                         Hủy </CancleButton>
                     <DivFlexRow></DivFlexRow>
-                    <Button style={{ marginLeft: '15px' }} onClick={() => handleCallback(props.confirm.callback)}>
+                    <Button onClick={() => handleCallback(props.confirm.callback)}>
                         Đồng ý  </Button>
                 </DivFlexRow>
             </ModalContent>

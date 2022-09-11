@@ -82,8 +82,8 @@ const ConfirmHoaDon = (props) => {
 
 const ThongKe = (props) => {
 
-    let [dateStart, setDateStart] = useState(moment().subtract(45, 'day').format("YYYY-MM-DD"));
-    // let [dateStart, setDateStart] = useState(moment().format("YYYY-MM-DD"));
+    // let [dateStart, setDateStart] = useState(moment().subtract(45, 'day').format("YYYY-MM-DD"));
+    let [dateStart, setDateStart] = useState(moment().format("YYYY-MM-DD"));
     let [dateEnd, setDateEnd] = useState(moment().format("YYYY-MM-DD"));
     let [searchBSX, setSearchBSX] = useState("");
     let [mBills, setBills] = useState([]);

@@ -29,15 +29,15 @@ export default (state = initState, action) => {
                 return {
                     ...state,
                     isLoading: action.data.isLoading,
-                    totalLoading: action.data.totalLoading || 1,
-                    currentLoading: action.data.currentLoading || 0
+                    totalLoading: action.data.isLoading ? (action.data.totalLoading || 1) : 0,
+                    currentLoading: action.data.isLoading ? (action.data.currentLoading || 0) : 0
                 }
             }
         case ADD_LOADING:
             {
                 return {
                     ...state,
-                    isLoading: state.currentLoading + 1 != state.totalLoading,
+                    isLoading: state.currentLoading + 1 < state.totalLoading,
                     currentLoading: state.currentLoading + 1
                 }
             }

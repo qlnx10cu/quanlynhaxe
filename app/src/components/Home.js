@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ToolBar from './ToolBar'
+import SocketEvent from './SocketEvent'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import styled from 'styled-components'
 import IO from 'socket.io-client';
@@ -25,11 +26,16 @@ const BaseContainer = styled.div`
     padding: 10px 20px;
 `;
 const Home = (props) => {
-    const socket = IO(HOST);
+    const [socket, setSocket] = useState(null)
+
+    useEffect(() => {
+        setSocket(IO(HOST));
+    }, []);
 
     return (
         <Router>
             <ToolBar />
+            <SocketEvent {...props} socket={socket} />
             <BaseContainer>
                 {props.info != null &&
                     <Route exact path="/products" component={LoadingComponent(() => <Products chucvu={props.info.chucvu} {...props} />)} />
@@ -44,9 +50,6 @@ const Home = (props) => {
                     <Route path="/customer" component={LoadingComponent(Customer, props)} />
                 }
                 {props.info != null &&
-                    <Route exact path="/services" component={LoadingComponent(() => <Services socket={socket} {...props} />)} />
-                }
-                {props.info != null &&
                     <Route path="/services/repairedbill" component={LoadingComponent(() => <RepairedBill socket={socket} {...props} />)} />
                 }
                 {props.info != null &&
@@ -54,6 +57,9 @@ const Home = (props) => {
                 }
                 {props.info != null &&
                     <Route path="/services/showbill" component={LoadingComponent(() => <RepairedBill socket={socket} {...props} />)} />
+                }
+                {props.info != null &&
+                    <Route exact path="/services" component={LoadingComponent(() => <Services socket={socket} {...props} />)} />
                 }
 
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") &&

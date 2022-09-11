@@ -29,33 +29,46 @@ getTable().then(value => {
     liftTable = value;
 });
 
-module.exports = function(io) {
+module.exports = function (io) {
 
-    io.on('connection', function(socket) {
+    io.on('connection', function (socket) {
 
-        socket.on('connected', (data) => {
-            socket.emit('connected', liftTable);
-        });
+        socket.emit('connected', liftTable);
+
         socket.on('maban', (data) => {
+            if (data >= liftTable.length)
+                return;
             socket.emit('mahoadon', liftTable[data]);
         });
         socket.on('select', (data) => {
             try {
                 let index = Number.parseInt(data.maban);
+                if (index < 0 || index >= liftTable.length)
+                    return;
+                if (liftTable[index].trangthai == 1 && !data.mahoadon) {
+                    socket.emit('enter_lifttable_error', { message: `Bàn ${index + 1} đã có ai đó nhập`, liftTable: liftTable, maban: index });
+                    return;
+                }
+                if (liftTable[index].trangthai == 0 && data.mahoadon) {
+                    socket.emit('seen_lifttable_error', { message: `Bàn ${index + 1} đã hoàn thành`, liftTable: liftTable, maban: index });
+                    return;
+                }
                 Abstract.update(BanNang, { mahoadon: data.mahoadon, biensoxe: data.biensoxe, trangthai: 1 }, { ma: index }).then(
                     () => {
                         liftTable[index].mahoadon = data.mahoadon;
                         liftTable[index].biensoxe = data.biensoxe;
                         liftTable[index].trangthai = 1;
-                        socket.emit('lifttable', liftTable);
+                        socket.emit('lifttable', { liftTable: liftTable, maban: index });
                         socket.broadcast.emit('lifttableFull', liftTable);
                     }
                 )
-            } catch (e) {}
+            } catch (e) { }
         })
         socket.on('bill', (data) => {
             try {
                 let index = Number.parseInt(data.maban);
+                if (index < 0 || index >= liftTable.length)
+                    return;
                 Abstract.update(BanNang, { mahoadon: data.mahoadon, biensoxe: data.biensoxe, trangthai: 2 }, { ma: index }).then(
                     () => {
                         liftTable[index].mahoadon = data.mahoadon;
@@ -64,18 +77,20 @@ module.exports = function(io) {
                         socket.emit('lifttableFull', liftTable);
                         socket.broadcast.emit('lifttableFull', liftTable);
                     });
-            } catch (e) {}
+            } catch (e) { }
         })
         socket.on('release', (data) => {
             try {
                 let index = Number.parseInt(data.maban);
+                if (index < 0 || index >= liftTable.length)
+                    return;
                 Abstract.update(BanNang, { mahoadon: "", biensoxe: "", trangthai: 0 }, { ma: index }).then(
                     () => {
                         liftTable[index].trangthai = 0;
                         liftTable[index].mahoadon = "";
                         liftTable[index].biensoxe = "";
                         socket.emit('lifttableFull', liftTable);
-                        socket.broadcast.emit('lifttableBill', liftTable);
+                        socket.broadcast.emit('lifttableBill', { liftTable: liftTable, maban: index });
                     });
             } catch (e) {
 

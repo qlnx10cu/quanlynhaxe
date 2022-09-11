@@ -194,7 +194,8 @@ module.exports = {
             try {
                 var datanv = { ma: ws_data["manv"] };
                 var nhanvien = await Abstract.getOne(Employee, datanv);
-                ws_data["tennv"] = nhanvien.ten;
+                if (nhanvien)
+                    ws_data["tennv"] = nhanvien.ten;
             } catch (ex) {
                 console.log("exportBill:" + ex.message)
             }

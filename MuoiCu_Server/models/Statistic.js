@@ -23,7 +23,7 @@ module.exports = {
     },
     getEmployee: async function (praram) {
         var sql = "select cthd.manvsuachua,nv.ten,SUM(cthd.tiencong) as tiencong,  CAST(hd.ngaythanhtoan AS date) as ngaythanhtoan from  hoadon hd, chitiethoadonsuachua cthd , nhanvien nv " +
-            " where hd.mahoadon=cthd.mahoadon and hd.trangthai=1 AND nv.ma=cthd.manvsuachua ";
+            " where hd.mahoadon=cthd.mahoadon and hd.trangthai=1 AND nv.ma=cthd.manvsuachua and nv.isdelete = 0";
 
         var param = [];
         if (praram.start) {
@@ -55,7 +55,7 @@ module.exports = {
             param.push(praram.end);
             sql = sql + " AND DATEDIFF(?,ngaythanhtoan) >= 0 ";
         }
-        sql = "select nv.ma,nv.ten from nhanvien nv where nv.chucvu='Sửa Chữa'";
+        sql = "select nv.ma,nv.ten from nhanvien nv where nv.chucvu='Sửa Chữa' and nv.isdelete = 0";
         var nv = await query(sql);
         var nhanvien = [];
 
@@ -116,7 +116,7 @@ module.exports = {
         }
         sql = " select nvtt.manv,nvtt.ten,nvtt.ngay,nvtt.tiencong,cc.vsbd,cc.vskp,cc.ghichu from " +
             "  (select nv.ma as manv,nv.ten,IFNULL(ct.ntt,?) as ngay,IFNULL(ct.tiencong,0) as tiencong from    " +
-            " (select nv.ma,nv.ten from nhanvien nv where nv.chucvu='Sửa Chữa' ) nv LEFT JOIN  " +
+            " (select nv.ma,nv.ten from nhanvien nv where nv.chucvu='Sửa Chữa' and nv.isdelete = 0) nv LEFT JOIN  " +
             " (select cthd.manvsuachua as manv,CAST(hd.ngaythanhtoan as DATE) as ntt, SUM(cthd.tiencong) as tiencong  " +
             " from chitiethoadonsuachua cthd LEFT JOIN hoadon hd on cthd.mahoadon=hd.mahoadon  " +
             " WHERE DATEDIFF(hd.ngaythanhtoan,?)=0 and hd.trangthai =1  " +

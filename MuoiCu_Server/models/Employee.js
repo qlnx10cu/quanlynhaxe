@@ -4,10 +4,10 @@ class Employee {
     }
     static getColmun(param) {
         if (param) {
-            let tmp = ['ma', 'ten', 'cmnd', 'sdt', 'gmail', 'username', 'password', 'chucvu', 'accountsip'];
+            let tmp = ['ma', 'ten', 'cmnd', 'sdt', 'gmail', 'username', 'password', 'chucvu', 'isdelete', 'accountsip'];
             return tmp.filter(e => Object.keys(param).includes(e));
         }
-        return "`ma`,`ten`,`cmnd`,`sdt`,`gmail`,`username`,`password`,`chucvu`,`accountsip`";
+        return "`ma`,`ten`,`cmnd`,`sdt`,`gmail`,`username`,`password`,`chucvu`,`isdelete`,`accountsip`";
     }
 
     static getLike(k) {
@@ -19,12 +19,12 @@ class Employee {
     }
 
     static getParam(param) {
-        let tmp = ['ma', 'ten', 'cmnd', 'sdt', 'gmail', 'username', 'password', 'chucvu', 'accountsip'];
+        let tmp = ['ma', 'ten', 'cmnd', 'sdt', 'gmail', 'username', 'password', 'chucvu', 'isdelete', 'accountsip'];
         let arr = Object.keys(param).filter(e => tmp.includes(e)).map(e => param[e])
         return arr;
     }
     static getArrayParam(param) {
-        let tmp = ['ma', 'ten', 'cmnd', 'sdt', 'gmail', 'username', 'password', 'chucvu', 'accountsip'];
+        let tmp = ['ma', 'ten', 'cmnd', 'sdt', 'gmail', 'username', 'password', 'chucvu', 'isdelete', 'accountsip'];
         let obj = {};
         let arr = Object.keys(param).filter(e => tmp.includes(e));
         arr.forEach(e => {

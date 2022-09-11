@@ -6,7 +6,7 @@ const Encrypt = require('../lib/encryptPassword');
 module.exports = {
     getList: async function (req, res, next) {
         try {
-            let resulft = await Abstract.getList(Employee, req.query);
+            let resulft = await Abstract.getList(Employee, { ...req.query, isdelete: 0 });
             res.json(resulft);
         } catch (error) {
             res.status(400).json({
@@ -19,7 +19,7 @@ module.exports = {
     getByMa: async function (req, res, next) {
         try {
             var param = Object.assign(req.params, req.query);
-            let resulft = await Abstract.getOne(Employee, param);
+            let resulft = await Abstract.getOne(Employee, { ...param, isdelete: 0 });
             res.json(resulft);
         } catch (error) {
             res.status(400).json({
@@ -32,7 +32,7 @@ module.exports = {
     getByTaikhoan: async function (req, res, next) {
         try {
             var param = Object.assign(req.params, req.query);
-            let resulft = await Abstract.getOne(Employee, param);
+            let resulft = await Abstract.getOne(Employee, { ...param, isdelete: 0 });
             res.json(resulft);
         } catch (error) {
             res.status(400).json({
@@ -45,7 +45,7 @@ module.exports = {
     getByAccountSip: async function (req, res, next) {
         try {
             var param = Object.assign(req.params, req.query);
-            let resulft = await Abstract.getOne(Employee, param);
+            let resulft = await Abstract.getOne(Employee, { ...param, isdelete: 0 });
             res.json(resulft);
         } catch (error) {
             res.status(400).json({
@@ -83,7 +83,7 @@ module.exports = {
     },
     delete: async function (req, res, next) {
         try {
-            let resulft = await Abstract.delete(Employee, req.params);
+            let resulft = await Abstract.update(Employee, { isdelete: 1 }, req.params);
             res.json(resulft);
         } catch (error) {
             res.status(400).json({

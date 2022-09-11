@@ -13,7 +13,7 @@ class ChamSoc {
     }
 
     static getLike(k) {
-        let tmp = ['ten','biensoxe', 'sodienthoai', 'zaloid'];
+        let tmp = ['ten', 'biensoxe', 'sodienthoai', 'zaloid'];
         return tmp.includes(k);
     }
     static getDuplicate() {
@@ -34,8 +34,8 @@ class ChamSoc {
         });
         return obj;
     }
-    
-    static async bydate (praram) {
+
+    static async bydate(praram) {
         var param = [];
         var sql = "select * from chamsoc where 1=1 ";
         if (praram.start) {
@@ -46,7 +46,7 @@ class ChamSoc {
             param.push(praram.end);
             sql = sql + "AND DATEDIFF(?,ngayhen) >= 0 ";
         }
-        sql = sql + " ORDER BY ngayhen desc";
+        sql = sql + " ORDER BY ngayhen asc";
         let res = await query(sql, param);
         return res;
     }

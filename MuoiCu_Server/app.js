@@ -52,6 +52,12 @@ require('./models/test');
 const app2 = express();
 let server2 = http.createServer(app2);
 server2.port = normalizePort(config.portApp);
+app2.use(function (req, res, next) {
+  if (req.url.startsWith('/resources') || req.url.startsWith('/app.js')) {
+    res.setHeader('Cache-Control', 'private')
+  }
+  next()
+})
 app2.use(express.static(__dirname + '/public'));
 app2.use(function (req, res, next) {
   res.sendFile(__dirname + '/public/index.html')

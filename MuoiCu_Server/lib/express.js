@@ -12,5 +12,5 @@ module.exports = (app, logger, express, path, cookieParser, passport, handlebars
     }));
     app.use(cookieParser());
     app.use(passport.initialize());
-    app.use(cors());
+    app.use(cors({ maxAge: 864000 }));
 }

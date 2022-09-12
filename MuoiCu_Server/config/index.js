@@ -21,16 +21,13 @@ module.exports = {
             to: "ctytrungtrang@gmail.com",
             cc: "dichvu.ctytrungtrang@gmail.com",
         }
-
-
     },
     zalo: {
         zns: parseBool(process.env.ENABLE_ZNS),
         zcc: parseBool(process.env.ENABLE_ZCC),
-        oaDomain: process.env.ZALO_OA_DOMAIN,
-        busDomain: process.env.ZALO_BUS_DOMAIN,
-        appId: process.env.ZALO_APPID,
-
+        oaDomain: 'https://oauth.zaloapp.com/v4/oa/access_token',
+        busDomain: 'https://business.openapi.zalo.me/message/template',
+        appId: '619166244360530229',
         secret_key: 'F2OX72FsA5QO8LE3w75D'
     },
     token_generator: {

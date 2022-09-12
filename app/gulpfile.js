@@ -26,6 +26,7 @@ const gutil = require('gulp-util');
 const plumber = require('gulp-plumber');
 const rename = require('gulp-rename');
 const header = require('gulp-header');
+const replace = require('gulp-replace');
 const browserify = require('browserify');
 const watchify = require('watchify');
 const envify = require('envify/custom');
@@ -46,6 +47,7 @@ const BANNER_OPTIONS =
 	currentYear: (new Date()).getFullYear()
 };
 const OUTPUT_DIR = '../MuoiCu_Server/public';
+const VERSION_APP = new Date().getTime();
 
 // Default environment
 process.env.NODE_ENV = 'development';
@@ -109,9 +111,9 @@ function bundle(options) {
 }
 
 gulp.task('clean', (done) => {
-	del(OUTPUT_DIR+"/resources", { force: true })
-	del(OUTPUT_DIR+"/index.html", { force: true })
-	del(OUTPUT_DIR+"/app.js", { force: true })
+	del(OUTPUT_DIR + "/resources", { force: true })
+	del(OUTPUT_DIR + "/index.html", { force: true })
+	del(OUTPUT_DIR + "/app.js", { force: true })
 	done()
 });
 
@@ -144,6 +146,7 @@ gulp.task('css', (done) => {
 
 gulp.task('html', () => {
 	return gulp.src('public/index.html')
+		.pipe(replace(/{{VERSION_APP}}/, VERSION_APP))
 		.pipe(gulp.dest(OUTPUT_DIR));
 });
 

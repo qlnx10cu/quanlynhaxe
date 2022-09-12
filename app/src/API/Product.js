@@ -1,21 +1,18 @@
-import {HOST} from '../Config'
+import { HOST } from '../Config'
 import axios from 'axios'
 
-export const SearchProductById = (token,id) => {
-    let url = `${HOST}/item?maphutung=`+id;
-    console.log(url);
-    //+'&limit=10'
+export const SearchProductById = (token, id) => {
+    let url = `${HOST}/item?maphutung=` + id;
     let headers = {
-        'Authorization': 'Bearer ' + token
     }
-    return axios.get(url,{headers})
+    return axios.get(url, { headers })
 }
 export const GetAllProduct = (token) => {
     let url = `${HOST}/item`;
     let headers = {
         'Authorization': 'Bearer ' + token
     }
-    return axios.get(url,{headers})
+    return axios.get(url, { headers })
 }
 export const GetFileExportProduct = (token) => {
     // let url = `${HOST}/statistic/layfile`;
@@ -27,27 +24,27 @@ export const GetFileExportProduct = (token) => {
         url: `${HOST}/statistic/layfile`,
         method: 'GET',
         responseType: 'blob', // important
-    },{headers})
+    }, { headers })
 }
-export  const  ImportPhuTung=(token,data)=>{
+export const ImportPhuTung = (token, data) => {
     let url = `${HOST}/itempart/import`;
     let headers = {
         'Authorization': 'Bearer ' + token
     }
-    return axios.post(url,data,{headers})
+    return axios.post(url, data, { headers })
 }
-export  const  ImportPhuKien=(token,data)=>{
+export const ImportPhuKien = (token, data) => {
     let url = `${HOST}/itemaccessary/import`;
     let headers = {
         'Authorization': 'Bearer ' + token
     }
-    return axios.post(url,data,{headers})
+    return axios.post(url, data, { headers })
 }
-export  const  ImportMuBH=(token,data)=>{
+export const ImportMuBH = (token, data) => {
     let url = `${HOST}/item/import`;
     let headers = {
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json',
     }
-    return axios.post(url,data,{headers})
+    return axios.post(url, data, { headers })
 }

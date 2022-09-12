@@ -6,7 +6,6 @@ import axios from 'axios'
 export const GetListCuaHangNgoai = (token) => {
     let url = `${HOST}/cuahangngoai`;
     let headers = {
-        'Authorization': 'Bearer ' + token,
     };
     return axios.get(url,{headers});
 };

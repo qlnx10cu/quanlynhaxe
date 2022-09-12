@@ -4,7 +4,6 @@ import axios from 'axios'
 export const GetlistCustomer = (token, query = '') => {
     let url = `${HOST}/customer?${query}`
     let headers = {
-        'Authorization': 'Bearer ' + token
     }
     return axios.get(url, { headers })
 }
@@ -12,7 +11,6 @@ export const GetlistCustomer = (token, query = '') => {
 export const GetCustomerDetail = (token, ma) => {
     let url = `${HOST}/customer/ma/${ma}/chitiet`
     let headers = {
-        'Authorization': 'Bearer ' + token
     }
     return axios.get(url, { headers })
 }
@@ -28,14 +26,12 @@ export const AddCustomer = (token, data) => {
 export const UpdateCustomer = (token, data, ma) => {
     let url = `${HOST}/customer/ma/` + ma
     let headers = {
-        'Authorization': 'Bearer ' + token
     }
     return axios.put(url, data, { headers })
 }
 export const DeleteCustomer = (token, id) => {
     let url = `${HOST}/customer/ma/` + id;
     let headers = {
-        'Authorization': 'Bearer ' + token
     }
     return axios.delete(url, { headers })
 }

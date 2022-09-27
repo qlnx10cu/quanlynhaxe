@@ -4,7 +4,7 @@ import moment from 'moment'
 import { GetChamSocTheoNgay } from "../../API/ChamSoc"
 import HistoryCustomer from '../Admin/HistoryCustomer'
 import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
-
+import useIsMounted from '../../lib/useIsMounted';
 
 import { UpdateChamSoc } from '../../API/ChamSoc'
 
@@ -32,18 +32,15 @@ const getTrangThai = (e) => {
 
 const NoteCSKH = (props) => {
 
-    let [data, setData] = useState({});
     let [isUpload, setUpload] = useState(false);
     let [note, setNote] = useState('');
     let [trangthai, setTrangThai] = useState(0);
+    const data = props.data || {};
 
     useEffect(() => {
         if (props.data) {
-            setData(props.data);
             setNote(props.data.ghichu);
             setTrangThai(props.data.trangthai);
-        } else {
-            setData({});
         }
     }, [])
 
@@ -138,7 +135,7 @@ const CSKH = (props) => {
     let [maKHHistoryCustomer, setMaKHHistoryCustomer] = useState(null);
     let [isShowChitiet, setShowChitiet] = useState(false);
     let [isShowNote, setShowNote] = useState(false);
-    let [dataCSKH, setDataCSKH] = useState("");
+    let [dataCSKH, setDataCSKH] = useState(null);
 
     let [mMaHoaDon, setMaHoaDon] = useState("");
     let [maxSizePage, setMaxSizePage] = useState(20);
@@ -146,9 +143,9 @@ const CSKH = (props) => {
     let [page, setPage] = useState(0);
     let [activePage, setActive] = useState(0);
 
+    const isMounted = useIsMounted();
 
     useEffect(() => {
-        setLoading(true)
         handleLayDanhSach();
     }, []);
 
@@ -158,13 +155,17 @@ const CSKH = (props) => {
         let start = moment(dateStart).format("YYYY/MM/DD");
         let end = moment(dateEnd).format("YYYY/MM/DD");
         GetChamSocTheoNgay(props.token, start, end).then(res => {
+            if (!isMounted())
+                return ;
             tachList(res.data, maxSizePage, activePage);
             setHistoryCallCurrents([...res.data]);
-        }).catch(err => {
-            props.alert("Có lỗi không thể lấy danh sách");
-        }).finally(() => {
             setLoading(false);
-        })
+        }).catch(err => {
+            if (!isMounted())
+                return;
+            props.alert("Có lỗi không thể lấy danh sách");
+            setLoading(false);
+        });
     }
 
     const handleNextPage = () => {
@@ -408,7 +409,7 @@ const CSKH = (props) => {
                 isShowing={isShowNote}
                 onCloseClick={(upload) => {
                     setShowNote(false);
-                    setDataCSKH("");
+                    setDataCSKH(null);
                     if (upload) {
                         handleLayDanhSach()
                     }

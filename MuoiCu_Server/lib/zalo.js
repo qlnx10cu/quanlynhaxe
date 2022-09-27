@@ -74,6 +74,33 @@ module.exports = {
 
     },
 
+    getMessageConversation: function(user_id) {
+
+        var url =`https://openapi.zalo.me/v2.0/oa/conversation?data=%7B%22offset%22%3A0%2C%22user_id%22%3A${user_id}%2C%22count%22%3A3%7D`;
+      
+        return new Promise((resolve, reject)=>{
+            try{
+                request.get({
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'access_token': access_token
+                    },
+                    url: url
+                }, function (error, response, body) {
+                    try {
+                        body = JSON.parse(body);
+                    } catch (ex) {
+                        body = {};
+                    }
+                    resolve({});
+                });
+            }catch(ex){
+                resolve({});
+            }
+        });
+       
+    },
+
     sendZNS_suachua: function (body) {
         if (!body || !config.zalo.zns)
             return false;

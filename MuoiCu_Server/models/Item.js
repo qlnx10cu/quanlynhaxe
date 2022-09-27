@@ -11,7 +11,7 @@ class Item {
     }
 
     static getDuplicate() {
-        return "ON DUPLICATE KEY UPDATE soluongtonkho = soluongtonkho + VALUES(soluongtonkho) ";
+        return "ON DUPLICATE KEY UPDATE soluongtonkho = soluongtonkho + VALUES(soluongtonkho), giaban_le = VALUES(giaban_le) ";
     }
 
     static getLike(k) {

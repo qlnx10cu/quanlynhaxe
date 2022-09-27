@@ -7,6 +7,7 @@ const Customer = require("../models/Customer");
 const Abstract = require('../models/Abstract');
 const Webhook = require('../models/Webhook');
 const ChamSoc = require("../models/ChamSoc");
+const zalo = require("../lib/zalo");
 
 function parseBodyWebhook(body) {
 	var data = {
@@ -40,7 +41,17 @@ function parseBodyWebhook(body) {
 			case 'oa_send_gif':
 				{
 					data.oaid = body.sender ? body.sender.id : '';
-					data.userid = body.recipient ? body.recipient.id : '';
+					if (body.recipient) {
+						if (String(body.recipient.id).length < 12) {
+							data.phone = body.recipient.id;
+						}
+						else {
+							data.userid = body.recipient.id;
+						}
+					}
+					if (body.message) {
+						data.msg_id = body.message.msg_id;
+					}
 					break;
 				}
 			case 'user_send_location':
@@ -77,11 +88,40 @@ module.exports = {
 
 					switch (body.event_name) {
 						case 'user_received_message': {
-							if (body.recipient && body.message && body.message.tracking_id) {
+							if (!body.recipient || body.message)
+								break;
+							if (body.message.tracking_id) {
 								var hoadon = await Abstract.getOne(Bill, { mahoadon: body.message.tracking_id });
-								if (hoadon && hoadon.makh) {
-									await Abstract.update(Customer, { zaloid: body.recipient.id }, { ma: hoadon.makh });
-									await Abstract.update(ChamSoc, { zaloid: body.recipient.id }, { mahoadon: hoadon.mahoadon });
+								if (hoadon && hoadon.makh && data.zaloid) {
+									await Abstract.update(Customer, { zaloid: data.zaloid }, { ma: hoadon.makh });
+									await Abstract.update(ChamSoc, { zaloid: data.zaloid }, { mahoadon: hoadon.mahoadon });
+								}
+							} else if (data.msg_id) {
+								const zaloid = body.recipient.id;
+								var kh = await Abstract.getOne(Customer, { zaloid });
+								if (kh && kh.zaloid == zaloid) {
+									break;
+								}
+
+								var resMsg = await zalo.getMessageConversation(zaloid);
+								if (resMsg && resMsg.data && Array.isArray(resMsg.data)) {
+									var dataMsg = resMsg.data;
+									for (var i in dataMsg) {
+										const msg = dataMsg[i];
+										if (msg.message_id) continue;
+
+										var wh = await Abstract.getOne(Webhook, { msg_id: msg.message_id });
+										if (!wh) continue
+
+										var mahoadon = JSON.parse(wh.msg).message.tracking_id;
+										var hoadon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
+										if (hoadon) {
+											if(hoadon.makh){
+												await Abstract.update(Customer, { zaloid: body.recipient.id }, { ma: hoadon.makh });
+											}
+											await Abstract.update(ChamSoc, { zaloid: body.recipient.id }, { mahoadon: hoadon.mahoadon });
+										}
+									}
 								}
 							}
 							break;

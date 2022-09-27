@@ -6,10 +6,10 @@ class Webhook {
     }
     static getColmun(param) {
         if (param) {
-            let tmp = ['id', 'msg', 'time', 'eventname', 'timestamp', 'useridbyapp', 'oaid', 'userid', 'phone', 'appid'];
+            let tmp = ['id', 'msg', 'time', 'eventname', 'timestamp', 'useridbyapp', 'oaid', 'userid', 'phone', 'appid', 'msg_id'];
             return tmp.filter(e => Object.keys(param).includes(e));
         }
-        return "`id`,`msg`,`time`,`eventname`,`timestamp`,`useridbyapp`,`oaid`,`userid`,`phone`,`appid`";
+        return "`id`,`msg`,`time`,`eventname`,`timestamp`,`useridbyapp`,`oaid`,`userid`,`phone`,`appid`,`msg_id`";
     }
 
     static getLike(k) {
@@ -21,12 +21,12 @@ class Webhook {
     }
 
     static getParam(param) {
-        let tmp = ['id', 'msg', 'time', 'eventname', 'timestamp', 'useridbyapp', 'oaid', 'userid', 'phone', 'appid'];
+        let tmp = ['id', 'msg', 'time', 'eventname', 'timestamp', 'useridbyapp', 'oaid', 'userid', 'phone', 'appid', 'msg_id'];
         let arr = Object.keys(param).filter(e => tmp.includes(e)).map(e => param[e])
         return arr;
     }
     static getArrayParam(param) {
-        let tmp = ['id', 'msg', 'time', 'eventname', 'timestamp', 'useridbyapp', 'oaid', 'userid', 'phone', 'appid'];
+        let tmp = ['id', 'msg', 'time', 'eventname', 'timestamp', 'useridbyapp', 'oaid', 'userid', 'phone', 'appid', 'msg_id'];
         let obj = {};
         let arr = Object.keys(param).filter(e => tmp.includes(e));
         arr.forEach(e => {

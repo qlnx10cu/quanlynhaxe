@@ -31,15 +31,31 @@ module.exports = {
             if (!sdt)
                 return "";
             sdt = sdt + "";
-            if (sdt.startsWith("0")) {
-                sdt = "84" + sdt.substring(1);
+            if (sdt.startsWith("+84")) {
+                sdt = "0" + sdt.substring(3);
             }
-            if (sdt.length != 11)
+            if (sdt.startsWith("84")) {
+                sdt = "0" + sdt.substring(2);
+            }
+            if (sdt.length != 10 || !sdt.startsWith("0"))
                 return "";
             return sdt;
         } catch (ex) {
 
         }
 
-    }
+    },
+    compareSDT: function (sdt1, sdt2) {
+        try {
+            if (!sdt1 || !sdt2)
+                return false;
+            sdt1 = this.formatSDT(sdt1);
+            sdt2 = this.formatSDT(sdt2);
+            if (!sdt1 || !sdt2 || sdt1 != sdt2)
+                return false;
+            return true;
+        } catch (error) {
+
+        }
+    },
 }

@@ -29,6 +29,41 @@ module.exports = {
             })
         }
     },
+    getByZaloId: async function (req, res, next) {
+        try {
+            var param = Object.assign(req.params, req.query);
+            let resulft = await Abstract.getOne(Customer, param);
+            if (resulft && resulft.zaloid && resulft.zaloid == param.zaloid) {
+                res.json(resulft);
+            } else {
+                res.json({});
+            }
+        } catch (error) {
+            res.status(400).json({
+                error: {
+                    message: error.message
+                }
+            })
+        }
+    },
+    getBySoDienThoai: async function (req, res, next) {
+        try {
+            var param = Object.assign(req.params, req.query);
+            let resulft = await Abstract.getOne(Customer, param);
+            if (resulft && resulft.sodienthoai && utils.compareSDT(resulft.sodienthoai, param.sodienthoai)) {
+                res.json(resulft);
+            } else {
+                res.json({});
+            }
+            res.json(resulft);
+        } catch (error) {
+            res.status(400).json({
+                error: {
+                    message: error.message
+                }
+            })
+        }
+    },
     add: async function (req, res, next) {
         try {
             req.body['updatetime'] = new Date();

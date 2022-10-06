@@ -12,39 +12,22 @@ var exec = require('child_process').exec;
 const utils = require("../lib/utils");
 const { UV_FS_O_FILEMAP } = require("constants");
 const ChamSoc = require("../models/ChamSoc");
-var isServerUpdate = false;
 
 module.exports = {
 
-    getList: async function (req, res, next) {
-        try {
-            let resulft = await AbstractTwo.getList(Bill, BillSuachua, req.query);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    getList: function (req, res) {
+        return AbstractTwo.getList(Bill, BillSuachua, req.query, '', '', ' ORDER BY ngaythanhtoan desc, ma desc limit 2000');
     },
-    getChitiet: async function (req, res, next) {
-        try {
-            let resulft = await BillSuachua.getChitiet(req.params.mahoadon);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    getChitiet: function (req, res) {
+        return BillSuachua.getChitiet(req.params.mahoadon);
     },
-    getByMa: async function (req, res, next) {
-        try {
-            var param = Object.assign(req.params, req.query);
-            let resulft = await AbstractTwo.getList(Bill, BillSuachua, param);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    getByMa: function (req, res) {
+        return AbstractTwo.getOne(Bill, BillSuachua, Object.assign(req.params, req.query));
     },
-    add: async function (req, res, next) {
+    add: async function (req, res) {
         try {
 
-            if (!req.body|| !req.body.biensoxe && !req.body.sokhung && !req.body.somay) {
+            if (!req.body || !req.body.biensoxe && !req.body.sokhung && !req.body.somay) {
                 librespone.error(req, res, "Phải có ít nhất biển số xe, hoặc số khung, hoặc số máy");
                 return;
             }
@@ -56,19 +39,12 @@ module.exports = {
                 return;
             }
 
-            if (isServerUpdate) {
-                librespone.error(req, res, "Thao tác quá nhanh. Vui lòng thử lại");
-                return;
-            }
-            isServerUpdate = true;
-
             var mhd = await Option.incrementAndGet("masuachua") + '';
             var mahoadon = 'DV-' + mhd.padStart(8, '0');;
             let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
 
             if (hoaDon) {
                 librespone.error(req, res, "Hóa đơn đã tồn tại vui lòng thủ lại.");
-                isServerUpdate = false;
                 return;
             }
 
@@ -95,16 +71,14 @@ module.exports = {
                 resulft = await Abstract.addMutil(BillSuachua, detailbill);
             await BillSuachua.giamSoLuongPhuTung(mahoadon);
 
-            isServerUpdate = false;
             res.json({ "mahoadon": mahoadon });
         } catch (error) {
             librespone.error(req, res, error.message);
-            isServerUpdate = false;
         }
     },
-    update: async function (req, res, next) {
+    update: async function (req, res) {
         try {
-            if (!req.body|| !req.body.biensoxe && !req.body.sokhung && !req.body.somay) {
+            if (!req.body || !req.body.biensoxe && !req.body.sokhung && !req.body.somay) {
                 librespone.error(req, res, "Phải có ít nhất biển số xe, hoặc số khung, hoặc số máy");
                 return;
             }
@@ -113,14 +87,14 @@ module.exports = {
                 librespone.error(req, res, "Không tồn tại mã hóa đơn");
                 return;
             }
-            
+
             var makh = await Customer.addOrUpdateSuaChua(req.body);
 
             if (!makh) {
                 librespone.error(req, res, "Không thể tạo khách hàng");
                 return;
             }
-            
+
             let {
                 mahoadon,
                 chitiet,
@@ -170,11 +144,7 @@ module.exports = {
                         return;
                     }
                 }
-                if (isServerUpdate) {
-                    librespone.error(req, res, "Thao tác quá nhanh. Vui lòng thử lại");
-                    return;
-                }
-                isServerUpdate = true;
+               
                 if (hoaDon.trangthai == 1) {
                     email.sendMail(req, res, "Update hóa đơn sữa chữa", "Hệ thống vừa update hoá đơn với mã " + mahoadon + "\nLý do:\n" + conlai.lydo);
                 }
@@ -202,26 +172,21 @@ module.exports = {
                 }
 
                 res.json({ "mahoadon": mahoadon });
-                isServerUpdate = false;
             } else {
                 librespone.error(req, res, 'Không update được hóa đơn');
-                isServerUpdate = false;
             }
 
         } catch (error) {
             librespone.error(req, res, error.message);
-            isServerUpdate = false;
         }
     },
-    delete: async function (req, res, next) {
-        try {
-            let resulft = await BillSuachua.delete(req.params.ma);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
+    delete: function (req, res) {
+        if (req.params.ma) {
+            return "Không tồn tại mã hóa đơn";
         }
+        return BillSuachua.delete(req.params.ma);
     },
-    export: async function (req, res, next) {
+    export: async function (req, res) {
         try {
             // var ws_data={"mahoadon":"DV-260071","manv":1,"manvsuachua":55,"manvtiepnhan":null,"tenkh":"adas","makh":20,"biensoxe":"67p1-6","tongtien":6592340,"ngayban":"2019-12-15 23:06:47","ngaythanhtoan":"2019-12-15 23:06:54","trangthai":1,"loaihoadon":0,"ngaysuachua":"2019-12-15 23:06:47","isdelete":0,"yeucaukhachhang":"321312asdadsadadafsfdskfskdf;l  fk;dsfk ;ldskf;lds kfk ;kf;ls f","tuvansuachua":"safafdsaf [of[pdsof  [pof[psa ofdsof[p sof[ps","sokm":0,"ma":20,"ten":"adas","sodienthoai":"asdsa","diachi":"sadsa","loaixe":"adsa79798","sokhung":"asdasd","somay":"sadas","chitiet":[{"ma":159,"mahoadon":"DV-260071","tenphutungvacongviec":"ÉP MÂM","nhacungcap":null,"maphutung":"","soluongphutung":2,"dongia":170000,"tiencong":0,"tongtien":340000,"manvsuachua":55},{"ma":160,"mahoadon":"DV-260071","tenphutungvacongviec":"Cao su giảm chấn bánh xe","nhacungcap":null,"maphutung":"06410KWB600","soluongphutung":1,"dongia":33000,"tiencong":2100000,"tongtien":2133000,"manvsuachua":55},{"ma":161,"mahoadon":"DV-260071","tenphutungvacongviec":"Cao su giảm chấn bánh xe","nhacungcap":null,"maphutung":"06410KVV900","soluongphutung":1,"dongia":41800,"tiencong":0,"tongtien":41800,"manvsuachua":55},{"ma":162,"mahoadon":"DV-260071","tenphutungvacongviec":"Cao su giảm chấn bánh xe","nhacungcap":null,"maphutung":"06410KFL850","soluongphutung":4,"dongia":27500,"tiencong":0,"tongtien":110000,"manvsuachua":55},{"ma":163,"mahoadon":"DV-260071","tenphutungvacongviec":"Bộ má phanh sau","nhacungcap":null,"maphutung":"06430KVB950","soluongphutung":4,"dongia":154880,"tiencong":0,"tongtien":619520,"manvsuachua":55},{"ma":164,"mahoadon":"DV-260071","tenphutungvacongviec":"Bộ má phanh","nhacungcap":null,"maphutung":"06430GCE305","soluongphutung":3,"dongia":65230,"tiencong":0,"tongtien":195690,"manvsuachua":55},{"ma":165,"mahoadon":"DV-260071","tenphutungvacongviec":"Bộ má phanh dầu sau","nhacungcap":null,"maphutung":"06435K01902","soluongphutung":1,"dongia":413600,"tiencong":2100000,"tongtien":2513600,"manvsuachua":55},{"ma":166,"mahoadon":"DV-260071","tenphutungvacongviec":"Bộ má phanh","nhacungcap":null,"maphutung":"06430GCE305","soluongphutung":1,"dongia":65230,"tiencong":24000,"tongtien":89230,"manvsuachua":55},{"ma":167,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PÍT TÔNG NGÀM PHANH","nhacungcap":null,"maphutung":"06451443405","soluongphutung":1,"dongia":34100,"tiencong":0,"tongtien":34100,"manvsuachua":55},{"ma":168,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PISTON NGÀM PHANH","nhacungcap":null,"maphutung":"06451961405","soluongphutung":1,"dongia":19800,"tiencong":0,"tongtien":19800,"manvsuachua":55},{"ma":169,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PÍT TÔNG NGÀM PHANH","nhacungcap":null,"maphutung":"06451443405","soluongphutung":1,"dongia":34100,"tiencong":0,"tongtien":34100,"manvsuachua":55},{"ma":170,"mahoadon":"DV-260071","tenphutungvacongviec":"test 23","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":20000,"tiencong":0,"tongtien":20000,"manvsuachua":55},{"ma":171,"mahoadon":"DV-260071","tenphutungvacongviec":"VỆ SINH BUỒNG ĐỐT","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":100000,"tiencong":0,"tongtien":100000,"manvsuachua":55},{"ma":172,"mahoadon":"DV-260071","tenphutungvacongviec":"test 23","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":20000,"tiencong":0,"tongtien":20000,"manvsuachua":55},{"ma":173,"mahoadon":"DV-260071","tenphutungvacongviec":"test 23","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":20000,"tiencong":0,"tongtien":20000,"manvsuachua":55},{"ma":174,"mahoadon":"DV-260071","tenphutungvacongviec":"Nan hoa sau,trong 10x156","nhacungcap":null,"maphutung":"06420KFL890","soluongphutung":1,"dongia":3300,"tiencong":0,"tongtien":3300,"manvsuachua":55},{"ma":175,"mahoadon":"DV-260071","tenphutungvacongviec":"ÉP MÂM","nhacungcap":null,"maphutung":"","soluongphutung":1,"dongia":170000,"tiencong":0,"tongtien":170000,"manvsuachua":55},{"ma":176,"mahoadon":"DV-260071","tenphutungvacongviec":"test 23","nhacungcap":null,"maphutung":"","soluongphutung":3,"dongia":20000,"tiencong":0,"tongtien":60000,"manvsuachua":55},{"ma":177,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PÍT TÔNG NGÀM PHANH","nhacungcap":null,"maphutung":"06451443405","soluongphutung":1,"dongia":34100,"tiencong":0,"tongtien":34100,"manvsuachua":55},{"ma":178,"mahoadon":"DV-260071","tenphutungvacongviec":"BỘ GIOĂNG PÍT TÔNG NGÀM PHANH","nhacungcap":null,"maphutung":"06451443405","soluongphutung":1,"dongia":34100,"tiencong":0,"tongtien":34100,"manvsuachua":55}]}
             var ws_data = await Abstract.getOne(Bill, req.params);
@@ -260,7 +225,7 @@ module.exports = {
             })
         }
     },
-    exportBill: async function (req, res, next) {
+    exportBill: async function (req, res) {
         var ws_data = await BillSuachua.getChitiet(req.params.mahoadon);
         // var ws_data = {
         //     "mahoadon": "DV-260071", "manv": 1, "manvsuachua": 55, "manvtiepnhan": null, "tennvsuachua": "Nguyễn Đức Cường"
@@ -290,7 +255,7 @@ module.exports = {
 
         res.render('exportsuachua', ws_data);
     },
-    exportBillNew: async function (req, res, next) {
+    exportBillNew: async function (req, res) {
         var ws_data = await BillSuachua.getChitiet(req.params.mahoadon);
         if (ws_data == null) {
             librespone.send(req, res, 'Khong tim thay mã hóa đơn ' + req.params.mahoadon);

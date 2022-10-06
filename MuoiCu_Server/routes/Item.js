@@ -1,4 +1,4 @@
-const router = require('express').Router();
+const router = require('../lib/router').Router();
 const Item = require('../controllers/Item');
 
 router.get('/', Item.getList);
@@ -10,4 +10,4 @@ router.post('/import/', Item.addMutil);
 
 
 
-module.exports = router;
+module.exports = router.router;

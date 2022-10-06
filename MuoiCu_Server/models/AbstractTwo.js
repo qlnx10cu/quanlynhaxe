@@ -3,7 +3,7 @@ const Encrypt = require('../lib/encryptPassword');
 const config = require('../config');
 
 class AbstractTwo {
-    static async getList(ClassTableOne, ClassTableTwo, param, paramQsl1, paramQsl2) {
+    static async getList(ClassTableOne, ClassTableTwo, param, paramQsl1, paramQsl2, whereOrder = '') {
         let where = ' 1=? ';
         let param1 = ClassTableOne.getArrayParam(param);
         param1 = Object.assign(param1, paramQsl1);
@@ -24,12 +24,12 @@ class AbstractTwo {
                 wherevalue.push(param2[k]);
             }
         }
-        let sql = `SELECT ${ClassTableOne.getSelect('tb1')},${ClassTableTwo.getSelect('tb2')} FROM ${ClassTableOne.getNameTable()} tb1 INNER JOIN ${ClassTableTwo.getNameTable()} tb2 ON ${ClassTableOne.getJoin()} where ${where} `;
+        let sql = `SELECT ${ClassTableOne.getSelect('tb1')},${ClassTableTwo.getSelect('tb2')} FROM ${ClassTableOne.getNameTable()} tb1 INNER JOIN ${ClassTableTwo.getNameTable()} tb2 ON ${ClassTableOne.getJoin()} where ${where} ${whereOrder}`;
         let res = await query(sql, wherevalue);
         return res;
     }
-    static async getOne(ClassTableOne, ClassTableTwo, param, param1, param2) {
-        let res = await AbstractTwo.getList(ClassTableOne, ClassTableTwo, param, param1, param2);
+    static async getOne(ClassTableOne, ClassTableTwo, param, param1, param2, whereOrder = '') {
+        let res = await AbstractTwo.getList(ClassTableOne, ClassTableTwo, param, param1, param2, whereOrder);
         if (!res)
             return null;
         return res[0];

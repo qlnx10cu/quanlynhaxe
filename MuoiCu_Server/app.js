@@ -6,6 +6,7 @@ const passport = require('passport');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path')
+const EventEmitter = require('events').EventEmitter;
 const hbs = require('express-handlebars').create({
   helpers: {
     format_tien: function (a) {
@@ -25,6 +26,9 @@ const {
 require('dotenv').config({
   path: '.env'
 })
+
+const emitter = new EventEmitter()
+emitter.setMaxListeners(0)
 
 const config = require('./config');
 

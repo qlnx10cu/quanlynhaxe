@@ -2,79 +2,41 @@ const Item = require("../models/Item");
 const Abstract = require("../models/Abstract");
 const librespone = require("../lib/respone");
 const logger = require("../lib/logger");
+const ItemHistory = require("../models/ItemHistory");
 
 module.exports = {
-    getList: async function (req, res, next) {
-        try {
-            let resulft = await Abstract.getList(Item, req.query);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    getList: function (req, res) {
+        return Abstract.getList(Item, req.query);
     },
-    getByMa: async function (req, res, next) {
-        try {
-            var param = Object.assign(req.params, req.query);
-            let resulft = await Abstract.getOne(Item, param);
-            if (resulft == null) {
-                librespone.error(req, res, "Không tìm thấy mã: ");
-            }
-            else
-                res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    getByMa: function (req, res) {
+        return Abstract.getOne(Item, Object.assign(req.params, req.query));
     },
-    add: async function (req, res, next) {
-        try {
-            let body = {
-                ...req.body
-            }
-            let resulft = await Abstract.add(Item, body);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    add: function (req, res) {
+        return Abstract.add(Item, { ...req.body });
     },
-    update: async function (req, res, next) {
-        try {
-            // var param = Object.assign(req.params, req.query);
-            let resulft = await Abstract.update(Item, req.body, req.params);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    update: function (req, res) {
+        return Abstract.update(Item, req.body, req.params);
     },
-    delete: async function (req, res, next) {
-        try {
-            var param = Object.assign(req.params, req.query)
-            let resulft = await Abstract.delete(Item, param);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    delete: function (req, res) {
+        return Abstract.delete(Item, Object.assign(req.params, req.query));
     },
-    deleteAll: async function (req, res, next) {
-        try {
-            if(req.params.loaiphutung!="phutung")
-                return librespone.error(req, res, "Not support");
-            //
-            var param = {loaiphutung:"phụ tùng"};
-            let resulft = await Abstract.delete(Item,param);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    deleteAll: function (req, res) {
+        return Abstract.delete(Item, { loaiphutung: "phụ tùng" });
     },
-    addMutil: async function (req, res, next) {
-        try {
-            let body = {
-                ...req.body
-            }
-            let resulft = await Abstract.addMutil(Item, body.chitiet);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
+    addMutil: function (req, res) {
+
+        let body = {
+            ...req.body
         }
+        let timeindex = new Date().getTime();
+        body.chitiet.map(e => {
+            e.timeindex = timeindex;
+            e.loai = 0;
+            return e;
+        })
+
+        return Abstract.addMutil(ItemHistory, body.chitiet)
+            .then(() => ItemHistory.addLichSuPhuTung(timeindex))
+            .then(() => Abstract.addMutil(Item, body.chitiet))
     },
 };

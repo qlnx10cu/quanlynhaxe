@@ -1,4 +1,4 @@
-const router = require('express').Router();
+const router = require('../lib/router').Router();
 const Bill = require('../controllers/Bill');
 
 router.get('/', Bill.getList);
@@ -11,4 +11,4 @@ router.delete('/mahoadon/:mahoadon', Bill.delete);
 router.post("/checkupdate", Bill.checkupdate)
 
 
-module.exports = router;
+module.exports = router.router;

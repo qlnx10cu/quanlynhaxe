@@ -7,43 +7,24 @@ const Option = require("../models/Option");
 const Employee = require("../models/Employee");
 const Customer = require("../models/Customer");
 const email = require("../lib/email");
-var isBillLeUpdate = false;
 
 module.exports = {
-    getList: async function (req, res, next) {
-        try {
-            let resulft = await AbstractTwo.getList(Bill, BillLe, req.query);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    getList: function (req, res) {
+        return AbstractTwo.getList(Bill, BillLe, req.query, '', '', ' ORDER BY ngaythanhtoan desc, ma desc limit 2000');
     },
-    getByMa: async function (req, res, next) {
-        try {
-            var param = Object.assign(req.params, req.query);
-            let resulft = await AbstractTwo.getList(Bill, BillLe, param);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    getByMa: function (req, res) {
+        return AbstractTwo.getOne(Bill, BillLe, Object.assign(req.params, req.query));
     },
-    add: async function (req, res, next) {
+    add: async function (req, res) {
         try {
-            if (isBillLeUpdate) {
-                librespone.error(req, res, "Thao tác quá nhanh. Vui lòng thử lại");
-                return;
-            }
 
             var makh = await Customer.addOrUpdateBanLe(req.body);
-
-            isBillLeUpdate = true;
             var mhd = await Option.incrementAndGet("mabanle") + '';
             var mahoadon = 'PT-' + mhd.padStart(8, '0');
             let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
 
             if (hoaDon) {
                 librespone.error(req, res, "Hóa đơn đã tồn tại vui lòng thủ lại.");
-                isBillLeUpdate = false;
                 return;
             }
 
@@ -67,25 +48,17 @@ module.exports = {
             resulft = await Abstract.addMutil(BillLe, detailbill);
             await BillLe.giamSoLuongPhuTung(detailbill);
             res.json({ "mahoadon": mahoadon });
-            isBillLeUpdate = false;
         } catch (error) {
             librespone.error(req, res, error.message);
-            isBillLeUpdate = false;
         }
     },
-    getChitiet: async function (req, res, next) {
-        try {
-            let resulft = await BillLe.getChitiet(req.params.mahoadon);
-            res.json(resulft);
-        } catch (error) {
-            res.status(400).json({
-                error: {
-                    message: error.message
-                }
-            })
+    getChitiet: function (req, res) {
+        if (!req.params.mahoadon) {
+            return "Không tồn tại mã hóa đơn";
         }
+        return BillLe.getChitiet(req.params.mahoadon);
     },
-    update: async function (req, res, next) {
+    update: async function (req, res) {
         try {
             if (!req.body.mahoadon) {
                 librespone.error(req, res, "Không tồn tại mã hóa đơn");
@@ -132,20 +105,15 @@ module.exports = {
             })
         }
     },
-    delete: async function (req, res, next) {
-        try {
-            var param = Object.assign(req.params, req.query)
-            var data = {};
-            data['ngaysuachua'] = new Date();
-            data["trangthai"] = 2;
-            await BillLe.tangSoLuongPhuTungByMaHD(param.mahoadon)
-            let resulft = await Abstract.delete(Bill, param);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    delete: function (req, res) {
+        var param = Object.assign(req.params, req.query)
+        var data = {};
+        data['ngaysuachua'] = new Date();
+        data["trangthai"] = 2;
+        return BillLe.tangSoLuongPhuTungByMaHD(param.mahoadon)
+            .then(() => Abstract.delete(Bill, param));
     },
-    export: async function (req, res, next) {
+    export: async function (req, res) {
         try {
             // var ws_data = await Abstract.getOne(Bill, req.params);
             // if (ws_data == null) {
@@ -183,7 +151,7 @@ module.exports = {
             })
         }
     },
-    exportBill: async function (req, res, next) {
+    exportBill: async function (req, res) {
         var ws_data = await BillLe.getChitiet(req.params.mahoadon);
         // var ws_data=getDataTmp();
         if (!ws_data) {

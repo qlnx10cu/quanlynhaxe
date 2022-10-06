@@ -10,42 +10,21 @@ const zalo = require("../lib/zalo");
 const utils = require("../lib/utils");
 
 module.exports = {
-    getList: async function (req, res, next) {
-        try {
-            let resulft = await Abstract.getList(Bill, req.query);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    getList: function (req, res) {
+        return Abstract.getList(Bill, req.query);
     },
-    getByMa: async function (req, res, next) {
-        try {
-            var param = Object.assign(req.params, req.query);
-            let resulft = await Abstract.getOne(Bill, param);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    getByMa: function (req, res) {
+        return Abstract.getOne(Bill, Object.assign(req.params, req.query, ' ORDER BY ngaythanhtoan desc, ma desc limit 2000'));
     },
-    add: async function (req, res, next) {
-        try {
-            req.body.ngaythanhtoan = new Date();
-            req.body.ngayban = new Date();
-            let resulft = await Abstract.add(Bill, req.body);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    add: function (req, res) {
+        req.body.ngaythanhtoan = new Date();
+        req.body.ngayban = new Date();
+        return Abstract.add(Bill, req.body);
     },
-    update: async function (req, res, next) {
-        try {
-            var param = Object.assign(req.params, req.query);
-            param['ngaysuachua'] = new Date();
-            let resulft = await Abstract.update(Bill, req.body, req.params);
-            res.json(resulft);
-        } catch (error) {
-            librespone.error(req, res, error.message);
-        }
+    update: function (req, res) {
+        var param = Object.assign(req.params, req.query);
+        param['ngaysuachua'] = new Date();
+        return Abstract.update(Bill, req.body, req.params);
     },
     delete: async function (req, res, next) {
         try {

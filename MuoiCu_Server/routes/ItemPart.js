@@ -1,5 +1,4 @@
-const router = require('express').Router();
-const ItemPart = require('../controllers/ItemPart');
+const router = require('../lib/router').Router();
 const Item = require('../controllers/Item');
 
 router.get('/', Item.getList);
@@ -11,4 +10,4 @@ router.delete('/all/:loaiphutung', Item.deleteAll);
 router.post('/import/', Item.addMutil);
 
 
-module.exports = router;
+module.exports = router.router;

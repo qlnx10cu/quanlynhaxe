@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ModalAlert, ModalContent, CloseButton } from '../../styles'
 import { setAlert } from "../../actions/App";
 import { connect } from 'react-redux'
 
 const AlertWarrper = (props) => {
+
+    useEffect(() => {
+        function handleEscapeKey(event) {
+            if (event.code === 'Escape') {
+                onCloseClick();
+            }
+        }
+        document.addEventListener('keydown', handleEscapeKey)
+        return () => document.removeEventListener('keydown', handleEscapeKey)
+    }, [])
+
     const onCloseClick = () => {
         props.setAlert(false, null, 0);
     }

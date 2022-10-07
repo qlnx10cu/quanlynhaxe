@@ -1,3 +1,6 @@
+const query = require("../lib/db");
+const Abstract = require("./Abstract");
+
 class Item {
     static getNameTable() {
         return "phutung";
@@ -32,6 +35,41 @@ class Item {
             obj[e] = param[e];
         });
         return obj;
+    }
+
+    static async getChiTiet(param) {
+        try {
+            const maphutung = param.maphutung;
+            var item = await Abstract.getOne(Item, param);
+            if (!item || item.maphutung != maphutung)
+                return {};
+            var chitiet = [];
+            let sql = '';
+            var res = [];
+
+            sql = "select * from lichsuphutung where maphutung=? order by timeindex desc limit 1000";
+            res = await query(sql, [maphutung]);
+            if (res && res.length != 0)
+                item.lichsu = res;
+            else
+                item.lichsu = [];
+            sql = "select ct.*,hd.ngaythanhtoan from chitiethoadonsuachua ct left join hoadon hd on ct.mahoadon = hd.mahoadon and hd.trangthai!=2  where maphutung=? order by hd.ngaythanhtoan limit 100";
+            res = await query(sql, [maphutung]);
+            if (res && res.length != 0)
+                chitiet = chitiet.concat(res);
+
+            sql = "select ct.*,hd.ngaythanhtoan from chitiethoadonle ct left join hoadon hd on ct.mahoadon = hd.mahoadon and hd.trangthai!=2  where maphutung=? order by hd.ngaythanhtoan limit 100";
+            res = await query(sql, [maphutung]);
+            if (res && res.length != 0)
+                chitiet = chitiet.concat(res);
+
+            item.chitiet = chitiet.sort((a, b) => (b.ngaythanhtoan || '').localeCompare(a.ngaythanhtoan || ''));
+
+            return item;
+        } catch (e) {
+            console.log('daye', e);
+            return {};
+        }
     }
 
 }

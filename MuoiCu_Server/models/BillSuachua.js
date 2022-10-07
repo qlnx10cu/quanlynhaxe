@@ -18,12 +18,12 @@ class BillChan {
         return `${tb}.tenphutungvacongviec,${tb}.maphutung,${tb}.soluongphutung,${tb}.tiencong,${tb}.chietkhau,${tb}.tongtien,${tb}.manvsuachua`;
     }
     static getParam(param) {
-        let tmp = ['mahoadon', 'tenphutungvacongviec', 'maphutung', 'dongia', 'nhacungcap', 'soluongphutung','chietkhau' ,'tiencong', 'tongtien', 'manvsuachua'];
+        let tmp = ['mahoadon', 'tenphutungvacongviec', 'maphutung', 'dongia', 'nhacungcap', 'soluongphutung', 'chietkhau', 'tiencong', 'tongtien', 'manvsuachua'];
         let arr = Object.keys(param).filter(e => tmp.includes(e)).map(e => param[e])
         return arr;
     }
     static getArrayParam(param) {
-        let tmp = ['mahoadon', 'tenphutungvacongviec', 'maphutung', 'dongia', 'nhacungcap', 'soluongphutung','chietkhau', 'tiencong', 'tongtien', 'manvsuachua'];
+        let tmp = ['mahoadon', 'tenphutungvacongviec', 'maphutung', 'dongia', 'nhacungcap', 'soluongphutung', 'chietkhau', 'tiencong', 'tongtien', 'manvsuachua'];
         let obj = {};
         let arr = Object.keys(param).filter(e => tmp.includes(e));
         arr.forEach(e => {
@@ -106,7 +106,7 @@ class BillChan {
             let sql = "select * from hoadon where mahoadon= ? and trangthai!=2";
             var result = [];
             var res = await query(sql, param);
-            if (!res || res.count == 0)
+            if (!res || res.length == 0)
                 return [];
             result = res[0];
             sql = "select * from chitiethoadonsuachua ct where ct.mahoadon=?  AND maphutung!=''";

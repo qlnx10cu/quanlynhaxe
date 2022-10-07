@@ -1,10 +1,75 @@
-import React, { useEffect } from 'react';
-import { Modal, ModalContent, DivFlexRow, DivFlexColumn, Input, Button, DelButton } from '../../../styles'
-import lib from '../../../lib'
+import React, { useEffect, useState } from 'react';
+import { Modal, ModalContent, DivFlexRow, DivFlexColumn, Input, Button, DelButton, Tab, Table } from '../../../styles'
 import { AddPhuTung, UpdatePhuTung, GetDetailPhuTung } from '../../../API/PhuTungAPI'
+import lib from '../../../lib'
+import moment from 'moment';
+
+const RenderTableDetail = ({ lichsu }) => {
+
+    return (
+        <React.Fragment>
+            <Table>
+                <tbody>
+                    <tr>
+                        <th>STT</th>
+                        <th>Ngày</th>
+                        <th>Giá mới</th>
+                        <th>Giá cũ</th>
+                        <th>Số lượng trươc khi nhập</th>
+                        <th>Số lượng nhập vào</th>
+                        <th>Số lượng sau khi nhập</th>
+                    </tr>
+                    {(lichsu || []).map((item, index) => (
+                        <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>{moment(item.ngaycapnhat || new Date()).format('DD/MM/YYYY')}</td>
+                            <td>{item.giaban_le}</td>
+                            <td>{item.giaban_cu}</td>
+                            <td>{item.soluongtonkho}</td>
+                            <td>{item.soluongtruocdo}</td>
+                            <td>{item.soluongtonkho + item.soluongtruocdo}</td>
+                        </tr>
+                    ))};
+                </tbody>
+            </Table>
+        </React.Fragment>
+    )
+}
+
+const RenderTableDetailHoaDon = ({ chitiet }) => {
+
+    return (
+        <React.Fragment>
+            <Table>
+                <tbody>
+                    <tr>
+                        <th>STT</th>
+                        <th>Ngày</th>
+                        <th>Mã Hóa Đơn</th>
+                        <th>Số lượng</th>
+                    </tr>
+
+                    {(chitiet || []).map((item, index) => (
+                        <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>{moment(item.ngaythanhtoan).format('DD/MM/YYYY')}</td>
+                            <td>{item.mahoadon}</td>
+                            <td>{item.soluong || item.soluongphutung}</td>
+                        </tr>
+                    ))};
+
+                </tbody>
+            </Table>
+        </React.Fragment>
+    )
+}
+
 
 const PopupPhuTung = (props) => {
 
+    let [activePage, setActive] = useState(0);
+    let mChiTiet = lib.handleInput([]);
+    let mLichSu = lib.handleInput([]);
     let mMaPhuTung = lib.handleInput("");
     let mNameEng = lib.handleInput("");
     let mNameVie = lib.handleInput("");
@@ -28,19 +93,23 @@ const PopupPhuTung = (props) => {
         mModel.setValue('');
         mColor.setValue('');
         mNote.setValue('');
+        mChiTiet.setValue([]);
+        mLichSu.setValue([]);
         if (item && item.maphutung) {
             GetDetailPhuTung(props.token, item.maphutung).then(res => {
                 let _item = res.data;
                 mMaPhuTung.setValue(_item.maphutung);
                 mNameEng.setValue(_item.tentienganh);
                 mNameVie.setValue(_item.tentiengviet);
-                mGiaBanHead.setValue(_item.giaban_head);
-                mGiaBanLe.setValue(_item.giaban_le);
+                mGiaBanHead.setValue(_item.giaban_head || 0);
+                mGiaBanLe.setValue(_item.giaban_le || 0);
                 mViTri.setValue(_item.vitri);
-                mSoLuongTonKho.setValue(_item.soluongtonkho)
+                mSoLuongTonKho.setValue(_item.soluongtonkho || 0)
                 mModel.setValue(_item.model);
                 mColor.setValue(_item.mamau);
                 mNote.setValue(_item.ghichu);
+                mChiTiet.setValue(_item.chitiet);
+                mLichSu.setValue(_item.lichsu);
             })
                 .catch(err => {
                     alert("Không lấy được chi tiết: ");
@@ -124,6 +193,8 @@ const PopupPhuTung = (props) => {
             })
     }
 
+    const isUpdate = item && item.maphutung;
+
     return (
         <Modal className={props.isShowing ? "active" : ""}>
             <ModalContent>
@@ -144,25 +215,24 @@ const PopupPhuTung = (props) => {
                 </DivFlexRow>
 
                 <DivFlexRow >
-                    {(!item || !item.maphutung) && <DivFlexColumn style={{ flex: 1 }}>
+                    <DivFlexColumn style={{ flex: 1 }}>
                         <label>Giá nhập</label>
-                        <Input type="number" min={0} {...mGiaBanHead} />
-                    </DivFlexColumn>}
-                    <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
-                        <label>Giá bán lẻ</label>
-                        <Input type="number" min={0} {...mGiaBanLe} />
+                        <Input type="number" min={0} {...mGiaBanHead} readOnly={isUpdate} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
-                        <label>Vị trí</label>
-                        <Input  {...mViTri} />
+                        <label>Giá bán lẻ</label>
+                        <Input type="number" min={0} {...mGiaBanLe} readOnly={isUpdate} />
+                    </DivFlexColumn>
+                    <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
+                        <label>Số lượng tồn kho </label>
+                        <Input type="number" min={0} {...mSoLuongTonKho} readOnly={isUpdate} />
                     </DivFlexColumn>
                 </DivFlexRow>
 
-
                 <DivFlexRow >
                     <DivFlexColumn style={{ flex: 1 }}>
-                        <label>Số lượng tồn kho </label>
-                        <Input type="number" min={0} {...mSoLuongTonKho} />
+                        <label>Vị trí</label>
+                        <Input  {...mViTri} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Model</label>
@@ -172,15 +242,31 @@ const PopupPhuTung = (props) => {
                         <label>Ghi chú</label>
                         <Input {...mNote} />
                     </DivFlexColumn>
+                    <DivFlexColumn style={{ flex: 1, marginLeft: 15 }} >
+                        <label>Màu</label>
+                        <Input type="color" style={{ height: "35px", margin: "8px 0", padding: "1px 2px", maxWidth: "150px" }} {...mColor} />
+                    </DivFlexColumn>
                 </DivFlexRow>
-                <DivFlexColumn >
-                    <label>Màu</label>
-                    <Input type="color" width={"45px"} {...mColor} />
-                </DivFlexColumn>
+
+                {isUpdate &&
+                    <div>
+                        <Tab>
+                            <button className={activePage === 0 ? "active" : ""} onClick={() => setActive(0)}>Lịch sử nhập hàng</button>
+                            <button className={activePage === 1 ? "active" : ""} onClick={() => setActive(1)}>Lịch sử hóa đơn</button>
+                        </Tab>
+                        {activePage === 0 &&
+                            <RenderTableDetail lichsu={mLichSu.value} {...props} />
+                        }
+                        {activePage === 1 &&
+                            <RenderTableDetailHoaDon chitiet={mChiTiet.value} {...props} />
+                        }
+
+                    </div>
+                }
 
                 <DivFlexRow style={{ justifyContent: 'flex-end' }}>
-                    {(!item || !item.maphutung) && <Button onClick={handleAdd}>Lưu</Button>}
-                    {item && item.maphutung && <Button onClick={handleUpdate}>Cập nhật</Button>}
+                    {!isUpdate && <Button onClick={handleAdd}>Lưu</Button>}
+                    {isUpdate && <Button onClick={handleUpdate}>Cập nhật</Button>}
                     <DelButton onClick={() => props.onCloseClick()} style={{ marginLeft: 15 }}>Hủy bỏ</DelButton>
                 </DivFlexRow>
 

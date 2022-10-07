@@ -334,9 +334,9 @@ const Products = (props) => {
                                 setSanPham(e.target.value)
                             }} >
                                 <option value={PHU_TUNG}>Phụ tùng</option>
-                                <option value={PHU_KIEN}>Phụ kiện</option>
+                                {/* <option value={PHU_KIEN}>Phụ kiện</option>
                                 <option value={NON_BH}>Nón bảo hiểm</option>
-                                <option value={DAU_NHOT}>Dầu nhớt</option>
+                                <option value={DAU_NHOT}>Dầu nhớt</option> */}
                             </Select>
                         </DivFlexRow>
                         <div>
@@ -346,7 +346,7 @@ const Products = (props) => {
                                     accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                     onChange={(e) => handleChoseFile(e)} />
                                 Import +
-                        </ButtonChooseFile>
+                            </ButtonChooseFile>
                             <Button onClick={(e) => handleExportFile(e)} >Export file thống kê</Button>
                         </div>
                     </DivFlexRow>
@@ -355,7 +355,7 @@ const Products = (props) => {
                             token={props.token} parent={props}
                             isActive={mSanPham === PHU_TUNG}
                         />
-                        <PhuKien
+                        {/* <PhuKien
                             token={props.token} parent={props}
                             isActive={mSanPham === PHU_KIEN}
                         />
@@ -366,7 +366,7 @@ const Products = (props) => {
                         <DauNhot
                             token={props.token} parent={props}
                             isActive={mSanPham === DAU_NHOT}
-                        />
+                        /> */}
                     </div>
                 </div>
 

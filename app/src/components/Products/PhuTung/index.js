@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ProductContainer, DivFlexRow, Button, Table, DelButton, Input, Select } from '../../../styles'
 import PopupPhuTung from './PopupPhuTung'
 import { DelPhuTung, DelAllPhuTung } from '../../../API/PhuTungAPI'
-import { alert, error } from "../../../actions/App";
+import { alert, error, confirm } from "../../../actions/App";
 
 import { connect } from 'react-redux'
 import _ from 'lodash'
@@ -112,15 +112,16 @@ const PhuTung = (props) => {
     };
 
     const handleXoaHetPhutung = () => {
-        if (window.confirm("Bạn chắc muốn hủy")) {
+        props.confirm("Bạn chắc muốn hủy", () => {
             DelAllPhuTung(props.token).then(res => {
                 props.alert("Xóa thành công.");
-                window.location.reload();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             }).catch(err => {
                 props.error("Không xóa được. @@")
             })
-        }
-
+        });
     }
 
     const handleNextPage = () => {
@@ -155,7 +156,7 @@ const PhuTung = (props) => {
             <DivFlexRow style={{ justifyContent: 'space-between' }}>
                 <h3>Danh sách phụ tùng</h3>
                 <Button onClick={() => { handleXoaHetPhutung(); }}>Xóa hết phụ tùng</Button>
-                <Button onClick={() => { setShowing(true); setItemEdit(null) }}>Thêm mới</Button>
+                <div></div>
             </DivFlexRow>
             <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginTop: 5, marginBottom: 15 }}>
                 <DivFlexRow style={{ alignItems: 'center' }}>
@@ -265,6 +266,7 @@ const mapState = (state) => ({
 });
 
 const mapDispatch = (dispatch) => ({
+    confirm: (mess, callback) => { dispatch(confirm(mess, callback)) },
     alert: (mess) => { dispatch(alert(mess)) },
     error: (mess) => { dispatch(error(mess)) },
 })

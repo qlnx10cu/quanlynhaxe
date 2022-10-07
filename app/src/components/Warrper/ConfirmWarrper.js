@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ModalAlert, ModalContent, CloseButton, CancleButton, Button, DivFlexRow } from '../../styles'
 import { setConfirm } from "../../actions/App";
 import { connect } from 'react-redux'
 
 const ConfirmWarrper = (props) => {
+    useEffect(() => {
+        function handleEscapeKey(event) {
+            if (event.code === 'Escape') {
+                onCloseClick();
+            }
+        }
+        document.addEventListener('keydown', handleEscapeKey)
+        return () => document.removeEventListener('keydown', handleEscapeKey)
+    }, [])
+
     const onCloseClick = () => {
         props.setConfirm(false, '', null);
     }

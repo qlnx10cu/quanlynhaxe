@@ -9,7 +9,7 @@ module.exports = {
         return Abstract.getList(Item, req.query);
     },
     getByMa: function (req, res) {
-        return Abstract.getOne(Item, Object.assign(req.params, req.query));
+        return Item.getChiTiet(Object.assign(req.params, req.query));
     },
     add: function (req, res) {
         return Abstract.add(Item, { ...req.body });
@@ -32,6 +32,7 @@ module.exports = {
         body.chitiet.map(e => {
             e.timeindex = timeindex;
             e.loai = 0;
+            e.ngaycapnhap = new Date();
             return e;
         })
 

@@ -58,7 +58,7 @@ class BillLe {
             let sql = "select * from hoadon where mahoadon= ? and trangthai=1 and loaihoadon=1";
             var result = [];
             var res = await query(sql, param);
-            if (!res|| res.length == 0) {
+            if (!res || res.length == 0) {
                 return null;
             }
             result = res[0];
@@ -86,7 +86,7 @@ class BillLe {
         let sql = "select * from hoadon where mahoadon= ? and trangthai=1 and loaihoadon=1";
         var result = [];
         var res = await query(sql, param);
-        if (!res || res.count == 0)
+        if (!res || res.length == 0)
             return [];
         result = res[0];
         sql = "select * from chitiethoadonle ct where ct.mahoadon=?  AND maphutung!=''";

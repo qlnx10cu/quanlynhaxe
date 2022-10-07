@@ -53,14 +53,12 @@ const PopupCuaHangNgoai = (props) => {
 
 
     useEffect(() => {
+        clearData();
         if (props.item) {
             setTenphutung(props.item.tenphutung);
             setNhacungcap(props.item.nhacungcap);
             setDonGia(props.item.dongia);
             setGhiChu(props.item.ghichu);
-        }
-        else {
-            clearData();
         }
     }, [props.item]);
 

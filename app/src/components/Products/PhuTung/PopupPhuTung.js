@@ -18,6 +18,16 @@ const PopupPhuTung = (props) => {
     let item = props.item;
 
     useEffect(() => {
+        mMaPhuTung.setValue('');
+        mNameEng.setValue('');
+        mNameVie.setValue('');
+        mGiaBanHead.setValue('');
+        mGiaBanLe.setValue('');
+        mViTri.setValue('');
+        mSoLuongTonKho.setValue('')
+        mModel.setValue('');
+        mColor.setValue('');
+        mNote.setValue('');
         if (item && item.maphutung) {
             GetDetailPhuTung(props.token, item.maphutung).then(res => {
                 let _item = res.data;
@@ -35,17 +45,6 @@ const PopupPhuTung = (props) => {
                 .catch(err => {
                     alert("Không lấy được chi tiết: ");
                 })
-        } else {
-            mMaPhuTung.setValue('');
-            mNameEng.setValue('');
-            mNameVie.setValue('');
-            mGiaBanHead.setValue('');
-            mGiaBanLe.setValue('');
-            mViTri.setValue('');
-            mSoLuongTonKho.setValue('')
-            mModel.setValue('');
-            mColor.setValue('');
-            mNote.setValue('');
         }
 
     }, [item])

@@ -38,6 +38,8 @@ const NoteCSKH = (props) => {
     const data = props.data || {};
 
     useEffect(() => {
+        setNote("");
+        setTrangThai(0);
         if (props.data) {
             setNote(props.data.ghichu);
             setTrangThai(props.data.trangthai);

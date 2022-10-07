@@ -22,6 +22,16 @@ const CustomerDetail = (props) => {
 
     let item = props.editItem;
     useEffect(() => {
+        setCustomerName('');
+        setSDT('');
+        setAddress('');
+        setSoXe('');
+        setLoaiXe('');
+        setSoKhung('');
+        setSoMay('');
+        setGioiTinh('Nam');
+        setThanhPho('An Giang');
+        setZaloId('');
         if (item && item.ma) {
             setCustomerName(item.ten);
             setSDT(item.sodienthoai);
@@ -33,18 +43,6 @@ const CustomerDetail = (props) => {
             setGioiTinh(item.gioitinh || 'Nam');
             setThanhPho(item.thanhpho);
             setZaloId(item.zaloid);
-        }
-        else {
-            setCustomerName('');
-            setSDT('');
-            setAddress('');
-            setSoXe('');
-            setLoaiXe('');
-            setSoKhung('');
-            setSoMay('');
-            setGioiTinh('Nam');
-            setThanhPho('An Giang');
-            setZaloId('');
         }
     }, [item])
 

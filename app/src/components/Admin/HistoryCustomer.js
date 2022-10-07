@@ -258,6 +258,7 @@ const HistoryCustomer = (props) => {
 
     let ma = props.ma;
     useEffect(() => {
+        setData({});
         if (ma) {
             GetCustomerDetail(props.token, ma).then((res) => {
                 setData(res.data);
@@ -265,8 +266,6 @@ const HistoryCustomer = (props) => {
                 alert('không thể xem được chi tiết');
                 console.log(err);
             })
-        } else {
-            setData({});
         }
     }, [ma])
 

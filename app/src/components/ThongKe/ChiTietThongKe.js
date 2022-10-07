@@ -29,6 +29,8 @@ const ChiTietThongKe = (props) => {
     }, [])
 
     useEffect(() => {
+        setData(null);
+        setStaff(null);
         if (props.isShowing) {
             if (props.loaihoadon === 1) {
                 //Bill le

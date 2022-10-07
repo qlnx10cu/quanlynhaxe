@@ -46,12 +46,11 @@ const RepairPriceDetail = (props) => {
     }
 
     useEffect(() => {
-        if (props.editItem&&props.editItem.ma) {
+        setName("");
+        setPrice(0);
+        if (props.editItem && props.editItem.ma) {
             setName(props.editItem.ten);
             setPrice(props.editItem.tien);
-        } else {
-            setName("");
-            setPrice(0);
         }
 
     }, [props.editItem])
@@ -69,11 +68,11 @@ const RepairPriceDetail = (props) => {
                     <DivFlexColumn style={{ marginLeft: 25, width: '100%' }}>
                         <DivFlexColumn style={{ fontSize: 20, marginBottom: 10 }}>
                             Tên Dịch Vụ
-                                <Input width='auto' value={mName} onChange={(e) => setName(e.target.value)} />
+                            <Input width='auto' value={mName} onChange={(e) => setName(e.target.value)} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ fontSize: 20, marginBottom: 10 }}>
                             Giá Tiền
-                                <Input type="Number" width='auto' value={mPrice} onChange={(e) => setPrice(e.target.value)} />
+                            <Input type="Number" width='auto' value={mPrice} onChange={(e) => setPrice(e.target.value)} />
                         </DivFlexColumn>
 
                     </DivFlexColumn>

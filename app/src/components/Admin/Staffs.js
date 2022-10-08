@@ -44,9 +44,12 @@ const Staffs = (props) => {
         }
     }
     return (
-        <div>
-            {props.isLoading && <Loading />}
-            {!props.isLoading &&
+        <Choose>
+            <When condition={props.isLoading}>
+                <Loading />
+            </When>
+            <Otherwise>
+
                 <React.Fragment>
                     <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ fontSize: '20px' }}>Danh sách nhân viên</span>
@@ -55,7 +58,7 @@ const Staffs = (props) => {
                             setEditItem(null);
                         }}>
                             Thêm mới
-                        <i className="fas fa-plus"></i>
+                            <i className="fas fa-plus"></i>
                         </Button>
                     </DivFlexRow>
                     <DivFlexRow style={{ alignItems: 'center', marginTop: 5, marginBottom: 15 }}>
@@ -64,7 +67,7 @@ const Staffs = (props) => {
                             handleButtonSearch();
                         }}>
                             Tìm Kiếm
-                        <i className="fas fa-search"></i>
+                            <i className="fas fa-search"></i>
                         </Button>
                     </DivFlexRow>
                     <Table>
@@ -120,9 +123,8 @@ const Staffs = (props) => {
                     } editItem={editItem} />
 
                 </React.Fragment>
-            }
-
-        </div>
+            </Otherwise>
+        </Choose>
 
     )
 }

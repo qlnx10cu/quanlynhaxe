@@ -21,7 +21,9 @@ const RenderTableDetail = ({ lichsu }) => {
 
     return (
         <React.Fragment>
-            <DataTable data={lichsu} >
+            <DataTable
+                data={lichsu}
+            >
                 <DataTable.Header>
                     <th>STT</th>
                     <th>Ngày</th>
@@ -52,7 +54,10 @@ const RenderTableDetailHoaDon = ({ chitiet }) => {
 
     return (
         <React.Fragment>
-            <DataTable data={chitiet} >
+            <DataTable
+                data={chitiet}
+                searchData={(search, e) => search == "" || e.mahoadon.toLowerCase().includes(search.toLowerCase())}
+            >
                 <DataTable.Header>
                     <th>STT</th>
                     <th>Ngày</th>

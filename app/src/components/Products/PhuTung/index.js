@@ -95,7 +95,10 @@ const PhuTung = (props) => {
                 <div></div>
             </DivFlexRow>
 
-            <DataTable data={mArrPhuTung} >
+            <DataTable
+                data={mArrPhuTung}
+                searchData={(search, e) => search == "" || e.maphutung.toLowerCase().includes(search.toLowerCase())}
+            >
                 <DataTable.Header>
                     <th>STT</th>
                     <th>Mã phụ tùng</th>

@@ -1,65 +1,68 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, ModalContent, DivFlexRow, DivFlexColumn, Input, Button, DelButton, Tab, Table, CloseButton } from '../../../styles'
-import { AddPhuTung, UpdatePhuTung, GetDetailPhuTung } from '../../../API/PhuTungAPI'
+import { AddPhuTung, UpdatePhuTung, GetDetailPhuTung } from '../../../API/PhuTungAPI';
+import DataTable from '../../Warrper/DataTable';
 import lib from '../../../lib'
 import moment from 'moment';
 
 const RenderTableDetail = ({ lichsu }) => {
 
+    const ItemTable = ({ item, index }) => {
+        return (<tr>
+            <td>{index + 1}</td>
+            <td>{moment(item.ngaycapnhat || new Date()).format('DD/MM/YYYY')}</td>
+            <td>{item.giaban_le}</td>
+            <td>{item.giaban_cu}</td>
+            <td>{item.soluongtonkho}</td>
+            <td>{item.soluongtruocdo}</td>
+            <td>{item.soluongtonkho + item.soluongtruocdo}</td>
+        </tr>)
+    }
+
     return (
         <React.Fragment>
-            <Table>
-                <tbody>
-                    <tr>
-                        <th>STT</th>
-                        <th>Ngày</th>
-                        <th>Giá mới</th>
-                        <th>Giá cũ</th>
-                        <th>Số lượng trươc khi nhập</th>
-                        <th>Số lượng nhập vào</th>
-                        <th>Số lượng sau khi nhập</th>
-                    </tr>
-                    {(lichsu || []).map((item, index) => (
-                        <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{moment(item.ngaycapnhat || new Date()).format('DD/MM/YYYY')}</td>
-                            <td>{item.giaban_le}</td>
-                            <td>{item.giaban_cu}</td>
-                            <td>{item.soluongtonkho}</td>
-                            <td>{item.soluongtruocdo}</td>
-                            <td>{item.soluongtonkho + item.soluongtruocdo}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+            <DataTable data={lichsu} >
+                <DataTable.Header>
+                    <th>STT</th>
+                    <th>Ngày</th>
+                    <th>Giá mới</th>
+                    <th>Giá cũ</th>
+                    <th>Số lượng trươc khi nhập</th>
+                    <th>Số lượng nhập vào</th>
+                    <th>Số lượng sau khi nhập</th>
+                </DataTable.Header>
+                <DataTable.Body>
+                    <ItemTable />
+                </DataTable.Body>
+            </DataTable>
         </React.Fragment>
     )
 }
 
 const RenderTableDetailHoaDon = ({ chitiet }) => {
 
+    const ItemTable = ({ item, index }) => {
+        return (<tr>
+            <td>{index + 1}</td>
+            <td>{moment(item.ngaythanhtoan).format('DD/MM/YYYY')}</td>
+            <td>{item.mahoadon}</td>
+            <td>{item.soluong || item.soluongphutung}</td>
+        </tr>)
+    }
+
     return (
         <React.Fragment>
-            <Table>
-                <tbody>
-                    <tr>
-                        <th>STT</th>
-                        <th>Ngày</th>
-                        <th>Mã Hóa Đơn</th>
-                        <th>Số lượng</th>
-                    </tr>
-
-                    {(chitiet || []).map((item, index) => (
-                        <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{moment(item.ngaythanhtoan).format('DD/MM/YYYY')}</td>
-                            <td>{item.mahoadon}</td>
-                            <td>{item.soluong || item.soluongphutung}</td>
-                        </tr>
-                    ))}
-
-                </tbody>
-            </Table>
+            <DataTable data={chitiet} >
+                <DataTable.Header>
+                    <th>STT</th>
+                    <th>Ngày</th>
+                    <th>Mã Hóa Đơn</th>
+                    <th>Số lượng</th>
+                </DataTable.Header>
+                <DataTable.Body>
+                    <ItemTable />
+                </DataTable.Body>
+            </DataTable>
         </React.Fragment>
     )
 }
@@ -83,6 +86,7 @@ const PopupPhuTung = (props) => {
     let item = props.item;
 
     useEffect(() => {
+        setActive(0);
         mMaPhuTung.setValue('');
         mNameEng.setValue('');
         mNameVie.setValue('');

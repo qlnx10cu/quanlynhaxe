@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import DataTable from '../../Warrper/DataTable';
 import { ProductContainer, DivFlexRow, Button, Table, DelButton, Input, Select } from '../../../styles'
 import PopupPhuTung from './PopupPhuTung'
 import { DelPhuTung, DelAllPhuTung } from '../../../API/PhuTungAPI'
@@ -8,7 +9,7 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 
 const PhuTungItem = ({
-    stt,
+    index,
     item,
     token,
     getList = () => {
@@ -34,11 +35,10 @@ const PhuTungItem = ({
 
     return (
         <tr>
-            <td>{stt}</td>
+            <td>{index + 1}</td>
             <td>{item.maphutung}</td>
             <td>{item.tentiengviet}</td>
-            {/* <td>{item.giaban_head.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td> */}
-            <td>{item.giaban_le.toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
+            <td>{(item.giaban_le || '').toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
             <td>{item.vitri}</td>
             <td>{item.soluongtonkho}</td>
             <td>
@@ -61,55 +61,17 @@ const PhuTungItem = ({
 
 const PhuTung = (props) => {
 
+    let chucvu = (props.info && props.info.chucvu) ? props.info.chucvu : null;
     let [isShowing, setShowing] = useState(false);
     let [itemEdit, setItemEdit] = useState({});
-
     let [mArrPhuTung, setArrPhuTung] = useState([]);
-    let [mArrPhuTungTemp, setArrPhuTungTemp] = useState([]);
-    let [searchValue, setSearchValue] = useState("");
-    let [maxPage, setMaxPage] = useState(0);
-    let [page, setPage] = useState(0);
-    let chucvu = null;
-    let [maxSizePage, setMaxSizePage] = useState(250);
-
-    if (props.info && props.info.chucvu) {
-        chucvu = props.info.chucvu
-    }
-
-    const handleButtonSearch = () => {
-        let search = "";
-        if (searchValue === "") {
-            search = "ALL"
-        }
-        else {
-            search = searchValue;
-        }
-        let list = props.listPhuTung.filter(function (item) {
-            return (checkHasRender(search, item));
-        });
-        setArrPhuTungTemp(list);
-        tachList(list, maxSizePage);
-    };
-
-    const _handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            handleButtonSearch();
-        }
-    };
 
     useEffect(() => {
         if (props.listPhuTung) {
-            setArrPhuTungTemp(props.listPhuTung);
-            tachList(props.listPhuTung, maxSizePage);
+            setArrPhuTung(props.listPhuTung);
         }
     }, [props.listPhuTung.length]);
 
-    const tachList = (list, size) => {
-        let tmp = _.chunk(list, size);
-        setArrPhuTung(tmp);
-        setMaxPage(tmp.length);
-        setPage(0);
-    };
 
     const handleXoaHetPhutung = () => {
         props.confirm("Bạn chắc muốn hủy", () => {
@@ -124,32 +86,6 @@ const PhuTung = (props) => {
         });
     }
 
-    const handleNextPage = () => {
-        let newPage = page + 1;
-        if (newPage >= maxPage) {
-            return;
-        }
-        setPage(newPage);
-    };
-
-    const handlePrevPage = () => {
-        let newPage = page - 1;
-        if (newPage < 0) {
-            return;
-        }
-        setPage(newPage);
-    };
-
-    const checkHasRender = (Search, item) => {
-        let strSearch = Search.toLowerCase();
-        return (Search === "ALL" || item.tentiengviet.toLowerCase().includes(strSearch) || item.maphutung.toLowerCase().includes(strSearch));
-    };
-
-    const handleChangeSoHang = (e) => {
-        setMaxSizePage(parseInt(e));
-        tachList(mArrPhuTungTemp, e);
-    }
-
     return (
 
         <ProductContainer className={props.isActive ? "active" : ""}>
@@ -158,93 +94,32 @@ const PhuTung = (props) => {
                 <Button onClick={() => { handleXoaHetPhutung(); }}>Xóa hết phụ tùng</Button>
                 <div></div>
             </DivFlexRow>
-            <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginTop: 5, marginBottom: 15 }}>
-                <DivFlexRow style={{ alignItems: 'center' }}>
-                    <Input onKeyPress={_handleKeyPress} style={{ width: 250, marginRight: 15 }}
-                        onChange={(e) => setSearchValue(e.target.value)} />
-                    <Button onClick={() => {
-                        handleButtonSearch();
-                    }}>
-                        Tìm Kiếm
-                        <i className="fas fa-search" />
-                    </Button>
-                </DivFlexRow>
 
-                <DivFlexRow style={{ alignItems: ' center', justifyContent: 'flex-end' }}>
-                    <label>Số hàng </label>
-                    <Select style={{ marginLeft: 10 }} width={100} value={maxSizePage} onChange={(e) => handleChangeSoHang(e.target.value)} >
-                        <option value="25" >25</option>
-                        <option value="50" >50</option>
-                        <option value="100" >100</option>
-                        <option value="250" >250</option>
-                        <option value="500" >500</option>
-                        <option value="1000" >1000</option>
-                        <option value="2000" >2000</option>
-                    </Select>
-
-                    <Button style={{ marginLeft: 35 }} onClick={handlePrevPage}>
-                        <i className="fas fa-angle-double-left"></i>
-                    </Button>
-                    <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginLeft: 10 }}>
-                        <div> {page + 1}/{maxPage > 1 ? maxPage : 1}</div>
-                    </DivFlexRow>
-                    <Button style={{ marginLeft: 15 }} onClick={handleNextPage}>
-                        <i className="fas fa-angle-double-right"></i>
-                    </Button>
-                </DivFlexRow>
-
-            </DivFlexRow>
-            <Table style={{ marginTop: 15 }}>
-                <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Mã phụ tùng</th>
-                        <th>Tên tiếng việt</th>
-                        {/* <th>Giá nhập</th> */}
-                        <th>Giá bán lẻ</th>
-                        <th>Vị trí</th>
-                        <th>Số lượng <br /> tồn kho</th>
-                        <th>Sửa/Xóa</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        mArrPhuTung[page] && mArrPhuTung[page].map((item, index) => (
-                            <PhuTungItem
-                                key={index}
-                                stt={index + page * maxSizePage + 1}
-                                item={item}
-                                token={props.token}
-                                getList={() => {
-                                }}
-                                alertProps={props.alert}
-                                alertError={props.parent.error}
-                                confirmErrorProps={props.parent.confirmError}
-                                setShowing={setShowing}
-                                setItemEdit={
-                                    setItemEdit
-                                }
-                            />
-                        ))
-                    }
-
-                </tbody>
-            </Table>
-            <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginTop: 5, marginBottom: 15 }}>
-                <DivFlexRow style={{ alignItems: 'center' }}>
-                </DivFlexRow>
-                <DivFlexRow>
-                    <Button onClick={handlePrevPage}>
-                        <i className="fas fa-angle-double-left"></i>
-                    </Button>
-                    <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginLeft: 10 }}>
-                        <div> {page + 1}/{maxPage > 1 ? maxPage : 1}</div>
-                    </DivFlexRow>
-                    <Button style={{ marginLeft: 15 }} onClick={handleNextPage}>
-                        <i className="fas fa-angle-double-right"></i>
-                    </Button>
-                </DivFlexRow>
-            </DivFlexRow>
+            <DataTable data={mArrPhuTung} >
+                <DataTable.Header>
+                    <th>STT</th>
+                    <th>Mã phụ tùng</th>
+                    <th>Tên tiếng việt</th>
+                    <th>Giá bán lẻ</th>
+                    <th>Vị trí</th>
+                    <th>Số lượng</th>
+                    <th>Sửa/Xóa</th>
+                </DataTable.Header>
+                <DataTable.Body>
+                    <PhuTungItem
+                        token={props.token}
+                        getList={() => {
+                        }}
+                        alertProps={props.alert}
+                        alertError={props.parent.error}
+                        confirmErrorProps={props.parent.confirmError}
+                        setShowing={setShowing}
+                        setItemEdit={
+                            setItemEdit
+                        }
+                    />
+                </DataTable.Body>
+            </DataTable>
             <PopupPhuTung
                 chucvu={chucvu}
                 item={itemEdit}

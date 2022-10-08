@@ -131,7 +131,7 @@ gulp.task("env:prod", (done) => {
 });
 
 gulp.task("lint", () => {
-    const src = ["gulpfile.js", "lib/**/*.js", "lib/**/*.jsx"];
+    const src = ["gulpfile.js", "src/**/*.js", "src/**/*.jsx"];
 
     return gulp.src(src)
         .pipe(plumber())
@@ -229,7 +229,6 @@ gulp.task("live", gulp.series(
     "css",
     "resources",
     "watch",
-    "openbrowser"
 ));
 
 gulp.task("default", gulp.series("prod"));

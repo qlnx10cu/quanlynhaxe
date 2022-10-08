@@ -66,7 +66,7 @@ const PhuTung = (props) => {
 
     let [mArrPhuTung, setArrPhuTung] = useState([]);
     let [mArrPhuTungTemp, setArrPhuTungTemp] = useState([]);
-    let [searchValue, setSearchValue] = useState("");
+    let [searchValue, setSearchValue] = useState("06455KVBT01");
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
     let chucvu = null;
@@ -101,6 +101,7 @@ const PhuTung = (props) => {
         if (props.listPhuTung) {
             setArrPhuTungTemp(props.listPhuTung);
             tachList(props.listPhuTung, maxSizePage);
+            handleButtonSearch();
         }
     }, [props.listPhuTung.length]);
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, ModalContent, DivFlexRow, DivFlexColumn, Input, Button, DelButton, Tab, Table } from '../../../styles'
+import { Modal, ModalContent, DivFlexRow, DivFlexColumn, Input, Button, DelButton, Tab, Table, CloseButton } from '../../../styles'
 import { AddPhuTung, UpdatePhuTung, GetDetailPhuTung } from '../../../API/PhuTungAPI'
 import lib from '../../../lib'
 import moment from 'moment';
@@ -29,7 +29,7 @@ const RenderTableDetail = ({ lichsu }) => {
                             <td>{item.soluongtruocdo}</td>
                             <td>{item.soluongtonkho + item.soluongtruocdo}</td>
                         </tr>
-                    ))};
+                    ))}
                 </tbody>
             </Table>
         </React.Fragment>
@@ -56,7 +56,7 @@ const RenderTableDetailHoaDon = ({ chitiet }) => {
                             <td>{item.mahoadon}</td>
                             <td>{item.soluong || item.soluongphutung}</td>
                         </tr>
-                    ))};
+                    ))}
 
                 </tbody>
             </Table>
@@ -193,11 +193,26 @@ const PopupPhuTung = (props) => {
             })
     }
 
+    useEffect(() => {
+        function handleEscapeKey(event) {
+            if (event.code === 'Escape') {
+                props.onCloseClick();
+            }
+        }
+        document.addEventListener('keydown', handleEscapeKey)
+        return () => document.removeEventListener('keydown', handleEscapeKey)
+    }, [])
+
+
     const isUpdate = item && item.maphutung;
 
     return (
         <Modal className={props.isShowing ? "active" : ""}>
             <ModalContent>
+                <div style={{ paddingTop: 3, paddingBottom: 3 }}>
+                    <CloseButton onClick={() => props.onCloseClick()}>&times;</CloseButton>
+                    <h2> </h2>
+                </div>
                 <h2 style={{ textAlign: 'center' }}>Phụ tùng</h2>
                 <DivFlexRow >
                     <DivFlexColumn style={{ flex: 1 }}>

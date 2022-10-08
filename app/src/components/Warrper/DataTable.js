@@ -74,7 +74,6 @@ const DataTable = (props) => {
     }
 
     const maxPageEnd = (page + 1) * maxSizePage;
-
     return (
         <>
             <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center', height: 50 }}>
@@ -113,7 +112,9 @@ const DataTable = (props) => {
             </Table>
             <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center', height: 50 }}>
                 <DivFlexRow style={{ alignItems: 'center' }}>
-                    <label style={{ marginLeft: 10 }}>Show {page * maxSizePage + 1} - {maxPageEnd < data.length ? maxPageEnd : data.length} / {data.length} </label>
+                    {data.length != 0 &&
+                        <label style={{ marginLeft: 10 }}>Show {page * maxSizePage + 1} - {maxPageEnd < data.length ? maxPageEnd : data.length} / {data.length} </label>
+                    }
                 </DivFlexRow>
                 <DivFlexRow style={{ alignItems: 'center', justifyContent: 'flex-end', marginTop: 5, marginBottom: 5 }}>
                     <Button onClick={handleStartPage}><i className="fas fa-angle-double-left"></i></Button>
@@ -139,8 +140,12 @@ DataTable.Header.Column = (props) => {
 }
 
 DataTable.Body = (props) => {
-    if (!props.rows) {
-        return (<tbody {...props} />)
+    if (!props.rows || props.rows.length ==0) {
+        return (
+        <tbody>
+            {<tr><td colspan="100%">{props.noData || 'Không có dữ liệu'}</td></tr>}
+        </tbody>
+        )
     }
     return (
         <tbody {...props}>

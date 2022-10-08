@@ -47,7 +47,7 @@ class Item {
             let sql = '';
             var res = [];
 
-            sql = "select * from lichsuphutung where maphutung=? order by timeindex desc limit 1000";
+            sql = "select * from lichsuphutung where maphutung=? order by timeindex desc limit 100";
             res = await query(sql, [maphutung]);
             if (res && res.length != 0)
                 item.lichsu = res;

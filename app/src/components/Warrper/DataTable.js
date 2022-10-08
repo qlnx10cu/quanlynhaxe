@@ -143,12 +143,12 @@ DataTable.Body = (props) => {
     if (!props.rows || props.rows.length ==0) {
         return (
         <tbody>
-            {<tr><td colspan="100%">{props.noData || 'Không có dữ liệu'}</td></tr>}
+            {<tr><td colSpan="100%">{props.noData || 'Không có dữ liệu'}</td></tr>}
         </tbody>
         )
     }
     return (
-        <tbody {...props}>
+        <tbody>
             {props.rows.map((item, index) => {
                 if (React.isValidElement(props.children)) {
                     return React.cloneElement(props.children, { key: index, item, index: index + props.page * props.maxSizePage });

@@ -8,6 +8,7 @@
     "axios": "^0.18.0",
     "dotenv": "^7.0.0",
     "fs": "^0.0.1-security",
+    "gulp-nodemon": "^2.5.0",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "react": "^16.8.6",

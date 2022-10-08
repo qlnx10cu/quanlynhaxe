@@ -37,6 +37,7 @@ const del = require("del");
 const mkdirp = require("mkdirp");
 const ncp = require("ncp");
 const eslint = require("gulp-eslint");
+const nodemon = require('gulp-nodemon');
 const browserSync = require("browser-sync");
 
 const PKG = require("./package.json");
@@ -45,8 +46,9 @@ const BANNER_OPTIONS = {
     pkg: PKG,
     currentYear: (new Date()).getFullYear()
 };
-const OUTPUT_DIR = "../MuoiCu_Server/public";
-const VERSION_APP = new Date().getTime();
+
+let OUTPUT_DIR = "../MuoiCu_Server/public";
+let VERSION_APP = new Date().getTime();
 
 // Default environment
 process.env.NODE_ENV = "development";
@@ -171,7 +173,7 @@ gulp.task("bundle:watch", () => {
 
 gulp.task("openbrowser", (done) => {
     browserSync({
-        proxy: "http://localhost:3002"
+        proxy: "http://localhost:5000"
     });
     done();
 });
@@ -200,6 +202,23 @@ gulp.task("watch", (done) => {
     done();
 });
 
+gulp.task("nodemon", function (cb) {
+    OUTPUT_DIR = "build";
+    VERSION_APP = "1.0.0";
+
+    var started = false;
+    return nodemon({
+        script: "server.js"
+    }).on('start', function () {
+        // to avoid nodemon being started multiple times
+        // thanks @matthisk
+        if (!started) {
+            cb();
+            started = true;
+        }
+    });
+});
+
 gulp.task("prod", gulp.series(
     "env:prod",
     "clean",
@@ -222,6 +241,7 @@ gulp.task("dev", gulp.series(
 
 gulp.task("live", gulp.series(
     "env:dev",
+    "nodemon",
     "clean",
     "lint",
     "bundle:watch",
@@ -229,6 +249,7 @@ gulp.task("live", gulp.series(
     "css",
     "resources",
     "watch",
+    "openbrowser"
 ));
 
 gulp.task("default", gulp.series("prod"));

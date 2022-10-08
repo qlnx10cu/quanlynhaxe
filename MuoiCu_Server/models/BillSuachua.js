@@ -96,11 +96,13 @@ class BillChan {
     static getDuplicate() {
         return "";
     }
+
     static async deleteMahoaDon(param) {
         var sql = "DELETE FROM chitiethoadonsuachua WHERE mahoadon= ?";
         var res = await query(sql, param);
         return res;
     }
+
     static async getChitietHungTrang(param) {
         try {
             let sql = "select * from hoadon where mahoadon= ? and trangthai!=2";
@@ -117,21 +119,21 @@ class BillChan {
             return [];
         }
     }
-    static async giamSoLuongPhuTung(param) {
-        var sql = "update chitiethoadonsuachua ct left join phutung pt on pt.maphutung=ct.maphutung " +
-            " set pt.soluongtonkho=pt.soluongtonkho-ct.soluongphutung " +
-            " where mahoadon=? AND ct.maphutung IS NOT NULL AND ct.maphutung !='' ";
-        var res = await query(sql, [param]);
-        return res;
 
+    static async giamSoLuongPhuTung(mahoadon) {
+        var sql = "update phutung pt left join ( select maphutung, soluongphutung from chitiethoadonsuachua where mahoadon = ?) ct on pt.maphutung=ct.maphutung " +
+            " set pt.soluongtonkho=pt.soluongtonkho - ct.soluongphutung " +
+            " where mahoadon=? AND ct.maphutung IS NOT NULL AND ct.maphutung !='' ";
+        var res = await query(sql, [mahoadon, mahoadon]);
+        return res;
     }
-    static async tangSoLuongPhuTung(param) {
-        var sql = "update chitiethoadonsuachua ct left join phutung pt on pt.maphutung=ct.maphutung " +
-            " set pt.soluongtonkho=pt.soluongtonkho+ct.soluongphutung " +
-            " where mahoadon=? AND ct.maphutung IS NOT NULL AND ct.maphutung !='' ";
-        var res = await query(sql, [param]);
-        return res;
 
+    static async tangSoLuongPhuTung(mahoadon) {
+        var sql = "update phutung pt left join ( select maphutung, soluongphutung from chitiethoadonsuachua where mahoadon = ?) ct on pt.maphutung=ct.maphutung " +
+            " set pt.soluongtonkho=pt.soluongtonkho + ct.soluongphutung " +
+            " where mahoadon=? AND ct.maphutung IS NOT NULL AND ct.maphutung !='' ";
+        var res = await query(sql, [mahoadon, mahoadon]);
+        return res;
     }
 }
 

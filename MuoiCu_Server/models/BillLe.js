@@ -128,13 +128,15 @@ class BillLe {
         var res = await query(sql, param);
         return res;
     }
+
     static async tangSoLuongPhuTungByMaHD(mahoadon) {
-        var sql = "update chitiethoadonle ct left join phutung pt on pt.maphutung=ct.maphutung " +
-            " set pt.soluongtonkho=pt.soluongtonkho+ct.soluong " +
+        var sql = "update phutung pt left join  ( select maphutung, soluong from chitiethoadonle where mahoadon = ?) ct on pt.maphutung=ct.maphutung " +
+            " set pt.soluongtonkho=pt.soluongtonkho + ct.soluong " +
             " where mahoadon=? AND ct.maphutung IS NOT NULL AND ct.maphutung !='' ";
-        var res = await query(sql, [mahoadon]);
+        var res = await query(sql, [mahoadon, mahoadon]);
         return res;
     }
+
 }
 
 module.exports = BillLe;

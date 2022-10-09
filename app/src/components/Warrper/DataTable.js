@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Table, DivFlexRow, Input, Button, Select } from "../../styles";
 import _ from "lodash";
 
+/* eslint-disable react/display-name */
+
 const DataTable = (props) => {
     const [rows, setRows] = useState([]);
     let [search, setSearch] = useState("");
@@ -197,5 +199,7 @@ DataTable.Body.Row = (props) => {
 DataTable.Body.Column = (props) => {
     return <td {...props}>{props.children}</td>;
 };
+
+/* eslint-enable react/display-name */
 
 export default DataTable;

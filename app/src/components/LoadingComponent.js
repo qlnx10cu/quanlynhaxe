@@ -16,6 +16,8 @@ const Wrapper = styled.div`
     align-items: center;
 `;
 
+/* eslint-disable react/display-name */
+
 export default (Component, paramProps, paramExtend) => {
     return (props) => (
         <Suspense fallback={<Wrapper>Đang tải..</Wrapper>}>
@@ -25,3 +27,5 @@ export default (Component, paramProps, paramExtend) => {
         </Suspense>
     );
 };
+
+/* eslint-enable react/display-name */

@@ -1,5 +1,4 @@
 import React from "react";
-import Input from "./Input";
 import styled from "styled-components";
 
 const Name = styled.div`
@@ -17,7 +16,21 @@ const Message = styled.div`
     width: 100%;
 `;
 
-export default ({ name, message, error, ...res }) => {
+const Input = styled.input`
+    width: 100%;
+    height: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    outline: none;
+    border-radius: 5px;
+    font-size: 1em;
+    padding: 5px;
+    margin: 10px 0;
+    :focus {
+        border: 1px solid rgba(0, 0, 0, 0.6);
+    }
+`;
+
+const LoginInput = ({ name, message, error, ...res }) => {
     let hidden = !res.value;
     return (
         <div style={{ width: "90%", position: "relative" }}>
@@ -27,3 +40,5 @@ export default ({ name, message, error, ...res }) => {
         </div>
     );
 };
+
+export default LoginInput;

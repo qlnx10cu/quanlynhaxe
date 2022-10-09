@@ -174,8 +174,8 @@ module.exports = {
         "import/extensions": 2,
         "import/no-duplicates": 2,
         // eslint-plugin-react options.
-        "jsx-quotes": [0, "prefer-single"],
-        "react/display-name": [0, { ignoreTranspilerName: false }],
+        "jsx-quotes": [2, "prefer-double"],
+        "react/display-name": [2, { ignoreTranspilerName: false }],
         "react/forbid-prop-types": 0,
         "react/jsx-boolean-value": 0,
         "react/jsx-closing-bracket-location": 0,

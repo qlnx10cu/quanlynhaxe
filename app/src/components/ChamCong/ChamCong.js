@@ -12,7 +12,7 @@ const NewInput = styled(Input)`
     text-align: center;
 `;
 
-export default (props) => {
+const ChamCong = (props) => {
     let [arr, setArr] = useState([]);
     let [dateStart, setDateStart] = useState(moment().format("YYYY-MM-DD"));
     let [isLoading, setLoading] = useState(false);
@@ -123,3 +123,5 @@ export default (props) => {
         </div>
     );
 };
+
+export default ChamCong;

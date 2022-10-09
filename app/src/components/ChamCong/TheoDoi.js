@@ -21,7 +21,7 @@ const handleDateInput = function () {
     };
 };
 
-export default (props) => {
+const TheoDoi = (props) => {
     let start = handleDateInput();
     let end = handleDateInput();
     let [data, setData] = useState([]);
@@ -108,3 +108,5 @@ export default (props) => {
         </div>
     );
 };
+
+export default TheoDoi;

@@ -119,7 +119,7 @@ const PopupPhuTung = (props) => {
                     mLichSu.setValue(_item.lichsu);
                 })
                 .catch((err) => {
-                    alert("Không lấy được chi tiết: ");
+                    props.alert("Không lấy được chi tiết: ");
                 });
         }
     }, [item]);
@@ -158,12 +158,12 @@ const PopupPhuTung = (props) => {
 
         UpdatePhuTung(props.token, data)
             .then((res) => {
-                alert("Update thành công.");
+                props.alert("Update thành công.");
                 props.getList();
                 props.onCloseClick();
             })
             .catch((err) => {
-                alert("Lỗi Update phụ tùng");
+                props.alert("Lỗi Update phụ tùng");
             });
     };
     const handleAdd = () => {
@@ -187,12 +187,12 @@ const PopupPhuTung = (props) => {
 
         AddPhuTung(props.token, data)
             .then((res) => {
-                alert("Thêm thành công.");
+                props.alert("Thêm thành công.");
                 props.getList();
                 props.onCloseClick();
             })
             .catch((err) => {
-                alert("Lỗi thêm phụ tùng");
+                props.alert("Lỗi thêm phụ tùng");
             });
     };
 

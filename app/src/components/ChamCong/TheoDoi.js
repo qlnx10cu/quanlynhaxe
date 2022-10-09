@@ -22,7 +22,7 @@ const handleDateInput = function () {
     };
 };
 
-export default () => {
+export default (props) => {
     let start = handleDateInput();
     let end = handleDateInput();
     let [data, setData] = useState([]);
@@ -53,7 +53,7 @@ export default () => {
             setData(arr);
         } catch (error) {
             console.log(error);
-            alert("Lay danh sach khong thanh cong!");
+            props.alert("Lay danh sach khong thanh cong!");
         }
     };
     const exportData = async () => {

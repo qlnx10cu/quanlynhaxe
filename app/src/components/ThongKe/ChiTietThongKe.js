@@ -40,7 +40,7 @@ const ChiTietThongKe = (props) => {
                         setData(res.data);
                     })
                     .catch((err) => {
-                        alert("Không lấy được chi tiết bill");
+                        props.alert("Không lấy được chi tiết bill");
                     });
             } else if (props.loaihoadon === 0) {
                 //Bill chan
@@ -50,7 +50,7 @@ const ChiTietThongKe = (props) => {
                         setData(res.data);
                     })
                     .catch((err) => {
-                        alert("Không lấy được chi tiết bill");
+                        props.alert("Không lấy được chi tiết bill");
                     });
             }
         }

@@ -45,7 +45,7 @@ const StaffDetail = (props) => {
     const handleButtonSave = () => {
         var kt = check(0);
         if (kt != "") {
-            alert(kt);
+            props.alert(kt);
             return;
         }
         var data = {
@@ -67,14 +67,14 @@ const StaffDetail = (props) => {
             })
             .catch((err) => {
                 setUpload(false);
-                alert("Tạo nhân viên thất bại \n\n Error:" + err.response.data.error.message);
+                props.alert("Tạo nhân viên thất bại \n\n Error:" + err.response.data.error.message);
             });
     };
 
     const handleButtonUpdate = () => {
         var kt = check(1);
         if (kt != "") {
-            alert(kt);
+            props.alert(kt);
             return;
         }
         var data = {
@@ -93,7 +93,7 @@ const StaffDetail = (props) => {
             })
             .catch((err) => {
                 setUpload(false);
-                alert("Cập nhập nhân viên thất bại \n\n Error:" + err.response.data.error.message);
+                props.alert("Cập nhập nhân viên thất bại \n\n Error:" + err.response.data.error.message);
             });
     };
 

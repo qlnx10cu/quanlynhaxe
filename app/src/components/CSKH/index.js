@@ -490,6 +490,7 @@ const CSKH = (props) => {
             />
 
             <ChiTietThongKe
+                alert={props.alert}
                 isShowing={isShowChitiet}
                 onCloseClick={() => {
                     setShowChitiet(false);

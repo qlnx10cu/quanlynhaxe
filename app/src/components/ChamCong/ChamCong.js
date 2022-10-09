@@ -13,7 +13,7 @@ const NewInput = styled(Input)`
     text-align: center;
 `;
 
-export default () => {
+export default (props) => {
     let [arr, setArr] = useState([]);
     let [dateStart, setDateStart] = useState(moment().format("YYYY-MM-DD"));
     let [isLoading, setLoading] = useState(false);
@@ -42,10 +42,10 @@ export default () => {
                 await axios.post(`${HOST}/chamcong/theongay/ngay/${ngay}`, {
                     chitiet: tmp,
                 });
-                alert("Thành công!");
+                props.alert("Thành công!");
             } catch (error) {
                 console.log(error);
-                alert("Chấm công không thành công!");
+                props.alert("Chấm công không thành công!");
             }
         }
     };
@@ -101,8 +101,6 @@ export default () => {
                         <tr key={index}>
                             <td>{e.ten || ""}</td>
                             <td>{(e.tiencong || 0).toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
-                            {/* <td><NewInput type='number' min={0} value={arr[index]['vskp']} onChange={(e) => handleTextInput(index, 'vskp', e.target.value)} /></td>
-                                <td><NewInput type='number' min={0} value={arr[index]['vsbd']} onChange={(e) => handleTextInput(index, 'vsbd', e.target.value)} /></td> */}
                             <td>
                                 <NewInput
                                     value={arr[index].ghichu ? arr[index].ghichu : ""}
@@ -115,8 +113,6 @@ export default () => {
                         <tr>
                             <td>Tổng</td>
                             <td>{arr.reduce((a, b) => a + (b.tiencong || 0), 0).toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
-                            {/* <td>{arr.reduce((a, b) => a + (b.vskp || 0), 0).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td>
-                            <td>{arr.reduce((a, b) => a + (b.vsbd || 0), 0).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })}</td> */}
                             <td></td>
                         </tr>
                     }

@@ -1083,11 +1083,13 @@ const BanLe = (props) => {
                         )}
                     </DivFlexRow>
                     <PopupNewProduct
+                        alert={(mess) => props.alert(mess)}
                         isShowing={isShowNewProduct}
                         onCloseClick={() => setNewProduct(false)}
                         addItemToProduct={(item) => addItemToProduct(item)}
                     />
                     <PopupNewCuaHangNgoai
+                        alert={(mess) => props.alert(mess)}
                         isShowing={isShowCuaHangNgoai}
                         onCloseClick={() => setNewCuaHangNgoai(false)}
                         listCuaHangNgoai={listCuaHangNgoai}
@@ -1102,6 +1104,7 @@ const BanLe = (props) => {
                         alert={(mess) => props.alert(mess)}
                     />
                     <ChiTietThongKe
+                        alert={(mess) => props.alert(mess)}
                         isShowing={isShowChitiet}
                         onCloseClick={() => {
                             setShowChitiet(false);

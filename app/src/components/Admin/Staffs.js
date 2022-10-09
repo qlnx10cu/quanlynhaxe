@@ -138,6 +138,7 @@ const Staffs = (props) => {
                         </Button>
                     </DivFlexRow>
                     <StaffDetail
+                        {...props}
                         isShowing={isShowStaffDetail}
                         onCloseClick={() => {
                             setShowStaffDetail(false);

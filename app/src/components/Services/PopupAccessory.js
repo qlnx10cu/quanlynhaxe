@@ -49,26 +49,26 @@ const PopupAccessory = (props) => {
 
     const handleAdd = () => {
         if (!mMaPhuTung || mMaPhuTung === "") {
-            alert("Chưa nhập mã phụ tùng");
+            props.alert("Chưa nhập mã phụ tùng");
             return;
         }
 
         if (!props.listProduct.find((e) => e.maphutung == mMaPhuTung)) {
-            alert("Không tìm thấy mã phụ tùng");
+            props.alert("Không tìm thấy mã phụ tùng");
             return;
         }
 
         if (!mTenCongViec || mTenCongViec.value === "" || !mDonGia || !mDonGia.value || mDonGia.value < 0) {
-            alert("phụ tùng không hợp lệ");
+            props.alert("phụ tùng không hợp lệ");
             return;
         }
 
         if (!mSoLuong.value || mSoLuong.value < 0) {
-            alert("Phải nhập số lượng");
+            props.alert("Phải nhập số lượng");
             return;
         }
         if (mSoLuong.value > mTonKho.value) {
-            alert("Số lượng lón hơn tồn kho hiện tai");
+            props.alert("Số lượng lón hơn tồn kho hiện tai");
             return;
         }
 

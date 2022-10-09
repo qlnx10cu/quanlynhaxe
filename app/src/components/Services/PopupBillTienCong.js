@@ -23,12 +23,12 @@ const PopupBillTienCong = (props) => {
 
     const handleAdd = () => {
         if (tentiencong === "") {
-            alert("Phải có tên phụ tùng");
+            props.alert("Phải có tên phụ tùng");
             return;
         }
 
         if (!dongia || dongia < 0) {
-            alert("Đơn giá phải >= 0");
+            props.alert("Đơn giá phải >= 0");
             return;
         }
 

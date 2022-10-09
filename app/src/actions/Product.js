@@ -1,5 +1,4 @@
 import { GetAllProduct } from "../API/Product";
-import { GetListCuaHangNgoai } from "../API/CuaHangNgoai";
 export const REQUEST_LIST_PRODUCT = "REQUEST_LIST_PRODUCT";
 export const REQUEST_LIST_PRODUCT_SUCCESS = "REQUEST_LIST_PRODUCT_SUCCESS";
 export const REQUEST_LIST_PRODUCT_FAILER = "REQUEST_LIST_PRODUCT_FAILER";
@@ -73,17 +72,4 @@ export const setListBillProduct = (arr) => (dispatch) => {
         type: SET_LIST_PRODUCT,
         data: arr,
     });
-};
-export const getListCuaHangNgoai = (token) => (dispatch) => {
-    GetListCuaHangNgoai(token)
-        .then((res) => {
-            dispatch({
-                type: GET_LIST_CHN_SUCCESS,
-                data: res.data,
-            });
-        })
-        .catch((err) => {
-            console.log(err);
-            alert("Lõi lấy danh sách cửa hàng ngoài.");
-        });
 };

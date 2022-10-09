@@ -27,7 +27,7 @@ const getTrangThai = (e) => {
     }
 };
 
-const RenderTableDetail = ({ list }) => {
+const RenderTableDetail = ({ alert, list }) => {
     let [isShowChitiet, setShowChitiet] = useState(false);
     let [mMaHoaDon, setMaHoaDon] = useState("");
     return (
@@ -104,6 +104,7 @@ const RenderTableDetail = ({ list }) => {
                 </tbody>
             </Table>
             <ChiTietThongKe
+                alert={(mess) => alert(mess)}
                 isShowing={isShowChitiet}
                 onCloseClick={() => {
                     setShowChitiet(false);
@@ -117,7 +118,7 @@ const RenderTableDetail = ({ list }) => {
     );
 };
 
-const RenderTableCSKH = ({ list }) => {
+const RenderTableCSKH = ({ alert, list }) => {
     let [isShowChitiet, setShowChitiet] = useState(false);
     let [mMaHoaDon, setMaHoaDon] = useState("");
 
@@ -191,6 +192,7 @@ const RenderTableCSKH = ({ list }) => {
                 </tbody>
             </Table>
             <ChiTietThongKe
+                alert={(mess) => alert(mess)}
                 isShowing={isShowChitiet}
                 onCloseClick={() => {
                     setShowChitiet(false);
@@ -298,7 +300,7 @@ const HistoryCustomer = (props) => {
                     setData(res.data);
                 })
                 .catch((err) => {
-                    alert("không thể xem được chi tiết");
+                    props.alert("không thể xem được chi tiết");
                     console.log(err);
                 });
         }

@@ -336,14 +336,6 @@ const CuocGoi = (props) => {
                 </Button>
             </DivFlexRow>
 
-            {/* <ChiTietThongKe
-                isShowing={isShowing}
-                onCloseClick={() => setShowing(false)}
-                mahoadon={mMaHoaDon}
-                token={props.token}
-                loaihoadon={loaihoadon}
-                listStaff={listStaff}
-            /> */}
         </div>
     );
 };

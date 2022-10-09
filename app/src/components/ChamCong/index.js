@@ -3,7 +3,7 @@ import RenderChamCong from "./ChamCong";
 import TheoDoi from "./TheoDoi";
 import { Tab, TabContent } from "../../styles";
 
-const ChamCong = () => {
+const ChamCong = (props) => {
     let [activePage, setActive] = useState(1);
 
     return (
@@ -18,11 +18,11 @@ const ChamCong = () => {
             </Tab>
 
             <TabContent className={activePage === 1 ? "active" : ""}>
-                <RenderChamCong />
+                <RenderChamCong {...props} />
             </TabContent>
 
             <TabContent className={activePage === 2 ? "active" : ""}>
-                <TheoDoi />
+                <TheoDoi {...props}/>
             </TabContent>
         </div>
     );

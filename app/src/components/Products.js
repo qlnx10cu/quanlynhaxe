@@ -25,7 +25,7 @@ function stringToDate(_date, _format, _delimiter) {
 
 /* eslint-disable camelcase */
 
-function readFile(file, token) {
+function readFile(file, token, props) {
     return new Promise((resolve, reject) => {
         let reader = new FileReader();
         // console.log('aaa')
@@ -208,11 +208,11 @@ function readFile(file, token) {
             }
             return ImportMuBH(token, dataSend)
                 .then(() => {
-                    alert("Thêm thành công");
+                    props.alert("Thêm thành công");
                     window.location.href = "/products";
                 })
                 .catch(() => {
-                    alert("Lỗi khi thêm");
+                    props.error("Lỗi khi thêm");
                     reject();
                 });
         };
@@ -236,7 +236,7 @@ const Products = (props) => {
         var files = e.target.files;
         props.setLoading(true);
         try {
-            await readFile(files[0], props.token);
+            await readFile(files[0], props.token, props);
             props.getAllProduct(props.token);
             props.setLoading(false);
         } catch (err) {
@@ -261,7 +261,7 @@ const Products = (props) => {
                 link.click();
             })
             .catch((err) => {
-                alert("Không thể xuất file");
+                props.error("Không thể xuất file");
             });
     };
     return (

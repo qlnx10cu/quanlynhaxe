@@ -326,7 +326,7 @@ const RepairedBill = (props) => {
                 let tmp = pathname.substring(pathname.lastIndexOf("/") + 1, pathname.length);
                 mb = Number.parseInt(tmp) - 1;
                 setMaban(mb + 1);
-            } catch (ex) { }
+            } catch (ex) {}
             if (mb < 0) {
                 props.alert("Đường dẫn không đúng");
                 window.close();
@@ -861,7 +861,7 @@ const RepairedBill = (props) => {
             ];
             props.setListBillProduct(newProduct);
             updateTongTienBill(newProduct);
-        } catch (ex) { }
+        } catch (ex) {}
     };
 
     const handleChangeTienCong = (value, index) => {
@@ -1167,11 +1167,12 @@ const RepairedBill = (props) => {
                             <Input
                                 readOnly
                                 autocomplete="off"
-                                value={(thoigianhen && thoigianhen != "0")
-                                    ? moment(trangthai == 1 && ngaythanhtoan.value ? ngaythanhtoan.value : new Date())
-                                        .add(thoigianhen, "days")
-                                        .format("DD/MM/YYYY")
-                                    : ""
+                                value={
+                                    thoigianhen && thoigianhen != "0"
+                                        ? moment(trangthai == 1 && ngaythanhtoan.value ? ngaythanhtoan.value : new Date())
+                                            .add(thoigianhen, "days")
+                                            .format("DD/MM/YYYY")
+                                        : ""
                                 }
                             />
                         </DivFlexColumn>
@@ -1430,6 +1431,7 @@ const RepairedBill = (props) => {
                         </DivFlexRow>
                     )}
                     <PopupBillTienCong
+                        alert={(mess) => props.alert(mess)}
                         addItemToProduct={(item) => addItemToProduct(item)}
                         isShowing={isShowTienCong}
                         listGiaDichVu={listGiaDichVu}
@@ -1438,6 +1440,7 @@ const RepairedBill = (props) => {
                         }}
                     />
                     <PopupBillCHN
+                        alert={(mess) => props.alert(mess)}
                         addItemToProduct={(item) => addItemToProduct(item)}
                         isShowing={isShowCuaHangNgoai}
                         listCuaHangNgoai={listCuaHangNgoai}
@@ -1446,6 +1449,7 @@ const RepairedBill = (props) => {
                         }}
                     />
                     <PopupAccessory
+                        alert={(mess) => props.alert(mess)}
                         addItemToProduct={(item) => addItemToProduct(item)}
                         isShowing={isShowNewBill}
                         listProduct={props.listProduct}

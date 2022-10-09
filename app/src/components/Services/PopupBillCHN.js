@@ -29,17 +29,17 @@ const PopupBillCHN = (props) => {
 
     const handleAdd = () => {
         if (tenphutung === "") {
-            alert("Phải có tên phụ tùng");
+            props.alert("Phải có tên phụ tùng");
             return;
         }
 
         if (!dongia || dongia < 0) {
-            alert("Đơn giá phải >= 0");
+            props.alert("Đơn giá phải >= 0");
             return;
         }
 
         if (!soluong || soluong <= 0) {
-            alert("Số  lượng phải > 0");
+            props.alert("Số  lượng phải > 0");
             return;
         }
 

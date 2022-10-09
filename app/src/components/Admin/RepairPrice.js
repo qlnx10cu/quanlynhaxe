@@ -127,6 +127,7 @@ const RepairPrice = (props) => {
                         </Button>
                     </DivFlexRow>
                     <RepairPriceDetail
+                        {...props}
                         isShowing={isShowRepairPriceDetail}
                         onCloseClick={() => {
                             setShowRepairPriceDetail(false);

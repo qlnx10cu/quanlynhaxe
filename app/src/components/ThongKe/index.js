@@ -457,16 +457,17 @@ const ThongKe = (props) => {
                 </Button>
             </DivFlexRow>
             <ConfirmHoaDon
+                alert={props.alert}
                 history={props.history}
                 isShowing={isShowingConfirm}
                 onCloseClick={() => setShowingConfirm(false)}
                 mahoadon={mMaHoaDon}
                 token={props.token}
-                alert={(mess) => props.alert(mess)}
                 loaihoadon={loaihoadon}
             />
 
             <ChiTietThongKe
+                alert={props.alert}
                 isShowing={isShowing}
                 onCloseClick={() => setShowing(false)}
                 mahoadon={mMaHoaDon}

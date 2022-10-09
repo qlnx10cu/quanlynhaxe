@@ -26,8 +26,9 @@ export const authenticate = (username, password) => (dispatch) => {
         })
         .catch((error) => {
             if (error) {
+                /* eslint-disable no-alert */
                 alert("Đăng nhập thất bại");
-                // dispatch(showNoti('Danger', error.response.data.message))
+                /* eslint-enable no-alert */
                 dispatch({
                     type: FAILER_AUTH,
                 });

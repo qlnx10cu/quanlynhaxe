@@ -43,34 +43,34 @@ const PopupNewProduct = (props) => {
 
     const handleAdd = () => {
         if (!mMaPhuTung || mMaPhuTung === "") {
-            alert("Chưa nhập mã phụ tùng");
+            props.alert("Chưa nhập mã phụ tùng");
             return;
         }
 
         if (!props.listProduct.find((e) => e.maphutung == mMaPhuTung)) {
-            alert("Không tìm thấy mã phụ tùng");
+            props.alert("Không tìm thấy mã phụ tùng");
             return;
         }
 
         if (!mTenCongViec || mTenCongViec.value === "" || !mDonGia || !mDonGia.value || mDonGia.value < 0) {
-            alert("phụ tùng không hợp lệ");
+            props.alert("phụ tùng không hợp lệ");
             return;
         }
 
         if (!chietkhau) chietkhau = 0;
 
         if (!mSoLuong.value || mSoLuong.value <= 0) {
-            alert("Phải nhập số lượng");
+            props.alert("Phải nhập số lượng");
             return;
         }
 
         if (!mTonKho.value || mTonKho.value < mSoLuong.value) {
-            alert("Số lượng tồn kho không đủ");
+            props.alert("Số lượng tồn kho không đủ");
             return;
         }
 
         if (chietkhau < 0 || chietkhau > 100) {
-            alert("Chiết khấu không hợp lệ");
+            props.alert("Chiết khấu không hợp lệ");
             return;
         }
 

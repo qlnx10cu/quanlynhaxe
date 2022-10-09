@@ -29,22 +29,22 @@ const PopupNewCuaHangNgoai = (props) => {
         if (!chietkhau) chietkhau = 0;
 
         if (tenphutung === "") {
-            alert("Phải có tên phụ tùng.");
+            props.alert("Phải có tên phụ tùng.");
             return;
         }
 
         if (!soluong || soluong <= 0) {
-            alert("số lượng phải >= 0");
+            props.alert("số lượng phải >= 0");
             return;
         }
 
         if (!dongia || dongia < 0) {
-            alert("Đợn gía phải > 0");
+            props.alert("Đợn gía phải > 0");
             return;
         }
 
         if (chietkhau < 0 || chietkhau > 100) {
-            alert("Chiết khấu không hợp lệ");
+            props.alert("Chiết khấu không hợp lệ");
             return;
         }
 

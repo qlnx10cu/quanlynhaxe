@@ -45,25 +45,21 @@ module.exports = {
         "indent": [2, 4, { SwitchCase: 1 }],
         "jsx-control-statements/jsx-use-if-tag": 0,
         "jsx-control-statements/jsx-jcs-no-undef": 0,
-        "key-spacing": [
-            0,
-            {
-                singleLine: {
-                    beforeColon: false,
-                    afterColon: true,
-                },
-                multiLine: {
-                    beforeColon: false,
-                    afterColon: true,
-                    align: "colon",
-                },
+        "key-spacing": [0, {
+            singleLine: {
+                beforeColon: true,
+                afterColon: false,
             },
+            multiLine: {
+                beforeColon: true,
+                afterColon: false,
+                align: "colon",
+            },
+        },
         ],
-        "keyword-spacing": 0,
-        "linebreak-style": [0, "unix"],
-        "lines-around-comment": [
-            2,
-            {
+        "keyword-spacing": 2,
+        "linebreak-style": [2, "windows"],
+        "lines-around-comment": [ 2, {
                 allowBlockStart: true,
                 allowObjectStart: true,
                 beforeBlockComment: true,
@@ -71,11 +67,11 @@ module.exports = {
             },
         ],
         "max-len": [
-            0,
-            90,
+            2,
+            150,
             {
                 tabWidth: 2,
-                comments: 110,
+                comments: 150,
                 ignoreUrls: true,
                 ignoreStrings: true,
                 ignoreTemplateLiterals: true,
@@ -85,7 +81,7 @@ module.exports = {
         "newline-after-var": 0,
         "newline-before-return": 0,
         "newline-per-chained-call": 0,
-        "no-alert": 0,
+        "no-alert": 2,
         "no-caller": 2,
         "no-case-declarations": 2,
         "no-catch-shadow": 2,

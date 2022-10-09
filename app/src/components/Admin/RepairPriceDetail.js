@@ -10,12 +10,12 @@ const RepairPriceDetail = (props) => {
     const handleSubmit = () => {
         setUpload(true);
         if (!mName) {
-            alert("Tên không được bỏ trống");
+            props.alert("Tên không được bỏ trống");
             return;
         }
 
         if (!mPrice) {
-            alert("Tên không được bỏ trống");
+            props.alert("Tên không được bỏ trống");
             return;
         }
         let data = {
@@ -29,7 +29,7 @@ const RepairPriceDetail = (props) => {
                     props.onCloseClick();
                 })
                 .catch((err) => {
-                    alert(JSON.stringify(err.response.data));
+                    props.alert(JSON.stringify(err.response.data));
                     setUpload(false);
                 });
         } else {
@@ -39,7 +39,7 @@ const RepairPriceDetail = (props) => {
                     props.onCloseClick();
                 })
                 .catch((err) => {
-                    alert(JSON.stringify(err.response.data));
+                    props.alert(JSON.stringify(err.response.data));
                     setUpload(false);
                 });
         }

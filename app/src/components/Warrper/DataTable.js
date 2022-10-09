@@ -6,16 +6,41 @@ import _ from "lodash";
 
 const DataTable = (props) => {
     const [rows, setRows] = useState([]);
+
+    let [data, setData] = useState([]);
     let [search, setSearch] = useState("");
     let [maxSizePage, setMaxSizePage] = useState(10);
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
-
-    const data = props.data || [];
+    var [isLoading, setLoading] = useState(false);
 
     useEffect(() => {
-        tachList(data, maxSizePage);
-    }, [data]);
+        if (!props.apiData) {
+            setLoading(props.isLoading);
+        }
+    }, [props.isLoading]);
+
+    useEffect(() => {
+        if (props.apiData) {
+            setLoading(true);
+            props
+                .apiData()
+                .then((res) => {
+                    handleData(res.data);
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    setLoading(false);
+                });
+        } else {
+            handleData(props.data || []);
+        }
+    }, [props.data]);
+
+    const handleData = (dataNew) => {
+        setData(dataNew);
+        tachList(dataNew, maxSizePage);
+    };
 
     const handleNextPage = () => {
         let newPage = page + 1;
@@ -75,9 +100,17 @@ const DataTable = (props) => {
 
     const maxPageEnd = (page + 1) * maxSizePage;
     return (
-        <>
+        <React.Fragment>
+            <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontSize: "20px" }}>{props.title}</span>
+                <If condition={props.addItem}>
+                    <Button onClick={() => props.addItem()}>
+                        Thêm mới<i className="fas fa-plus"></i>
+                    </Button>
+                </If>
+            </DivFlexRow>
             <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center", height: 50 }}>
-                {props.searchData && (
+                <If condition={props.searchData}>
                     <DivFlexRow style={{ alignItems: "center" }}>
                         <label style={{ marginLeft: 10 }}>Search: </label>
                         <Input
@@ -88,11 +121,13 @@ const DataTable = (props) => {
                             onChange={(e) => setSearch(e.target.value)}
                         />
                         <Button style={{ marginLeft: 10 }} onClick={handleKeyPress}>
-                            Tìm kếm{" "}
+                            Tìm kếm
                         </Button>
                     </DivFlexRow>
-                )}
-                {!props.searchData && <DivFlexRow />}
+                </If>
+                <If condition={!props.searchData}>
+                    <DivFlexRow></DivFlexRow>
+                </If>
                 <DivFlexRow style={{ alignItems: " center", justifyContent: "flex-end", marginTop: 5, marginBottom: 10 }}>
                     <label>Số hàng </label>
                     <Select style={{ marginLeft: 10 }} width={100} value={maxSizePage} onChange={(e) => handleChangeSoHang(e.target.value)}>
@@ -110,7 +145,6 @@ const DataTable = (props) => {
                     </Button>
                     <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between", marginLeft: 10 }}>
                         <div>
-                            {" "}
                             {page + 1}/{maxPage > 1 ? maxPage : 1}
                         </div>
                     </DivFlexRow>
@@ -121,13 +155,13 @@ const DataTable = (props) => {
             </DivFlexRow>
             <Table>
                 {props.children[0]}
-                {React.cloneElement(props.children[1], { rows: rows[page] || [], page, maxSizePage })}
+                {React.cloneElement(props.children[1], { rows: rows[page] || [], page, maxSizePage, isLoading })}
             </Table>
             <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center", height: 50 }}>
                 <DivFlexRow style={{ alignItems: "center" }}>
                     {data.length != 0 && (
                         <label style={{ marginLeft: 10 }}>
-                            Show {page * maxSizePage + 1} - {maxPageEnd < data.length ? maxPageEnd : data.length} / {data.length}{" "}
+                            Show {page * maxSizePage + 1} - {maxPageEnd < data.length ? maxPageEnd : data.length} / {data.length}
                         </label>
                     )}
                 </DivFlexRow>
@@ -140,7 +174,6 @@ const DataTable = (props) => {
                     </Button>
                     <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between", marginLeft: 10 }}>
                         <div>
-                            {" "}
                             {page + 1}/{maxPage > 1 ? maxPage : 1}
                         </div>
                     </DivFlexRow>
@@ -152,7 +185,7 @@ const DataTable = (props) => {
                     </Button>
                 </DivFlexRow>
             </DivFlexRow>
-        </>
+        </React.Fragment>
     );
 };
 
@@ -169,20 +202,31 @@ DataTable.Header.Column = (props) => {
 };
 
 DataTable.Body = (props) => {
+    if (props.isLoading) {
+        return (
+            <tbody>
+                <tr>
+                    <td colSpan="100%">{"Đang load dữ liệu ..."}</td>
+                </tr>
+            </tbody>
+        );
+    }
     if (!props.rows || props.rows.length == 0) {
         return (
             <tbody>
-                {
-                    <tr>
-                        <td colSpan="100%">{props.noData || "Không có dữ liệu"}</td>
-                    </tr>
-                }
+                <tr>
+                    <td colSpan="100%">{props.noData || "Không có dữ liệu"}</td>
+                </tr>
             </tbody>
         );
     }
     return (
         <tbody>
             {props.rows.map((item, index) => {
+                if (props.render) {
+                    return props.render(item, index + props.page * props.maxSizePage);
+                }
+
                 if (React.isValidElement(props.children)) {
                     return React.cloneElement(props.children, { key: index, item, index: index + props.page * props.maxSizePage });
                 }

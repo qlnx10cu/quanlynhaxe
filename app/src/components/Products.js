@@ -9,6 +9,7 @@ import XLSX from "xlsx";
 import { setLoading } from "../actions/App";
 import { getAllProduct } from "../actions/Product";
 import moment from "moment";
+import { DelAllPhuTung } from "../API/PhuTungAPI";
 
 function stringToDate(_date, _format, _delimiter) {
     var formatLowerCase = _format.toLowerCase();
@@ -134,12 +135,35 @@ const Products = (props) => {
                 props.error("Không thể xuất file");
             });
     };
+    const handleXoaHetPhutung = () => {
+        props.confirm("Bạn chắc muốn hủy", () => {
+            DelAllPhuTung(props.token)
+                .then((res) => {
+                    props.alert("Xóa thành công.");
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                })
+                .catch((err) => {
+                    props.error("Không xóa được. @@");
+                });
+        });
+    };
+
     return (
         <div>
             {props.isLoading && <Loading />}
             {!props.isLoading && (
                 <div>
                     <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between" }}>
+                        <div></div>
+                        <Button
+                            onClick={() => {
+                                handleXoaHetPhutung();
+                            }}
+                        >
+                            Xóa hết phụ tùng
+                        </Button>
                         <div>
                             <ButtonChooseFile style={{ marginRight: 30 }}>
                                 <input

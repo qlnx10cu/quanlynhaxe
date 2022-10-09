@@ -11,6 +11,8 @@ import { alert, error, errorHttp, success, setLoading, addLoading, confirm, conf
 import CaiDat from "./CaiDat";
 import CuocGoi from "./CuocGoi";
 import CSKH from "./CSKH";
+import { closeModal, openModal } from "../actions/Modal";
+import ModalManager from "./ModalManager";
 const Staffs = React.lazy(() => import("./Admin/Staffs"));
 const Customer = React.lazy(() => import("./Admin/Customer"));
 const Products = React.lazy(() => import("./Products"));
@@ -36,6 +38,7 @@ const Home = (props) => {
         <Router>
             <ToolBar />
             <SocketEvent {...props} socket={socket} />
+            <ModalManager {...props} />
             <BaseContainer>
                 {props.info != null && (
                     <Route
@@ -130,6 +133,12 @@ const mapDispatch = (dispatch) => ({
     },
     setLoading: (isLoad, totalLoading) => {
         dispatch(setLoading(isLoad, totalLoading));
+    },
+    openModal: (name, data, handleSubmit) => {
+        dispatch(openModal(name, data, handleSubmit));
+    },
+    closeModal: (name, id) => {
+        dispatch(closeModal(name, id));
     },
 });
 

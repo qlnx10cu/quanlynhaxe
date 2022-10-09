@@ -6,48 +6,7 @@ import { DelPhuTung, DelAllPhuTung } from "../../../API/PhuTungAPI";
 import { alert, error, confirm } from "../../../actions/App";
 
 import { connect } from "react-redux";
-import _ from "lodash";
-
-const PhuTungItem = ({ index, item, token, getList = () => {}, confirmErrorProps, alertProps, alertError, setShowing, setItemEdit }) => {
-    const handleDelClick = () => {
-        confirmErrorProps("Bạn chắc muốn hủy", 2, () => {
-            DelPhuTung(token, item.maphutung)
-                .then((res) => {
-                    alertProps("Xóa thành công.");
-                    getList();
-                })
-                .catch((err) => {
-                    alertError("Không xóa được phụ tùng " + item.maphutung);
-                });
-        });
-    };
-
-    return (
-        <tr>
-            <td>{index + 1}</td>
-            <td>{item.maphutung}</td>
-            <td>{item.tentiengviet}</td>
-            <td>{(item.giaban_le || "").toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
-            <td>{item.vitri}</td>
-            <td>{item.soluongtonkho}</td>
-            <td>
-                <DivFlexRow>
-                    <Button
-                        onClick={() => {
-                            setShowing(true);
-                            setItemEdit(item);
-                        }}
-                    >
-                        <i className="fas fa-cog" />
-                    </Button>
-                    <DelButton onClick={handleDelClick} style={{ marginLeft: 5 }}>
-                        <i className="far fa-trash-alt" />
-                    </DelButton>
-                </DivFlexRow>
-            </td>
-        </tr>
-    );
-};
+import lodash from "lodash";
 
 const PhuTung = (props) => {
     let chucvu = props.info && props.info.chucvu ? props.info.chucvu : null;
@@ -61,36 +20,28 @@ const PhuTung = (props) => {
         }
     }, [props.listPhuTung.length]);
 
-    const handleXoaHetPhutung = () => {
-        props.confirm("Bạn chắc muốn hủy", () => {
-            DelAllPhuTung(props.token)
+    const handleDelClick = (item) => {
+        parent.confirmError("Bạn chắc muốn hủy", 2, () => {
+            DelPhuTung(props.token, item.maphutung)
                 .then((res) => {
-                    props.alert("Xóa thành công.");
+                    parent.error("Xóa thành công.");
                     setTimeout(() => {
-                        window.location.reload();
+                        window.reload();
                     }, 1000);
                 })
                 .catch((err) => {
-                    props.error("Không xóa được. @@");
+                    parent.error("Không xóa được phụ tùng " + item.maphutung);
                 });
         });
     };
 
     return (
         <ProductContainer className="active">
-            <DivFlexRow style={{ justifyContent: "space-between" }}>
-                <h3>Danh sách phụ tùng</h3>
-                <Button
-                    onClick={() => {
-                        handleXoaHetPhutung();
-                    }}
-                >
-                    Xóa hết phụ tùng
-                </Button>
-                <div></div>
-            </DivFlexRow>
-
-            <DataTable data={mArrPhuTung} searchData={(search, e) => search == "" || e.maphutung.toLowerCase().includes(search.toLowerCase())}>
+            <DataTable
+                title={"Danh sách phụ tùng"}
+                data={mArrPhuTung}
+                searchData={(search, e) => search == "" || e.maphutung.toLowerCase().includes(search.toLowerCase())}
+            >
                 <DataTable.Header>
                     <th>STT</th>
                     <th>Mã phụ tùng</th>
@@ -100,17 +51,33 @@ const PhuTung = (props) => {
                     <th>Số lượng</th>
                     <th>Sửa/Xóa</th>
                 </DataTable.Header>
-                <DataTable.Body>
-                    <PhuTungItem
-                        token={props.token}
-                        getList={() => {}}
-                        alertProps={props.alert}
-                        alertError={props.parent.error}
-                        confirmErrorProps={props.parent.confirmError}
-                        setShowing={setShowing}
-                        setItemEdit={setItemEdit}
-                    />
-                </DataTable.Body>
+                <DataTable.Body
+                    render={(item, index) => {
+                        return (
+                            <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>{item.maphutung}</td>
+                                <td>{item.tentiengviet}</td>
+                                <td>{(item.giaban_le || 0).toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
+                                <td>{item.vitri}</td>
+                                <td>{item.soluongtonkho}</td>
+                                <td>
+                                    <Button
+                                        onClick={() => {
+                                            setShowing(true);
+                                            setItemEdit(item);
+                                        }}
+                                    >
+                                        <i className="fas fa-edit" />
+                                    </Button>
+                                    <DelButton onClick={() => handleDelClick(item)} style={{ marginLeft: 5 }}>
+                                        <i className="far fa-trash-alt" />
+                                    </DelButton>
+                                </td>
+                            </tr>
+                        );
+                    }}
+                ></DataTable.Body>
             </DataTable>
             <PopupPhuTung
                 chucvu={chucvu}

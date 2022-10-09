@@ -1,8 +1,9 @@
 module.exports = {
     env: {
-        browser: true,
-        es6: true,
-        node: true,
+        "browser": true,
+        "es6": true,
+        "node": true,
+        "jsx-control-statements/jsx-control-statements": true
     },
     plugins: ["import", "react", "jsx-control-statements"],
     extends: ["eslint:recommended", "plugin:react/recommended", "plugin:jsx-control-statements/recommended"],
@@ -38,8 +39,14 @@ module.exports = {
         "generator-star-spacing": 2,
         "guard-for-in": 2,
         "indent": [2, 4, { SwitchCase: 1 }],
+        "jsx-control-statements/jsx-choose-not-empty": 2,
+        "jsx-control-statements/jsx-for-require-each": 0,
+        "jsx-control-statements/jsx-for-require-of": 2,
+        "jsx-control-statements/jsx-for-require-body": 0,
+        "jsx-control-statements/jsx-if-require-condition": 2,
+        "jsx-control-statements/jsx-otherwise-once-last": 2,
         "jsx-control-statements/jsx-use-if-tag": 0,
-        "jsx-control-statements/jsx-jcs-no-undef": 0,
+        "jsx-control-statements/jsx-when-require-condition": 2,
         "key-spacing": [2, { singleLine: { beforeColon: false, afterColon: true }, multiLine: { beforeColon: false, afterColon: true } }],
         "keyword-spacing": 2,
         "linebreak-style": [2, "windows"],

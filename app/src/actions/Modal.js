@@ -1,10 +1,15 @@
 import * as type from "./action-types";
 
-export function openModal(name, data) {
+export const POPUP_NAME = {
+    POPUP_STAFFS: "POPUP_STAFFS",
+};
+
+export function openModal(name, data, callback) {
     return {
         type: type.MODAL.OPEN_MODAL,
         name: name,
         data: data,
+        callback: callback,
     };
 }
 

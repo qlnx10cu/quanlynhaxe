@@ -48,9 +48,9 @@ const RenderByRole = (props) => {
 
     if (canRender > -1) {
         return <>{props.children}</>;
-    } else {
-        return <></>;
     }
+
+    return <></>;
 };
 
 const ListToolBar = [
@@ -119,12 +119,10 @@ const ListToolBar = [
         onClick: (history, setIndex) => {
             if (!history.location.pathname.includes("/banle")) {
                 history.push("/banle");
-            } else {
-                if (history.location.search.indexOf("mahoadon")) {
-                    history.push("/banle");
-                    history.push("/banle");
-                    history.goBack();
-                }
+            } else if (history.location.search.indexOf("mahoadon")) {
+                history.push("/banle");
+                history.push("/banle");
+                history.goBack();
             }
 
             setIndex(5);

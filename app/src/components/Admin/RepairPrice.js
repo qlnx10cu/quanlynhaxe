@@ -102,7 +102,7 @@ const RepairPrice = (props) => {
                                         <DelButton
                                             onClick={() => {
                                                 props.confirmError("Bạn chắc muốn hủy", 2, () => {
-                                                    DelSalary(props.token, item.ma).then((response) => {
+                                                    DelSalary(props.token, item.ma).then((res) => {
                                                         GetListSalary(props.token).then((response) => {
                                                             setListSalary(response.data);
                                                         });

@@ -122,8 +122,8 @@ const mapDispatch = (dispatch) => ({
     confirm: (mess, callback) => {
         dispatch(confirm(mess, callback));
     },
-    confirmError: (mess, error, callback) => {
-        dispatch(confirmError(mess, error, callback));
+    confirmError: (mess, errorType, callback) => {
+        dispatch(confirmError(mess, errorType, callback));
     },
     addLoading: () => {
         dispatch(addLoading());

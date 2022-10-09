@@ -54,25 +54,25 @@ const CuaHangNgoai = (props) => {
                         <th></th>
                     </tr>
                     {listCuaHang &&
-                        listCuaHang.map((item, index) => (
+                        listCuaHang.map((product, index) => (
                             <tr key={index}>
-                                <td>{item.tenphutung}</td>
-                                <td>{item.nhacungcap}</td>
-                                <td>{item.dongia.toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
-                                <td>{item.ghichu}</td>
+                                <td>{product.tenphutung}</td>
+                                <td>{product.nhacungcap}</td>
+                                <td>{product.dongia.toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
+                                <td>{product.ghichu}</td>
                                 <td>
                                     <Button
                                         onClick={() => {
                                             setIsShowing(true);
-                                            setItem(item);
+                                            setItem(product);
                                         }}
                                     >
                                         <i className="fas fa-cog"></i>
                                     </Button>
                                     <DelButton
                                         onClick={() => {
-                                            props.confirmError("Bạn chắc muốn hủy phụ tùng: " + item.tenphutung, 2, () => {
-                                                handleDelItem(item.tenphutung, item.nhacungcap);
+                                            props.confirmError("Bạn chắc muốn hủy phụ tùng: " + product.tenphutung, 2, () => {
+                                                handleDelItem(product.tenphutung, product.nhacungcap);
                                             });
                                         }}
                                         style={{ marginLeft: 5 }}

@@ -59,12 +59,10 @@ const ChiTietThongKe = (props) => {
     const CallApiGetListStaff = (manv) => {
         GetListStaff(props.token)
             .then((res) => {
-                let staff = null;
-                var listStaff = res.data;
-                staff = listStaff.find(function (item) {
+                let staffCur = res.data.find(function (item) {
                     return item.ma === manv;
                 });
-                setStaff(staff);
+                setStaff(staffCur);
             })
             .catch((err) => {});
     };
@@ -73,11 +71,10 @@ const ChiTietThongKe = (props) => {
         if (props.listStaff == null) {
             CallApiGetListStaff(manv);
         } else {
-            let staff = null;
-            staff = props.listStaff.find(function (item) {
+            let staffCur = props.listStaff.find(function (item) {
                 return item.ma === manv;
             });
-            setStaff(staff);
+            setStaff(staffCur);
         }
     };
 

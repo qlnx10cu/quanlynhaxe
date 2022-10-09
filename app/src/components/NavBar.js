@@ -74,6 +74,8 @@ const Title = styled.div`
     }
 `;
 
+/* eslint-disable no-invalid-this */
+
 class NavBar extends React.Component {
     constructor(props) {
         super(props);
@@ -128,6 +130,8 @@ class NavBar extends React.Component {
         );
     }
 }
+
+/* eslint-enable no-invalid-this */
 
 // const mapState = (state) => ({
 //     userName: state.Profile.proDetail.Name,

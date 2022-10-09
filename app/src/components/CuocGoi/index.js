@@ -4,7 +4,7 @@ import moment from "moment";
 import { GetCuocGoiTheoNgay } from "../../API/CuocGoi";
 // import ChiTietThongKe from './ChiTietThongKe'
 import { connect } from "react-redux";
-import { alert, success, setLoading } from "../../actions/App";
+import { alert, success } from "../../actions/App";
 import _ from "lodash";
 
 const IconCircle = (props) => {
@@ -342,7 +342,6 @@ const CuocGoi = (props) => {
 
 const mapState = (state) => ({
     token: state.Authenticate.token,
-    isLoading: state.App.isLoading,
 });
 
 const mapDispatch = (dispatch) => ({
@@ -351,9 +350,6 @@ const mapDispatch = (dispatch) => ({
     },
     success: (mess) => {
         dispatch(success(mess));
-    },
-    setLoading: (isLoad) => {
-        dispatch(setLoading(isLoad));
     },
 });
 

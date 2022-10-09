@@ -10,7 +10,7 @@ import { UpdateChamSoc } from "../../API/ChamSoc";
 
 import { GetListStaff } from "../../API/Staffs";
 import { connect } from "react-redux";
-import { alert, success, setLoading, confirm, error } from "../../actions/App";
+import { alert, success, confirm, error } from "../../actions/App";
 import _ from "lodash";
 
 const getTrangThai = (e) => {
@@ -520,7 +520,6 @@ const CSKH = (props) => {
 
 const mapState = (state) => ({
     token: state.Authenticate.token,
-    isLoading: state.App.isLoading,
 });
 
 const mapDispatch = (dispatch) => ({
@@ -535,9 +534,6 @@ const mapDispatch = (dispatch) => ({
     },
     success: (mess) => {
         dispatch(success(mess));
-    },
-    setLoading: (isLoad) => {
-        dispatch(setLoading(isLoad));
     },
 });
 

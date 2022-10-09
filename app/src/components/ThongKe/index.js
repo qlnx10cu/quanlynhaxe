@@ -8,7 +8,7 @@ import { GetListStaff } from "../../API/Staffs";
 import { HuyThanhToan, HuyThanhToanLe, CheckUpdateBill } from "../../API/Bill";
 import { HOST, HOST_SHEME } from "../../Config";
 import { connect } from "react-redux";
-import { alert, success, setLoading, error, confirm } from "../../actions/App";
+import { alert, success, error, confirm } from "../../actions/App";
 import { withRouter } from "react-router-dom";
 import _ from "lodash";
 
@@ -129,17 +129,17 @@ const ThongKe = (props) => {
             });
     }, []);
 
-    const HuyHoaDon = (mMaHoaDon, loaiHD, cb) => {
+    const HuyHoaDon = (mhd, loaiHD, cb) => {
         if (loaiHD == 0) {
-            HuyThanhToan(props.token, mMaHoaDon)
+            HuyThanhToan(props.token, mhd)
                 .then((res) => {
-                    props.alert("Hủy hóa đơn " + mMaHoaDon + " đã thành công: ");
+                    props.alert("Hủy hóa đơn " + mhd + " đã thành công: ");
                     if (cb) {
                         cb();
                     }
                 })
                 .catch((err) => {
-                    props.alert("Lỗi hủy hóa đơn " + mMaHoaDon);
+                    props.alert("Lỗi hủy hóa đơn " + mhd);
                     if (cb) {
                         cb();
                     }
@@ -493,7 +493,6 @@ const ThongKe = (props) => {
 
 const mapState = (state) => ({
     token: state.Authenticate.token,
-    isLoading: state.App.isLoading,
 });
 
 const mapDispatch = (dispatch) => ({
@@ -508,9 +507,6 @@ const mapDispatch = (dispatch) => ({
     },
     confirm: (mess, callback) => {
         dispatch(confirm(mess, callback));
-    },
-    setLoading: (isLoad) => {
-        dispatch(setLoading(isLoad));
     },
 });
 

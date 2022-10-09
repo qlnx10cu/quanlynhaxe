@@ -201,9 +201,9 @@ const CustomerDetail = (props) => {
                             <DivFlexColumn style={{ fontSize: 20, marginBottom: 2, marginLeft: 50, width: "100%" }}>
                                 Thành phố
                                 <Select autocomplete="off" width="100%" value={mThanhPho} onChange={(e) => setThanhPho(e.target.value)}>
-                                    {ListThanhPho.map((item, index) => (
-                                        <option key={index} value={item}>
-                                            {item}
+                                    {ListThanhPho.map((tp, index) => (
+                                        <option key={index} value={tp}>
+                                            {tp}
                                         </option>
                                     ))}
                                 </Select>

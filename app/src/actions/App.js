@@ -107,12 +107,12 @@ export const confirm = (message, callback) => {
         },
     };
 };
-export const confirmError = (message, error, callback) => {
+export const confirmError = (message, errorType, callback) => {
     return {
         type: SWAP_CONFIRM,
         data: {
             isLoading: true,
-            error: error,
+            error: errorType,
             callback: callback,
             message: message,
         },

@@ -236,7 +236,7 @@ const BanLe = (props) => {
 
     useEffect(() => {
         var mhd = "";
-        var loai = 0;
+        var loaiCurrent = 0;
         let pathname = window.location.href;
         if (pathname.endsWith("/")) pathname = pathname.substring(0, pathname.length - 1);
 
@@ -250,7 +250,7 @@ const BanLe = (props) => {
         clearAll();
 
         if (pathname.endsWith("/banle")) {
-            loai = 0;
+            loaiCurrent = 0;
         } else if (pathname.includes("/banle/showbill")) {
             var queryParams = getQueryParams(window.location.href);
             if (!queryParams || !queryParams.mahoadon) {
@@ -260,7 +260,7 @@ const BanLe = (props) => {
             }
             mhd = queryParams.mahoadon;
             setmahoadonUpdate(queryParams.mahoadon);
-            loai = 2;
+            loaiCurrent = 2;
         } else {
             var queryParams = getQueryParams(window.location.href);
             if (!queryParams || !queryParams.mahoadon) {
@@ -278,9 +278,9 @@ const BanLe = (props) => {
 
             mhd = queryParams.mahoadon;
             setmahoadonUpdate(queryParams.mahoadon);
-            loai = 1;
+            loaiCurrent = 1;
         }
-        if (loai != 0) {
+        if (loaiCurrent != 0) {
             props.setLoading(true, 3);
         }
 
@@ -301,9 +301,9 @@ const BanLe = (props) => {
 
         props.getAllProduct(props.token);
 
-        setLoai(loai);
+        setLoai(loaiCurrent);
 
-        if (loai != 0) {
+        if (loaiCurrent != 0) {
             GetBillBanLeByMaHoaDon(props.token, mhd)
                 .then((res) => {
                     if (!isMouted) return;

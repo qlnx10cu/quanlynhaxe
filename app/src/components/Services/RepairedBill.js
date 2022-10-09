@@ -768,9 +768,9 @@ const RepairedBill = (props) => {
 
         props.confirmError(mess, !data.tenkh || length == 0 ? 1 : 0, () => {
             UpdateBill(props.token, data)
-                .then((res) => {
+                .then(() => {
                     ThanhToan(props.token, mMaHoaDon)
-                        .then((res) => {
+                        .then(() => {
                             if (props.socket) props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
                             setMaHoaDon("");
                             exportBill();
@@ -1315,9 +1315,9 @@ const RepairedBill = (props) => {
                                                 min="0"
                                             />
                                             <datalist id="tien_cong_bill">
-                                                {listGiaDichVu.map((item, index) => (
-                                                    <option key={index} value={item.tien}>
-                                                        {item.ten}
+                                                {listGiaDichVu.map((dichvu, idx) => (
+                                                    <option key={idx} value={dichvu.tien}>
+                                                        {dichvu.ten}
                                                     </option>
                                                 ))}
                                             </datalist>

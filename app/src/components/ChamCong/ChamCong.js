@@ -24,9 +24,8 @@ export default (props) => {
         setLoading(true);
         try {
             let res = await axios.get(`${HOST}/chamcong/theongay/ngay/${tmp}`);
-            let arr = res.data;
             setLoading(false);
-            await setArr(arr);
+            await setArr(res.data);
         } catch (error) {}
     };
     const uploadData = async () => {
@@ -97,10 +96,10 @@ export default (props) => {
                         <th>VSBĐ</th> */}
                         <th>Ghi chú</th>
                     </tr>
-                    {arr.map((e, index) => (
+                    {arr.map((nv, index) => (
                         <tr key={index}>
-                            <td>{e.ten || ""}</td>
-                            <td>{(e.tiencong || 0).toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
+                            <td>{nv.ten || ""}</td>
+                            <td>{(nv.tiencong || 0).toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
                             <td>
                                 <NewInput
                                     value={arr[index].ghichu ? arr[index].ghichu : ""}

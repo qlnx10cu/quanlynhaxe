@@ -23,6 +23,8 @@ function stringToDate(_date, _format, _delimiter) {
     return formatedDate;
 }
 
+/* eslint-disable camelcase */
+
 function readFile(file, token) {
     return new Promise((resolve, reject) => {
         let reader = new FileReader();
@@ -222,6 +224,9 @@ function readFile(file, token) {
         };
     });
 }
+
+/* eslint-enable camelcase */
+
 const Products = (props) => {
     useEffect(() => {
         props.getAllProduct(props.token);

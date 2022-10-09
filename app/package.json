@@ -30,6 +30,7 @@
     "gulp": "gulp",
     "dev": "gulp dev",
     "prod": "gulp prod",
+    "lint": "gulp lint",
     "pretty": "prettier --write \"./**/*.{js,jsx}\""
   },
   "homepage": "./",

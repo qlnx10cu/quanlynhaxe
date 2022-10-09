@@ -327,11 +327,12 @@ const BanLe = (props) => {
                         mDiaChi.setValue(data.diachi);
                     }
                     var chitiet = [...data.chitiet];
-                    for (var k in chitiet) {
-                        var newItem = chitiet[k];
+
+                    chitiet.forEach((newItem) => {
                         newItem.tencongviec = newItem.tenphutung;
                         newItem.tongtien = newItem.dongia * newItem.soluong * ((100 - newItem.chietkhau) / 100);
-                    }
+                    });
+
                     setNgaythanhtoan(data.ngaythanhtoan);
                     setLydo(data.lydo);
                     setTongTien(data.tongtien);
@@ -541,10 +542,11 @@ const BanLe = (props) => {
 
     const addListItemToProduct = (items) => {
         var tongtien = 0;
-        for (var k in items) {
-            var item = items[k];
+
+        items.forEach((item) => {
             tongtien += item.tongtien;
-        }
+        });
+
         var product = [...mProducts];
         setProducts(product.concat(items));
         setTongTien(mTongTien + tongtien);

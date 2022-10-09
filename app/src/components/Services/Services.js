@@ -87,8 +87,8 @@ const CRepairItem = (props) => {
                 {mIsWorking === 2
                     ? `BSX: ${props.item && props.item.biensoxe} (${props.item && props.item.mahoadon})`
                     : mIsWorking === 1
-                    ? "Đang nhập thông tin"
-                    : "Trống"}
+                        ? "Đang nhập thông tin"
+                        : "Trống"}
             </span>
             <DivFlexRow>
                 {mIsWorking === 2 ? (

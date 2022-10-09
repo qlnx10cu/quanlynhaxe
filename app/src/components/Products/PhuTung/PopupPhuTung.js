@@ -69,6 +69,8 @@ const RenderTableDetailHoaDon = ({ chitiet }) => {
     );
 };
 
+/* eslint-disable camelcase */
+
 const PopupPhuTung = (props) => {
     let [activePage, setActive] = useState(0);
     let mChiTiet = lib.handleInput([]);
@@ -289,5 +291,7 @@ const PopupPhuTung = (props) => {
         </Modal>
     );
 };
+
+/* eslint-enable camelcase */
 
 export default PopupPhuTung;

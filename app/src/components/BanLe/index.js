@@ -777,8 +777,7 @@ const BanLe = (props) => {
             return item.maphutung.toLowerCase().includes(values.toLowerCase()) || item.tentiengviet.toLowerCase().includes(values.toLowerCase());
         });
         if (product.length !== 0) {
-            if (product.length === 1 && product[0].maphutung === values) {
-            } else {
+            if (product.length != 1 || product[0].maphutung != values) {
                 SliceTop20(product);
             }
         }

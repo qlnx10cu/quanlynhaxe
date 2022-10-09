@@ -67,11 +67,6 @@ const PopupBillCHN = (props) => {
         setSoLuong(1);
     };
 
-    useEffect(() => {
-        if (props.isShowing) {
-        }
-    }, [props.isShowing]);
-
     return (
         <Modal className={props.isShowing ? "active" : ""}>
             <ModalContent>

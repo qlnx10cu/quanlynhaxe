@@ -19,8 +19,7 @@ export default (state = initState, action) => {
             return newState;
         }
         case type.MODAL.CLOSE_MODAL:
-            newState = newState.filter((e) => e.id != action.id);
-            return newState;
+            return newState.filter((e) => e.id != action.id);
         default:
             return state;
     }

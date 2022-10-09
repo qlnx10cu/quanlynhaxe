@@ -70,11 +70,6 @@ const PopupNewCuaHangNgoai = (props) => {
         setChietkhau(0);
     };
 
-    useEffect(() => {
-        if (props.isShowing) {
-        }
-    }, [props.isShowing]);
-
     return (
         <Modal className={props.isShowing ? "active" : ""}>
             <ModalContent>

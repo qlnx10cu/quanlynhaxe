@@ -119,7 +119,7 @@ module.exports = {
         "no-obj-calls": 2,
         "no-proto": 2,
         "no-prototype-builtins": 0,
-        "no-redeclare": 0,
+        "no-redeclare": 2,
         "no-regex-spaces": 2,
         "no-restricted-imports": 2,
         "no-return-assign": 2,

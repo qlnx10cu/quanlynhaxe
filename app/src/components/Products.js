@@ -41,9 +41,9 @@ function readFile(file, token, props) {
                 if (k == "1") {
                     const wsname = workbook.SheetNames[k];
                     const ws = workbook.Sheets[wsname];
-                    var K = ws["!ref"].split(":")[1];
-                    var vitriK = parseInt(K.substring(1, K.length));
-                    for (var i = 7; i <= vitriK; i++) {
+                    let K = ws["!ref"].split(":")[1];
+                    let vitriK = parseInt(K.substring(1, K.length));
+                    for (let i = 7; i <= vitriK; i++) {
                         let data = {
                             maphutung: "",
                             ghichu: "",
@@ -75,136 +75,6 @@ function readFile(file, token, props) {
                         dataSend.chitiet.push(data);
                     }
                 }
-
-                if (k === "3") {
-                    const wsname = workbook.SheetNames[k];
-                    const ws = workbook.Sheets[wsname];
-                    var K = ws["!ref"].split(":")[1];
-                    var vitriK = parseInt(K.substring(1, K.length - 1));
-                    var arr = [];
-                    vitriK = 202;
-                    for (var i = 7; i <= vitriK; i++) {
-                        let data = {
-                            maphutung: "",
-                            ghichu: "",
-                            tentiengviet: "",
-                            tentienganh: "",
-                            mau: "",
-                            model: "",
-                            loaiphutung: "phụ kiện",
-                            soluongtonkho: 0,
-                            vitri: "",
-                            giaban_head: 0,
-                            giaban_le: 0,
-                            ngaycapnhat: null,
-                            loaixe: "",
-                        };
-                        if (ws["B" + i] === undefined) {
-                            continue;
-                        }
-                        if (ws["B" + i] && ws["B" + i] !== null) data.maphutung = String(ws["B" + i].v).toUpperCase();
-                        if (ws["C" + i] && ws["C" + i] !== null) data.tentiengviet = ws["C" + i].v;
-                        if (ws["D" + i] && ws["D" + i] !== null && ws["D" + i].v !== "") {
-                            data.soluongtonkho = ws["D" + i].v;
-                            if (!data.soluongtonkho || data.soluongtonkho === undefined || data.soluongtonkho === "") data.soluongtonkho = 0;
-                        }
-                        if (ws["E" + i] && ws["E" + i] !== null) data.vitri = ws["E" + i].w;
-                        if (ws["F" + i] && ws["F" + i] !== null) data.model = ws["F" + i].v;
-                        if (ws["K" + i] && ws["K" + i] !== null) data.ghichu = ws["K" + i].v;
-                        if (ws["N" + i] && ws["N" + i] !== null) data.giaban_head = ws["N" + i].v;
-                        if (ws["O" + i] && ws["O" + i] !== null) data.giaban_le = ws["O" + i].v;
-                        // if (ws["P" + i] && ws["P" + i] !== null)
-                        //     data.ngaycapnhat = new Date();
-                        dataSend.chitiet.push(data);
-                    }
-                }
-
-                if (k === "4") {
-                    const wsname = workbook.SheetNames[k];
-                    const ws = workbook.Sheets[wsname];
-                    var K = ws["!ref"].split(":")[1];
-                    var vitriK = parseInt(K.substring(1, K.length));
-                    vitriK = 19;
-                    for (var i = 7; i <= vitriK; i++) {
-                        let data = {
-                            maphutung: "",
-                            tentienganh: "",
-                            tentiengviet: "",
-                            giaban_head: 0,
-                            giaban_le: 0,
-                            loaiphutung: "dầu nhớt",
-                            soluongtonkho: 0,
-                            ghichu: "",
-                            vitri: "",
-                            ngaycapnhat: null,
-                        };
-                        if (ws["B" + i] === undefined) continue;
-                        if (ws["B" + i] && ws["B" + i] !== null) data.maphutung = String(ws["B" + i].v).toUpperCase();
-                        if (ws["C" + i] && ws["C" + i] !== null) data.tentiengviet = ws["C" + i].v;
-                        if (ws["D" + i] && ws["D" + i] !== null && ws["D" + i].v !== "") {
-                            data.soluongtonkho = ws["D" + i].v;
-                            if (!data.soluongtonkho || data.soluongtonkho === undefined || data.soluongtonkho === "") data.soluongtonkho = 0;
-                        }
-                        if (ws["M" + i] && ws["M" + i] !== null) data.giaban_head = ws["M" + i].v;
-                        if (ws["N" + i] && ws["N" + i] !== null) data.giaban_le = ws["N" + i].v;
-                        // if (ws["O" + i] && ws["O" + i] !== null)
-                        //     data.ngaycapnhat = new Date();
-                        dataSend.chitiet.push(data);
-                    }
-                }
-
-                // if (k === "2") {
-                //     const wsname = workbook.SheetNames[k];
-                //     const ws = workbook.Sheets[wsname];
-                //     var K = ws['!ref'].split(':')[1];
-                //     var vitriK = parseInt(K.substring(1, K.length));
-
-                //     for (var i = 3; i <= vitriK; i++) {
-                //         let data = {
-                //             maphutung: "",
-                //             ghichu: "",
-                //             tentiengviet: "",
-                //             tentienganh: "",
-                //             mau: "",
-                //             model: "",
-                //             loaiphutung: "phụ kiện",
-                //             soluongtonkho: 0,
-                //             vitri: "",
-                //             giaban_head: 0,
-                //             giaban_le: 0,
-                //             ngaycapnhat: null,
-                //             loaixe: ""
-                //         }
-                //         if (ws["C" + i] === undefined)
-                //             continue
-                //         if (ws["C" + i] && ws["C" + i] !== null)
-                //             data.maphutung = ws["C" + i].v;
-                //         if (ws["B" + i] && ws["B" + i] !== null)
-                //             data.loaixe = ws["B" + i].v;
-                //         if (ws["E" + i] && ws["E" + i] !== null)
-                //             data.ghichu = ws["E" + i].v;
-                //         if (ws["H" + i] && ws["H" + i] !== null)
-                //             data.tentiengviet = ws["H" + i].v;
-                //         if (ws["F" + i] && ws["F" + i] !== null)
-                //             data.mamau = ws["F" + i].v;
-                //         if (ws["I" + i] && ws["I" + i] !== null)
-                //             data.model = ws["I" + i].v;
-                //         if (ws["J" + i] && ws["J" + i] !== null && ws["J" + i].v !== "") {
-                //             data.soluongtonkho = ws["J" + i].v;
-                //             if (!data.soluongtonkho || data.soluongtonkho === undefined || data.soluongtonkho === '')
-                //                 data.soluongtonkho = 0;
-                //         }
-                //         if (ws["K" + i] && ws["K" + i] !== null)
-                //             data.vitri = ws["K" + i].w;
-                //         if (ws["L" + i] && ws["L" + i] !== null)
-                //             data.giaban_head = ws["L" + i].v;
-                //         if (ws["M" + i] && ws["M" + i] !== null)
-                //             data.giaban_le = ws["M" + i].v;
-                //         // if(ws["N"+i] && ws["N"+i]!==null)
-                //         //     data.ngaycapnhat=new Date(ws["N"+i].w);
-                //         dataImportPhuKien.chitiet.push(data)
-                //     }
-                // }
             }
             return ImportMuBH(token, dataSend)
                 .then(() => {

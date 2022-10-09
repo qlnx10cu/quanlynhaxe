@@ -247,10 +247,11 @@ const BanLe = (props) => {
         props.setLoading(true, 2);
         clearAll();
 
+        var queryParams = getQueryParams(window.location.href);
+
         if (pathname.endsWith("/banle")) {
             loaiCurrent = 0;
         } else if (pathname.includes("/banle/showbill")) {
-            var queryParams = getQueryParams(window.location.href);
             if (!queryParams || !queryParams.mahoadon) {
                 props.alert("Đường dẫn không đúng");
                 window.close();
@@ -260,7 +261,6 @@ const BanLe = (props) => {
             setmahoadonUpdate(queryParams.mahoadon);
             loaiCurrent = 2;
         } else {
-            var queryParams = getQueryParams(window.location.href);
             if (!queryParams || !queryParams.mahoadon) {
                 props.alert("Đường dẫn không đúng");
                 return;

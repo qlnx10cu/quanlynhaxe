@@ -301,10 +301,11 @@ const RepairedBill = (props) => {
         var updateHoadon = 0;
         var mahoadon = "";
         let mb = -1;
+        var queryParams = getQueryParams(window.location.href);
         let pathname = window.location.href;
         if (pathname.endsWith("/")) pathname = pathname.substring(0, pathname.length - 1);
+
         if (pathname.indexOf("services/showbill") !== -1) {
-            var queryParams = getQueryParams(window.location.href);
             if (!queryParams || !queryParams.mahoadon) {
                 props.alert("Đường dẫn không đúng");
                 return;
@@ -312,7 +313,6 @@ const RepairedBill = (props) => {
             updateHoadon = 2;
             mahoadon = queryParams.mahoadon;
         } else if (pathname.indexOf("services/updatebill") !== -1) {
-            var queryParams = getQueryParams(window.location.href);
             if (!queryParams || !queryParams.mahoadon) {
                 props.alert("Đường dẫn không đúng");
                 return;

@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { DivFlexRow, DivFlexColumn, Button, Input, Table, Modal, ModalContent, CloseButton, Select, Tab, Link, Textarea } from '../../styles'
-import moment from 'moment'
-import { GetChamSocTheoNgay } from "../../API/ChamSoc"
-import HistoryCustomer from '../Admin/HistoryCustomer'
-import ChiTietThongKe from '../ThongKe/ChiTietThongKe'
-import useIsMounted from '../../lib/useIsMounted';
+import React, { useState, useEffect } from "react";
+import { DivFlexRow, DivFlexColumn, Button, Input, Table, Modal, ModalContent, CloseButton, Select, Tab, Link, Textarea } from "../../styles";
+import moment from "moment";
+import { GetChamSocTheoNgay } from "../../API/ChamSoc";
+import HistoryCustomer from "../Admin/HistoryCustomer";
+import ChiTietThongKe from "../ThongKe/ChiTietThongKe";
+import useIsMounted from "../../lib/useIsMounted";
 
-import { UpdateChamSoc } from '../../API/ChamSoc'
+import { UpdateChamSoc } from "../../API/ChamSoc";
 
-import { GetListStaff } from '../../API/Staffs'
-import { connect } from 'react-redux'
+import { GetListStaff } from "../../API/Staffs";
+import { connect } from "react-redux";
 import { alert, success, setLoading, confirm, error } from "../../actions/App";
-import _ from 'lodash'
+import _ from "lodash";
 
 const getTrangThai = (e) => {
     switch (e) {
@@ -28,12 +28,11 @@ const getTrangThai = (e) => {
         default:
             return "Không biết";
     }
-}
+};
 
 const NoteCSKH = (props) => {
-
     let [isUpload, setUpload] = useState(false);
-    let [note, setNote] = useState('');
+    let [note, setNote] = useState("");
     let [trangthai, setTrangThai] = useState(0);
     const data = props.data || {};
 
@@ -44,7 +43,7 @@ const NoteCSKH = (props) => {
             setNote(props.data.ghichu);
             setTrangThai(props.data.trangthai);
         }
-    }, [])
+    }, []);
 
     const handleButtonUpdate = () => {
         if (isUpload == true || !data || !data.ma) {
@@ -54,28 +53,30 @@ const NoteCSKH = (props) => {
         var dataUpdate = {
             ma: data.ma,
             ghichu: note,
-            trangthai: trangthai
-        }
+            trangthai: trangthai,
+        };
         setUpload(true);
-        UpdateChamSoc(props.token, dataUpdate, data.ma).then(Response => {
-            setUpload(false);
-            props.onCloseClick(true);
-        }).catch(err => {
-            setUpload(false);
-            props.alert("Cập nhập thông in thất bại \n Error:" + err.response.data.error.message);
-        });
+        UpdateChamSoc(props.token, dataUpdate, data.ma)
+            .then((Response) => {
+                setUpload(false);
+                props.onCloseClick(true);
+            })
+            .catch((err) => {
+                setUpload(false);
+                props.alert("Cập nhập thông in thất bại \n Error:" + err.response.data.error.message);
+            });
     };
 
     useEffect(() => {
         function handleEscapeKey(event) {
-            if (event.code === 'Escape') {
+            if (event.code === "Escape") {
                 props.onCloseClick(false);
             }
         }
 
-        document.addEventListener('keydown', handleEscapeKey)
-        return () => document.removeEventListener('keydown', handleEscapeKey)
-    }, [])
+        document.addEventListener("keydown", handleEscapeKey);
+        return () => document.removeEventListener("keydown", handleEscapeKey);
+    }, []);
 
     return (
         <Modal className={props.isShowing ? "active" : ""}>
@@ -84,22 +85,22 @@ const NoteCSKH = (props) => {
                     <CloseButton onClick={props.onCloseClick}>&times;</CloseButton>
                     <h2> </h2>
                 </div>
-                <DivFlexRow style={{ marginTop: 10, width: '100%' }}>
+                <DivFlexRow style={{ marginTop: 10, width: "100%" }}>
                     <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                         Tên Khách Hàng
-                        <Input readOnly width='auto' value={data.tenkh || ''} />
+                        <Input readOnly width="auto" value={data.tenkh || ""} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Số Điện Thoại
-                        <Input readOnly width='auto' value={data.sodienthoai || ''} />
+                        <Input readOnly width="auto" value={data.sodienthoai || ""} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Hóa đơn
-                        <Input readOnly width='auto' value={data.mahoadon || ''} />
+                        <Input readOnly width="auto" value={data.mahoadon || ""} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginLeft: 20, marginBottom: 2 }}>
                         Trạng thái
-                        <Select width='auto' value={trangthai || 0} onChange={(e) => setTrangThai(e.target.value)} >
+                        <Select width="auto" value={trangthai || 0} onChange={(e) => setTrangThai(e.target.value)}>
                             <option value="0">{getTrangThai(0)}</option>
                             <option value="1">{getTrangThai(1)}</option>
                             <option value="2">{getTrangThai(2)}</option>
@@ -107,28 +108,27 @@ const NoteCSKH = (props) => {
                         </Select>
                     </DivFlexColumn>
                 </DivFlexRow>
-                <DivFlexRow style={{ marginTop: 10, width: '100%' }}>
+                <DivFlexRow style={{ marginTop: 10, width: "100%" }}>
                     <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                         Ghi chú
-                        <Textarea width='100%' value={note || ''} onChange={(e) => setNote(e.target.value)} />
+                        <Textarea width="100%" value={note || ""} onChange={(e) => setNote(e.target.value)} />
                     </DivFlexColumn>
                 </DivFlexRow>
 
-                <DivFlexRow style={{ justifyContent: 'flex-end' }}>
-                    <Button width='150px' onClick={() => handleButtonUpdate()}>
+                <DivFlexRow style={{ justifyContent: "flex-end" }}>
+                    <Button width="150px" onClick={() => handleButtonUpdate()}>
                         {isUpload ? "" : "Cập nhật"}
                         {isUpload ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-edit"></i>}
                     </Button>
                 </DivFlexRow>
             </ModalContent>
         </Modal>
-    )
-}
+    );
+};
 
 const CSKH = (props) => {
-
-    let [dateStart, setDateStart] = useState(moment().subtract(5, 'days').format("YYYY-MM-DD"));
-    let [dateEnd, setDateEnd] = useState(moment().add(5, 'days').format("YYYY-MM-DD"));
+    let [dateStart, setDateStart] = useState(moment().subtract(5, "days").format("YYYY-MM-DD"));
+    let [dateEnd, setDateEnd] = useState(moment().add(5, "days").format("YYYY-MM-DD"));
     let [searchName, setSearchName] = useState("");
     let [mHistoryCalls, setHistoryCalls] = useState([]);
     let [mHistoryCallCurrents, setHistoryCallCurrents] = useState([]);
@@ -151,24 +151,23 @@ const CSKH = (props) => {
         handleLayDanhSach();
     }, []);
 
-
     const handleLayDanhSach = () => {
-        setLoading(true)
+        setLoading(true);
         let start = moment(dateStart).format("YYYY/MM/DD");
         let end = moment(dateEnd).format("YYYY/MM/DD");
-        GetChamSocTheoNgay(props.token, start, end).then(res => {
-            if (!isMounted())
-                return ;
-            tachList(res.data, maxSizePage, activePage);
-            setHistoryCallCurrents([...res.data]);
-            setLoading(false);
-        }).catch(err => {
-            if (!isMounted())
-                return;
-            props.alert("Có lỗi không thể lấy danh sách");
-            setLoading(false);
-        });
-    }
+        GetChamSocTheoNgay(props.token, start, end)
+            .then((res) => {
+                if (!isMounted()) return;
+                tachList(res.data, maxSizePage, activePage);
+                setHistoryCallCurrents([...res.data]);
+                setLoading(false);
+            })
+            .catch((err) => {
+                if (!isMounted()) return;
+                props.alert("Có lỗi không thể lấy danh sách");
+                setLoading(false);
+            });
+    };
 
     const handleNextPage = () => {
         let newPage = page + 1;
@@ -189,16 +188,17 @@ const CSKH = (props) => {
     const handleChangeSoHang = (e) => {
         setMaxSizePage(parseInt(e));
         tachList(mHistoryCallCurrents, e, activePage);
-    }
+    };
 
     const tachList = (list, size, tab) => {
-        if (tab != 0)
-            list = list.filter(x => x && x.trangthai == (tab - 1));
+        if (tab != 0) list = list.filter((x) => x && x.trangthai == tab - 1);
         if (searchName != "") {
-            list = list.filter(bill => searchName == ""
-                || (bill && bill.tenkh && bill.tenkh.toLowerCase().includes(searchName.toLowerCase()))
-                || (bill && bill.sodienthoai && bill.sodienthoai.toLowerCase().includes(searchName.toLowerCase()))
-                || (bill && bill.biensoxe && bill.biensoxe.toLowerCase().includes(searchName.toLowerCase()))
+            list = list.filter(
+                (bill) =>
+                    searchName == "" ||
+                    (bill && bill.tenkh && bill.tenkh.toLowerCase().includes(searchName.toLowerCase())) ||
+                    (bill && bill.sodienthoai && bill.sodienthoai.toLowerCase().includes(searchName.toLowerCase())) ||
+                    (bill && bill.biensoxe && bill.biensoxe.toLowerCase().includes(searchName.toLowerCase()))
             );
         }
         let tmp = _.chunk(list, size);
@@ -208,48 +208,41 @@ const CSKH = (props) => {
     };
 
     const handleSearchName = () => {
-        tachList(mHistoryCallCurrents, maxSizePage, activePage)
-    }
+        tachList(mHistoryCallCurrents, maxSizePage, activePage);
+    };
 
     const _handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === "Enter") {
             handleSearchName();
         }
-    }
+    };
 
     const setTab = (tab) => {
         if (mHistoryCallCurrents) {
             setActive(tab);
             tachList(mHistoryCallCurrents, maxSizePage, tab);
         }
-
-    }
+    };
 
     const copyCallId = (callid) => {
         try {
             navigator.clipboard.writeText(callid);
-        } catch (ex) {
-
-        }
-    }
+        } catch (ex) {}
+    };
 
     const goiKhachHang = (e) => {
         if (!e) {
-            props.error('Không thể gọi');
+            props.error("Không thể gọi");
             return;
         }
         let url = `microsip://callto:${e}`;
-        window.open(
-            url,
-        );
-    }
-
+        window.open(url);
+    };
 
     return (
         <div>
-
-            <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                <DivFlexRow style={{ alignItems: 'center' }}>
+            <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center" }}>
+                <DivFlexRow style={{ alignItems: "center" }}>
                     <h3>Danh sách Khách Hàng.</h3>
                     <label style={{ marginLeft: 10 }}>Bắt đầu từ </label>
                     <Input type="date" value={dateStart} style={{ marginLeft: 10 }} onChange={(e) => setDateStart(e.target.value)} />
@@ -257,44 +250,66 @@ const CSKH = (props) => {
                     <Input type="date" value={dateEnd} style={{ marginLeft: 10 }} onChange={(e) => setDateEnd(e.target.value)} />
                 </DivFlexRow>
                 <DivFlexRow>
-                    <Button onClick={isLoading ? () => { } : handleLayDanhSach} style={{ marginLeft: 10 }}>
+                    <Button onClick={isLoading ? () => {} : handleLayDanhSach} style={{ marginLeft: 10 }}>
                         {isLoading ? <i className="fas fa-spinner fa-pulse"></i> : "Lấy danh sách"}
                     </Button>
                 </DivFlexRow>
-
             </DivFlexRow>
-            <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-
-            </DivFlexRow>
+            <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center" }}></DivFlexRow>
             <Tab>
-                <button className={activePage === 0 ? "active" : ""} onClick={() => setTab(0)}>Tất cả</button>
-                <button className={activePage === 1 ? "active" : ""} onClick={() => setTab(1)}>Chưa chăm sóc</button>
-                <button className={activePage === 2 ? "active" : ""} onClick={() => setTab(2)}>Đang chăm sóc</button>
-                <button className={activePage === 3 ? "active" : ""} onClick={() => setTab(3)}>Thành công</button>
-                <button className={activePage === 4 ? "active" : ""} onClick={() => setTab(4)}>Thất bại</button>
+                <button className={activePage === 0 ? "active" : ""} onClick={() => setTab(0)}>
+                    Tất cả
+                </button>
+                <button className={activePage === 1 ? "active" : ""} onClick={() => setTab(1)}>
+                    Chưa chăm sóc
+                </button>
+                <button className={activePage === 2 ? "active" : ""} onClick={() => setTab(2)}>
+                    Đang chăm sóc
+                </button>
+                <button className={activePage === 3 ? "active" : ""} onClick={() => setTab(3)}>
+                    Thành công
+                </button>
+                <button className={activePage === 4 ? "active" : ""} onClick={() => setTab(4)}>
+                    Thất bại
+                </button>
             </Tab>
-            <DivFlexRow style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                <DivFlexRow style={{ alignItems: 'center' }}>
+            <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center" }}>
+                <DivFlexRow style={{ alignItems: "center" }}>
                     <label style={{ marginLeft: 10 }}>Search SDT,Tên,BSX: </label>
-                    <Input type="text" onKeyPress={_handleKeyPress} value={searchName} style={{ marginLeft: 10 }} onChange={(e) => setSearchName(e.target.value)} />
-                    <Button style={{ marginLeft: 10 }} onClick={handleSearchName}>Search </Button>
+                    <Input
+                        type="text"
+                        onKeyPress={_handleKeyPress}
+                        value={searchName}
+                        style={{ marginLeft: 10 }}
+                        onChange={(e) => setSearchName(e.target.value)}
+                    />
+                    <Button style={{ marginLeft: 10 }} onClick={handleSearchName}>
+                        Search{" "}
+                    </Button>
                 </DivFlexRow>
-                <DivFlexRow style={{ alignItems: ' center', justifyContent: 'flex-end', marginTop: 5, marginBottom: 10 }}>
+                <DivFlexRow style={{ alignItems: " center", justifyContent: "flex-end", marginTop: 5, marginBottom: 10 }}>
                     <label>Số hàng </label>
-                    <Select style={{ marginLeft: 10 }} width={100} value={maxSizePage} onChange={(e) => handleChangeSoHang(e.target.value)} >
-                        <option value="20" >20</option>
-                        <option value="50" >50</option>
-                        <option value="100" >100</option>
-                        <option value="250" >250</option>
-                        <option value="500" >500</option>
-                        <option value="1000" >1000</option>
-                        <option value="2000" >2000</option>
+                    <Select style={{ marginLeft: 10 }} width={100} value={maxSizePage} onChange={(e) => handleChangeSoHang(e.target.value)}>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="250">250</option>
+                        <option value="500">500</option>
+                        <option value="1000">1000</option>
+                        <option value="2000">2000</option>
                     </Select>
-                    <Button style={{ marginLeft: 35 }} onClick={handlePrevPage}><i className="fas fa-angle-double-left"></i></Button>
-                    <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginLeft: 10 }}>
-                        <div> {page + 1}/{maxPage > 1 ? maxPage : 1}</div>
+                    <Button style={{ marginLeft: 35 }} onClick={handlePrevPage}>
+                        <i className="fas fa-angle-double-left"></i>
+                    </Button>
+                    <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between", marginLeft: 10 }}>
+                        <div>
+                            {" "}
+                            {page + 1}/{maxPage > 1 ? maxPage : 1}
+                        </div>
                     </DivFlexRow>
-                    <Button style={{ marginLeft: 15 }} onClick={handleNextPage}><i className="fas fa-angle-double-right"></i></Button>
+                    <Button style={{ marginLeft: 15 }} onClick={handleNextPage}>
+                        <i className="fas fa-angle-double-right"></i>
+                    </Button>
                 </DivFlexRow>
             </DivFlexRow>
 
@@ -315,93 +330,171 @@ const CSKH = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        mHistoryCalls[page] && mHistoryCalls[page].map((item, index) => (
+                    {mHistoryCalls[page] &&
+                        mHistoryCalls[page].map((item, index) => (
                             <tr key={index}>
                                 <td>{moment(item.ngayhen).format("DD/MM/YYYY")}</td>
-                                <td><Link style={{
-                                    borderBottom: "1px solid blue",
-                                    color: "blue",
-                                    cursor: "pointer"
-                                }} onClick={() => {
-                                    setMaKHHistoryCustomer(item.makh);
-                                    setShowHistoryCustomer(true);
-                                }}> {item.makh}</Link></td>
+                                <td>
+                                    <Link
+                                        style={{
+                                            borderBottom: "1px solid blue",
+                                            color: "blue",
+                                            cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                            setMaKHHistoryCustomer(item.makh);
+                                            setShowHistoryCustomer(true);
+                                        }}
+                                    >
+                                        {" "}
+                                        {item.makh}
+                                    </Link>
+                                </td>
                                 <td>{item.tenkh}</td>
-                                <td>
-                                    {item.sodienthoai || item.zaloid}</td>
+                                <td>{item.sodienthoai || item.zaloid}</td>
                                 <td>{item.biensoxe}</td>
-                                <td><Link style={{
-                                    borderBottom: "1px solid blue",
-                                    color: "blue",
-                                    cursor: "pointer"
-                                }} onClick={() => {
-                                    setShowChitiet(true);
-                                    setMaHoaDon(item.mahoadon);
-                                }}> {item.mahoadon}</Link></td>
-                                <td
-                                    style={{
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        maxWidth: '100px'
-                                    }}
-                                >{item.kiemtralantoi || ''}</td>
-                                <td>{item.solangoi}</td>
                                 <td>
-                                    {getTrangThai(item.trangthai)}
+                                    <Link
+                                        style={{
+                                            borderBottom: "1px solid blue",
+                                            color: "blue",
+                                            cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                            setShowChitiet(true);
+                                            setMaHoaDon(item.mahoadon);
+                                        }}
+                                    >
+                                        {" "}
+                                        {item.mahoadon}
+                                    </Link>
                                 </td>
                                 <td
                                     style={{
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        maxWidth: '100px'
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        maxWidth: "100px",
                                     }}
-                                >{item.ghichu || ''}</td>
+                                >
+                                    {item.kiemtralantoi || ""}
+                                </td>
+                                <td>{item.solangoi}</td>
+                                <td>{getTrangThai(item.trangthai)}</td>
+                                <td
+                                    style={{
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        maxWidth: "100px",
+                                    }}
+                                >
+                                    {item.ghichu || ""}
+                                </td>
                                 <td>
-                                    <Button onClick={() => {
-                                        setDataCSKH(item);
-                                        setShowNote(true);
-                                    }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Xem chi tiết"><i className="fas fa-eye"></i></Button>
-                                    <Button onClick={() => {
-                                        if (!item.zaloid) {
-                                            props.alert('Chưa có thông tin zalo từ khách hàng này')
-                                        } else {
-                                            window.open(`https://oa.zalo.me/chatv2?uid=${item.zaloid}&oaid=2867735993958514567`, '_blank');
-                                        }
-                                    }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Nhắn tin với khách hàng"><i className="fas fa-comment"></i></Button>
+                                    <Button
+                                        onClick={() => {
+                                            setDataCSKH(item);
+                                            setShowNote(true);
+                                        }}
+                                        style={{
+                                            marginLeft: 5,
+                                            height: 30,
+                                            width: 30,
+                                            display: "inline-flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        }}
+                                        title="Xem chi tiết"
+                                    >
+                                        <i className="fas fa-eye"></i>
+                                    </Button>
+                                    <Button
+                                        onClick={() => {
+                                            if (!item.zaloid) {
+                                                props.alert("Chưa có thông tin zalo từ khách hàng này");
+                                            } else {
+                                                window.open(`https://oa.zalo.me/chatv2?uid=${item.zaloid}&oaid=2867735993958514567`, "_blank");
+                                            }
+                                        }}
+                                        style={{
+                                            marginLeft: 5,
+                                            height: 30,
+                                            width: 30,
+                                            display: "inline-flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        }}
+                                        title="Nhắn tin với khách hàng"
+                                    >
+                                        <i className="fas fa-comment"></i>
+                                    </Button>
 
-                                    <Button onClick={() => {
-
-                                        props.confirm(`Bạn muốn gọi ${item.tenkh || ''} (${item.sodienthoai || item.zaloid || (item.direction == 'agent2user' ? item.tosip : item.fromsip)}) `, () => {
-                                            goiKhachHang(item.sodienthoai || item.zaloid || (item.direction == 'agent2user' ? item.tosip : item.fromsip));
-                                        })
-
-                                    }} style={{ marginLeft: 5, height: 30, width: 30, display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }} title="Gọi khách hàng"><i className="fas fa-phone"></i></Button>
+                                    <Button
+                                        onClick={() => {
+                                            props.confirm(
+                                                `Bạn muốn gọi ${item.tenkh || ""} (${
+                                                    item.sodienthoai || item.zaloid || (item.direction == "agent2user" ? item.tosip : item.fromsip)
+                                                }) `,
+                                                () => {
+                                                    goiKhachHang(
+                                                        item.sodienthoai ||
+                                                            item.zaloid ||
+                                                            (item.direction == "agent2user" ? item.tosip : item.fromsip)
+                                                    );
+                                                }
+                                            );
+                                        }}
+                                        style={{
+                                            marginLeft: 5,
+                                            height: 30,
+                                            width: 30,
+                                            display: "inline-flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        }}
+                                        title="Gọi khách hàng"
+                                    >
+                                        <i className="fas fa-phone"></i>
+                                    </Button>
                                 </td>
                             </tr>
-                        ))
-                    }
+                        ))}
                 </tbody>
             </Table>
-            <DivFlexRow style={{ alignItems: ' center', justifyContent: 'flex-end', marginTop: 15 }}>
-                <Button onClick={handlePrevPage}><i className="fas fa-angle-double-left"></i></Button>
-                <DivFlexRow style={{ alignItems: 'center', justifyContent: 'space-between', marginLeft: 10 }}>
-                    <div> {page + 1}/{maxPage > 1 ? maxPage : 1}</div>
+            <DivFlexRow style={{ alignItems: " center", justifyContent: "flex-end", marginTop: 15 }}>
+                <Button onClick={handlePrevPage}>
+                    <i className="fas fa-angle-double-left"></i>
+                </Button>
+                <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between", marginLeft: 10 }}>
+                    <div>
+                        {" "}
+                        {page + 1}/{maxPage > 1 ? maxPage : 1}
+                    </div>
                 </DivFlexRow>
-                <Button style={{ marginLeft: 15 }} onClick={handleNextPage}><i className="fas fa-angle-double-right"></i></Button>
+                <Button style={{ marginLeft: 15 }} onClick={handleNextPage}>
+                    <i className="fas fa-angle-double-right"></i>
+                </Button>
             </DivFlexRow>
 
-            <HistoryCustomer alert={props.alert} error={props.error} confirm={props.confirm} isShowing={isShowHistoryCustomer} onCloseClick={() => {
-                setShowHistoryCustomer(false)
-                setMaKHHistoryCustomer(null);
-            }
-            } ma={maKHHistoryCustomer} />
+            <HistoryCustomer
+                alert={props.alert}
+                error={props.error}
+                confirm={props.confirm}
+                isShowing={isShowHistoryCustomer}
+                onCloseClick={() => {
+                    setShowHistoryCustomer(false);
+                    setMaKHHistoryCustomer(null);
+                }}
+                ma={maKHHistoryCustomer}
+            />
 
             <ChiTietThongKe
                 isShowing={isShowChitiet}
-                onCloseClick={() => { setShowChitiet(false); setMaHoaDon("") }}
+                onCloseClick={() => {
+                    setShowChitiet(false);
+                    setMaHoaDon("");
+                }}
                 mahoadon={mMaHoaDon}
                 token={""}
                 loaihoadon={0}
@@ -413,7 +506,7 @@ const CSKH = (props) => {
                     setShowNote(false);
                     setDataCSKH(null);
                     if (upload) {
-                        handleLayDanhSach()
+                        handleLayDanhSach();
                     }
                 }}
                 data={dataCSKH}
@@ -422,19 +515,29 @@ const CSKH = (props) => {
             />
         </div>
     );
-}
+};
 
 const mapState = (state) => ({
     token: state.Authenticate.token,
-    isLoading: state.App.isLoading
-})
+    isLoading: state.App.isLoading,
+});
 
 const mapDispatch = (dispatch) => ({
-    alert: (mess) => { dispatch(alert(mess)) },
-    error: (mess) => { dispatch(error(mess)) },
-    confirm: (mess, callback) => { dispatch(confirm(mess, callback)) },
-    success: (mess) => { dispatch(success(mess)) },
-    setLoading: (isLoad) => { dispatch(setLoading(isLoad)) }
-})
+    alert: (mess) => {
+        dispatch(alert(mess));
+    },
+    error: (mess) => {
+        dispatch(error(mess));
+    },
+    confirm: (mess, callback) => {
+        dispatch(confirm(mess, callback));
+    },
+    success: (mess) => {
+        dispatch(success(mess));
+    },
+    setLoading: (isLoad) => {
+        dispatch(setLoading(isLoad));
+    },
+});
 
 export default connect(mapState, mapDispatch)(CSKH);

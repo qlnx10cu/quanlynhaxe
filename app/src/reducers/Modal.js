@@ -1,4 +1,4 @@
-import * as type from '../actions/action-types';
+import * as type from "../actions/action-types";
 
 const initState = [];
 
@@ -15,13 +15,11 @@ export default (state = initState, action) => {
             newState[id].id = id;
             newState[id].name = name;
             newState[id].open = true;
-            newState[id].data = action.data
-                ? { ...action.data }
-                : { ...initState[name].data };
+            newState[id].data = action.data ? { ...action.data } : { ...initState[name].data };
             return newState;
         }
         case type.MODAL.CLOSE_MODAL:
-            newState = newState.filter(e => e.id != action.id );
+            newState = newState.filter((e) => e.id != action.id);
             return newState;
         default:
             return state;

@@ -1,9 +1,4 @@
-import {
-    IS_LOADING,
-    ADD_LOADING,
-    SWAP_CONFIRM,
-    SWAP_ALERT
-} from '../actions/App'
+import { IS_LOADING, ADD_LOADING, SWAP_CONFIRM, SWAP_ALERT } from "../actions/App";
 
 const initState = {
     isLoading: false,
@@ -12,44 +7,42 @@ const initState = {
     alert: {
         isLoading: false,
         error: false,
-        message: ""
+        message: "",
     },
     confirm: {
         error: 0,
         isLoading: false,
         callback: null,
-        message: ""
+        message: "",
     },
-}
+};
 
 export default (state = initState, action) => {
     switch (action.type) {
-        case IS_LOADING:
-            {
-                return {
-                    ...state,
-                    isLoading: action.data.isLoading,
-                    totalLoading: action.data.isLoading ? (action.data.totalLoading || 1) : 0,
-                    currentLoading: action.data.isLoading ? (action.data.currentLoading || 0) : 0
-                }
-            }
-        case ADD_LOADING:
-            {
-                return {
-                    ...state,
-                    isLoading: state.currentLoading + 1 < state.totalLoading,
-                    currentLoading: state.currentLoading + 1
-                }
-            }
+        case IS_LOADING: {
+            return {
+                ...state,
+                isLoading: action.data.isLoading,
+                totalLoading: action.data.isLoading ? action.data.totalLoading || 1 : 0,
+                currentLoading: action.data.isLoading ? action.data.currentLoading || 0 : 0,
+            };
+        }
+        case ADD_LOADING: {
+            return {
+                ...state,
+                isLoading: state.currentLoading + 1 < state.totalLoading,
+                currentLoading: state.currentLoading + 1,
+            };
+        }
         case SWAP_ALERT: {
             return {
                 ...state,
                 alert: {
                     isLoading: action.data.isLoading,
                     error: action.data.error,
-                    message: action.data.message
-                }
-            }
+                    message: action.data.message,
+                },
+            };
         }
         case SWAP_CONFIRM: {
             return {
@@ -58,11 +51,11 @@ export default (state = initState, action) => {
                     isLoading: action.data.isLoading,
                     callback: action.data.callback,
                     error: action.data.error,
-                    message: action.data.message
-                }
-            }
+                    message: action.data.message,
+                },
+            };
         }
         default:
             return state;
     }
-}
+};

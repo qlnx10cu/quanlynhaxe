@@ -37,14 +37,14 @@ const del = require("del");
 const mkdirp = require("mkdirp");
 const ncp = require("ncp");
 const eslint = require("gulp-eslint");
-const nodemon = require('gulp-nodemon');
+const nodemon = require("gulp-nodemon");
 const browserSync = require("browser-sync");
 
 const PKG = require("./package.json");
 const BANNER = fs.readFileSync("banner.txt").toString();
 const BANNER_OPTIONS = {
     pkg: PKG,
-    currentYear: (new Date()).getFullYear()
+    currentYear: new Date().getFullYear(),
 };
 
 let OUTPUT_DIR = "../MuoiCu_Server/public";
@@ -61,27 +61,27 @@ function bundle(options) {
     options = options || {};
 
     const watch = Boolean(options.watch);
-    let bundler = browserify(
-        {
-            entries: path.join(__dirname, PKG.main),
-            extensions: [".js", ".jsx"],
-            // required for sourcemaps (must be false otherwise)
-            debug: process.env.NODE_ENV === "development",
-            // required for watchify
-            cache: {},
-            // required for watchify
-            packageCache: {},
-            // required to be true only for watchify
-            fullPaths: watch,
-            // Don"t parse clone dep (not needed)
-            noParse: ["clone"]
-        })
+    let bundler = browserify({
+        entries: path.join(__dirname, PKG.main),
+        extensions: [".js", ".jsx"],
+        // required for sourcemaps (must be false otherwise)
+        debug: process.env.NODE_ENV === "development",
+        // required for watchify
+        cache: {},
+        // required for watchify
+        packageCache: {},
+        // required to be true only for watchify
+        fullPaths: watch,
+        // Don"t parse clone dep (not needed)
+        noParse: ["clone"],
+    })
         .transform("babelify")
-        .transform(envify(
-            {
+        .transform(
+            envify({
                 NODE_ENV: process.env.NODE_ENV,
-                _: "purge"
-            }));
+                _: "purge",
+            })
+        );
 
     if (watch) {
         bundler = watchify(bundler);
@@ -91,19 +91,18 @@ function bundle(options) {
 
             gutil.log("bundling...");
             rebundle();
-            gutil.log("bundle took %sms", (Date.now() - start));
+            gutil.log("bundle took %sms", Date.now() - start);
         });
     }
 
     function rebundle() {
-        return bundler.bundle()
+        return bundler
+            .bundle()
             .on("error", logError)
             .pipe(source(`${PKG.name}.js`))
             .pipe(buffer())
             .pipe(rename(`${PKG.name}.js`))
-            .pipe(gulpif(process.env.NODE_ENV === "production",
-                uglify()
-            ))
+            .pipe(gulpif(process.env.NODE_ENV === "production", uglify()))
             .pipe(header(BANNER, BANNER_OPTIONS))
             .pipe(gulp.dest(OUTPUT_DIR));
     }
@@ -135,10 +134,7 @@ gulp.task("env:prod", (done) => {
 gulp.task("lint", () => {
     const src = ["gulpfile.js", "src/**/*.js", "src/**/*.jsx"];
 
-    return gulp.src(src)
-        .pipe(plumber())
-        .pipe(eslint())
-        .pipe(eslint.format());
+    return gulp.src(src).pipe(plumber()).pipe(eslint()).pipe(eslint.format());
 });
 
 gulp.task("css", (done) => {
@@ -146,7 +142,8 @@ gulp.task("css", (done) => {
 });
 
 gulp.task("html", () => {
-    return gulp.src("public/index.html")
+    return gulp
+        .src("public/index.html")
         .pipe(replace(/{{VERSION_APP}}/, VERSION_APP))
         .pipe(gulp.dest(OUTPUT_DIR));
 });
@@ -156,8 +153,7 @@ gulp.task("resources", (done) => {
 
     mkdirp.sync(dst);
     ncp("public/resources", dst, { stopOnErr: true }, (error) => {
-        if (error && error[0].code !== "ENOENT")
-            throw new Error(`resources copy failed: ${error}`);
+        if (error && error[0].code !== "ENOENT") throw new Error(`resources copy failed: ${error}`);
 
         done();
     });
@@ -173,31 +169,23 @@ gulp.task("bundle:watch", () => {
 
 gulp.task("openbrowser", (done) => {
     browserSync({
-        proxy: "http://localhost:5000"
+        proxy: "http://localhost:5000",
     });
     done();
 });
 
 gulp.task("watch", (done) => {
     // Watch changes in HTML
-    gulp.watch(["index.html"], gulp.series(
-        "html"
-    ));
+    gulp.watch(["index.html"], gulp.series("html"));
 
     // Watch changes in Stylus files
-    gulp.watch(["stylus/**/*.styl"], gulp.series(
-        "css"
-    ));
+    gulp.watch(["stylus/**/*.styl"], gulp.series("css"));
 
     // Watch changes in resources
-    gulp.watch(["resources/**/*"], gulp.series(
-        "resources", "css"
-    ));
+    gulp.watch(["resources/**/*"], gulp.series("resources", "css"));
 
     // Watch changes in JS files
-    gulp.watch(["gulpfile.js", "lib/**/*.js", "lib/**/*.jsx"], gulp.series(
-        "lint"
-    ));
+    gulp.watch(["gulpfile.js", "lib/**/*.js", "lib/**/*.jsx"], gulp.series("lint"));
 
     done();
 });
@@ -208,8 +196,8 @@ gulp.task("nodemon", function (cb) {
 
     var started = false;
     return nodemon({
-        script: "server.js"
-    }).on('start', function () {
+        script: "server.js",
+    }).on("start", function () {
         // to avoid nodemon being started multiple times
         // thanks @matthisk
         if (!started) {
@@ -219,37 +207,10 @@ gulp.task("nodemon", function (cb) {
     });
 });
 
-gulp.task("prod", gulp.series(
-    "env:prod",
-    "clean",
-    "lint",
-    "bundle",
-    "html",
-    "css",
-    "resources"
-));
+gulp.task("prod", gulp.series("env:prod", "clean", "lint", "bundle", "html", "css", "resources"));
 
-gulp.task("dev", gulp.series(
-    "env:dev",
-    "clean",
-    "lint",
-    "bundle",
-    "html",
-    "css",
-    "resources"
-));
+gulp.task("dev", gulp.series("env:dev", "clean", "lint", "bundle", "html", "css", "resources"));
 
-gulp.task("live", gulp.series(
-    "env:dev",
-    "nodemon",
-    "clean",
-    "lint",
-    "bundle:watch",
-    "html",
-    "css",
-    "resources",
-    "watch",
-    "openbrowser"
-));
+gulp.task("live", gulp.series("env:dev", "nodemon", "clean", "lint", "bundle:watch", "html", "css", "resources", "watch", "openbrowser"));
 
 gulp.task("default", gulp.series("prod"));

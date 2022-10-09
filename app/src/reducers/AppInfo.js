@@ -1,6 +1,4 @@
-import {
-    UPDATE_LIFTTABLE
-} from '../actions/AppInfo'
+import { UPDATE_LIFTTABLE } from "../actions/AppInfo";
 
 const initState = {
     liftTable: [],
@@ -8,14 +6,13 @@ const initState = {
 
 export default (state = initState, action) => {
     switch (action.type) {
-        case UPDATE_LIFTTABLE:
-            {
-                return {
-                    ...state,
-                    liftTable: [...action.data],
-                }
-            }
+        case UPDATE_LIFTTABLE: {
+            return {
+                ...state,
+                liftTable: [...action.data],
+            };
+        }
         default:
             return state;
     }
-}
+};

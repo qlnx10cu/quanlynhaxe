@@ -1,5 +1,3 @@
-import Theme from './Theme'
+import Theme from "./Theme";
 
-export {
-    Theme,
-}
+export { Theme };

@@ -1,4 +1,4 @@
-import styled  from 'styled-components'
+import styled from "styled-components";
 
 const WraperToolBar = styled.div`
     width: auto;
@@ -9,29 +9,29 @@ const WraperToolBar = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(0,0,0,0.3);
-`
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+`;
 
 // const BaseContainer = styled.div`
-//     -webkit-touch-callout: none; 
-//     -webkit-user-select: none; 
-//     -khtml-user-select: none; 
-//     -moz-user-select: none; 
-//     -ms-user-select: none; 
+//     -webkit-touch-callout: none;
+//     -webkit-user-select: none;
+//     -khtml-user-select: none;
+//     -moz-user-select: none;
+//     -ms-user-select: none;
 //     user-select: none;
 //     padding: 10px;
 //     height: 100%;
 // `
 
 const Link = styled.a`
-  border-bottom: 1px solid blue;
-  color: blue;
-  cursor: pointer;
-`
+    border-bottom: 1px solid blue;
+    color: blue;
+    cursor: pointer;
+`;
 
 const Button = styled.button`
-    width: ${props => props.width || 'auto'}
-    height: ${props => props.height || '38px'}
+    width: ${(props) => props.width || "auto"}
+    height: ${(props) => props.height || "38px"}
     outline: none;
     border-radius: 5px;
     color: white;
@@ -49,10 +49,10 @@ const Button = styled.button`
       padding: 5px;
       font-size: 14px;
     }
-`
+`;
 const CancleButton = styled.button`
-    width: ${props => props.width || 'auto'}
-    height: ${props => props.height || '38px'}
+    width: ${(props) => props.width || "auto"}
+    height: ${(props) => props.height || "38px"}
     outline: none;
     border-radius: 5px;
     color: #001a33;
@@ -71,82 +71,96 @@ const CancleButton = styled.button`
       padding: 5px;
       font-size: 14px;
     }
-`
+`;
 const DelButton = styled(Button)`
-  width: ${props => props.width || 'auto'}
-  height: ${props => props.height || '38px'}
+  width: ${(props) => props.width || "auto"}
+  height: ${(props) => props.height || "38px"}
   background-color: #ff8080;
   :hover {
     background-color: #ff9999;
   }
-`
+`;
 
 const Modal = styled.div`
     display: none;
-    position: fixed; 
-    z-index: 1; 
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    ${'' /* padding-top: 5%; */}
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+    ${"" /* padding-top: 5%; */}
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
     animation-name: fadeIn;
     animation-duration: 0.4s;
 
     @keyframes fadeIn {
-      from {opacity: 0} 
-      to {opacity: 1}
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
     }
 
     &.active {
-      display: block;
+        display: block;
     }
-`
+`;
 
 const ModalContent = styled.div`
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
     position: relative;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 3px;
     width: 75%;
     animation-name: slideIn;
     animation-duration: 0.4s;
 
     @keyframes slideIn {
-      from {top: -300px; opacity: 0}
-      to {top: 0; opacity: 1}
+        from {
+            top: -300px;
+            opacity: 0;
+        }
+        to {
+            top: 0;
+            opacity: 1;
+        }
     }
 `;
 
 const ModalAlert = styled.div`
     display: none;
-    position: fixed; 
-    z-index: 1; 
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    ${'' /* padding-top: 5%; */}
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+    ${"" /* padding-top: 5%; */}
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
     animation-name: fadeIn;
     animation-duration: 0.4s;
 
     @keyframes fadeIn {
-      from {opacity: 0} 
-      to {opacity: 1}
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
     }
 
     &.active {
-      display: flex;
+        display: flex;
     }
-`
+`;
 
 const Table = styled.table`
     border-collapse: collapse;
@@ -158,14 +172,16 @@ const Table = styled.table`
         padding: 8px;
         font-size: 14px;
     }
-    
+
     a {
-      border-bottom: 1px solid blue;
-      color: blue;
-      cursor: pointer;
+        border-bottom: 1px solid blue;
+        color: blue;
+        cursor: pointer;
     }
 
-    tr:hover {background-color: #ddd;}
+    tr:hover {
+        background-color: #ddd;
+    }
 
     tr:nth-child(even) {
         background-color: #f2f2f2;
@@ -181,7 +197,9 @@ const Table = styled.table`
         font-size: 14px;
     }
 
-    input[type=text], select, textarea {
+    input[type="text"],
+    select,
+    textarea {
         width: 100%;
         padding: 12px;
         border: 1px solid #ccc;
@@ -195,46 +213,47 @@ const CloseButton = styled.span`
     font-size: 28px;
     font-weight: bold;
 
-    :hover,focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
+    :hover,
+    focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
     }
 `;
 const DivFlexColumn = styled.div`
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 `;
 
 const DivFlexRow = styled.div`
-  display: flex;
+    display: flex;
 `;
 
 const Select = styled.select`
     border-radius: 3px;
-    border: 1px solid rgba(0,0,0, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.8);
     height: 38px;
     padding: 8px 20px;
     margin: 8px 0;
     font-size: 16px;
     background: white;
-    width: ${props => props.width || '200px'};
+    width: ${(props) => props.width || "200px"};
     min-width: 100px;
-    
-    :disabled  {
-      color: black;
-      opacity: 1;
+
+    :disabled {
+        color: black;
+        opacity: 1;
     }
 `;
 
 const Input = styled.input`
-    width: ${props => props.width || 'auto'};
+    width: ${(props) => props.width || "auto"};
     padding: 8px 20px;
     margin: 8px 0;
 `;
 
 const Textarea = styled.textarea`
-    width: ${props => props.width || 'auto'};
+    width: ${(props) => props.width || "auto"};
     padding: 8px 20px;
     margin: 8px 0;
 `;
@@ -243,9 +262,9 @@ const ProductContainer = styled.div`
     display: none;
     width: auto;
     height: auto;
-    
+
     &.active {
-      display: block;
+        display: block;
     }
 `;
 
@@ -260,7 +279,7 @@ const ButtonChooseFile = styled.label`
     background: #66ccff;
 
     :hover {
-      background-color: #99ddff;
+        background-color: #99ddff;
     }
 
     input[type="file"] {
@@ -269,37 +288,36 @@ const ButtonChooseFile = styled.label`
 `;
 
 const Tab = styled.div`
-        overflow: hidden;
-        border-bottom: 1px solid #ccc;
-        
-        button {
-            background-color: inherit;
-            float: left;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 14px 16px;
-            transition: 0.3s;
-            font-size: 17px;
-            
-            :hover {
-                background-color: #ddd;
-            }
-            
-            &.active {
-                background-color: #ccc;
-            }
+    overflow: hidden;
+    border-bottom: 1px solid #ccc;
+
+    button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 17px;
+
+        :hover {
+            background-color: #ddd;
         }
+
+        &.active {
+            background-color: #ccc;
+        }
+    }
 `;
 
 const TabContent = styled.div`
-       display: none;
-       
-       &.active {
-        display: block;
-       }
-`;
+    display: none;
 
+    &.active {
+        display: block;
+    }
+`;
 
 export {
     WraperToolBar,
@@ -321,4 +339,4 @@ export {
     CancleButton,
     ProductContainer,
     ButtonChooseFile,
-}
+};

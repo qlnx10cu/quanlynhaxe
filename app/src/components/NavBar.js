@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components'
+import React from "react";
+import styled from "styled-components";
 
 const NavBarContainer = styled.div`
     min-height: 50px;
@@ -11,13 +11,13 @@ const NavBarContainer = styled.div`
     align-items: center;
     justify-content: space-between;
     position: relative;
-    z-index: 1
-`
+    z-index: 1;
+`;
 
 const RightContainer = styled.div`
     display: flex;
     align-items: center;
-`
+`;
 const Dropdown = styled.div`
     margin: 0 30px;
     display: inline-block;
@@ -25,10 +25,10 @@ const Dropdown = styled.div`
     :hover {
         cursor: pointer;
     }
-`
+`;
 
 const DropdownContent = styled.div`
-    display: ${props => props.show ? 'block' : 'none'};
+    display: ${(props) => (props.show ? "block" : "none")};
     position: absolute;
     top: calc(100% + 10px);
     right: 0;
@@ -36,7 +36,7 @@ const DropdownContent = styled.div`
     border-radius: 5px;
     min-width: 160px;
     overflow: auto;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 
     span {
         color: black;
@@ -44,12 +44,12 @@ const DropdownContent = styled.div`
         text-decoration: none;
         display: block;
         font-size: 16px;
-    
+
         :hover {
-            background-color: #ddd
+            background-color: #ddd;
         }
     }
-`
+`;
 
 const Title = styled.div`
     display: flex;
@@ -72,33 +72,34 @@ const Title = styled.div`
         height: 50px;
         margin-right: 10px;
     }
-`
+`;
+
+/* eslint-disable no-invalid-this */
 
 class NavBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             show: false,
-        }
+        };
     }
 
     handleClickOut = () => {
-        this.setState({ show: false })
-        document.removeEventListener('click', this.handleClickOut)
-    }
+        this.setState({ show: false });
+        document.removeEventListener("click", this.handleClickOut);
+    };
 
     handleOptionClick = () => {
         if (!this.state.show) {
-            document.addEventListener('click', this.handleClickOut)
-            this.setState({ show: true })
+            document.addEventListener("click", this.handleClickOut);
+            this.setState({ show: true });
+        } else {
+            this.setState({ show: false });
         }
-        else {
-            this.setState({ show: false })
-        }
-    }
+    };
 
     componentWillUnmount() {
-        document.removeEventListener('click', this.handleClickOut)
+        document.removeEventListener("click", this.handleClickOut);
     }
 
     componentDidMount() {
@@ -111,7 +112,7 @@ class NavBar extends React.Component {
             <NavBarContainer onClick={this.handleOptionClick}>
                 <Title>
                     <img src="/resources/img/logo.png" alt="HEAD Trung Trang" />
-                    <span>{this.props.ten || 'Loading ...'}</span>
+                    <span>{this.props.ten || "Loading ..."}</span>
                 </Title>
 
                 <RightContainer>
@@ -119,16 +120,18 @@ class NavBar extends React.Component {
                         <span>{this.props.userName}</span>
                         <i className="fas fa-caret-down" style={{ marginLeft: 5 }}></i>
 
-                        <DropdownContent show={this.state.show} >
+                        <DropdownContent show={this.state.show}>
                             <span onClick={this.props.handleCaiDat}>Cài Đặt</span>
-                            <span onClick={this.props.logout}>Đăng xuất</span>
+                            <span onClick={() => this.props.logout()}>Đăng xuất</span>
                         </DropdownContent>
                     </Dropdown>
                 </RightContainer>
             </NavBarContainer>
-        )
+        );
     }
 }
+
+/* eslint-enable no-invalid-this */
 
 // const mapState = (state) => ({
 //     userName: state.Profile.proDetail.Name,

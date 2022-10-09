@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { Modal, ModalContent, CloseButton, DivFlexRow, Button, DivFlexColumn, Input } from '../../styles'
+import React, { useState, useEffect } from "react";
+import { Modal, ModalContent, CloseButton, DivFlexRow, Button, DivFlexColumn, Input } from "../../styles";
 // import { showNoti } from '../../../Actions/Notification';
-import { connect } from 'react-redux'
-import {AddSalary} from '../../API/Salary'
+import { connect } from "react-redux";
+import { AddSalary } from "../../API/Salary";
 
 // const handleInput = (initVal = null) => {
 //     let [value, setValue] = useState(initVal);
@@ -19,31 +19,27 @@ import {AddSalary} from '../../API/Salary'
 // }
 
 const DeleteDialog = (props) => {
-
     let [isUpload, setUpload] = useState(false);
-    let [mName,setName]=useState("");
-    let [mPrice,setPrice]=useState("");
+    let [mName, setName] = useState("");
+    let [mPrice, setPrice] = useState("");
 
     const handleSubmit = () => {
         setUpload(true);
         let data = {
             ten: mName,
-            tien: mPrice
-        }
-        
-        AddSalary(props.data,data).then(response=>{
+            tien: mPrice,
+        };
+
+        AddSalary(props.data, data).then((response) => {
             setUpload(false);
             props.onCloseClick();
-        })
-
-    }
+        });
+    };
 
     useEffect(() => {
         setName("");
         setPrice("");
-    }, [])
-
-
+    }, []);
 
     return (
         <Modal className={props.isShowing ? "active" : ""}>
@@ -53,31 +49,30 @@ const DeleteDialog = (props) => {
                     <h2> </h2>
                 </div>
                 <DivFlexRow style={{ marginTop: 10 }}>
-                    <DivFlexColumn style={{ marginLeft: 25, width: '100%' }}>
+                    <DivFlexColumn style={{ marginLeft: 25, width: "100%" }}>
                         <DivFlexColumn style={{ fontSize: 20, marginBottom: 10 }}>
                             Tên Dịch Vụ
-                                <Input width='auto' value={mName.value}  onChange={(e) => setName(e.target.value)} />
+                            <Input width="auto" value={mName.value} onChange={(e) => setName(e.target.value)} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ fontSize: 20, marginBottom: 10 }}>
                             Giá Tiền
-                                <Input type="Number" width='auto' value={mPrice.value} onChange={(e) => setPrice(e.target.value)} />
+                            <Input type="Number" width="auto" value={mPrice.value} onChange={(e) => setPrice(e.target.value)} />
                         </DivFlexColumn>
-
                     </DivFlexColumn>
                 </DivFlexRow>
-                <DivFlexRow style={{ justifyContent: 'flex-end' }}>
-                    <Button width='100px' onClick={isUpload ? () => { } : handleSubmit}>
+                <DivFlexRow style={{ justifyContent: "flex-end" }}>
+                    <Button width="100px" onClick={isUpload ? () => {} : handleSubmit}>
                         {isUpload ? <i className="fas fa-spinner fa-spin"></i> : "Lưu"}
                     </Button>
                 </DivFlexRow>
             </ModalContent>
         </Modal>
-    )
-}
+    );
+};
 
 const mapState = (state) => ({
     token: state.Authenticate.token,
-})
+});
 
 // const mapDispatch = dispatch => ({
 //     showNoti: (type, mess) => { dispatch(showNoti(type, mess)) }

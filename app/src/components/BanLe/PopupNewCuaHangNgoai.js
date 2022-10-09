@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButton } from '../../styles'
-import { connect } from 'react-redux'
-import { getAllProduct } from '../../actions/Product';
+import React, { useState, useEffect } from "react";
+import { Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButton } from "../../styles";
+import { connect } from "react-redux";
+import { getAllProduct } from "../../actions/Product";
 const PopupNewCuaHangNgoai = (props) => {
-
     let [nhacungcap, setNhaCungCap] = useState("");
     let [tenphutung, setTenPhuTung] = useState("");
     let [dongia, setDonGia] = useState(0);
@@ -14,41 +13,38 @@ const PopupNewCuaHangNgoai = (props) => {
         setTenPhuTung(values);
         let item = null;
         item = props.listCuaHangNgoai.find(function (e) {
-            return (e.tenphutung.toLowerCase() === values.toLowerCase());
+            return e.tenphutung.toLowerCase() === values.toLowerCase();
         });
 
         if (item) {
             setNhaCungCap(item.nhacungcap);
             setDonGia(item.dongia);
-        }
-        else {
+        } else {
             setNhaCungCap("");
             setDonGia(0);
         }
     };
 
     const handleAdd = () => {
-
-        if (!chietkhau)
-            chietkhau = 0;
+        if (!chietkhau) chietkhau = 0;
 
         if (tenphutung === "") {
-            alert("Phải có tên phụ tùng.");
+            props.alert("Phải có tên phụ tùng.");
             return;
         }
- 
+
         if (!soluong || soluong <= 0) {
-            alert("số lượng phải >= 0");
+            props.alert("số lượng phải >= 0");
             return;
         }
 
         if (!dongia || dongia < 0) {
-            alert("Đợn gía phải > 0");
+            props.alert("Đợn gía phải > 0");
             return;
         }
 
-        if (chietkhau < 0 || chietkhau>100) {
-            alert("Chiết khấu không hợp lệ");
+        if (chietkhau < 0 || chietkhau > 100) {
+            props.alert("Chiết khấu không hợp lệ");
             return;
         }
 
@@ -59,7 +55,7 @@ const PopupNewCuaHangNgoai = (props) => {
             soluong: parseInt(soluong),
             chietkhau: chietkhau,
             tongtien: parseInt(dongia) * parseInt(soluong) * ((100 - parseInt(chietkhau)) / 100),
-            nhacungcap: nhacungcap
+            nhacungcap: nhacungcap,
         };
         props.addItemToHangNgoai(newData);
         clearData();
@@ -74,13 +70,6 @@ const PopupNewCuaHangNgoai = (props) => {
         setChietkhau(0);
     };
 
-
-    useEffect(() => {
-        if (props.isShowing) {
-
-        };
-    }, [props.isShowing]);
-
     return (
         <Modal className={props.isShowing ? "active" : ""}>
             <ModalContent>
@@ -91,16 +80,22 @@ const PopupNewCuaHangNgoai = (props) => {
                     </DivFlexColumn>
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Tên phụ tùng: </label>
-                        <Input list="phu_tung" name="phu_tung" value={tenphutung} onChange={(e) => {
-                            searchTenPhuTung(e.target.value);
-                        }} />
+                        <Input
+                            list="phu_tung"
+                            name="phu_tung"
+                            value={tenphutung}
+                            onChange={(e) => {
+                                searchTenPhuTung(e.target.value);
+                            }}
+                        />
                         <datalist id="phu_tung">
-                            {props.listCuaHangNgoai && props.listCuaHangNgoai.map((item, index) => (
-                                <option key={index}
-                                    value={item.tenphutung}>{item.dongia}</option>
-                            ))}
+                            {props.listCuaHangNgoai &&
+                                props.listCuaHangNgoai.map((item, index) => (
+                                    <option key={index} value={item.tenphutung}>
+                                        {item.dongia}
+                                    </option>
+                                ))}
                         </datalist>
-
                     </DivFlexColumn>
                 </DivFlexRow>
 
@@ -111,7 +106,15 @@ const PopupNewCuaHangNgoai = (props) => {
                     </DivFlexColumn>
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Chiết khấu: </label>
-                        <Input type="Number" min={0} max={100} value={chietkhau} onChange={(e) => { setChietkhau(e.target.value) }} />
+                        <Input
+                            type="Number"
+                            min={0}
+                            max={100}
+                            value={chietkhau}
+                            onChange={(e) => {
+                                setChietkhau(e.target.value);
+                            }}
+                        />
                     </DivFlexColumn>
                 </DivFlexRow>
 
@@ -122,19 +125,24 @@ const PopupNewCuaHangNgoai = (props) => {
                     </DivFlexColumn>
                 </DivFlexRow>
 
-                <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: 'flex-end' }}>
-                    <label>Tổng tiền: <span
-                        style={{ fontWeight: 'bold' }}>{((parseInt(dongia) || 0) * (100 - (parseInt(chietkhau) || 0))) / 100 * (parseInt(soluong) || 0)} VND</span></label>
+                <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: "flex-end" }}>
+                    <label>
+                        Tổng tiền:{" "}
+                        <span style={{ fontWeight: "bold" }}>
+                            {(((parseInt(dongia) || 0) * (100 - (parseInt(chietkhau) || 0))) / 100) * (parseInt(soluong) || 0)} VND
+                        </span>
+                    </label>
                 </DivFlexRow>
 
-                <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: 'flex-end' }}>
+                <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: "flex-end" }}>
                     <Button onClick={handleAdd}>Thêm</Button>
-                    <DelButton style={{ marginLeft: 10 }} onClick={() => props.onCloseClick()}>Hủy</DelButton>
+                    <DelButton style={{ marginLeft: 10 }} onClick={() => props.onCloseClick()}>
+                        Hủy
+                    </DelButton>
                 </DivFlexRow>
-
             </ModalContent>
         </Modal>
-    )
+    );
 };
 
 const mapState = (state) => ({
@@ -143,7 +151,7 @@ const mapState = (state) => ({
 
 const mapDispatch = (dispatch) => ({
     getAllProduct: (token) => {
-        dispatch(getAllProduct(token))
+        dispatch(getAllProduct(token));
     },
 });
 

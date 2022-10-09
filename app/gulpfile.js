@@ -188,12 +188,12 @@ gulp.task("watch", (done) => {
     gulp.watch(["resources/**/*"], gulp.series("resources", "css"));
 
     // Watch changes in JS files
-    gulp.watch(["gulpfile.js", "lib/**/*.js", "lib/**/*.jsx"], gulp.series("lint"));
+    gulp.watch(["gulpfile.js", "src/**/*.js", "src/**/*.jsx"], gulp.series("lint"));
 
     done();
 });
 
-gulp.task("nodemon", function (cb) {
+gulp.task("nodemon", function (done) {
     OUTPUT_DIR = "build";
     VERSION_APP = "1.0.0";
 
@@ -201,11 +201,9 @@ gulp.task("nodemon", function (cb) {
     return nodemon({
         script: "server.js",
     }).on("start", function () {
-        // to avoid nodemon being started multiple times
-        // thanks @matthisk
         if (!started) {
-            cb();
             started = true;
+            done();
         }
     });
 });

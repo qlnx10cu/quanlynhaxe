@@ -23,10 +23,7 @@ module.exports = {
         },
     },
     rules: {
-        "array-bracket-spacing": [0, "always", {
-            objectsInArrays: true,
-            arraysInArrays: true,
-        }],
+        "array-bracket-spacing": [2, "never"],
         "arrow-parens": [2, "always"],
         "arrow-spacing": 2,
         "block-spacing": [2, "always"],
@@ -43,33 +40,11 @@ module.exports = {
         "indent": [2, 4, { SwitchCase: 1 }],
         "jsx-control-statements/jsx-use-if-tag": 0,
         "jsx-control-statements/jsx-jcs-no-undef": 0,
-        "key-spacing": [0, {
-            singleLine: {
-                beforeColon: true,
-                afterColon: false,
-            },
-            multiLine: {
-                beforeColon: true,
-                afterColon: false,
-                align: "colon",
-            },
-        }],
+        "key-spacing": [2, { singleLine: { beforeColon: false, afterColon: true }, multiLine: { beforeColon: false, afterColon: true } }],
         "keyword-spacing": 2,
         "linebreak-style": [2, "windows"],
-        "lines-around-comment": [2, {
-            allowBlockStart: true,
-            allowObjectStart: true,
-            beforeBlockComment: true,
-            beforeLineComment: false,
-        }],
-        "max-len": [2, 150, {
-            tabWidth: 2,
-            comments: 150,
-            ignoreUrls: true,
-            ignoreStrings: true,
-            ignoreTemplateLiterals: true,
-            ignoreRegExpLiterals: true,
-        }],
+        "lines-around-comment": [2, { allowBlockStart: true, allowObjectStart: true, beforeBlockComment: true, beforeLineComment: false }],
+        "max-len": [2, 150, { tabWidth: 2, comments: 150, ignoreUrls: true, ignoreStrings: true, ignoreTemplateLiterals: true, ignoreRegExpLiterals: true }],
         "newline-after-var": 0,
         "newline-before-return": 0,
         "newline-per-chained-call": 0,
@@ -200,12 +175,8 @@ module.exports = {
         "react/prefer-es6-class": 2,
         "react/prop-types": [2, { skipUndeclared: true }],
         "react/react-in-jsx-scope": 2,
-        "react/self-closing-comp": [0 , { component: false, html: true }],
+        "react/self-closing-comp": [0, { component: false, html: true }],
         "react/sort-comp": 0,
-        "react/jsx-wrap-multilines": [2, {
-            declaration: false,
-            assignment: false,
-            return: true,
-        }],
+        "react/jsx-wrap-multilines": [2, { declaration: false, assignment: false, return: true }],
     },
 };

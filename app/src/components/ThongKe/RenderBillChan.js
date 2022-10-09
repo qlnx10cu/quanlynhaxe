@@ -99,7 +99,7 @@ const RenderBillChan = ({ data }) => {
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Kiểm tra định kỳ: </label>
-                            <Select disabled={true} readOnly value={data.kiemtradinhky}>
+                            <Select disabled readOnly value={data.kiemtradinhky}>
                                 <option value="0">Không có</option>
                                 <option value="1">Lần 1</option>
                                 <option value="2">Lần 2</option>

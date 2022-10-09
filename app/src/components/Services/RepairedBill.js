@@ -997,7 +997,7 @@ const RepairedBill = (props) => {
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Tên nhân viên sửa chữa: </label>
-                            <Input readOnly={true} autocomplete="off" {...tennhanvien} />
+                            <Input readOnly autocomplete="off" {...tennhanvien} />
                         </DivFlexColumn>
                     </DivFlexRow>
                     <DivFlexRow style={{ alignItems: "center" }}>

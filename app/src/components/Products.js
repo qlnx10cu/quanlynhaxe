@@ -284,7 +284,7 @@ const Products = (props) => {
                         </div>
                     </DivFlexRow>
                     <div style={{ marginTop: 15 }}>
-                        <PhuTung token={props.token} parent={props} isActive={true} />
+                        <PhuTung token={props.token} parent={props} />
                     </div>
                 </div>
             )}

@@ -122,7 +122,7 @@ class NavBar extends React.Component {
 
                         <DropdownContent show={this.state.show}>
                             <span onClick={this.props.handleCaiDat}>Cài Đặt</span>
-                            <span onClick={this.props.logout}>Đăng xuất</span>
+                            <span onClick={() => this.props.logout()}>Đăng xuất</span>
                         </DropdownContent>
                     </Dropdown>
                 </RightContainer>

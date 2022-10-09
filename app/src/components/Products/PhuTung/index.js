@@ -77,7 +77,7 @@ const PhuTung = (props) => {
     };
 
     return (
-        <ProductContainer className={props.isActive ? "active" : ""}>
+        <ProductContainer className="active">
             <DivFlexRow style={{ justifyContent: "space-between" }}>
                 <h3>Danh sách phụ tùng</h3>
                 <Button

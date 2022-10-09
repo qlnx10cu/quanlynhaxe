@@ -19,7 +19,7 @@ const Services = React.lazy(() => import("./Services/Services"));
 const RepairedBill = React.lazy(() => import("./Services/RepairedBill"));
 const BanLe = React.lazy(() => import("./BanLe"));
 const ChamCong = React.lazy(() => import("./ChamCong"));
-const ThongKe = React.lazy(() => import("./ThongKe/index.js"));
+const ThongKe = React.lazy(() => import("./ThongKe/index"));
 const CuaHangNgoai = React.lazy(() => import("./CuaHangNgoai"));
 
 const BaseContainer = styled.div`

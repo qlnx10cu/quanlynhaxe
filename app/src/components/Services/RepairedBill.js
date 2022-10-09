@@ -22,12 +22,19 @@ import { connect } from "react-redux";
 import { UpdateBill, SaveBill, ThanhToan, HuyThanhToan, GetBillSuaChuaByMaHoaDon, CheckUpdateBill } from "../../API/Bill";
 import { GetlistCustomer } from "../../API/Customer";
 import { GetListNVSuaChua } from "../../API/Staffs";
-import { deleteBillProduct, deleteItemBillProduct, setListBillProduct, updateBillProduct, deleteItemBillProductMa } from "../../actions/Product";
 import { withRouter } from "react-router-dom";
 import PopupBillCHN from "./PopupBillCHN";
 import { GetListCuaHangNgoai } from "../../API/CuaHangNgoai";
 import { GetListSalary } from "../../API/Salary";
-import { addBillProduct, getAllProduct } from "../../actions/Product";
+import {
+    deleteBillProduct,
+    addBillProduct,
+    getAllProduct,
+    deleteItemBillProduct,
+    setListBillProduct,
+    updateBillProduct,
+    deleteItemBillProductMa,
+} from "../../actions/Product";
 import moment from "moment";
 import Loading from "../Loading";
 

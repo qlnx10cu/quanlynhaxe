@@ -33,7 +33,7 @@ const ChiTietThongKe = (props) => {
         setStaff(null);
         if (props.isShowing) {
             if (props.loaihoadon === 1) {
-                //Bill le
+                // Bill le
                 GetBillBanLeByMaHoaDon(props.token, props.mahoadon)
                     .then((res) => {
                         getStaff(res.data.manv);
@@ -43,7 +43,7 @@ const ChiTietThongKe = (props) => {
                         props.alert("Không lấy được chi tiết bill");
                     });
             } else if (props.loaihoadon === 0) {
-                //Bill chan
+                // Bill chan
                 GetBillSuaChuaByMaHoaDon(props.token, props.mahoadon)
                     .then((res) => {
                         getStaff(res.data.manv);

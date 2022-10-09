@@ -17,12 +17,10 @@ import {
 import { getAllProduct } from "../../actions/Product";
 import PopupNewProduct from "./PopupNewProduct";
 import PopupNewCuaHangNgoai from "./PopupNewCuaHangNgoai";
-import { SaveBillBanLe } from "../../API/Bill";
-import { UpdateBillBanLe } from "../../API/Bill";
+import { SaveBillBanLe, UpdateBillBanLe, GetBillBanLeByMaHoaDon, CheckUpdateBill } from "../../API/Bill";
 import { GetlistCustomer } from "../../API/Customer";
 import { connect } from "react-redux";
 import { GetListCuaHangNgoai } from "../../API/CuaHangNgoai";
-import { GetBillBanLeByMaHoaDon, CheckUpdateBill } from "../../API/Bill";
 import ChiTietThongKe from "../ThongKe/ChiTietThongKe";
 import Loading from "../Loading";
 import moment from "moment";

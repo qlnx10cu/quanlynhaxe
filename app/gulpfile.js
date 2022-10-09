@@ -40,8 +40,11 @@ const eslint = require("gulp-eslint");
 const nodemon = require("gulp-nodemon");
 const browserSync = require("browser-sync");
 
+/* eslint-disable import/extensions */
 const PKG = require("./package.json");
 const BANNER = fs.readFileSync("banner.txt").toString();
+/* eslint-enable import/extensions */
+
 const BANNER_OPTIONS = {
     pkg: PKG,
     currentYear: new Date().getFullYear(),

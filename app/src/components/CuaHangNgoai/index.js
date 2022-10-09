@@ -3,7 +3,7 @@ import { DivFlexRow, Table, Button, DelButton } from "../../styles";
 import PopupCuaHangNgoai from "./PopupCuaHangNgoai";
 import { connect } from "react-redux";
 import { DeleteItemCuaHangNgoai, GetListCuaHangNgoai } from "../../API/CuaHangNgoai";
-import { getListCuaHangNgoai } from "../../actions/Product.js";
+import { getListCuaHangNgoai } from "../../actions/Product";
 
 const CuaHangNgoai = (props) => {
     let [isShowing, setIsShowing] = useState(false);

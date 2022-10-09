@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { DivFlexRow, DivFlexColumn, Button, Input, Table, Modal, ModalContent, CloseButton, Select, Tab, Link, Textarea } from "../../styles";
 import moment from "moment";
-import { GetChamSocTheoNgay } from "../../API/ChamSoc";
+import { GetChamSocTheoNgay, UpdateChamSoc } from "../../API/ChamSoc";
 import HistoryCustomer from "../Admin/HistoryCustomer";
 import ChiTietThongKe from "../ThongKe/ChiTietThongKe";
 import useIsMounted from "../../lib/useIsMounted";
-
-import { UpdateChamSoc } from "../../API/ChamSoc";
-
-import { GetListStaff } from "../../API/Staffs";
 import { connect } from "react-redux";
 import { alert, success, confirm, error } from "../../actions/App";
 import _ from "lodash";

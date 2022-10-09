@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Table, Button, DivFlexRow } from "../../styles";
-import { Input } from "../../styles";
+import { Table, Button, DivFlexRow, Input } from "../../styles";
 import axios from "axios";
 import { HOST, HOST_SHEME } from "../../Config";
 import moment from "moment";

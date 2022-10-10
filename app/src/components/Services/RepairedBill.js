@@ -1323,9 +1323,9 @@ const RepairedBill = (props) => {
                                 </th>
                                 <th>Mã phụ tùng</th>
                                 <th>Đơn giá</th>
-                                <th style={{ maxWidth: 100 }}>SL</th>
-                                <th style={{ maxWidth: 100 }}>Chiết khấu (%)</th>
-                                <th style={{ maxWidth: 150 }}>Tiền phụ tùng</th>
+                                <th style={{ width: 100 }}>SL</th>
+                                <th style={{ width: 100 }}>Chiết khấu (%)</th>
+                                <th>Tiền phụ tùng</th>
                                 <th>Tiền công</th>
                                 <th>
                                     Tổng tiền công <br />+ phụ tùng
@@ -1347,7 +1347,7 @@ const RepairedBill = (props) => {
                                         <td>{item.dongia.toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
                                         <td>
                                             <input
-                                                style={{ maxWidth: 60, textAlign: "right" }}
+                                                style={{ maxWidth: 100, textAlign: "right" }}
                                                 readOnly={showInfoBill || item.loaiphutung == "tiencong"}
                                                 type="number"
                                                 max={1000}
@@ -1370,7 +1370,7 @@ const RepairedBill = (props) => {
                                         <td>{utils.formatVND(item.tienpt)}</td>
                                         <td>
                                             <input
-                                                style={{ width: "90%", maxWidth: 150, textAlign: "right" }}
+                                                style={{ width: 150, textAlign: "right" }}
                                                 readOnly={showInfoBill || item.loaiphutung == "tiencong"}
                                                 type="number"
                                                 max={100}

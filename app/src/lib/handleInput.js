@@ -1,28 +1,36 @@
 import { useState } from "react";
 
-export default function (init) {
+export default function (init, callback) {
     let [value, setValueState] = useState(init);
+
+    const _setValue = (val) => {
+        value = val;
+        setValueState(val);
+    };
 
     const onChange = function (e) {
         setValue(e.target.value);
+        if (callback) {
+            callback(value);
+        }
     };
 
     const setValue = (val) => {
         if (init === null || init === undefined) {
-            setValueState(val);
+            _setValue(val);
         } else if (typeof init === "number" && Number.isInteger(init)) {
             try {
-                setValueState(parseInt(val));
+                _setValue(parseInt(val));
             } catch (error) {
-                setValueState(0);
+                _setValue(0);
             }
         } else if (typeof init === "number" && !Number.isInteger(init)) {
             try {
-                setValueState(parseFloat(val));
+                _setValue(parseFloat(val));
             } catch (error) {}
-            setValueState(0);
+            _setValue(0);
         } else {
-            setValueState(val);
+            _setValue(val);
         }
     };
 

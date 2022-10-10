@@ -124,6 +124,9 @@ gulp.task("env:dev", (done) => {
     gutil.log("setting 'dev' environment");
 
     process.env.NODE_ENV = "development";
+    OUTPUT_DIR = "build";
+    VERSION_APP = "1.0.0";
+
     done();
 });
 
@@ -194,9 +197,6 @@ gulp.task("watch", (done) => {
 });
 
 gulp.task("nodemon", function (done) {
-    OUTPUT_DIR = "build";
-    VERSION_APP = "1.0.0";
-
     var started = false;
     return nodemon({
         script: "server.js",
@@ -212,6 +212,6 @@ gulp.task("prod", gulp.series("env:prod", "clean", "lint", "bundle", "html", "cs
 
 gulp.task("dev", gulp.series("env:dev", "clean", "lint", "bundle", "html", "css", "resources"));
 
-gulp.task("live", gulp.series("env:dev", "nodemon", "clean", "lint", "bundle:watch", "html", "css", "resources", "watch", "openbrowser"));
+gulp.task("live", gulp.series("env:dev", "clean", "lint", "bundle:watch", "html", "css", "resources", "watch", "nodemon", "openbrowser"));
 
 gulp.task("default", gulp.series("prod"));

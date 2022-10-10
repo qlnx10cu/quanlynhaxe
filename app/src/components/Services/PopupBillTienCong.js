@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButton } from "../../styles";
 import { connect } from "react-redux";
 import { addBillProduct } from "../../actions/Product";
+import ButtonClose from "../Warrper/ButtonClose";
+import utils from "../../lib/utils";
 
 const PopupBillTienCong = (props) => {
     let [tentiencong, setTenTienCong] = useState("");
@@ -34,13 +36,17 @@ const PopupBillTienCong = (props) => {
 
         var data = {
             key: props.listBillProduct.length + 1,
+            loaiphutung: "tiencong",
             tenphutungvacongviec: tentiencong,
             maphutung: "",
-            dongia: 0,
+            dongia: utils.parseInt(dongia),
             chietkhau: 0,
-            soluongphutung: 0,
-            tiencong: parseInt(dongia) || 0,
-            tongtien: parseInt(dongia) || 0,
+            soluongphutung: 1,
+            tienpt: 0,
+            thanhtiencong: utils.tinhTongTien(dongia, 1),
+            thanhtienpt: 0,
+            tiencong: utils.parseInt(dongia),
+            tongtien: utils.tinhTongTien(dongia, 1),
             nhacungcap: "Trung Trang",
         };
         props.addItemToProduct(data, true);
@@ -83,10 +89,10 @@ const PopupBillTienCong = (props) => {
                 </DivFlexRow>
 
                 <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: "flex-end" }}>
-                    <Button onClick={handleAdd}>Thêm</Button>
-                    <DelButton style={{ marginLeft: 10 }} onClick={() => props.onCloseClick()}>
-                        Hủy
-                    </DelButton>
+                    <ButtonClose onClick={props.onCloseClick}></ButtonClose>
+                    <Button style={{ marginLeft: 10 }} onClick={handleAdd}>
+                        Thêm
+                    </Button>
                 </DivFlexRow>
             </ModalContent>
         </Modal>

@@ -37,6 +37,8 @@ import {
 } from "../../actions/Product";
 import moment from "moment";
 import Loading from "../Loading";
+import utils from "../../lib/utils";
+import ButtonDelete from "../Warrper/ButtonDelete";
 
 const oneDay = 1000 * 3600 * 24;
 
@@ -444,15 +446,18 @@ const RepairedBill = (props) => {
     const removeItemToProduct = (item) => {
         var tong = 0;
         var tongCong = 0;
+        var tongTienpt = 0;
         props.listBillProduct.forEach((element) => {
             tong += element.tongtien;
-            tongCong += element.tiencong;
+            tongCong += element.thanhtiencong;
+            tongTienpt += element.thanhtienpt;
         });
         tong -= item.tongtien;
-        tongCong -= item.tiencong;
+        tongCong -= item.thanhtiencong;
+        tongTienpt -= item.thanhtienpt;
 
         setTongTienCong(tongCong);
-        setTongTienPT(tong - tongCong);
+        setTongTienPT(tongTienpt);
         setTongTienBill(tong);
     };
 
@@ -465,17 +470,19 @@ const RepairedBill = (props) => {
         }
         var tong = 0;
         var tongCong = 0;
+        var tongTienpt = 0;
         props.listBillProduct.forEach((element) => {
             tong += element.tongtien;
-            tongCong += element.tiencong;
+            tongCong += element.thanhtiencong;
+            tongTienpt += element.thanhtienpt;
         });
 
         if (i == props.listBillProduct.length) {
             tong = tong + item.tongtien;
-            tongCong = tongCong + item.tiencong;
-
+            tongCong += item.thanhtiencong;
+            tongTienpt += item.thanhtienpt;
             setTongTienCong(tongCong);
-            setTongTienPT(tong - tongCong);
+            setTongTienPT(tongTienpt);
             setTongTienBill(tong);
             props.addBillProduct(item);
         } else {
@@ -495,7 +502,7 @@ const RepairedBill = (props) => {
             .then((res) => {
                 searchBienSoXe(res.data.biensoxe);
                 searchNhanVienSuaChua(res.data.manvsuachua);
-                updateTongTienBill(res.data.chitiet);
+                showChiTietPhutung(res.data.chitiet);
                 props.setListBillProduct(res.data.chitiet);
                 mLoaiXe.setValue(res.data.loaixe);
                 mMaKH.setValue(res.data.ma);
@@ -629,7 +636,6 @@ const RepairedBill = (props) => {
                 })
                 .catch((err) => {
                     props.errorHttp(err, "Không thể lưu phiếu sữa chưa: ");
-                    console.log(err);
                 });
         });
     };
@@ -685,18 +691,25 @@ const RepairedBill = (props) => {
                 return null;
             }
         }
+
         var tong = 0;
         var tienpt = 0;
         var tiencong = 0;
         var listProduct = [];
         for (let i = 0; i < props.listBillProduct.length; i++) {
             tong = tong + props.listBillProduct[i].tongtien;
-            tiencong = tiencong + props.listBillProduct[i].tiencong;
+            tiencong = tiencong + props.listBillProduct[i].thanhtiencong;
+            tienpt = tienpt + props.listBillProduct[i].thanhtienpt;
+
             let temp = {
+                loaiphutung: props.listBillProduct[i].loaiphutung,
                 tenphutungvacongviec: props.listBillProduct[i].tenphutungvacongviec,
                 maphutung: props.listBillProduct[i].maphutung,
                 soluongphutung: props.listBillProduct[i].soluongphutung,
                 tiencong: props.listBillProduct[i].tiencong,
+                tienpt: props.listBillProduct[i].tienpt,
+                thanhtiencong: props.listBillProduct[i].thanhtiencong,
+                thanhtienpt: props.listBillProduct[i].thanhtienpt,
                 dongia: props.listBillProduct[i].dongia,
                 chietkhau: props.listBillProduct[i].chietkhau,
                 manvsuachua: mMaNVSuaChua.value,
@@ -707,8 +720,8 @@ const RepairedBill = (props) => {
 
         for (var i = 0; i < listProduct.length; i++) {
             var item = listProduct[i];
-            if (item.soluongphutung < 0) {
-                props.alert("Phụ tùng :" + item.tenphutungvacongviec + " có số lượng < 0");
+            if (item.soluongphutung <= 0) {
+                props.alert("Phụ tùng :" + item.tenphutungvacongviec + " có số lượng <= 0");
                 return null;
             }
             if (item.dongia < 0) {
@@ -725,7 +738,10 @@ const RepairedBill = (props) => {
             }
         }
 
-        tienpt = tong - tiencong;
+        if (tienpt + tiencong != tong) {
+            props.alert("Hóa đơn đang có lỗi, vui lòng tạo lại");
+            return;
+        }
 
         var data = {
             manvsuachua: mMaNVSuaChua.value,
@@ -828,39 +844,62 @@ const RepairedBill = (props) => {
         });
     };
 
+    const showChiTietPhutung = (product) => {
+        product.forEach((element) => {
+            if (element.loaiphutung === null) {
+                if (element.dongia == 0) {
+                    element.soluongphutung = 1;
+                    element.dongia = element.tiencong;
+                    element.thanhtiencong = element.tiencong;
+                    element.thanhtienpt = 0;
+                    element.loaiphutung = "tiencong";
+                    element.tongtien = element.thanhtiencong + element.thanhtienpt;
+                } else {
+                    element.tienpt = utils.tinhTongTien(element.dongia, element.soluongphutung);
+                    element.thanhtienpt = utils.tinhTongTien(element.dongia, element.soluongphutung, element.chietkhau);
+                    element.thanhtiencong = utils.tinhTongTien(element.tiencong, 1, element.chietkhau);
+                    element.tongtien = element.thanhtienpt + element.thanhtiencong;
+                    if (element.maphutung) {
+                        element.loaiphutung = "phutung";
+                    } else {
+                        element.loaiphutung = "cuahangngoai";
+                    }
+                }
+            }
+        });
+
+        updateTongTienBill(product);
+    };
+
     const updateTongTienBill = (product) => {
         var tong = 0;
         var tongCong = 0;
+        var tongTienpt = 0;
         product.forEach((element) => {
             tong += element.tongtien;
-            tongCong += element.tiencong;
+            tongCong += element.thanhtiencong;
+            tongTienpt += element.thanhtienpt;
         });
 
         setTongTienCong(tongCong);
-        setTongTienPT(tong - tongCong);
+        setTongTienPT(tongTienpt);
         setTongTienBill(tong);
     };
 
-    const handleChangeSL = (value, index) => {
-        let newItem = props.listBillProduct[index];
-        if (value && value >= 0) newItem.soluongphutung = parseInt(value);
-        else newItem.soluongphutung = 1;
-        newItem.tongtien =
-            Math.round((100 - newItem.chietkhau) * parseInt(newItem.dongia) * parseInt(newItem.soluongphutung)) / 100 + parseInt(newItem.tiencong);
-        let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
-        props.setListBillProduct(newProduct);
-        updateTongTienBill(newProduct);
-    };
-
-    const handleChangeChieuKhau = (value, index) => {
+    const updateItemNew = (newItem, index) => {
         try {
-            let newItem = props.listBillProduct[index];
-            if (value && value >= 0 && value <= 100) newItem.chietkhau = parseInt(value);
-            else newItem.chietkhau = 0;
-            if (newItem.chietkhau < 0 || newItem.chietkhau > 100) newItem.chietkhau = 0;
-            newItem.tongtien =
-                Math.round((100 - newItem.chietkhau) * parseInt(newItem.dongia) * parseInt(newItem.soluongphutung)) / 100 +
-                parseInt(newItem.tiencong);
+            if (newItem.loaiphutung == "tiencong") {
+                newItem.tienpt = 0;
+                newItem.thanhtienpt = 0;
+                newItem.tiencong = utils.tinhTongTien(newItem.dongia, newItem.soluongphutung, 0);
+                newItem.thanhtiencong = utils.tinhTongTien(newItem.dongia, newItem.soluongphutung, newItem.chietkhau);
+            } else {
+                newItem.thanhtiencong = utils.tinhTongTien(newItem.tiencong, 1, newItem.chietkhau);
+                newItem.tienpt = utils.tinhTongTien(newItem.dongia, newItem.soluongphutung, 0);
+                newItem.thanhtienpt = utils.tinhTongTien(newItem.dongia, newItem.soluongphutung, newItem.chietkhau);
+            }
+            newItem.tongtien = newItem.thanhtiencong + newItem.thanhtienpt;
+
             let newProduct = [
                 ...props.listBillProduct.slice(0, index),
                 newItem,
@@ -871,15 +910,27 @@ const RepairedBill = (props) => {
         } catch (ex) {}
     };
 
+    const handleChangeSL = (value, index) => {
+        try {
+            let newItem = props.listBillProduct[index];
+            newItem.soluongphutung = utils.parseInt(value, 1, 1000);
+
+            updateItemNew(newItem, index);
+        } catch (error) {}
+    };
+
+    const handleChangeChieuKhau = (value, index) => {
+        try {
+            let newItem = props.listBillProduct[index];
+            newItem.chietkhau = utils.parseInt(value, 0, 100);
+            updateItemNew(newItem, index);
+        } catch (ex) {}
+    };
+
     const handleChangeTienCong = (value, index) => {
         let newItem = props.listBillProduct[index];
-        if (value && value >= 0) newItem.tiencong = parseInt(value);
-        else newItem.tiencong = 0;
-        newItem.tongtien =
-            Math.round((100 - newItem.chietkhau) * parseInt(newItem.dongia) * parseInt(newItem.soluongphutung)) / 100 + parseInt(newItem.tiencong);
-        let newProduct = [...props.listBillProduct.slice(0, index), newItem, ...props.listBillProduct.slice(index + 1, props.listBillProduct.lenght)];
-        props.setListBillProduct(newProduct);
-        updateTongTienBill(newProduct);
+        newItem.tiencong = utils.parseInt(value);
+        updateItemNew(newItem, index);
     };
 
     const _handleKeyPress = (e) => {
@@ -933,15 +984,20 @@ const RepairedBill = (props) => {
             return;
         }
 
+        const dongia = utils.parseInt(item.giaban_le);
         var newData = {
             key: props.listBillProduct.length + 1,
+            loaiphutung: "phutung",
             tenphutungvacongviec: item.tentiengviet,
             maphutung: item.maphutung,
-            dongia: parseInt(item.giaban_le),
+            dongia: dongia,
             chietkhau: 0,
             soluongphutung: 1,
+            tienpt: dongia,
             tiencong: 0,
-            tongtien: parseInt(item.giaban_le),
+            thanhtiencong: 0,
+            thanhtienpt: dongia,
+            tongtien: dongia,
             nhacungcap: "Trung Trang",
         };
         addItemToProduct(newData, false);
@@ -1170,17 +1226,18 @@ const RepairedBill = (props) => {
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Ngày Hẹn: </label>
-                            <Input
-                                readOnly
-                                autocomplete="off"
-                                value={
-                                    thoigianhen && thoigianhen != "0"
-                                        ? moment(trangthai == 1 && ngaythanhtoan.value ? ngaythanhtoan.value : new Date())
-                                            .add(thoigianhen, "days")
-                                            .format("DD/MM/YYYY")
-                                        : ""
-                                }
-                            />
+                            <If condition={!thoigianhen || thoigianhen == "0"}>
+                                <Input readOnly autocomplete="off" value="" />
+                            </If>
+                            <If condition={thoigianhen && thoigianhen != "0"}>
+                                <Input
+                                    readOnly
+                                    autocomplete="off"
+                                    value={moment(trangthai == 1 && ngaythanhtoan.value ? ngaythanhtoan.value : new Date())
+                                        .add(thoigianhen, "days")
+                                        .format("DD/MM/YYYY")}
+                                />
+                            </If>
                         </DivFlexColumn>
                     </DivFlexRow>
                     {(isUpdateBill == 3 || lydo) && (
@@ -1258,28 +1315,29 @@ const RepairedBill = (props) => {
                         </DivFlexRow>
                     )}
                     <Table>
-                        <tbody>
+                        <thead>
                             <tr>
-                                <th>STT</th>
+                                <th style={{ width: 50 }}>STT</th>
                                 <th>
                                     Tên phụ tùng <br /> và công việc
                                 </th>
                                 <th>Mã phụ tùng</th>
                                 <th>Đơn giá</th>
-                                <th>SL</th>
-                                <th>Chiết khấu (%)</th>
+                                <th style={{ width: 100 }}>SL</th>
+                                <th style={{ width: 100 }}>Chiết khấu (%)</th>
                                 <th>Tiền phụ tùng</th>
                                 <th>Tiền công</th>
                                 <th>
                                     Tổng tiền công <br />+ phụ tùng
                                 </th>
-                                {!showInfoBill && (
-                                    <th>
+                                <If condition={!showInfoBill}>
+                                    <th style={{ width: 100 }}>
                                         <i className="far fa-trash-alt"></i>
                                     </th>
-                                )}
+                                </If>
                             </tr>
-
+                        </thead>
+                        <tbody>
                             {props.listBillProduct &&
                                 props.listBillProduct.map((item, index) => (
                                     <tr key={index}>
@@ -1289,58 +1347,44 @@ const RepairedBill = (props) => {
                                         <td>{item.dongia.toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
                                         <td>
                                             <input
-                                                readOnly={showInfoBill}
+                                                style={{ width: 100, textAlign: "right" }}
+                                                readOnly={showInfoBill || item.loaiphutung == "tiencong"}
                                                 type="number"
+                                                max={1000}
                                                 onChange={(e) => handleChangeSL(e.target.value, index)}
-                                                value={props.listBillProduct[index].soluongphutung}
+                                                value={item.soluongphutung}
                                                 min="1"
                                             />
                                         </td>
                                         <td>
                                             <input
+                                                style={{ width: 100, textAlign: "right" }}
                                                 readOnly={showInfoBill}
                                                 type="number"
                                                 max={100}
                                                 onChange={(e) => handleChangeChieuKhau(e.target.value, index)}
-                                                value={props.listBillProduct[index].chietkhau}
+                                                value={item.chietkhau}
                                                 min="0"
                                             />
                                         </td>
-                                        <td>
-                                            {(Math.round((100 - item.chietkhau) * item.dongia * item.soluongphutung) / 100).toLocaleString("vi-VI", {
-                                                style: "currency",
-                                                currency: "VND",
-                                            })}
-                                        </td>
+                                        <td>{utils.formatVND(item.tienpt)}</td>
                                         <td>
                                             <input
-                                                readOnly={showInfoBill}
-                                                list="tien_cong_bill"
+                                                style={{ width: 150, textAlign: "right" }}
+                                                readOnly={showInfoBill || item.loaiphutung == "tiencong"}
                                                 type="number"
+                                                max={100}
                                                 onChange={(e) => handleChangeTienCong(e.target.value, index)}
-                                                value={props.listBillProduct[index].tiencong}
+                                                value={item.tiencong}
                                                 min="0"
                                             />
-                                            <datalist id="tien_cong_bill">
-                                                {listGiaDichVu.map((dichvu, idx) => (
-                                                    <option key={idx} value={dichvu.tien}>
-                                                        {dichvu.ten}
-                                                    </option>
-                                                ))}
-                                            </datalist>
                                         </td>
-                                        <td>{item.tongtien.toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
-                                        {!showInfoBill && (
+                                        <td>{utils.formatVND(item.tongtien)}</td>
+                                        <If condition={!showInfoBill}>
                                             <td>
-                                                <DelButton
-                                                    onClick={() => {
-                                                        DelItem(item);
-                                                    }}
-                                                >
-                                                    <i className="far fa-trash-alt"></i>
-                                                </DelButton>
+                                                <ButtonDelete data={item} onClick={DelItem} />
                                             </td>
-                                        )}
+                                        </If>
                                     </tr>
                                 ))}
                         </tbody>

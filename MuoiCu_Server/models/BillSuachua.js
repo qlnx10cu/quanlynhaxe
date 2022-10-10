@@ -6,24 +6,24 @@ class BillChan {
     }
     static getColmun(param) {
         if (param) {
-            let tmp = ['mahoadon', 'tenphutungvacongviec', 'maphutung', 'dongia', 'nhacungcap', 'soluongphutung', 'chietkhau', 'tiencong', 'tongtien', 'manvsuachua'];
+            let tmp = ['mahoadon', 'tenphutungvacongviec', 'maphutung', 'dongia', 'nhacungcap', 'soluongphutung', 'loaiphutung', 'tienpt', 'chietkhau', 'tiencong', 'thanhtiencong', 'thanhtienpt', 'tongtien', 'manvsuachua'];
             return tmp.filter(e => Object.keys(param).includes(e));
         }
-        return "`mahoadon`,`tenphutungvacongviec`,`maphutung`,`dongia`,`nhacungcap`,`soluongphutung`,`chietkhau`,`tiencong`,`tongtien`,`manvsuachua`";
+        return "`mahoadon`,`tenphutungvacongviec`,`maphutung`,`dongia`,`nhacungcap`,`soluongphutung`,`loaiphutung`,`tienpt`,``chietkhau`,`tiencong`,`thanhtiencong`,`thanhtienpt,`tongtien`,`manvsuachua`";
     }
     static getLike(k) {
         return false;
     }
     static getSelect(tb) {
-        return `${tb}.tenphutungvacongviec,${tb}.maphutung,${tb}.soluongphutung,${tb}.tiencong,${tb}.chietkhau,${tb}.tongtien,${tb}.manvsuachua`;
+        return `${tb}.tenphutungvacongviec,${tb}.maphutung,${tb}.soluongphutung,${tb}.tiencong,${tb}.chietkhau,${tb}.loaiphutung,${tb}.tienpt,${tb}.thanhtiencong,${tb}.thanhtienpt,${tb}.tongtien,${tb}.manvsuachua`;
     }
     static getParam(param) {
-        let tmp = ['mahoadon', 'tenphutungvacongviec', 'maphutung', 'dongia', 'nhacungcap', 'soluongphutung', 'chietkhau', 'tiencong', 'tongtien', 'manvsuachua'];
+        let tmp = ['mahoadon', 'tenphutungvacongviec', 'maphutung', 'dongia', 'nhacungcap', 'soluongphutung', 'loaiphutung', 'tienpt', 'chietkhau', 'tiencong', 'thanhtiencong', 'thanhtienpt', 'tongtien', 'manvsuachua'];
         let arr = Object.keys(param).filter(e => tmp.includes(e)).map(e => param[e])
         return arr;
     }
     static getArrayParam(param) {
-        let tmp = ['mahoadon', 'tenphutungvacongviec', 'maphutung', 'dongia', 'nhacungcap', 'soluongphutung', 'chietkhau', 'tiencong', 'tongtien', 'manvsuachua'];
+        let tmp = ['mahoadon', 'tenphutungvacongviec', 'maphutung', 'dongia', 'nhacungcap', 'soluongphutung', 'loaiphutung', 'tienpt', 'chietkhau', 'tiencong', 'thanhtiencong', 'thanhtienpt', 'tongtien', 'manvsuachua'];
         let obj = {};
         let arr = Object.keys(param).filter(e => tmp.includes(e));
         arr.forEach(e => {

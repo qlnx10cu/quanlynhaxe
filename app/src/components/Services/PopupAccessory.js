@@ -3,18 +3,18 @@ import { Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButto
 import lib from "../../lib";
 import { connect } from "react-redux";
 import { addBillProduct } from "../../actions/Product";
+import utils from "../../lib/utils";
+import ButtonClose from "../Warrper/ButtonClose";
 
 const PopupAccessory = (props) => {
     let mTenCongViec = lib.handleInput("");
-    let [mMaPhuTung, setMaPhuTung] = useState("");
-    let mDonGia = lib.handleInput("");
+    let mMaPhuTung = lib.handleInput("");
+    let mDonGia = lib.handleInput(0);
     let mSoLuong = lib.handleInput(1);
     let mTonKho = lib.handleInput(0);
-    let mTienCong = lib.handleInput(0);
     let [mDataList, setDataList] = useState([]);
 
     const searchMaPhuTung = (values) => {
-        setMaPhuTung(values);
         if (values === "") {
             SliceTop20(props.listProduct);
             return;
@@ -24,7 +24,7 @@ const PopupAccessory = (props) => {
         });
         if (product.length !== 0) {
             if (product.length === 1 && product[0].maphutung === values) {
-                setMaPhuTung(product[0].maphutung);
+                mMaPhuTung.setValue(product[0].maphutung);
                 mTenCongViec.setValue(product[0].tentiengviet);
                 mDonGia.setValue(product[0].giaban_le);
                 mTonKho.setValue(product[0].soluongtonkho);
@@ -48,12 +48,12 @@ const PopupAccessory = (props) => {
     };
 
     const handleAdd = () => {
-        if (!mMaPhuTung || mMaPhuTung === "") {
+        if (!mMaPhuTung.value || mMaPhuTung.value === "") {
             props.alert("Chưa nhập mã phụ tùng");
             return;
         }
 
-        if (!props.listProduct.find((e) => e.maphutung == mMaPhuTung)) {
+        if (!props.listProduct.find((e) => e.maphutung == mMaPhuTung.value)) {
             props.alert("Không tìm thấy mã phụ tùng");
             return;
         }
@@ -63,7 +63,7 @@ const PopupAccessory = (props) => {
             return;
         }
 
-        if (!mSoLuong.value || mSoLuong.value < 0) {
+        if (!mSoLuong.value || mSoLuong.value <= 0) {
             props.alert("Phải nhập số lượng");
             return;
         }
@@ -74,22 +74,24 @@ const PopupAccessory = (props) => {
 
         var data = {
             key: props.listBillProduct.length + 1,
+            loaiphutung: "phutung",
             tenphutungvacongviec: mTenCongViec.value,
-            maphutung: mMaPhuTung,
+            maphutung: mMaPhuTung.value,
             chietkhau: 0,
-            dongia: parseInt(mDonGia.value) || 0,
-            soluongphutung: parseInt(mSoLuong.value) || 0,
+            tienpt: utils.tinhTongTien(mDonGia.value, mSoLuong.value),
+            dongia: utils.parseInt(mDonGia.value),
+            soluongphutung: utils.parseInt(mSoLuong.value),
             tiencong: 0,
-            tongtien: (parseInt(mDonGia.value) || 0) * (parseInt(mSoLuong.value) || 0) + (parseInt(mTienCong.value) || 0),
+            thanhtiencong: 0,
+            thanhtienpt: utils.tinhTongTien(mDonGia.value, mSoLuong.value),
+            tongtien: utils.tinhTongTien(mDonGia.value, mSoLuong.value),
             nhacungcap: "Trung Trang",
         };
         props.addItemToProduct(data, true);
-        // props.addBillProduct(data);
         mTenCongViec.setValue("");
-        setMaPhuTung("");
+        mMaPhuTung.setValue("");
         mDonGia.setValue("");
         mSoLuong.setValue("");
-        mTienCong.setValue("");
         mTonKho.setValue("");
         mDonGia.setValue("");
         props.onCloseClick();
@@ -109,12 +111,13 @@ const PopupAccessory = (props) => {
                         <Input
                             list="browsers"
                             name="browser"
-                            value={mMaPhuTung}
+                            value={mMaPhuTung.value}
                             onChange={(e) => {
                                 mDonGia.setValue("");
                                 mTenCongViec.setValue("");
                                 mTonKho.setValue(0);
-                                mSoLuong.setValue(0);
+                                mSoLuong.setValue(1);
+                                mMaPhuTung.setValue(e.target.value);
                                 searchMaPhuTung(e.target.value);
                             }}
                         />
@@ -135,27 +138,21 @@ const PopupAccessory = (props) => {
                     </DivFlexColumn>
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Số lượng: </label>
-                        <Input type="Number" max={mTonKho.value} min={0} {...mSoLuong} />
+                        <Input type="Number" max={mTonKho.value} min={1} {...mSoLuong} />
                     </DivFlexColumn>
                 </DivFlexRow>
 
                 <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: "flex-end" }}>
                     <label>
-                        Tổng tiền:{" "}
-                        <span style={{ fontWeight: "bold" }}>
-                            {((parseInt(mDonGia.value) || 0) * (parseInt(mSoLuong.value) || 0) + (parseInt(mTienCong.value) || 0)).toLocaleString(
-                                "vi-VI",
-                                { style: "currency", currency: "VND" }
-                            )}
-                        </span>
+                        Tổng tiền: <span style={{ fontWeight: "bold" }}>{utils.formatVND(utils.tinhTongTien(mDonGia.value, mSoLuong.value))}</span>
                     </label>
                 </DivFlexRow>
 
                 <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: "flex-end" }}>
-                    <Button onClick={handleAdd}>Thêm</Button>
-                    <DelButton style={{ marginLeft: 10 }} onClick={() => props.onCloseClick()}>
-                        Hủy
-                    </DelButton>
+                    <ButtonClose onClick={props.onCloseClick}></ButtonClose>
+                    <Button style={{ marginLeft: 10 }} onClick={handleAdd}>
+                        Thêm
+                    </Button>
                 </DivFlexRow>
             </ModalContent>
         </Modal>

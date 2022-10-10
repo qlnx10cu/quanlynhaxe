@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButton } from "../../styles";
 import { connect } from "react-redux";
 import { addBillProduct } from "../../actions/Product";
+import utils from "../../lib/utils";
+import ButtonClose from "../Warrper/ButtonClose";
 
 const PopupBillCHN = (props) => {
     let [nhacungcap, setNhaCungCap] = useState("");
@@ -43,19 +45,27 @@ const PopupBillCHN = (props) => {
             return;
         }
 
+        if (!nhacungcap || nhacungcap === "") {
+            props.alert("Phải có nhà cung cấp");
+            return;
+        }
+
         var data = {
             key: props.listBillProduct.length + 1,
+            loaiphutung: "cuahangngoai",
             tenphutungvacongviec: tenphutung,
             maphutung: "",
-            dongia: parseInt(dongia) || 0,
+            dongia: utils.parseInt(dongia),
             chietkhau: 0,
-            soluongphutung: parseInt(soluong) || 0,
+            soluongphutung: utils.parseInt(soluong),
+            tienpt: utils.tinhTongTien(dongia, soluong),
             tiencong: 0,
-            tongtien: parseInt(dongia * soluong) || 0,
+            thanhtiencong: 0,
+            thanhtienpt: utils.tinhTongTien(dongia, soluong),
+            tongtien: utils.tinhTongTien(dongia, soluong),
             nhacungcap: nhacungcap,
         };
         props.addItemToProduct(data, true);
-        // props.addBillProduct(data);
         clearData();
         props.onCloseClick();
     };
@@ -113,10 +123,10 @@ const PopupBillCHN = (props) => {
                 </DivFlexRow>
 
                 <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: "flex-end" }}>
-                    <Button onClick={handleAdd}>Thêm</Button>
-                    <DelButton style={{ marginLeft: 10 }} onClick={() => props.onCloseClick()}>
-                        Hủy
-                    </DelButton>
+                    <ButtonClose onClick={props.onCloseClick}></ButtonClose>
+                    <Button style={{ marginLeft: 10 }} onClick={handleAdd}>
+                        Thêm
+                    </Button>
                 </DivFlexRow>
             </ModalContent>
         </Modal>

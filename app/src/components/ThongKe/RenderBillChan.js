@@ -2,6 +2,7 @@ import React from "react";
 import { DivFlexRow, DivFlexColumn, Table, Input, Button, Textarea, Select } from "../../styles";
 import moment from "moment";
 import { HOST, HOST_SHEME } from "../../Config";
+import utils from "../../lib/utils";
 
 const RenderTableBill = ({ list }) => {
     return (
@@ -33,15 +34,9 @@ const RenderTableBill = ({ list }) => {
                                 <td style={{ textAlign: "right" }}>{item.dongia.toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
                                 <td style={{ textAlign: "right" }}>{item.soluongphutung}</td>
                                 <td style={{ textAlign: "right" }}>{item.chietkhau}%</td>
-                                <td style={{ textAlign: "right" }}>
-                                    {(item.dongia * item.soluongphutung).toLocaleString("vi-VI", { style: "currency", currency: "VND" })}
-                                </td>
-                                <td style={{ textAlign: "right" }}>
-                                    {item.tiencong && item.tiencong.toLocaleString("vi-VI", { style: "currency", currency: "VND" })}
-                                </td>
-                                <td style={{ textAlign: "right" }}>
-                                    {item.tongtien && item.tongtien.toLocaleString("vi-VI", { style: "currency", currency: "VND" })}
-                                </td>
+                                <td style={{ textAlign: "right" }}>{utils.formatVND(item.tienpt)}</td>
+                                <td style={{ textAlign: "right" }}>{utils.formatVND(item.tiencong)}</td>
+                                <td style={{ textAlign: "right" }}>{utils.formatVND(item.tongtien)}</td>
                             </tr>
                         ))}
                 </tbody>
@@ -134,7 +129,7 @@ const RenderBillChan = ({ data }) => {
                             <Input readOnly value={data.ngayhen ? moment(data.ngayhen).format("DD/MM/YYYY") : "Không có"} />
                         </DivFlexColumn>
                     </DivFlexRow>
-                    {data.lydo && (
+                    <If condition={data.lydo}>
                         <DivFlexRow>
                             <DivFlexColumn>
                                 <label>Ngày thay đổi: </label>
@@ -145,11 +140,19 @@ const RenderBillChan = ({ data }) => {
                                 <Textarea readOnly autocomplete="off" value={data.lydo} cols={53} />
                             </DivFlexColumn>
                         </DivFlexRow>
-                    )}
+                    </If>
                     <DivFlexRow>
                         <DivFlexColumn style={{ marginTop: 10 }}>
+                            <label>Tiền PT: </label>
+                            <Input readOnly value={utils.formatVND(data.tienpt)} />
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ marginLeft: 15, marginTop: 10 }}>
+                            <label>Tiền Công: </label>
+                            <Input readOnly value={utils.formatVND(data.tiencong)} />
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ marginLeft: 15, marginTop: 10 }}>
                             <label>Tổng tiền: </label>
-                            <Input readOnly value={data.tongtien.toLocaleString("vi-VI", { style: "currency", currency: "VND" })} />
+                            <Input readOnly value={utils.formatVND(data.tongtien)} />
                         </DivFlexColumn>
                     </DivFlexRow>
 

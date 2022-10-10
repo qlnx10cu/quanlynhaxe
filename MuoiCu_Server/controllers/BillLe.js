@@ -111,7 +111,7 @@ module.exports = {
         data['ngaysuachua'] = new Date();
         data["trangthai"] = 2;
         return BillLe.tangSoLuongPhuTungByMaHD(param.mahoadon)
-            .then(() => Abstract.delete(Bill, param));
+            .then(() => Abstract.update(Bill, data,  param));
     },
     export: async function (req, res) {
         try {

@@ -136,7 +136,7 @@ const Products = (props) => {
         setLoading(true);
         try {
             await readFile(files[0], props.token, props);
-            props.getAllProduct(props.token);
+            props.getListProduct();
             setLoading(false);
         } catch (err) {
             setLoading(false);

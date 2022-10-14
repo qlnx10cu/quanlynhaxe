@@ -10,12 +10,22 @@ import ReduxThunk from "redux-thunk";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { PersistGate } from "redux-persist/integration/react";
+import Loading from "./components/Loading";
 
 // Config persist
 const persistConfig = {
     key: "root",
     storage,
     whitelist: ["Authenticate"],
+    migrate: function (e, k) {
+        return new Promise((resolve, reject) => {
+            if (!e || !e.Authenticate || !e.Authenticate.isAuthenticated) {
+                resolve({});
+                return;
+            }
+            resolve(e);
+        });
+    },
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
@@ -26,7 +36,7 @@ let persistor = persistStore(store);
 
 render(
     <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
+        <PersistGate loading={<Loading />} persistor={persistor}>
             <App />
         </PersistGate>
     </Provider>,

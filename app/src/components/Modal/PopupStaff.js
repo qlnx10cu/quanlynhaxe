@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { Modal, ModalContent, CloseButton, DivFlexRow, Button, DivFlexColumn, Input, Select } from "../../styles";
-import { AddStaff, UpdateStaff } from "../../API/Staffs";
+import React, { useEffect } from "react";
+import { DivFlexRow, DivFlexColumn, Input, Select } from "../../styles";
 import { connect } from "react-redux";
 import ModalWrapper from "../Warrper/ModalWrapper";
-import { addStaff, deleteStaff, getListStaff, updateStaff } from "../../actions/Staffs";
-import utils from "../../lib/utils";
+import { addStaff, updateStaff } from "../../actions/Staffs";
 import lib from "../../lib";
 
 const PopupStaff = (props) => {
-    let mStaffName = lib.handleInput("");
-    let mCMND = lib.handleInput("");
-    let mSDT = lib.handleInput("");
-    let mEmail = lib.handleInput("");
-    let mUserName = lib.handleInput("");
-    let mPassword = lib.handleInput("");
-    let mAccountSip = lib.handleInput("");
-    let mRole = lib.handleInput("Dịch Vụ");
+    const mStaffName = lib.handleInput("");
+    const mCMND = lib.handleInput("");
+    const mSDT = lib.handleInput("");
+    const mEmail = lib.handleInput("");
+    const mUserName = lib.handleInput("");
+    const mPassword = lib.handleInput("");
+    const mAccountSip = lib.handleInput("");
+    const mRole = lib.handleInput("Dịch Vụ");
 
-    let item = props.item;
+    const item = props.item;
     const loai = item ? 1 : 0;
 
     useEffect(() => {

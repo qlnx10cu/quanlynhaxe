@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { DivFlexRow, ButtonChooseFile, Button, DivFlexColumn, DelButton } from "../styles";
-import PhuTung from "./Products/PhuTung/index";
+import { DivFlexRow, ButtonChooseFile, Button, DivFlexColumn } from "../../styles";
 import { connect } from "react-redux";
-import Loading from "../components/Loading";
-import { GetFileExportProduct, ImportMuBH } from "../API/Product";
+import Loading from "../Loading";
+import { GetFileExportProduct, ImportMuBH } from "../../API/Product";
 import XLSX from "xlsx";
-import { setLoading } from "../actions/App";
-import { deleteProduct, getAllProduct, getListProduct } from "../actions/Product";
+import { deleteProduct, getListProduct } from "../../actions/Product";
 import moment from "moment";
-import { DelAllPhuTung, DelPhuTung } from "../API/PhuTungAPI";
-import DataTable from "./Warrper/DataTable";
-// import ButtonEdit from "./Styles/ButtonEdit";
-// import ButtonDelete from "./Styles/ButtonDelete";
-import { ButtonDelete, ButtonEdit } from "./Styles";
-import utils from "../lib/utils";
-import { POPUP_NAME } from "../actions/Modal";
+import { DelAllPhuTung } from "../../API/PhuTungAPI";
+import DataTable from "../Warrper/DataTable";
+import { ButtonDelete, ButtonEdit } from "../Styles";
+import utils from "../../lib/utils";
+import { POPUP_NAME } from "../../actions/Modal";
 
 function stringToDate(_date, _format, _delimiter) {
     var formatLowerCase = _format.toLowerCase();
@@ -184,13 +179,7 @@ const Products = (props) => {
                 <DivFlexColumn>
                     <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between" }}>
                         <DivFlexRow></DivFlexRow>
-                        <Button
-                            onClick={() => {
-                                handleXoaHetPhutung();
-                            }}
-                        >
-                            Xóa hết phụ tùng
-                        </Button>
+                        <Button onClick={() => handleXoaHetPhutung()}>Xóa hết phụ tùng</Button>
                         <DivFlexRow>
                             <ButtonChooseFile style={{ marginRight: 30 }}>
                                 <input

@@ -15,7 +15,7 @@ import { closeModal, openModal } from "../actions/Modal";
 import ModalManager from "./ModalManager";
 const Staffs = React.lazy(() => import("./Pages/Staffs"));
 const Customer = React.lazy(() => import("./Admin/Customer"));
-const Products = React.lazy(() => import("./Products"));
+const Products = React.lazy(() => import("./Pages/Products"));
 const RepairPrice = React.lazy(() => import("./Admin/RepairPrice"));
 const Services = React.lazy(() => import("./Services/Services"));
 const RepairedBill = React.lazy(() => import("./Services/RepairedBill"));

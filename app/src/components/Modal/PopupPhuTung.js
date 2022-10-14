@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DivFlexRow, DivFlexColumn, Input, Tab } from "../../styles";
+import { DivFlexRow, DivFlexColumn, Input } from "../../styles";
 import { GetDetailPhuTung } from "../../API/PhuTungAPI";
 import moment from "moment";
 import DataTable from "../Warrper/DataTable";
@@ -8,75 +8,67 @@ import lib from "../../lib";
 import utils from "../../lib/utils";
 import { addProduct, updateProduct } from "../../actions/Product";
 import { connect } from "react-redux";
+import { TabPage } from "../Styles";
 
 const RenderTableDetail = ({ lichsu }) => {
-    const ItemTable = ({ item, index }) => {
-        return (
-            <tr>
-                <td>{index + 1}</td>
-                <td>{moment(item.ngaycapnhat || new Date()).format("DD/MM/YYYY")}</td>
-                <td>{item.giaban_le}</td>
-                <td>{item.giaban_cu}</td>
-                <td>{item.soluongtonkho}</td>
-                <td>{item.soluongtruocdo}</td>
-                <td>{item.soluongtonkho + item.soluongtruocdo}</td>
-            </tr>
-        );
-    };
-
     return (
-        <React.Fragment>
-            <DataTable data={lichsu}>
-                <DataTable.Header>
-                    <th>STT</th>
-                    <th>Ngày</th>
-                    <th>Giá mới</th>
-                    <th>Giá cũ</th>
-                    <th>Số lượng trươc khi nhập</th>
-                    <th>Số lượng nhập vào</th>
-                    <th>Số lượng sau khi nhập</th>
-                </DataTable.Header>
-                <DataTable.Body>
-                    <ItemTable />
-                </DataTable.Body>
-            </DataTable>
-        </React.Fragment>
+        <DataTable data={lichsu}>
+            <DataTable.Header>
+                <th>STT</th>
+                <th>Ngày</th>
+                <th>Giá mới</th>
+                <th>Giá cũ</th>
+                <th>Số lượng trươc khi nhập</th>
+                <th>Số lượng nhập vào</th>
+                <th>Số lượng sau khi nhập</th>
+            </DataTable.Header>
+            <DataTable.Body
+                render={(item, index) => {
+                    return (
+                        <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>{moment(item.ngaycapnhat || new Date()).format("DD/MM/YYYY")}</td>
+                            <td>{item.giaban_le}</td>
+                            <td>{item.giaban_cu}</td>
+                            <td>{item.soluongtonkho}</td>
+                            <td>{item.soluongtruocdo}</td>
+                            <td>{item.soluongtonkho + item.soluongtruocdo}</td>
+                        </tr>
+                    );
+                }}
+            />
+        </DataTable>
     );
 };
 
 const RenderTableDetailHoaDon = ({ chitiet }) => {
-    const ItemTable = ({ item, index }) => {
-        return (
-            <tr>
-                <td>{index + 1}</td>
-                <td>{moment(item.ngaythanhtoan).format("DD/MM/YYYY")}</td>
-                <td>{item.mahoadon}</td>
-                <td>{item.soluong || item.soluongphutung}</td>
-            </tr>
-        );
-    };
-
     return (
-        <React.Fragment>
-            <DataTable data={chitiet} searchData={(search, e) => search == "" || e.mahoadon.toLowerCase().includes(search.toLowerCase())}>
-                <DataTable.Header>
-                    <th>STT</th>
-                    <th>Ngày</th>
-                    <th>Mã Hóa Đơn</th>
-                    <th>Số lượng</th>
-                </DataTable.Header>
-                <DataTable.Body>
-                    <ItemTable />
-                </DataTable.Body>
-            </DataTable>
-        </React.Fragment>
+        <DataTable data={chitiet} searchData={(search, e) => search == "" || e.mahoadon.toLowerCase().includes(search.toLowerCase())}>
+            <DataTable.Header>
+                <th>STT</th>
+                <th>Ngày</th>
+                <th>Mã Hóa Đơn</th>
+                <th>Số lượng</th>
+            </DataTable.Header>
+            <DataTable.Body
+                render={(item, index) => {
+                    return (
+                        <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>{moment(item.ngaythanhtoan).format("DD/MM/YYYY")}</td>
+                            <td>{item.mahoadon}</td>
+                            <td>{item.soluong || item.soluongphutung}</td>
+                        </tr>
+                    );
+                }}
+            />
+        </DataTable>
     );
 };
 
 /* eslint-disable camelcase */
 
 const PopupPhuTung = (props) => {
-    let [activePage, setActive] = useState(0);
     let [isLoading, setLoading] = useState(false);
     let mChiTiet = lib.handleInput([]);
     let mLichSu = lib.handleInput([]);
@@ -234,18 +226,14 @@ const PopupPhuTung = (props) => {
             </DivFlexRow>
 
             <If condition={isUpdate}>
-                <div>
-                    <Tab>
-                        <button className={activePage === 0 ? "active" : ""} onClick={() => setActive(0)}>
-                            Lịch sử nhập hàng
-                        </button>
-                        <button className={activePage === 1 ? "active" : ""} onClick={() => setActive(1)}>
-                            Lịch sử hóa đơn
-                        </button>
-                    </Tab>
-                    {activePage === 0 && <RenderTableDetail isLoading={isLoading} lichsu={mLichSu.value} {...props} />}
-                    {activePage === 1 && <RenderTableDetailHoaDon isLoading={isLoading} chitiet={mChiTiet.value} {...props} />}
-                </div>
+                <TabPage>
+                    <TabPage.Tab title={"Lịch sử nhập hàng"}>
+                        <RenderTableDetail isLoading={isLoading} lichsu={mLichSu.value} {...props} />
+                    </TabPage.Tab>
+                    <TabPage.Tab title={"Lịch sử hóa đơn"}>
+                        <RenderTableDetailHoaDon isLoading={isLoading} chitiet={mChiTiet.value} {...props} />
+                    </TabPage.Tab>
+                </TabPage>
             </If>
         </ModalWrapper>
     );

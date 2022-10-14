@@ -13,7 +13,7 @@ import CuocGoi from "./CuocGoi";
 import CSKH from "./CSKH";
 import { closeModal, openModal } from "../actions/Modal";
 import ModalManager from "./ModalManager";
-const Staffs = React.lazy(() => import("./Admin/Staffs"));
+const Staffs = React.lazy(() => import("./Pages/Staffs"));
 const Customer = React.lazy(() => import("./Admin/Customer"));
 const Products = React.lazy(() => import("./Products"));
 const RepairPrice = React.lazy(() => import("./Admin/RepairPrice"));

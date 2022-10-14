@@ -4,61 +4,56 @@ import { AddStaff, UpdateStaff } from "../../API/Staffs";
 import { connect } from "react-redux";
 import ModalWrapper from "../Warrper/ModalWrapper";
 import { addStaff, deleteStaff, getListStaff, updateStaff } from "../../actions/Staffs";
+import utils from "../../lib/utils";
+import lib from "../../lib";
 
 const PopupStaff = (props) => {
-    let [mStaffName, setStaffName] = useState("");
-    let [mCMND, setCMND] = useState("");
-    let [mSDT, setSDT] = useState("");
-    let [mEmail, setEmail] = useState("");
-    let [mUserName, setUserName] = useState("");
-    let [mPassword, setPassword] = useState("");
-    let [mAccountSip, setAccountSip] = useState("");
-    let [mRole, setRole] = useState("Dịch Vụ");
+    let mStaffName = lib.handleInput("");
+    let mCMND = lib.handleInput("");
+    let mSDT = lib.handleInput("");
+    let mEmail = lib.handleInput("");
+    let mUserName = lib.handleInput("");
+    let mPassword = lib.handleInput("");
+    let mAccountSip = lib.handleInput("");
+    let mRole = lib.handleInput("Dịch Vụ");
+
     let item = props.item;
+    const loai = item ? 1 : 0;
 
     useEffect(() => {
-        setStaffName("");
-        setCMND("");
-        setSDT("");
-        setEmail("");
-        setRole("Dịch Vụ");
-        setAccountSip("");
-        setUserName("");
+        if (!item) return;
+        mStaffName.setValue(item.ten);
+        mCMND.setValue(item.cmnd);
+        mSDT.setValue(item.sdt);
+        mEmail.setValue(item.gmail);
+        mUserName.setValue(item.username);
+        mAccountSip.setValue(item.accountsip || "");
+        mRole.setValue(item.chucvu);
+    }, []);
 
-        if (item) {
-            setStaffName(item.ten);
-            setCMND(item.cmnd);
-            setSDT(item.sdt);
-            setEmail(item.gmail);
-            setRole(item.chucvu);
-            setAccountSip(item.accountsip || "");
-            setUserName(item.username);
-        }
-    }, [item]);
-    const check = (loai) => {
-        if (!mStaffName || mStaffName.length == 0) return "Tên nhân viên không được để trống";
+    const check = () => {
+        if (!mStaffName.value || mStaffName.value.length == 0) return "Tên nhân viên không được để trống";
         if (loai) return "";
-        if (!mUserName || mUserName.length == 0) return "Tài khoản không được để trống";
-        if (!mPassword || mPassword.length == 0) return "Mật khẩu không được để trống";
-        if (mPassword.length < 6) return "Mật khẩu phải có độ dài 6 kí tự";
+        if (!mUserName.value || mUserName.value.length == 0) return "Tài khoản không được để trống";
+        if (!mPassword.value || mPassword.value.length < 6) return "Mật khẩu phải có độ dài 6 kí tự";
         return "";
     };
     const handleButtonSave = (done, fail) => {
-        var kt = check(0);
+        var kt = check();
         if (kt != "") {
             fail(kt);
             return;
         }
         var data = {
-            ma: mUserName,
-            ten: mStaffName,
-            cmnd: mCMND,
-            sdt: mSDT,
-            gmail: mEmail,
-            username: mUserName,
-            password: mPassword,
-            accountsip: mAccountSip,
-            chucvu: mRole,
+            ma: mUserName.value,
+            ten: mStaffName.value,
+            cmnd: mCMND.value,
+            sdt: mSDT.value,
+            gmail: mEmail.value,
+            username: mUserName.value,
+            password: mPassword.value,
+            accountsip: mAccountSip.value,
+            chucvu: mRole.value,
         };
         props
             .addStaff(data)
@@ -71,18 +66,18 @@ const PopupStaff = (props) => {
     };
 
     const handleButtonUpdate = (done, fail) => {
-        var kt = check(1);
+        var kt = check();
         if (kt != "") {
             props.alert(kt);
             return;
         }
         var data = {
-            ten: mStaffName,
-            cmnd: mCMND,
-            sdt: mSDT,
-            gmail: mEmail,
-            accountsip: mAccountSip,
-            chucvu: mRole,
+            ten: mStaffName.value,
+            cmnd: mCMND.value,
+            sdt: mSDT.value,
+            gmail: mEmail.value,
+            accountsip: mAccountSip.value,
+            chucvu: mRole.value,
         };
 
         props
@@ -96,7 +91,7 @@ const PopupStaff = (props) => {
     };
 
     const handleButton = (done, fail) => {
-        if (item) {
+        if (item && loai == 1) {
             handleButtonUpdate(done, fail);
         } else {
             handleButtonSave(done, fail);
@@ -115,37 +110,37 @@ const PopupStaff = (props) => {
                 <DivFlexColumn style={{ marginLeft: 25, width: "100%" }}>
                     <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                         Tên Nhân Viên
-                        <Input width="auto" value={mStaffName} onChange={(e) => setStaffName(e.target.value)} />
+                        <Input width="auto" {...mStaffName} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                         Số CMND
-                        <Input width="auto" type="Number" value={mCMND} onChange={(e) => setCMND(e.target.value)} />
+                        <Input width="auto" type="Number" {...mCMND} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginBottom: 5 }}>
                         Số Điên Thoại
-                        <Input width="auto" type="Number" value={mSDT} onChange={(e) => setSDT(e.target.value)} />
+                        <Input width="auto" type="Number" {...mSDT} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                         Email
-                        <Input type="Email" width="auto" value={mEmail} onChange={(e) => setEmail(e.target.value)} />
+                        <Input type="Email" width="auto" {...mEmail} />
                     </DivFlexColumn>
                     <DivFlexColumn style={{ fontSize: 20, marginBottom: 5 }}>
                         Account Sip
-                        <Input width="auto" type="" value={mAccountSip} onChange={(e) => setAccountSip(e.target.value)} />
+                        <Input width="auto" {...mAccountSip} />
                     </DivFlexColumn>
-                    <If condition={!item}>
+                    <If condition={loai == 0}>
                         <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                             Tên Đăng Nhập
-                            <Input width="auto" value={mUserName} onChange={(e) => setUserName(e.target.value)} />
+                            <Input width="auto" {...mUserName} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                             Mật khẩu
-                            <Input type="Password" width="auto" value={mPassword} onChange={(e) => setPassword(e.target.value)} />
+                            <Input type="Password" width="auto" {...mPassword} />
                         </DivFlexColumn>
                     </If>
                     <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                         Chức Vụ
-                        <Select value={mRole} onChange={(e) => setRole(e.target.value)}>
+                        <Select {...mRole}>
                             <option value="Dịch Vụ">Dịch Vụ</option>
                             <option value="Phụ Tùng">Phụ Tùng</option>
                             <option value="Sửa Chữa">Sửa Chữa</option>

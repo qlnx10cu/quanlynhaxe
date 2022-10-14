@@ -29,8 +29,8 @@ export default (state = initState, action) => {
         }
 
         case type.STAFFS.UPDATE_STAFFS: {
-            const index = state.data.findIndex((staff) => staff.ma == action.ma);
-            const staff = state.data.find((staff) => staff.ma == action.ma);
+            const index = state.data.findIndex((sta) => sta.ma == action.ma);
+            const staff = state.data.find((sta) => sta.ma == action.ma);
 
             if (index < 0 || index >= state.data.length || !staff || staff.ma != action.ma || !action.data) return state;
 

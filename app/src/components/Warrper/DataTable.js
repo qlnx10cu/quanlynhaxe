@@ -120,7 +120,7 @@ const DataTable = (props) => {
                             style={{ marginLeft: 10 }}
                             onChange={(e) => setSearch(e.target.value)}
                         />
-                        <Button style={{ marginLeft: 10 }} onClick={handleKeyPress}>
+                        <Button style={{ marginLeft: 10 }} onClick={() => tachList(data, maxSizePage)}>
                             Tìm kếm
                         </Button>
                     </DivFlexRow>

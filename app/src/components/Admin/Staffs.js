@@ -1,33 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button, DelButton } from "../../styles";
 import { connect } from "react-redux";
-import { GetListStaff, DeleteStaff } from "../../API/Staffs";
 import { POPUP_NAME } from "../../actions/Modal";
 import DataTable from "../Warrper/DataTable";
+import { deleteStaff } from "../../actions/Staffs";
+import utils from "../../lib/utils";
+
 const Staffs = (props) => {
-    var [listStaff, setListStaff] = useState([]);
-    var [isLoading, setLoading] = useState(false);
-
-    useEffect(() => {
-        getListStaff();
-    }, []);
-
-    const getListStaff = () => {
-        setLoading(true);
-        GetListStaff(props.token)
-            .then((Response) => {
-                setListStaff(Response.data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                setLoading(false);
-            });
-    };
-
     const addItem = () => {
         props.openModal(POPUP_NAME.POPUP_STAFFS, null, (data) => {
             props.alert("Thêm nhân viên thành công");
-            getListStaff();
         });
     };
 
@@ -39,18 +21,24 @@ const Staffs = (props) => {
 
     const deleteItem = (item) => {
         props.confirmError("Bạn chắc muốn hủy", 2, () => {
-            DeleteStaff(props.token, item.ma);
-            getListStaff();
+            return props
+                .deleteStaff(item.ma)
+                .then(() => {
+                    props.alert("Xóa nhân viên thành công");
+                })
+                .catch((err) => {
+                    props.alert("Tạo nhân viên thất bại \n\n Error:" + err.message);
+                });
         });
     };
 
     return (
         <DataTable
             title={"Danh sách nhân viên"}
-            data={listStaff}
-            isLoading={isLoading}
-            addItem={addItem}
-            searchData={(search, e) => search == "" || e.ten.toLowerCase().includes(search.toLowerCase())}
+            data={props.staffs}
+            isLoading={props.isLoading}
+            addItem={() => addItem()}
+            searchData={(search, e) => utils.searchName(e.ma, search) || utils.searchName(e.ten, search)}
         >
             <DataTable.Header>
                 <th>Mã Nhân Viên</th>
@@ -89,7 +77,12 @@ const Staffs = (props) => {
     );
 };
 const mapState = (state) => ({
-    token: state.Authenticate.token,
+    staffs: state.Staffs.data,
+    isLoading: state.Staffs.isLoading,
 });
 
-export default connect(mapState, null)(Staffs);
+const mapDispatch = {
+    deleteStaff: (ma) => deleteStaff(ma),
+};
+
+export default connect(mapState, mapDispatch)(Staffs);

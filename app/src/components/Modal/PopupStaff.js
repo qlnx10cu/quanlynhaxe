@@ -3,6 +3,7 @@ import { Modal, ModalContent, CloseButton, DivFlexRow, Button, DivFlexColumn, In
 import { AddStaff, UpdateStaff } from "../../API/Staffs";
 import { connect } from "react-redux";
 import ModalWrapper from "../Warrper/ModalWrapper";
+import { addStaff, deleteStaff, getListStaff, updateStaff } from "../../actions/Staffs";
 
 const PopupStaff = (props) => {
     let [mStaffName, setStaffName] = useState("");
@@ -59,12 +60,13 @@ const PopupStaff = (props) => {
             accountsip: mAccountSip,
             chucvu: mRole,
         };
-        AddStaff(props.token, data)
+        props
+            .addStaff(data)
             .then(() => {
                 done();
             })
             .catch((err) => {
-                fail("Tạo nhân viên thất bại \n\n Error:" + err.response.data.error.message);
+                fail("Tạo nhân viên thất bại \n\n Error:" + err.message);
             });
     };
 
@@ -83,12 +85,13 @@ const PopupStaff = (props) => {
             chucvu: mRole,
         };
 
-        UpdateStaff(props.token, data, item.ma)
+        props
+            .updateStaff(data, item.ma)
             .then(() => {
                 done();
             })
             .catch((err) => {
-                fail("Tạo nhân viên thất bại \n\n Error:" + err.response.data.error.message);
+                fail("Tạo nhân viên thất bại \n\n Error:" + err.message);
             });
     };
 
@@ -156,8 +159,8 @@ const PopupStaff = (props) => {
     );
 };
 
-const mapState = (state) => ({
-    token: state.Authenticate.token,
-});
-
-export default connect(mapState, null)(PopupStaff);
+const mapDispatch = {
+    addStaff: (data) => addStaff(data),
+    updateStaff: (data, ma) => updateStaff(data, ma),
+};
+export default connect(null, mapDispatch)(PopupStaff);

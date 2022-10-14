@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { updateLiftTable } from "../actions/AppInfo";
+import { getListStaff } from "../actions/Staffs";
 
 const SocketEvent = (props) => {
     useEffect(() => {
@@ -73,6 +74,10 @@ const SocketEvent = (props) => {
         };
     }, [props.socket]);
 
+    useEffect(() => {
+        props.getListStaff();
+    }, []);
+
     return <div style={{ display: "none" }}></div>;
 };
 const mapState = (state) => ({
@@ -81,9 +86,8 @@ const mapState = (state) => ({
 });
 
 const mapDispatch = (dispatch) => ({
-    updateLiftTable: (data) => {
-        dispatch(updateLiftTable(data));
-    },
+    updateLiftTable: (data) => dispatch(updateLiftTable(data)),
+    getListStaff: () => dispatch(getListStaff()),
 });
 
 export default connect(mapState, mapDispatch)(withRouter(SocketEvent));

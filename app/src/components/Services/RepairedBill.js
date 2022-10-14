@@ -371,7 +371,7 @@ const RepairedBill = (props) => {
                     props.addLoading();
                 })
                 .catch((err) => {
-                    props.aerrorHttp(err, "Lỗi kết nối đến server\nVui lòng kiểm tra đường mạng");
+                    props.errorHttp(err, "Lỗi kết nối đến server\nVui lòng kiểm tra đường mạng");
                 });
             await GetListSalary(props.token)
                 .then((respose) => {

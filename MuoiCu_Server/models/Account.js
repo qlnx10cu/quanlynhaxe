@@ -36,7 +36,7 @@ class Account {
     }
 
     static getNameTable() {
-        return "taikhoan";
+        return "nhanvien";
     }
     static getColmun(param) {
         if (param) {
@@ -66,7 +66,7 @@ class Account {
         return obj;
     }
     static getLike(k) {
-        let tmp = ['username', 'password', 'chucvu'];
+        let tmp = [];
         return tmp.includes(k);
     }
     static getForgenKey() {

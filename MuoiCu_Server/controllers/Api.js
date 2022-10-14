@@ -2,7 +2,9 @@ const logger = require("../lib/logger");
 const config = require('../config');
 const Option = require("../models/Option")
 const utils = require("../lib/utils");
+const librespone = require("../lib/respone");
 const Bill = require("../models/Bill");
+const Account = require("../models/Account");
 const Customer = require("../models/Customer");
 const Abstract = require('../models/Abstract');
 const Webhook = require('../models/Webhook');
@@ -116,7 +118,7 @@ module.exports = {
 										var mahoadon = JSON.parse(wh.msg).message.tracking_id;
 										var hoadon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
 										if (hoadon) {
-											if(hoadon.makh){
+											if (hoadon.makh) {
 												await Abstract.update(Customer, { zaloid: body.recipient.id }, { ma: hoadon.makh });
 											}
 											await Abstract.update(ChamSoc, { zaloid: body.recipient.id }, { mahoadon: hoadon.mahoadon });
@@ -134,6 +136,35 @@ module.exports = {
 			res.json({});
 		} catch (error) {
 			librespone.error(req, res, error.message);
+		}
+	},
+	accountsip: async function (req, res, next) {
+		try{
+			const params = Object.assign(req.params, req.query);
+			const acc = await Abstract.getOne(Account,params);
+			if (!acc  || !acc.username || acc.username != params.username) {
+				librespone.error(req, res, "Not found account");
+				return;
+			}
+			if (!acc.accountsip) {
+				librespone.error(req, res, "Bạn không có quyền gọi điện");
+				return;
+			}
+			const config = {
+				id: acc.username,
+				label : acc.ten,
+				server: 'callcenter.trungtrang.com',
+				proxy: '',
+				domain: 'callcenter.trungtrang.com',
+				authID: acc.accountsip,
+				username: acc.accountsip,
+				password: "TrungTrang@",
+			};
+
+			res.json(config);
+		}catch(ex){
+			console.log('err: ', ex);
+			librespone.error(req, res, ex);
 		}
 	}
 

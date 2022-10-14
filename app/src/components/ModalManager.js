@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { alert } from "../actions/App";
-import { closeModal, POPUP_NAME } from "../actions/Modal";
-import useIsMounted from "../lib/useIsMounted";
+import { POPUP_NAME } from "../actions/Modal";
+import PopupPhuTung from "./Modal/PopupPhuTung";
 import PopupStaff from "./Modal/PopupStaff";
-import ModalWrapper from "./Warrper/ModalWrapper";
+import useIsMounted from "../lib/useIsMounted";
 
 /* eslint-disable no-undef */
 
@@ -40,9 +39,18 @@ const ModalManager = (props) => {
                         open={item.open}
                         item={item.data}
                         alert={props.alert}
-                        onCloseClick={() => handleClose(item)}
                         onClose={() => handleClose(item)}
-                    ></PopupStaff>
+                    />
+                </When>
+                <When condition={item.name == POPUP_NAME.POPUP_PRODUCTS}>
+                    <PopupPhuTung
+                        key={item.id}
+                        callback={item.callback}
+                        open={item.open}
+                        item={item.data}
+                        alert={props.alert}
+                        onClose={() => handleClose(item)}
+                    />
                 </When>
             </Choose>
         </For>

@@ -1,4 +1,65 @@
+import * as type from "./action-types";
+import APIUtils from "../API/APIUtils";
+
+export const getListProduct = () => (dispatch) => {
+    dispatch({
+        type: type.PRODUCTS.LOADING_PRODUCTS,
+        data: true,
+    });
+
+    return APIUtils.get("/item")
+        .then((res) => {
+            dispatch({
+                type: type.PRODUCTS.GET_LIST_PRODUCTS,
+                data: res,
+            });
+        })
+        .catch((error) => {
+            dispatch({
+                type: "SWAP_ALERT",
+                data: {
+                    isLoading: true,
+                    error: 1,
+                    message: error.message,
+                },
+            });
+            dispatch({
+                type: type.PRODUCTS.LOADING_PRODUCTS,
+                data: true,
+            });
+        });
+};
+
+export const addProduct = (data) => (dispatch) => {
+    return APIUtils.post("/itempart", data).then((res) => {
+        dispatch({
+            type: type.PRODUCTS.ADD_PRODUCTS,
+            data: data,
+        });
+    });
+};
+
+export const updateProduct = (data, maphutung) => (dispatch) => {
+    return APIUtils.put("/itempart/maphutung/" + maphutung, data).then((res) => {
+        dispatch({
+            type: type.PRODUCTS.UPDATE_PRODUCTS,
+            data: data,
+            maphutung: maphutung,
+        });
+    });
+};
+
+export const deleteProduct = (maphutung) => (dispatch) => {
+    return APIUtils.delete("/itempart/maphutung/" + maphutung).then((res) => {
+        dispatch({
+            type: type.PRODUCTS.DELETE_PRODUCTS,
+            maphutung: maphutung,
+        });
+    });
+};
+
 import { GetAllProduct } from "../API/Product";
+
 export const REQUEST_LIST_PRODUCT = "REQUEST_LIST_PRODUCT";
 export const REQUEST_LIST_PRODUCT_SUCCESS = "REQUEST_LIST_PRODUCT_SUCCESS";
 export const REQUEST_LIST_PRODUCT_FAILER = "REQUEST_LIST_PRODUCT_FAILER";

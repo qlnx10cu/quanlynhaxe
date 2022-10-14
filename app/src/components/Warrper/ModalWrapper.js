@@ -1,56 +1,55 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { alert, error } from "../../actions/App";
-import useIsMounted from "../../lib/useIsMounted";
+import { alert } from "../../actions/App";
 import { CancleButton, CloseButton, DivFlexRow, Modal, ModalContent } from "../../styles";
-import ButtonUpload from "./ButtonUpload";
+import { ButtonUpload } from "../Styles";
+import useIsMounted from "../../lib/useIsMounted";
 
-const ModalWrapper = (props) => {
+const ModalWrapper = ({ title, open, onClose, submit, titleSubmit, callback, alertMsg, children }) => {
     const [isUpload, setUpload] = useState(false);
     const isMounted = useIsMounted();
 
     const handleCallback = () => {
         if (!isMounted()) return;
-        if (!props.submit) return;
+        if (!submit) return;
 
         setUpload(true);
 
-        props.submit(
-            (data) => {
+        submit()
+            .then((data) => {
                 if (!isMounted()) return;
                 setUpload(false);
-                if (props.callback) {
-                    props.callback(data);
+                if (callback) {
+                    callback(data);
                 }
-                if (props.onClose) {
-                    props.onClose(true);
+                if (onClose) {
+                    onClose(true);
                 }
-            },
-            (err) => {
+            })
+            .catch((err) => {
                 if (!isMounted()) return;
                 setUpload(false);
                 if (err) {
-                    props.alert(err);
+                    alertMsg(err.message);
                 }
-            }
-        );
+            });
     };
 
     return (
-        <Modal className={props.open ? "active" : ""}>
+        <Modal className={open ? "active" : ""}>
             <ModalContent>
                 <div style={{ paddingTop: 3, paddingBottom: 3 }}>
-                    <CloseButton onClick={props.onClose}>&times;</CloseButton>
-                    <h2 style={{ display: "flex", justifyContent: "center" }}>{props.title}</h2>
+                    <CloseButton onClick={onClose}>&times;</CloseButton>
+                    <h2 style={{ display: "flex", justifyContent: "center" }}>{title}</h2>
                 </div>
-                {props.children}
+                {children}
                 <DivFlexRow style={{ marginTop: 50, marginBottom: 5, justifyContent: "flex-end", alignItems: "center" }}>
                     <DivFlexRow></DivFlexRow>
-                    <CancleButton onClick={props.onClose}>Hủy</CancleButton>
-                    <If condition={props.submit}>
+                    <CancleButton onClick={onClose}>Hủy</CancleButton>
+                    <If condition={submit}>
                         <DivFlexRow></DivFlexRow>
                         <ButtonUpload isUpload={isUpload} onClick={() => handleCallback()}>
-                            {props.titleSubmit || "Đồng ý"}
+                            {titleSubmit || "Đồng ý"}
                         </ButtonUpload>
                     </If>
                 </DivFlexRow>
@@ -60,11 +59,8 @@ const ModalWrapper = (props) => {
 };
 
 const mapDispatch = (dispatch) => ({
-    alert: (mess) => {
+    alertMsg: (mess) => {
         dispatch(alert(mess));
-    },
-    error: (mess) => {
-        dispatch(error(mess));
     },
 });
 

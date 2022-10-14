@@ -16,7 +16,7 @@ const PopupStaff = (props) => {
     const mRole = lib.handleInput("Dịch Vụ");
 
     const item = props.item;
-    const loai = item ? 1 : 0;
+    const isUpdate = item ? 1 : 0;
 
     useEffect(() => {
         if (!item) return;
@@ -31,16 +31,15 @@ const PopupStaff = (props) => {
 
     const check = () => {
         if (!mStaffName.value || mStaffName.value.length == 0) return "Tên nhân viên không được để trống";
-        if (loai) return "";
+        if (isUpdate) return "";
         if (!mUserName.value || mUserName.value.length == 0) return "Tài khoản không được để trống";
         if (!mPassword.value || mPassword.value.length < 6) return "Mật khẩu phải có độ dài 6 kí tự";
         return "";
     };
-    const handleButtonSave = (done, fail) => {
+    const handleButtonSave = () => {
         var kt = check();
         if (kt != "") {
-            fail(kt);
-            return;
+            return Promise.reject({ error: -1, message: kt });
         }
         var data = {
             ma: mUserName.value,
@@ -53,21 +52,15 @@ const PopupStaff = (props) => {
             accountsip: mAccountSip.value,
             chucvu: mRole.value,
         };
-        props
-            .addStaff(data)
-            .then(() => {
-                done();
-            })
-            .catch((err) => {
-                fail("Tạo nhân viên thất bại \n\n Error:" + err.message);
-            });
+        return props.addStaff(data).then((res) => {
+            props.alert("Thêm nhân viên thành công.");
+        });
     };
 
-    const handleButtonUpdate = (done, fail) => {
+    const handleButtonUpdate = () => {
         var kt = check();
         if (kt != "") {
-            props.alert(kt);
-            return;
+            return Promise.reject({ error: -1, message: kt });
         }
         var data = {
             ten: mStaffName.value,
@@ -78,22 +71,16 @@ const PopupStaff = (props) => {
             chucvu: mRole.value,
         };
 
-        props
-            .updateStaff(data, item.ma)
-            .then(() => {
-                done();
-            })
-            .catch((err) => {
-                fail("Tạo nhân viên thất bại \n\n Error:" + err.message);
-            });
+        return props.updateStaff(data, item.ma).then((res) => {
+            props.alert("Update nhân viên thành công.");
+        });
     };
 
-    const handleButton = (done, fail) => {
-        if (item && loai == 1) {
-            handleButtonUpdate(done, fail);
-        } else {
-            handleButtonSave(done, fail);
+    const handleButton = () => {
+        if (item && isUpdate == 1) {
+            return handleButtonUpdate();
         }
+        return handleButtonSave();
     };
 
     return (
@@ -101,8 +88,9 @@ const PopupStaff = (props) => {
             open={props.open}
             title={"Nhân viên"}
             callback={props.callback}
-            onClose={props.onCloseClick}
-            submit={(done, fail) => handleButton(done, fail)}
+            onClose={props.onClose}
+            submit={() => handleButton()}
+            titleSubmit={isUpdate ? "Cập nhật" : "Thêm"}
         >
             <DivFlexRow style={{ marginTop: 10 }}>
                 <DivFlexColumn style={{ marginLeft: 25, width: "100%" }}>
@@ -126,7 +114,7 @@ const PopupStaff = (props) => {
                         Account Sip
                         <Input width="auto" {...mAccountSip} />
                     </DivFlexColumn>
-                    <If condition={loai == 0}>
+                    <If condition={isUpdate == 0}>
                         <DivFlexColumn style={{ fontSize: 20, marginBottom: 2 }}>
                             Tên Đăng Nhập
                             <Input width="auto" {...mUserName} />

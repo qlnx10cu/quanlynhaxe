@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { DivFlexRow, ButtonChooseFile, Button } from "../styles";
+import { DivFlexRow, ButtonChooseFile, Button, DivFlexColumn, DelButton } from "../styles";
 import PhuTung from "./Products/PhuTung/index";
 import { connect } from "react-redux";
 import Loading from "../components/Loading";
 import { GetFileExportProduct, ImportMuBH } from "../API/Product";
 import XLSX from "xlsx";
 import { setLoading } from "../actions/App";
-import { getAllProduct } from "../actions/Product";
+import { deleteProduct, getAllProduct, getListProduct } from "../actions/Product";
 import moment from "moment";
-import { DelAllPhuTung } from "../API/PhuTungAPI";
+import { DelAllPhuTung, DelPhuTung } from "../API/PhuTungAPI";
+import DataTable from "./Warrper/DataTable";
+// import ButtonEdit from "./Styles/ButtonEdit";
+// import ButtonDelete from "./Styles/ButtonDelete";
+import { ButtonDelete, ButtonEdit } from "./Styles";
+import utils from "../lib/utils";
+import { POPUP_NAME } from "../actions/Modal";
 
 function stringToDate(_date, _format, _delimiter) {
     var formatLowerCase = _format.toLowerCase();
@@ -99,9 +105,35 @@ function readFile(file, token, props) {
 /* eslint-enable camelcase */
 
 const Products = (props) => {
+    let [mArrPhuTung, setArrPhuTung] = useState([]);
+
     useEffect(() => {
-        props.getAllProduct(props.token);
+        props.getListProduct();
     }, []);
+    useEffect(() => {
+        if (props.listPhuTung) {
+            setArrPhuTung(props.listPhuTung);
+        }
+    }, [props.listPhuTung]);
+
+    const updateItem = (item) => {
+        props.openModal(POPUP_NAME.POPUP_PRODUCTS, item, (data) => {
+            props.alert("Update phụ tùng thành công");
+        });
+    };
+
+    const deleteItem = (item) => {
+        props.confirmError("Bạn chắc muốn hủy", 2, () => {
+            return props
+                .deleteProduct(item.maphutung)
+                .then(() => {
+                    props.alert("Xóa thành công");
+                })
+                .catch((err) => {
+                    props.alert("Xóa thất bại \n\n Error:" + err.message);
+                });
+        });
+    };
 
     const handleChoseFile = async (e) => {
         var files = e.target.files;
@@ -113,13 +145,6 @@ const Products = (props) => {
         } catch (err) {
             props.setLoading(false);
         }
-
-        // res = {...res[0], ...res[1]};
-        // res['kiem ke'] = res['kiem ke'].filter((e, index) => e.length > 0 && index >3);
-        // res['phu kien'] = res['phu kien'].filter((e, index) => e.length > 0 && index > 2)
-        // res['phu tung'] = res['phu tung'].filter((e, index) => e.length > 0 && index > 2)
-        // res['non bao hiem'] = res['phu tung'].filter((e, index) => e.length > 0 && index > 2)
-        // res['dau nhot'] = res['phu tung'].filter((e, index) => e.length > 0 && index > 2)
     };
     const handleExportFile = (e) => {
         GetFileExportProduct(props.token)
@@ -151,12 +176,14 @@ const Products = (props) => {
     };
 
     return (
-        <div>
-            {props.isLoading && <Loading />}
-            {!props.isLoading && (
-                <div>
+        <Choose>
+            <When condition={props.isLoading}>
+                <Loading />
+            </When>
+            <Otherwise>
+                <DivFlexColumn>
                     <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between" }}>
-                        <div></div>
+                        <DivFlexRow></DivFlexRow>
                         <Button
                             onClick={() => {
                                 handleXoaHetPhutung();
@@ -164,7 +191,7 @@ const Products = (props) => {
                         >
                             Xóa hết phụ tùng
                         </Button>
-                        <div>
+                        <DivFlexRow>
                             <ButtonChooseFile style={{ marginRight: 30 }}>
                                 <input
                                     type="file"
@@ -175,27 +202,57 @@ const Products = (props) => {
                                 Import +
                             </ButtonChooseFile>
                             <Button onClick={(e) => handleExportFile(e)}>Export file thống kê</Button>
-                        </div>
+                        </DivFlexRow>
                     </DivFlexRow>
                     <div style={{ marginTop: 15 }}>
-                        <PhuTung token={props.token} parent={props} />
+                        <DataTable
+                            title="Danh sách phụ tùng"
+                            data={mArrPhuTung}
+                            isLoading={props.isLoading}
+                            searchData={(search, e) => utils.searchName(e.maphutung, search) || utils.searchName(e.tentiengviet, search)}
+                        >
+                            <DataTable.Header>
+                                <th>STT</th>
+                                <th>Mã phụ tùng</th>
+                                <th>Tên tiếng việt</th>
+                                <th>Giá bán lẻ</th>
+                                <th>Vị trí</th>
+                                <th>Số lượng</th>
+                                <th>Sửa/Xóa</th>
+                            </DataTable.Header>
+                            <DataTable.Body
+                                render={(item, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{item.maphutung}</td>
+                                            <td>{item.tentiengviet}</td>
+                                            <td>{(item.giaban_le || 0).toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
+                                            <td>{item.vitri}</td>
+                                            <td>{item.soluongtonkho}</td>
+                                            <td>
+                                                <ButtonEdit onClick={() => updateItem(item)} />
+                                                <ButtonDelete onClick={() => deleteItem(item)} style={{ marginLeft: 5 }} />
+                                            </td>
+                                        </tr>
+                                    );
+                                }}
+                            ></DataTable.Body>
+                        </DataTable>
                     </div>
-                </div>
-            )}
-        </div>
+                </DivFlexColumn>
+            </Otherwise>
+        </Choose>
     );
 };
 
 const mapState = (state) => ({
+    listPhuTung: state.Product.data,
     token: state.Authenticate.token,
     isLoading: state.App.isLoading,
 });
-const mapDispatch = (dispatch) => ({
-    setLoading: (isLoad) => {
-        dispatch(setLoading(isLoad));
-    },
-    getAllProduct: (token) => {
-        dispatch(getAllProduct(token));
-    },
-});
+const mapDispatch = {
+    getListProduct: () => getListProduct(),
+    deleteProduct: (maphutung) => deleteProduct(maphutung),
+};
 export default connect(mapState, mapDispatch)(Products);

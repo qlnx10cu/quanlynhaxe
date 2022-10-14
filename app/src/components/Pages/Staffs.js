@@ -1,10 +1,10 @@
 import React from "react";
-import { Button, DelButton } from "../../styles";
 import { connect } from "react-redux";
 import { POPUP_NAME } from "../../actions/Modal";
 import DataTable from "../Warrper/DataTable";
 import { deleteStaff } from "../../actions/Staffs";
 import utils from "../../lib/utils";
+import { ButtonDelete, ButtonEdit } from "../Styles";
 
 const Staffs = (props) => {
     const addItem = () => {
@@ -34,9 +34,8 @@ const Staffs = (props) => {
 
     return (
         <DataTable
-            title={"Danh sách nhân viên"}
+            title="Danh sách nhân viên"
             data={props.staffs}
-            isLoading={props.isLoading}
             addItem={() => addItem()}
             searchData={(search, e) => utils.searchName(e.ma, search) || utils.searchName(e.ten, search)}
         >
@@ -62,12 +61,8 @@ const Staffs = (props) => {
                             <td>{item.accountsip}</td>
                             <td>{item.chucvu}</td>
                             <td>
-                                <Button onClick={() => updateItem(item)}>
-                                    <i className="fas fa-edit"></i>
-                                </Button>
-                                <DelButton onClick={() => deleteItem(item)} style={{ marginLeft: 5 }}>
-                                    <i className="far fa-trash-alt"></i>
-                                </DelButton>
+                                <ButtonEdit onClick={() => updateItem(item)} />
+                                <ButtonDelete onClick={() => deleteItem(item)} style={{ marginLeft: 5 }} />
                             </td>
                         </tr>
                     );

@@ -38,7 +38,7 @@ import {
 import moment from "moment";
 import Loading from "../Loading";
 import utils from "../../lib/utils";
-import ButtonDelete from "../Warrper/ButtonDelete";
+import { ButtonDelete } from "../Styles";
 
 const oneDay = 1000 * 3600 * 24;
 

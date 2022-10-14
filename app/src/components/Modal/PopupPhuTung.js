@@ -1,0 +1,260 @@
+import React, { useEffect, useState } from "react";
+import { DivFlexRow, DivFlexColumn, Input, Tab } from "../../styles";
+import { GetDetailPhuTung } from "../../API/PhuTungAPI";
+import moment from "moment";
+import DataTable from "../Warrper/DataTable";
+import ModalWrapper from "../Warrper/ModalWrapper";
+import lib from "../../lib";
+import utils from "../../lib/utils";
+import { addProduct, updateProduct } from "../../actions/Product";
+import { connect } from "react-redux";
+
+const RenderTableDetail = ({ lichsu }) => {
+    const ItemTable = ({ item, index }) => {
+        return (
+            <tr>
+                <td>{index + 1}</td>
+                <td>{moment(item.ngaycapnhat || new Date()).format("DD/MM/YYYY")}</td>
+                <td>{item.giaban_le}</td>
+                <td>{item.giaban_cu}</td>
+                <td>{item.soluongtonkho}</td>
+                <td>{item.soluongtruocdo}</td>
+                <td>{item.soluongtonkho + item.soluongtruocdo}</td>
+            </tr>
+        );
+    };
+
+    return (
+        <React.Fragment>
+            <DataTable data={lichsu}>
+                <DataTable.Header>
+                    <th>STT</th>
+                    <th>Ngày</th>
+                    <th>Giá mới</th>
+                    <th>Giá cũ</th>
+                    <th>Số lượng trươc khi nhập</th>
+                    <th>Số lượng nhập vào</th>
+                    <th>Số lượng sau khi nhập</th>
+                </DataTable.Header>
+                <DataTable.Body>
+                    <ItemTable />
+                </DataTable.Body>
+            </DataTable>
+        </React.Fragment>
+    );
+};
+
+const RenderTableDetailHoaDon = ({ chitiet }) => {
+    const ItemTable = ({ item, index }) => {
+        return (
+            <tr>
+                <td>{index + 1}</td>
+                <td>{moment(item.ngaythanhtoan).format("DD/MM/YYYY")}</td>
+                <td>{item.mahoadon}</td>
+                <td>{item.soluong || item.soluongphutung}</td>
+            </tr>
+        );
+    };
+
+    return (
+        <React.Fragment>
+            <DataTable data={chitiet} searchData={(search, e) => search == "" || e.mahoadon.toLowerCase().includes(search.toLowerCase())}>
+                <DataTable.Header>
+                    <th>STT</th>
+                    <th>Ngày</th>
+                    <th>Mã Hóa Đơn</th>
+                    <th>Số lượng</th>
+                </DataTable.Header>
+                <DataTable.Body>
+                    <ItemTable />
+                </DataTable.Body>
+            </DataTable>
+        </React.Fragment>
+    );
+};
+
+/* eslint-disable camelcase */
+
+const PopupPhuTung = (props) => {
+    let [activePage, setActive] = useState(0);
+    let [isLoading, setLoading] = useState(false);
+    let mChiTiet = lib.handleInput([]);
+    let mLichSu = lib.handleInput([]);
+    let mMaPhuTung = lib.handleInput("");
+    let mNameEng = lib.handleInput("");
+    let mNameVie = lib.handleInput("");
+    let mGiaBanHead = lib.handleInput(0);
+    let mGiaBanLe = lib.handleInput(0);
+    let mViTri = lib.handleInput("");
+    let mSoLuongTonKho = lib.handleInput(0);
+    let mNote = lib.handleInput("");
+    let mModel = lib.handleInput("");
+    let mColor = lib.handleInput("#FFFFFF");
+    let item = props.item;
+    const isUpdate = item && item.maphutung;
+
+    useEffect(() => {
+        if (!item || !item.maphutung) {
+            return;
+        }
+        mMaPhuTung.setValue(item.maphutung);
+        mNameEng.setValue(item.tentienganh);
+        mNameVie.setValue(item.tentiengviet);
+        mGiaBanHead.setValue(item.giaban_head || 0);
+        mGiaBanLe.setValue(item.giaban_le || 0);
+        mViTri.setValue(item.vitri);
+        mSoLuongTonKho.setValue(item.soluongtonkho || 0);
+        mModel.setValue(item.model);
+        mColor.setValue(item.mamau);
+        mNote.setValue(item.ghichu);
+        setLoading(true);
+        GetDetailPhuTung(props.token, item.maphutung)
+            .then((res) => {
+                setLoading(false);
+                mChiTiet.setValue(res.data.chitiet);
+                mLichSu.setValue(res.data.lichsu);
+            })
+            .catch((err) => {
+                setLoading(false);
+                props.alert("Không lấy được chi tiết: ");
+            });
+    }, [item]);
+
+    const handleUpdate = () => {
+        let _gia_head = utils.parseInt(mGiaBanHead.value);
+        let _gia_le = utils.parseInt(mGiaBanLe.value);
+        let _soluong = utils.parseInt(mSoLuongTonKho.value);
+
+        let data = {
+            ma: item.maphutung,
+            maphutung: mMaPhuTung.value,
+            tentienganh: mNameEng.value,
+            tentiengviet: mNameVie.value,
+            loaiphutung: "phụ tùng",
+            giaban_head: _gia_head,
+            giaban_le: _gia_le,
+            soluongtonkho: _soluong,
+            ghichu: mNote.value,
+            vitri: mViTri.value,
+            model: mModel.value,
+            mamau: mColor.value,
+        };
+
+        return props.updateProduct(data, item.maphutung).then((res) => {
+            props.alert("Update thành công.");
+        });
+    };
+    const handleAdd = () => {
+        let _gia_head = utils.parseInt(mGiaBanHead.value);
+        let _gia_le = utils.parseInt(mGiaBanLe.value);
+        let _soluong = utils.parseInt(mSoLuongTonKho.value);
+
+        let data = {
+            maphutung: mMaPhuTung.value,
+            tentienganh: mNameEng.value,
+            tentiengviet: mNameVie.value,
+            loaiphutung: "phụ tùng",
+            giaban_head: _gia_head,
+            giaban_le: _gia_le,
+            soluongtonkho: _soluong,
+            ghichu: mNote.value,
+            vitri: mViTri.value,
+            model: mModel.value,
+            mamau: mColor.value,
+        };
+
+        return props.addProduct(data).then((res) => {
+            props.alert("Thêm thành công.");
+        });
+    };
+
+    const handleButton = () => {
+        if (item && isUpdate) {
+            return handleUpdate();
+        }
+        return handleAdd();
+    };
+
+    return (
+        <ModalWrapper
+            open={props.open}
+            title={"Phụ tùng"}
+            callback={props.callback}
+            onClose={props.onClose}
+            submit={handleButton}
+            titleSubmit={isUpdate ? "Cập nhật" : "Thêm"}
+        >
+            <DivFlexRow>
+                <DivFlexColumn style={{ flex: 1 }}>
+                    <label>Mã phụ tùng </label>
+                    <Input {...mMaPhuTung} readOnly={isUpdate} />
+                </DivFlexColumn>
+                <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
+                    <label>Tên phụ tùng (Anh) </label>
+                    <Input {...mNameEng} />
+                </DivFlexColumn>
+                <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
+                    <label>Tên phụ tùng (Việt)</label>
+                    <Input {...mNameVie} />
+                </DivFlexColumn>
+            </DivFlexRow>
+
+            <DivFlexRow>
+                <DivFlexColumn style={{ flex: 1 }}>
+                    <label>Giá nhập</label>
+                    <Input type="number" min={0} {...mGiaBanHead} readOnly={isUpdate} />
+                </DivFlexColumn>
+                <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
+                    <label>Giá bán lẻ</label>
+                    <Input type="number" min={0} {...mGiaBanLe} readOnly={isUpdate} />
+                </DivFlexColumn>
+                <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
+                    <label>Số lượng tồn kho </label>
+                    <Input type="number" min={0} {...mSoLuongTonKho} readOnly={isUpdate} />
+                </DivFlexColumn>
+            </DivFlexRow>
+
+            <DivFlexRow>
+                <DivFlexColumn style={{ flex: 1 }}>
+                    <label>Vị trí</label>
+                    <Input {...mViTri} />
+                </DivFlexColumn>
+                <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
+                    <label>Model</label>
+                    <Input {...mModel} />
+                </DivFlexColumn>
+                <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
+                    <label>Ghi chú</label>
+                    <Input {...mNote} />
+                </DivFlexColumn>
+                <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
+                    <label>Màu</label>
+                    <Input type="color" style={{ height: "35px", margin: "8px 0", padding: "1px 2px", maxWidth: "150px" }} {...mColor} />
+                </DivFlexColumn>
+            </DivFlexRow>
+
+            <If condition={isUpdate}>
+                <div>
+                    <Tab>
+                        <button className={activePage === 0 ? "active" : ""} onClick={() => setActive(0)}>
+                            Lịch sử nhập hàng
+                        </button>
+                        <button className={activePage === 1 ? "active" : ""} onClick={() => setActive(1)}>
+                            Lịch sử hóa đơn
+                        </button>
+                    </Tab>
+                    {activePage === 0 && <RenderTableDetail isLoading={isLoading} lichsu={mLichSu.value} {...props} />}
+                    {activePage === 1 && <RenderTableDetailHoaDon isLoading={isLoading} chitiet={mChiTiet.value} {...props} />}
+                </div>
+            </If>
+        </ModalWrapper>
+    );
+};
+
+/* eslint-enable camelcase */
+
+const mapDispatch = {
+    addProduct: (data) => addProduct(data),
+    updateProduct: (data, maphutung) => updateProduct(data, maphutung),
+};
+export default connect(null, mapDispatch)(PopupPhuTung);

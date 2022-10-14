@@ -1,9 +1,9 @@
 import React from "react";
 import { Button } from "../../styles";
 
-const ButtonUpload = ({ children, onClick, isUpload }) => {
+const ButtonUpload = ({ children, style, onClick, isUpload }) => {
     return (
-        <Button width="100px" onClick={onClick} disabled={isUpload}>
+        <Button style={{ ...style }} onClick={onClick} disabled={isUpload}>
             {isUpload ? <i className="fas fa-spinner fa-spin"></i> : children}
         </Button>
     );

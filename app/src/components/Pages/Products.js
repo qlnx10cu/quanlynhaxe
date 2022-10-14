@@ -8,7 +8,7 @@ import { deleteProduct, getListProduct } from "../../actions/Product";
 import moment from "moment";
 import { DelAllPhuTung } from "../../API/PhuTungAPI";
 import DataTable from "../Warrper/DataTable";
-import { ButtonDelete, ButtonEdit } from "../Styles";
+import { ButtonDelete, ButtonEdit, ButtonUpload } from "../Styles";
 import utils from "../../lib/utils";
 import { POPUP_NAME } from "../../actions/Modal";
 
@@ -100,6 +100,7 @@ function readFile(file, token, props) {
 /* eslint-enable camelcase */
 
 const Products = (props) => {
+    let [isLoading, setLoading] = useState(false);
     let [mArrPhuTung, setArrPhuTung] = useState([]);
 
     useEffect(() => {
@@ -132,18 +133,20 @@ const Products = (props) => {
 
     const handleChoseFile = async (e) => {
         var files = e.target.files;
-        props.setLoading(true);
+        setLoading(true);
         try {
             await readFile(files[0], props.token, props);
             props.getAllProduct(props.token);
-            props.setLoading(false);
+            setLoading(false);
         } catch (err) {
-            props.setLoading(false);
+            setLoading(false);
         }
     };
     const handleExportFile = (e) => {
+        setLoading(true);
         GetFileExportProduct(props.token)
             .then((response) => {
+                setLoading(false);
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement("a");
                 link.href = url;
@@ -152,86 +155,89 @@ const Products = (props) => {
                 link.click();
             })
             .catch((err) => {
+                setLoading(false);
                 props.error("Không thể xuất file");
             });
     };
     const handleXoaHetPhutung = () => {
+        setLoading(true);
         props.confirm("Bạn chắc muốn hủy", () => {
             DelAllPhuTung(props.token)
                 .then((res) => {
+                    setLoading(false);
                     props.alert("Xóa thành công.");
                     setTimeout(() => {
                         window.location.reload();
                     }, 1000);
                 })
                 .catch((err) => {
+                    setLoading(false);
                     props.error("Không xóa được. @@");
                 });
         });
     };
 
     return (
-        <Choose>
-            <When condition={props.isLoading}>
-                <Loading />
-            </When>
-            <Otherwise>
-                <DivFlexColumn>
-                    <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between" }}>
-                        <DivFlexRow></DivFlexRow>
-                        <Button onClick={() => handleXoaHetPhutung()}>Xóa hết phụ tùng</Button>
-                        <DivFlexRow>
-                            <ButtonChooseFile style={{ marginRight: 30 }}>
-                                <input
-                                    type="file"
-                                    multiple
-                                    accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                    onChange={(e) => handleChoseFile(e)}
-                                />
-                                Import +
-                            </ButtonChooseFile>
-                            <Button onClick={(e) => handleExportFile(e)}>Export file thống kê</Button>
-                        </DivFlexRow>
-                    </DivFlexRow>
-                    <div style={{ marginTop: 15 }}>
-                        <DataTable
-                            title="Danh sách phụ tùng"
-                            data={mArrPhuTung}
-                            isLoading={props.isLoading}
-                            searchData={(search, e) => utils.searchName(e.maphutung, search) || utils.searchName(e.tentiengviet, search)}
-                        >
-                            <DataTable.Header>
-                                <th>STT</th>
-                                <th>Mã phụ tùng</th>
-                                <th>Tên tiếng việt</th>
-                                <th>Giá bán lẻ</th>
-                                <th>Vị trí</th>
-                                <th>Số lượng</th>
-                                <th>Sửa/Xóa</th>
-                            </DataTable.Header>
-                            <DataTable.Body
-                                render={(item, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td>{index + 1}</td>
-                                            <td>{item.maphutung}</td>
-                                            <td>{item.tentiengviet}</td>
-                                            <td>{(item.giaban_le || 0).toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
-                                            <td>{item.vitri}</td>
-                                            <td>{item.soluongtonkho}</td>
-                                            <td>
-                                                <ButtonEdit onClick={() => updateItem(item)} />
-                                                <ButtonDelete onClick={() => deleteItem(item)} style={{ marginLeft: 5 }} />
-                                            </td>
-                                        </tr>
-                                    );
-                                }}
-                            ></DataTable.Body>
-                        </DataTable>
-                    </div>
-                </DivFlexColumn>
-            </Otherwise>
-        </Choose>
+        <DivFlexColumn>
+            <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between" }}>
+                <DivFlexRow></DivFlexRow>
+                <ButtonUpload isUpload={isLoading} onClick={() => handleXoaHetPhutung()}>
+                    Xóa hết phụ tùng
+                </ButtonUpload>
+                <DivFlexRow>
+                    <ButtonChooseFile style={{ marginRight: 30 }}>
+                        <input
+                            disabled={isLoading}
+                            readOnly={isLoading}
+                            type="file"
+                            multiple
+                            accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                            onChange={(e) => handleChoseFile(e)}
+                        />
+                        {isLoading ? "..." : "Import +"}
+                    </ButtonChooseFile>
+                    <ButtonUpload isUpload={isLoading} onClick={(e) => handleExportFile(e)}>
+                        Export file thống kê
+                    </ButtonUpload>
+                </DivFlexRow>
+            </DivFlexRow>
+            <div style={{ marginTop: 15 }}>
+                <DataTable
+                    title="Danh sách phụ tùng"
+                    data={mArrPhuTung}
+                    isLoading={isLoading}
+                    searchData={(search, e) => utils.searchName(e.maphutung, search) || utils.searchName(e.tentiengviet, search)}
+                >
+                    <DataTable.Header>
+                        <th>STT</th>
+                        <th>Mã phụ tùng</th>
+                        <th>Tên tiếng việt</th>
+                        <th>Giá bán lẻ</th>
+                        <th>Vị trí</th>
+                        <th>Số lượng</th>
+                        <th>Sửa/Xóa</th>
+                    </DataTable.Header>
+                    <DataTable.Body
+                        render={(item, index) => {
+                            return (
+                                <tr key={index}>
+                                    <td>{index + 1}</td>
+                                    <td>{item.maphutung}</td>
+                                    <td>{item.tentiengviet}</td>
+                                    <td>{(item.giaban_le || 0).toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
+                                    <td>{item.vitri}</td>
+                                    <td>{item.soluongtonkho}</td>
+                                    <td>
+                                        <ButtonEdit onClick={() => updateItem(item)} />
+                                        <ButtonDelete onClick={() => deleteItem(item)} style={{ marginLeft: 5 }} />
+                                    </td>
+                                </tr>
+                            );
+                        }}
+                    ></DataTable.Body>
+                </DataTable>
+            </div>
+        </DivFlexColumn>
     );
 };
 

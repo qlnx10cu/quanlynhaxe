@@ -55,7 +55,7 @@ const RenderTableDetailHoaDon = ({ chitiet }) => {
                     return (
                         <tr key={index}>
                             <td>{index + 1}</td>
-                            <td>{moment(item.ngaythanhtoan).format("DD/MM/YYYY")}</td>
+                            <td>{moment(item.ngaythanhtoan || item.timeindex).format("DD/MM/YYYY")}</td>
                             <td>{item.mahoadon}</td>
                             <td>{item.soluong || item.soluongphutung}</td>
                         </tr>

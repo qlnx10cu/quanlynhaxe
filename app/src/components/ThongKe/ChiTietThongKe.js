@@ -3,7 +3,7 @@ import { Modal, ModalContent, CloseButton } from "../../styles";
 import { GetBillBanLeByMaHoaDon, GetBillSuaChuaByMaHoaDon } from "../../API/Bill";
 import RenderBillLe from "./RenderBillLe";
 import RenderBillChan from "./RenderBillChan";
-import { GetListStaff } from "../../API/Staffs";
+import { connect } from "react-redux";
 
 const RenderChiTietNhanVien = ({ staff }) => {
     return (
@@ -15,7 +15,6 @@ const RenderChiTietNhanVien = ({ staff }) => {
 
 const ChiTietThongKe = (props) => {
     let [data, setData] = useState(null);
-    let [staff, setStaff] = useState(null);
 
     useEffect(() => {
         function handleEscapeKey(event) {
@@ -30,13 +29,11 @@ const ChiTietThongKe = (props) => {
 
     useEffect(() => {
         setData(null);
-        setStaff(null);
         if (props.isShowing) {
             if (props.loaihoadon === 1) {
                 // Bill le
                 GetBillBanLeByMaHoaDon(props.token, props.mahoadon)
                     .then((res) => {
-                        getStaff(res.data.manv);
                         setData(res.data);
                     })
                     .catch((err) => {
@@ -46,7 +43,6 @@ const ChiTietThongKe = (props) => {
                 // Bill chan
                 GetBillSuaChuaByMaHoaDon(props.token, props.mahoadon)
                     .then((res) => {
-                        getStaff(res.data.manv);
                         setData(res.data);
                     })
                     .catch((err) => {
@@ -55,28 +51,6 @@ const ChiTietThongKe = (props) => {
             }
         }
     }, [props.isShowing]);
-
-    const CallApiGetListStaff = (manv) => {
-        GetListStaff(props.token)
-            .then((res) => {
-                let staffCur = res.data.find(function (item) {
-                    return item.ma === manv;
-                });
-                setStaff(staffCur);
-            })
-            .catch((err) => {});
-    };
-
-    const getStaff = (manv) => {
-        if (props.listStaff == null) {
-            CallApiGetListStaff(manv);
-        } else {
-            let staffCur = props.listStaff.find(function (item) {
-                return item.ma === manv;
-            });
-            setStaff(staffCur);
-        }
-    };
 
     return (
         <Modal className={props.isShowing ? "active" : ""}>
@@ -88,18 +62,26 @@ const ChiTietThongKe = (props) => {
                 <h3 style={{ textAlign: "center" }}>HEAD TRUNG TRANG</h3>
                 <h4 style={{ textAlign: "center" }}>612/31B Trần Hưng Đạo, phường Bình Khánh, TP Long Xuyên, An Giang</h4>
                 <h5 style={{ textAlign: "center" }}> Bán hàng: 02963 603 828 - Phụ tùng: 02963 603 826 - Dịch vụ: 02963 957 669</h5>
-                <RenderChiTietNhanVien staff={staff} />
+                <RenderChiTietNhanVien staff={props.staffs.find((e) => data && e.ma == data.manv)} />
                 <h3 style={{ marginTop: 10 }}>Thông tin bill</h3>
-                {props.loaihoadon === 1 ? (
-                    <RenderBillLe data={data} />
-                ) : props.loaihoadon === 0 ? (
-                    <RenderBillChan data={data} />
-                ) : (
-                    <h3 style={{ textAlign: "center" }}>Không lấy được chi tiết bill</h3>
-                )}
+                <Choose>
+                    <When condition={props.loaihoadon == 1}>
+                        <RenderBillLe data={data} />
+                    </When>
+                    <When condition={props.loaihoadon == 0}>
+                        <RenderBillChan data={data} />
+                    </When>
+                    <Otherwise>
+                        <h3 style={{ textAlign: "center" }}>Không lấy được chi tiết bill</h3>
+                    </Otherwise>
+                </Choose>
             </ModalContent>
         </Modal>
     );
 };
 
-export default ChiTietThongKe;
+const mapState = (state) => ({
+    staffs: state.Staffs.data,
+});
+
+export default connect(mapState, null)(ChiTietThongKe);

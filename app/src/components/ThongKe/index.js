@@ -4,7 +4,6 @@ import moment from "moment";
 import { GetBillTheoNgay } from "../../API/ThongKeAPI";
 import ChiTietThongKe from "./ChiTietThongKe";
 import HistoryCustomer from "../Admin/HistoryCustomer";
-import { GetListStaff } from "../../API/Staffs";
 import { HuyThanhToan, HuyThanhToanLe, CheckUpdateBill } from "../../API/Bill";
 import { HOST, HOST_SHEME } from "../../Config";
 import { connect } from "react-redux";
@@ -111,22 +110,13 @@ const ThongKe = (props) => {
     let [mMaHoaDon, setMaHoaDon] = useState("");
     let [loaihoadon, setLoaiHoaDon] = useState("");
     let [isLoading, setLoading] = useState(false);
-    let [listStaff, setListStaff] = useState([]);
     let [maxSizePage, setMaxSizePage] = useState(20);
     let [maxPage, setMaxPage] = useState(0);
     let [page, setPage] = useState(0);
     let [activePage, setActive] = useState(0);
 
     useEffect(() => {
-        setLoading(true);
-        GetListStaff(props.token)
-            .then((res) => {
-                setListStaff(res.data);
-                handleLayDanhSach();
-            })
-            .catch((err) => {
-                props.alert("Không lấy được danh sách nhân viên");
-            });
+        handleLayDanhSach();
     }, []);
 
     const HuyHoaDon = (mhd, loaiHD, cb) => {
@@ -473,7 +463,6 @@ const ThongKe = (props) => {
                 mahoadon={mMaHoaDon}
                 token={props.token}
                 loaihoadon={loaihoadon}
-                listStaff={listStaff}
             />
 
             <HistoryCustomer

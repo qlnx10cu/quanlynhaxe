@@ -1,5 +1,5 @@
 import * as type from "./action-types";
-import APIUtils from "../API/APIUtils";
+import StaffsApi from "../API/StaffsApi";
 
 export const getListStaff = () => (dispatch) => {
     dispatch({
@@ -7,7 +7,7 @@ export const getListStaff = () => (dispatch) => {
         data: true,
     });
 
-    return APIUtils.get("/employee")
+    return StaffsApi.getList()
         .then((res) => {
             dispatch({
                 type: type.STAFFS.GET_LIST_STAFFS,
@@ -31,7 +31,7 @@ export const getListStaff = () => (dispatch) => {
 };
 
 export const addStaff = (data) => (dispatch) => {
-    return APIUtils.post("/employee", data).then((res) => {
+    return StaffsApi.add(data).then(() => {
         dispatch({
             type: type.STAFFS.ADD_STAFFS,
             data: data,
@@ -39,8 +39,8 @@ export const addStaff = (data) => (dispatch) => {
     });
 };
 
-export const updateStaff = (data, ma) => (dispatch) => {
-    return APIUtils.put("/employee/ma/" + ma, data).then((res) => {
+export const updateStaff = (ma, data) => (dispatch) => {
+    return StaffsApi.update(ma, data).then(() => {
         dispatch({
             type: type.STAFFS.UPDATE_STAFFS,
             data: data,
@@ -50,7 +50,7 @@ export const updateStaff = (data, ma) => (dispatch) => {
 };
 
 export const deleteStaff = (ma) => (dispatch) => {
-    return APIUtils.delete("/employee/ma/" + ma).then((res) => {
+    return StaffsApi.delete(ma).then(() => {
         dispatch({
             type: type.STAFFS.DELETE_STAFFS,
             ma: ma,

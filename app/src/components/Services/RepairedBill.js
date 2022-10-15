@@ -21,7 +21,6 @@ import { HOST } from "../../Config";
 import { connect } from "react-redux";
 import { UpdateBill, SaveBill, ThanhToan, HuyThanhToan, GetBillSuaChuaByMaHoaDon, CheckUpdateBill } from "../../API/Bill";
 import { GetlistCustomer } from "../../API/Customer";
-import { GetListNVSuaChua } from "../../API/Staffs";
 import { withRouter } from "react-router-dom";
 import PopupBillCHN from "./PopupBillCHN";
 import { GetListCuaHangNgoai } from "../../API/CuaHangNgoai";
@@ -343,8 +342,11 @@ const RepairedBill = (props) => {
             }
         }
 
-        props.setLoading(true, 5);
+        props.setLoading(true, 4);
         try {
+            listNhanVienSuaChua = props.staffs.filter((e) => utils.searchName(e.chucvu, "Sửa Chữa"));
+            setListNhanVienSuaChua(listNhanVienSuaChua);
+
             await props.getAllProduct(props.token);
 
             await GetlistCustomer(props.token)
@@ -355,15 +357,6 @@ const RepairedBill = (props) => {
                 })
                 .catch((err) => {
                     props.errorHttp(err, "Không thể lấy danh sách khách hàng\nLỗi kết nối đến server\nVui lòng kiểm tra đường mạng");
-                });
-            await GetListNVSuaChua(props.token)
-                .then((response) => {
-                    listNhanVienSuaChua = response.data;
-                    setListNhanVienSuaChua(response.data);
-                    props.addLoading();
-                })
-                .catch((err) => {
-                    props.errorHttp(err, "Không thể lấy danh sách nhân viên sữa chữa\nLỗi kết nối đến server\nVui lòng kiểm tra đường mạng");
                 });
             await GetListCuaHangNgoai(props.token)
                 .then((res) => {
@@ -1537,6 +1530,7 @@ const mapState = (state) => ({
     listBillProduct: state.Product.listBillProduct,
     listProduct: state.Product.listProduct,
     isLoading: state.App.isLoading,
+    staffs: state.Staffs.data,
     info: state.Authenticate.info,
 });
 const mapDispatch = (dispatch) => ({

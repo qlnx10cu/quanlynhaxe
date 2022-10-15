@@ -71,7 +71,7 @@ const PopupStaff = (props) => {
             chucvu: mRole.value,
         };
 
-        return props.updateStaff(data, item.ma).then((res) => {
+        return props.updateStaff(item.ma, data).then((res) => {
             props.alert("Update nhân viên thành công.");
         });
     };
@@ -142,6 +142,6 @@ const PopupStaff = (props) => {
 
 const mapDispatch = {
     addStaff: (data) => addStaff(data),
-    updateStaff: (data, ma) => updateStaff(data, ma),
+    updateStaff: (ma, data) => updateStaff(ma, data),
 };
 export default connect(null, mapDispatch)(PopupStaff);

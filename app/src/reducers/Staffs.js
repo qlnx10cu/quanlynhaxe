@@ -22,6 +22,9 @@ export default (state = initState, action) => {
         }
 
         case type.STAFFS.ADD_STAFFS: {
+            const staff = state.data.find((sta) => sta.ma == action.data.ma);
+            if (staff) return state;
+
             const newState = { ...state };
             newState.data = [action.data, ...newState.data];
 

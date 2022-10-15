@@ -16,7 +16,7 @@ import ModalManager from "./ModalManager";
 const Staffs = React.lazy(() => import("./Pages/Staffs"));
 const Customer = React.lazy(() => import("./Admin/Customer"));
 const Products = React.lazy(() => import("./Pages/Products"));
-const RepairPrice = React.lazy(() => import("./Admin/RepairPrice"));
+const Salary = React.lazy(() => import("./Pages/Salary"));
 const Services = React.lazy(() => import("./Services/Services"));
 const RepairedBill = React.lazy(() => import("./Services/RepairedBill"));
 const BanLe = React.lazy(() => import("./BanLe"));
@@ -50,7 +50,7 @@ const Home = (props) => {
                     />
                 )}
                 {props.info != null && props.info.chucvu === "Admin" && <Route path="/staffs" component={LoadingComponent(Staffs, props)} />}
-                {props.info != null && <Route path="/repairPrice" component={LoadingComponent(RepairPrice, props)} />}
+                {props.info != null && <Route path="/repairPrice" component={LoadingComponent(Salary, props)} />}
                 {props.info != null && <Route path="/customer" component={LoadingComponent(Customer, props)} />}
                 {props.info != null && (
                     <Route

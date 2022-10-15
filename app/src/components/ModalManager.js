@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { POPUP_NAME } from "../actions/Modal";
+import useIsMounted from "../lib/useIsMounted";
 import PopupPhuTung from "./Modal/PopupPhuTung";
 import PopupStaff from "./Modal/PopupStaff";
-import useIsMounted from "../lib/useIsMounted";
 import PopupSalary from "./Modal/PopupSalary";
+import PopupStoreOutside from "./Modal/PopupStoreOutside";
 
 /* eslint-disable no-undef */
 
@@ -55,6 +56,16 @@ const ModalManager = (props) => {
                 </When>
                 <When condition={item.name == POPUP_NAME.POPUP_SALARIES}>
                     <PopupSalary
+                        key={item.id}
+                        callback={item.callback}
+                        open={item.open}
+                        item={item.data}
+                        alert={props.alert}
+                        onClose={() => handleClose(item)}
+                    />
+                </When>
+                <When condition={item.name == POPUP_NAME.POPUP_STORE_OUTSIDES}>
+                    <PopupStoreOutside
                         key={item.id}
                         callback={item.callback}
                         open={item.open}

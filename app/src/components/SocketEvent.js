@@ -77,6 +77,7 @@ const SocketEvent = (props) => {
     useEffect(() => {
         props.getListStaff();
         props.getListSalary();
+        props.getListStoreOutside();
     }, []);
 
     return <div style={{ display: "none" }}></div>;
@@ -90,6 +91,7 @@ const mapDispatch = {
     updateLiftTable: (data) => updateLiftTable(data),
     getListStaff: () => actions.StaffAction.getListStaff(),
     getListSalary: () => actions.SalaryAction.getListSalary(),
+    getListStoreOutside: () => actions.StoreOutsideAction.getListStoreOutside(),
 };
 
 export default connect(mapState, mapDispatch)(withRouter(SocketEvent));

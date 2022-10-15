@@ -250,6 +250,14 @@ const Input = styled.input`
     width: ${(props) => props.width || "auto"};
     padding: 8px 20px;
     margin: 8px 0;
+
+    :disabled {
+        opacity: 1;
+    }
+
+    :read-only {
+        background: rgba(0, 0, 0, 0.15);
+    }
 `;
 
 const Textarea = styled.textarea`

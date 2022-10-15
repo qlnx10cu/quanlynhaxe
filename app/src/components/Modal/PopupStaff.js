@@ -37,11 +37,11 @@ const PopupStaff = (props) => {
         return "";
     };
     const handleButtonSave = () => {
-        var kt = check();
+        const kt = check();
         if (kt != "") {
             return Promise.reject({ error: -1, message: kt });
         }
-        var data = {
+        const data = {
             ma: mUserName.value,
             ten: mStaffName.value,
             cmnd: mCMND.value,
@@ -58,11 +58,12 @@ const PopupStaff = (props) => {
     };
 
     const handleButtonUpdate = () => {
-        var kt = check();
+        const kt = check();
+
         if (kt != "") {
             return Promise.reject({ error: -1, message: kt });
         }
-        var data = {
+        const data = {
             ten: mStaffName.value,
             cmnd: mCMND.value,
             sdt: mSDT.value,

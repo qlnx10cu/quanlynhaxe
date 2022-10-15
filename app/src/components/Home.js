@@ -22,7 +22,7 @@ const RepairedBill = React.lazy(() => import("./Services/RepairedBill"));
 const BanLe = React.lazy(() => import("./BanLe"));
 const ChamCong = React.lazy(() => import("./ChamCong"));
 const ThongKe = React.lazy(() => import("./ThongKe/index"));
-const CuaHangNgoai = React.lazy(() => import("./CuaHangNgoai"));
+const StoreOutside = React.lazy(() => import("./Pages/StoreOutside"));
 
 const BaseContainer = styled.div`
     padding: 10px 20px;
@@ -97,7 +97,7 @@ const Home = (props) => {
                 )}
                 {props.info != null && <Route path="/cuocgoi" component={LoadingComponent(CuocGoi, props)} />}
                 {props.info != null && <Route path="/thongke" component={LoadingComponent(ThongKe, props)} />}
-                {props.info != null && <Route path="/cuahangngoai" component={LoadingComponent(CuaHangNgoai, props)} />}
+                {props.info != null && <Route path="/cuahangngoai" component={LoadingComponent(StoreOutside, props)} />}
                 {props.info != null && <Route path="/caidat" component={LoadingComponent(CaiDat, props)} />}
             </BaseContainer>
         </Router>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Modal, ModalContent, CloseButton, DivFlexRow, Button, DivFlexColumn, Input } from "../../styles";
+import React, { useEffect } from "react";
+import { DivFlexRow, DivFlexColumn, Input } from "../../styles";
 import { connect } from "react-redux";
 import ModalWrapper from "../Warrper/ModalWrapper";
 import * as actions from "../../actions";
@@ -24,11 +24,11 @@ const PopupSalary = (props) => {
         return "";
     };
     const handleButtonSave = () => {
-        var kt = check();
+        const kt = check();
         if (kt != "") {
             return Promise.reject({ error: -1, message: kt });
         }
-        var data = {
+        const data = {
             ten: mName.value,
             tien: mPrice.value,
         };
@@ -38,11 +38,11 @@ const PopupSalary = (props) => {
     };
 
     const handleButtonUpdate = () => {
-        var kt = check();
+        const kt = check();
         if (kt != "") {
             return Promise.reject({ error: -1, message: kt });
         }
-        var data = {
+        const data = {
             ten: mName.value,
             tien: mPrice.value,
         };

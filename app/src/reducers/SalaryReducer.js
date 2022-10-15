@@ -22,8 +22,8 @@ export default (state = initState, action) => {
         }
 
         case type.SALARY.ADD_SALARY: {
-            const staff = state.data.find((sta) => sta.ma == action.data.ma);
-            if (staff) return state;
+            const salary = state.data.find((sta) => sta.ma == action.data.ma);
+            if (salary) return state;
 
             const newState = { ...state };
             newState.data = [action.data, ...newState.data];
@@ -33,11 +33,11 @@ export default (state = initState, action) => {
 
         case type.SALARY.UPDATE_SALARY: {
             const index = state.data.findIndex((sta) => sta.ma == action.ma);
-            const staff = state.data.find((sta) => sta.ma == action.ma);
+            const salary = state.data.find((sta) => sta.ma == action.ma);
 
-            if (index < 0 || index >= state.data.length || !staff || staff.ma != action.ma || !action.data) return state;
+            if (index < 0 || index >= state.data.length || !salary || salary.ma != action.ma || !action.data) return state;
 
-            const data = { ...staff, ...action.data };
+            const data = { ...salary, ...action.data };
 
             const newState = { ...state };
 
@@ -48,7 +48,7 @@ export default (state = initState, action) => {
 
         case type.SALARY.DELETE_SALARY: {
             const newState = { ...state };
-            newState.data = newState.data.filter((staff) => staff.ma != action.ma);
+            newState.data = newState.data.filter((salary) => salary.ma != action.ma);
 
             return newState;
         }

@@ -5,6 +5,7 @@ import AppInfo from "./AppInfo";
 import Modal from "./Modal";
 import Staff from "./StaffReducer";
 import Salary from "./SalaryReducer";
+import StoreOutside from "./StoreOutsideReducer";
 
 import App from "./App";
 
@@ -14,6 +15,7 @@ export default combineReducers({
     Modal,
     Staff,
     Salary,
+    StoreOutside,
     AppInfo,
     App,
 });

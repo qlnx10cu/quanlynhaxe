@@ -20,7 +20,7 @@ const Salary = React.lazy(() => import("./Pages/Salary"));
 const Services = React.lazy(() => import("./Services/Services"));
 const RepairedBill = React.lazy(() => import("./Services/RepairedBill"));
 const BanLe = React.lazy(() => import("./BanLe"));
-const ChamCong = React.lazy(() => import("./ChamCong"));
+const ChamCong = React.lazy(() => import("./Pages/ChamCong"));
 const ThongKe = React.lazy(() => import("./ThongKe/index"));
 const StoreOutside = React.lazy(() => import("./Pages/StoreOutside"));
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Tab } from "../../styles";
+import { Tab, TabContent } from "../../styles";
 
 const TabPage = ({ children }) => {
     let [activePage, setActive] = useState(0);
@@ -19,9 +19,9 @@ const TabPage = ({ children }) => {
             </Tab>
             {children.map((item, idx) => {
                 return (
-                    <React.Fragment key={idx}>
-                        <If condition={activePage == idx}>{item}</If>
-                    </React.Fragment>
+                    <TabContent key={idx} className={activePage === idx ? "active" : ""}>
+                        {item}
+                    </TabContent>
                 );
             })}
         </React.Fragment>

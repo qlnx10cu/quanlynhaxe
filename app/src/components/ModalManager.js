@@ -106,7 +106,7 @@ const ModalManager = (props) => {
                         open={item.open}
                         item={item.data}
                         alert={props.alert}
-                        comfirm={props.comfirm}
+                        confirm={props.confirm}
                         openModal={props.openModal}
                         history={props.history}
                         onClose={() => handleClose(item)}

@@ -8,6 +8,9 @@ export default class ApiObject {
     getList() {
         return APIUtils.get(this.name);
     }
+    getListByDate(start, end) {
+        return APIUtils.get(this.name + "/bydate?end=" + end + "&start=" + start);
+    }
     get(key) {
         return APIUtils.get(this.name + "/" + this.key + "/" + key);
     }

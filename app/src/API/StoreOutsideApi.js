@@ -1,7 +1,7 @@
 import ApiObject from "./ApiObject";
 import APIUtils from "./APIUtils";
 
-class StoreOutside extends ApiObject {
+class StoreOutsideApi extends ApiObject {
     constructor(name, ma) {
         super(name, ma);
     }
@@ -13,4 +13,4 @@ class StoreOutside extends ApiObject {
     }
 }
 
-export default new StoreOutside("/cuahangngoai", "ma");
+export default new StoreOutsideApi("/cuahangngoai", "ma");

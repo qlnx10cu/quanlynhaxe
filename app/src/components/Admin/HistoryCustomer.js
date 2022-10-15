@@ -6,10 +6,8 @@ import ChiTietThongKe from "../ThongKe/ChiTietThongKe";
 
 import { connect } from "react-redux";
 import moment from "moment";
+import { IconCircle } from "../Styles";
 
-const IconCircle = (props) => {
-    return <i className="fa fa-circle" style={props.style}></i>;
-};
 const getTrangThai = (e) => {
     switch (e) {
         case -1:
@@ -262,10 +260,7 @@ const RenderTableCall = ({ list }) => {
                                         )}
                                     </td>
                                     <td>
-                                        <IconCircle
-                                            style={{ marginRight: "10px", color: item.status == 1 ? "green" : item.status == 2 ? "red" : "#00ffd0" }}
-                                        />
-                                        {item.status == 1 ? "Thành công" : item.status == 2 ? "Gọi nhỡ" : "Đang gọi"}
+                                        <IconCircle status={item.status} style={{ marginRight: "10px" }} />
                                     </td>
                                     <td>{parseInt(item.durationms / 1000)}</td>
                                     <td

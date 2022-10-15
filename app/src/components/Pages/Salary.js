@@ -6,7 +6,7 @@ import * as actions from "../../actions";
 import utils from "../../lib/utils";
 import { ButtonDelete, ButtonEdit } from "../Styles";
 
-const RepairPrice = (props) => {
+const Salary = (props) => {
     const addItem = () => {
         props.openModal(POPUP_NAME.POPUP_SALARIES, null, (data) => {
             props.alert("Thêm thành công");
@@ -73,4 +73,4 @@ const mapDispatch = {
     deleteSalary: (ma) => actions.SalaryAction.deleteSalary(ma),
 };
 
-export default connect(mapState, mapDispatch)(RepairPrice);
+export default connect(mapState, mapDispatch)(Salary);

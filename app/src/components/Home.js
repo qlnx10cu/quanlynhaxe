@@ -9,7 +9,6 @@ import LoadingComponent from "./LoadingComponent";
 import { connect } from "react-redux";
 import { alert, error, errorHttp, success, setLoading, addLoading, confirm, confirmError } from "../actions/App";
 import CaiDat from "./CaiDat";
-import CuocGoi from "./CuocGoi";
 import CSKH from "./CSKH";
 import { closeModal, openModal } from "../actions/Modal";
 import ModalManager from "./ModalManager";
@@ -19,6 +18,7 @@ const Products = React.lazy(() => import("./Pages/Products"));
 const Salary = React.lazy(() => import("./Pages/Salary"));
 const Services = React.lazy(() => import("./Services/Services"));
 const RepairedBill = React.lazy(() => import("./Services/RepairedBill"));
+const HistoryCall = React.lazy(() => import("./Pages/HistoryCall"));
 const BanLe = React.lazy(() => import("./BanLe"));
 const ChamCong = React.lazy(() => import("./Pages/ChamCong"));
 const Statistic = React.lazy(() => import("./Pages/Statistic"));
@@ -50,7 +50,7 @@ const Home = (props) => {
                     />
                 )}
                 {props.info != null && props.info.chucvu === "Admin" && <Route path="/staffs" component={LoadingComponent(Staffs, props)} />}
-                {props.info != null && <Route path="/repairPrice" component={LoadingComponent(Salary, props)} />}
+                {props.info != null && <Route path="/salary" component={LoadingComponent(Salary, props)} />}
                 {props.info != null && <Route path="/customer" component={LoadingComponent(Customer, props)} />}
                 {props.info != null && (
                     <Route
@@ -95,7 +95,7 @@ const Home = (props) => {
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ" || props.info.chucvu === "Văn Phòng") && (
                     <Route path="/chamcong" component={LoadingComponent(ChamCong, props)} />
                 )}
-                {props.info != null && <Route path="/cuocgoi" component={LoadingComponent(CuocGoi, props)} />}
+                {props.info != null && <Route path="/cuocgoi" component={LoadingComponent(HistoryCall, props)} />}
                 {props.info != null && <Route path="/thongke" component={LoadingComponent(Statistic, props)} />}
                 {props.info != null && <Route path="/cuahangngoai" component={LoadingComponent(StoreOutside, props)} />}
                 {props.info != null && <Route path="/caidat" component={LoadingComponent(CaiDat, props)} />}

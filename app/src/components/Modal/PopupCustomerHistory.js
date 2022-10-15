@@ -1,25 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { DivFlexRow, DivFlexColumn, Input, Table, Link, Button } from "../../styles";
-import { connect } from "react-redux";
-import ModalWrapper from "../Warrper/ModalWrapper";
-import * as actions from "../../actions";
-import lib from "../../lib";
-import { ButtonCall, ButtonChatZalo, ButtonView, TabPage } from "../Styles";
-import { GetCustomerDetail } from "../../API/Customer";
 import moment from "moment/moment";
-import ChiTietThongKe from "../ThongKe/ChiTietThongKe";
-import { POPUP_NAME } from "../../actions/Modal";
+import ModalWrapper from "../Warrper/ModalWrapper";
+import lib from "../../lib";
 import DataTable from "../Warrper/DataTable";
 import utils from "../../lib/utils";
-
-const IconCircle = (props) => {
-    return <i className="fa fa-circle" style={props.style}></i>;
-};
+import { DivFlexRow, DivFlexColumn, Input, Link } from "../../styles";
+import { connect } from "react-redux";
+import { ButtonCall, ButtonChatZalo, ButtonView, IconCircle, TabPage } from "../Styles";
+import { GetCustomerDetail } from "../../API/Customer";
+import { POPUP_NAME } from "../../actions/Modal";
 
 const RenderTableDetail = ({ onViewBill, list }) => {
-    list = (list || []).sort(function (a, b) {
-        var x = a.ngaythanhtoan.toLowerCase();
-        var y = b.ngaythanhtoan.toLowerCase();
+    list = (list || []).sort((a, b) => {
+        const x = a.ngaythanhtoan.toLowerCase();
+        const y = b.ngaythanhtoan.toLowerCase();
+
         return x > y ? -1 : x < y ? 1 : 0;
     });
 
@@ -80,9 +75,10 @@ const RenderTableDetail = ({ onViewBill, list }) => {
 };
 
 const RenderTableCSKH = ({ onViewBill, list }) => {
-    list = (list || []).sort(function (a, b) {
-        var x = a.ngayhen.toLowerCase();
-        var y = b.ngayhen.toLowerCase();
+    list = (list || []).sort((a, b) => {
+        const x = a.ngayhen.toLowerCase();
+        const y = b.ngayhen.toLowerCase();
+
         return x > y ? -1 : x < y ? 1 : 0;
     });
 
@@ -150,15 +146,10 @@ const RenderTableCSKH = ({ onViewBill, list }) => {
 };
 
 const RenderTableCall = ({ list }) => {
-    const copyCallId = (callid) => {
-        try {
-            navigator.clipboard.writeText(callid);
-        } catch (ex) {}
-    };
+    list = (list || []).sort((a, b) => {
+        const x = a.starttime.toLowerCase();
+        const y = b.starttime.toLowerCase();
 
-    list = (list || []).sort(function (a, b) {
-        var x = a.starttime.toLowerCase();
-        var y = b.starttime.toLowerCase();
         return x > y ? -1 : x < y ? 1 : 0;
     });
 
@@ -200,10 +191,7 @@ const RenderTableCall = ({ list }) => {
                                     {item.direction == "agent2user" ? <i className="fa fa-arrow-right"></i> : <i className="fa fa-arrow-left"></i>}
                                 </td>
                                 <td>
-                                    <IconCircle
-                                        style={{ marginRight: "10px", color: item.status == 1 ? "green" : item.status == 2 ? "red" : "#00ffd0" }}
-                                    />
-                                    {item.status == 1 ? "Thành công" : item.status == 2 ? "Gọi nhỡ" : "Đang gọi"}
+                                    <IconCircle status={item.status} style={{ marginRight: "10px" }} />
                                 </td>
                                 <td>{parseInt(item.durationms / 1000)}</td>
                                 <td
@@ -274,8 +262,8 @@ const PopupCustomerHistory = (props) => {
                 </DivFlexColumn>
                 <DivFlexColumn style={{ fontSize: 14, marginLeft: 10, marginBottom: 2, width: "150px", justifyContent: "space-around" }}>
                     <DivFlexColumn style={{ display: "inline", width: "100%" }}>
-                        <ButtonChatZalo style={{ width: "50px" }} data={mData} alert={props.alert}></ButtonChatZalo>
-                        <ButtonCall style={{ width: "50px", marginLeft: "10px" }} data={mData} alert={props.alert}></ButtonCall>
+                        <ButtonChatZalo data={mData} alert={props.alert} />
+                        <ButtonCall data={mData} alert={props.alert} confirm={props.confirm} />
                     </DivFlexColumn>
                 </DivFlexColumn>
             </DivFlexRow>
@@ -303,13 +291,13 @@ const PopupCustomerHistory = (props) => {
             </DivFlexRow>
             <TabPage>
                 <TabPage.Tab title="Sữa chữa">
-                    <RenderTableDetail list={mData.chitiet} onViewBill={handleViewBill} {...props} />
+                    <RenderTableDetail list={mData.chitiet} onViewBill={handleViewBill} />
                 </TabPage.Tab>
                 <TabPage.Tab title="Chăm sóc">
-                    <RenderTableCSKH list={mData.historycskh} onViewBill={handleViewBill} {...props} />
+                    <RenderTableCSKH list={mData.historycskh} onViewBill={handleViewBill} />
                 </TabPage.Tab>
                 <TabPage.Tab title="Cuộc gọi">
-                    <RenderTableCall list={mData.historycall} onViewBill={handleViewBill} {...props} />
+                    <RenderTableCall list={mData.historycall} onViewBill={handleViewBill} />
                 </TabPage.Tab>
             </TabPage>
         </ModalWrapper>

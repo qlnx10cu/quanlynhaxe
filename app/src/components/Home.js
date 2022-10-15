@@ -8,7 +8,6 @@ import { HOST } from "../Config";
 import LoadingComponent from "./LoadingComponent";
 import { connect } from "react-redux";
 import { alert, error, errorHttp, success, setLoading, addLoading, confirm, confirmError } from "../actions/App";
-import CSKH from "./CSKH";
 import { closeModal, openModal } from "../actions/Modal";
 import ModalManager from "./ModalManager";
 const Staffs = React.lazy(() => import("./Pages/Staffs"));
@@ -22,6 +21,7 @@ const BanLe = React.lazy(() => import("./BanLe"));
 const ChamCong = React.lazy(() => import("./Pages/ChamCong"));
 const Statistic = React.lazy(() => import("./Pages/Statistic"));
 const Setting = React.lazy(() => import("./Pages/Setting"));
+const CustomerCare = React.lazy(() => import("./Pages/CustomerCare"));
 const StoreOutside = React.lazy(() => import("./Pages/StoreOutside"));
 
 const BaseContainer = styled.div`
@@ -90,7 +90,7 @@ const Home = (props) => {
                     <Route path="/banle" component={LoadingComponent(BanLe, props)} />
                 )}
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "CSKH") && (
-                    <Route path="/chamsockhachhang" component={LoadingComponent(CSKH, props)} />
+                    <Route path="/chamsockhachhang" component={LoadingComponent(CustomerCare, props)} />
                 )}
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ" || props.info.chucvu === "Văn Phòng") && (
                     <Route path="/chamcong" component={LoadingComponent(ChamCong, props)} />

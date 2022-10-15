@@ -9,7 +9,13 @@ const ButtonDelete = ({ children, data, onClick, isUpload, title, style, classNa
     };
 
     return (
-        <DelButton style={{ ...style }} className={className} onClick={handleOnClick} disabled={isUpload} title={title || "Xóa"}>
+        <DelButton
+            style={{ marginLeft: 5, height: 30, width: 30, display: "inline-flex", justifyContent: "center", alignItems: "center", ...style }}
+            className={className}
+            onClick={handleOnClick}
+            disabled={isUpload}
+            title={title || "Xóa"}
+        >
             <If condition={isUpload}>
                 <i className="fas fa-spinner fa-spin"></i>
             </If>

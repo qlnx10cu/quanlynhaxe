@@ -4,11 +4,11 @@ import ModalWrapper from "../Warrper/ModalWrapper";
 import lib from "../../lib";
 import DataTable from "../Warrper/DataTable";
 import utils from "../../lib/utils";
-import { DivFlexRow, DivFlexColumn, Input, Link } from "../../styles";
 import { connect } from "react-redux";
+import { POPUP_NAME } from "../../actions/Modal";
+import { DivFlexRow, DivFlexColumn, Input, Link } from "../../styles";
 import { ButtonCall, ButtonChatZalo, ButtonView, IconCircle, TabPage } from "../Styles";
 import { GetCustomerDetail } from "../../API/Customer";
-import { POPUP_NAME } from "../../actions/Modal";
 
 const RenderTableDetail = ({ onViewBill, list }) => {
     list = (list || []).sort((a, b) => {

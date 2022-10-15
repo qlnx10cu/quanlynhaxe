@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
-import { DivFlexRow, DivFlexColumn, Input, Button } from "../../styles";
+import React from "react";
+import { DivFlexRow, Button } from "../../styles";
 import { connect } from "react-redux";
-import ModalWrapper from "../Warrper/ModalWrapper";
-import * as actions from "../../actions";
-import lib from "../../lib";
 import { InputValue } from "../Styles";
 import { CheckUpdateBill } from "../../API/Bill";
+import lib from "../../lib";
+import ModalWrapper from "../Warrper/ModalWrapper";
 
 const PopupConfirmBill = (props) => {
     const useIsMounted = lib.useIsMounted();
@@ -30,20 +29,15 @@ const PopupConfirmBill = (props) => {
             return;
         }
 
-        CheckUpdateBill(props.token, { ma: mBarCode.value, mahoadon: item.mahoadon })
-            .then((res) => {
-                if (!useIsMounted()) return;
-                if (res && res.data && res.data.error && res.data.error >= 1) {
-                    mBarCode.setValue("");
-                    props.onClose();
-                    UpdateHoaDon(item.mahoadon, item.loaihoadon);
-                } else {
-                    props.alert("Mã code không đúng, vui lòng nhập lại");
-                }
-            })
-            .catch((err) => {
-                props.alert("Lỗi : " + err.message);
-            });
+        return CheckUpdateBill(props.token, { ma: mBarCode.value, mahoadon: item.mahoadon }).then((res) => {
+            if (!useIsMounted()) return;
+            if (res && res.data && res.data.error && res.data.error >= 1) {
+                mBarCode.setValue("");
+                UpdateHoaDon(item.mahoadon, item.loaihoadon);
+            } else {
+                props.alert("Mã code không đúng, vui lòng nhập lại");
+            }
+        });
     };
 
     return (

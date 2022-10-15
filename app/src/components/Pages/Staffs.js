@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { POPUP_NAME } from "../../actions/Modal";
-import DataTable from "../Warrper/DataTable";
+import { ButtonDelete, ButtonEdit } from "../Styles";
 import * as actions from "../../actions";
 import utils from "../../lib/utils";
-import { ButtonDelete, ButtonEdit } from "../Styles";
+import DataTable from "../Warrper/DataTable";
 
 const Staffs = (props) => {
     const addItem = () => {

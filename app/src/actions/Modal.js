@@ -9,6 +9,7 @@ export const POPUP_NAME = {
     POPUP_BILL: "POPUP_BILL",
     POPUP_CUSTOMER_HISTORY: "POPUP_CUSTOMER_HISTORY",
     POPUP_CALL: "POPUP_CALL",
+    POPUP_CUSTOMER_CARE_NOTE: "POPUP_CUSTOMER_CARE_NOTE",
 };
 
 export function openModal(name, data, callback) {

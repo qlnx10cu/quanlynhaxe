@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import DataTable from "../Warrper/DataTable";
 import utils from "../../lib/utils";
 import lib from "../../lib";
-import { ButtonCall, ButtonChatZalo, ButtonDelete, ButtonEdit, ButtonUpload, ButtonView, IconCircle, LabelOverflow, TabPage } from "../Styles";
-import moment from "moment";
+import { ButtonCall, ButtonChatZalo, ButtonUpload, ButtonView, IconCircle, LabelOverflow, TabPage } from "../Styles";
 import HistoryCallApi from "../../API/HistoryCallApi";
 import { DivFlexRow, Input } from "../../styles";
 
@@ -12,7 +11,7 @@ const HistoryCall = (props) => {
     const [tab, setTab] = useState(0);
     const [isLoading, setLoading] = useState(false);
     const [historycalls, setHistoryCalls] = useState([]);
-    const mDateStart = lib.handleInputDate("YYYY-MM-DD", "YYYY-MM-DD", moment().subtract(60, "days"));
+    const mDateStart = lib.handleInputDate("YYYY-MM-DD");
     const mDateEnd = lib.handleInputDate("YYYY-MM-DD");
 
     useEffect(() => {
@@ -60,13 +59,13 @@ const HistoryCall = (props) => {
                     </ButtonUpload>
                 </DivFlexRow>
             </DivFlexRow>
+            <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center" }}></DivFlexRow>
             <TabPage onChange={setTab}>
                 <TabPage.Tab title="Tất cả" />
                 <TabPage.Tab title="Gọi ra" />
                 <TabPage.Tab title="Gọi vào" />
             </TabPage>
             <DataTable
-                title="Danh sách cuộc gọi"
                 isLoading={isLoading}
                 data={historycalls.filter((x) => tab == 0 || convertDirection(x.direction) == tab)}
                 searchData={(search, call) =>

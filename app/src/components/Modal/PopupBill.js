@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { DivFlexRow, DivFlexColumn, Input, Button } from "../../styles";
 import { connect } from "react-redux";
-import ModalWrapper from "../Warrper/ModalWrapper";
-import * as actions from "../../actions";
 import lib from "../../lib";
-import { InputValue } from "../Styles";
-import { CheckUpdateBill, GetBillBanLeByMaHoaDon, GetBillSuaChuaByMaHoaDon } from "../../API/Bill";
+import ModalWrapper from "../Warrper/ModalWrapper";
 import RenderBillLe from "../ThongKe/RenderBillLe";
 import RenderBillChan from "../ThongKe/RenderBillChan";
 import RenderChiTietNhanVien from "../ThongKe/RenderChiTietNhanVien";

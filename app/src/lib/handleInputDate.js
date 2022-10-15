@@ -1,7 +1,7 @@
 import moment from "moment/moment";
 import { useState } from "react";
 
-export default function (formatInput, formatValue, init, callback) {
+export default function (formatInput, init, callback) {
     let [value, setValueState] = useState(moment(init).format(formatInput));
 
     const _setValue = (val) => {
@@ -17,7 +17,7 @@ export default function (formatInput, formatValue, init, callback) {
     };
 
     const getValue = (fm) => {
-        fm = fm || formatValue || formatInput;
+        fm = fm || formatInput;
         return moment(value).format(fm);
     };
 

@@ -6,8 +6,8 @@ import ModalWrapper from "../Warrper/ModalWrapper";
 import ProductApi from "../../API/ProductApi";
 import lib from "../../lib";
 import utils from "../../lib/utils";
-import { addProduct, updateProduct } from "../../actions/Product";
 import { connect } from "react-redux";
+import { addProduct, updateProduct } from "../../actions/Product";
 import { TabPage } from "../Styles";
 
 const RenderTableDetail = ({ lichsu }) => {

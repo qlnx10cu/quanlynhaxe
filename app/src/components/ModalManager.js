@@ -10,6 +10,7 @@ import PopupStoreOutside from "./Modal/PopupStoreOutside";
 import PopupConfirmBill from "./Modal/PopupConfirmBill";
 import PopupBill from "./Modal/PopupBill";
 import PopupCustomerHistory from "./Modal/PopupCustomerHistory";
+import PopupCustomerCareNote from "./Modal/PopupCustomerCareNote";
 
 /* eslint-disable no-undef */
 
@@ -112,6 +113,20 @@ const ModalManager = (props) => {
                         onClose={() => handleClose(item)}
                     />
                 </When>
+                <When condition={item.name == POPUP_NAME.POPUP_CUSTOMER_CARE_NOTE}>
+                    <PopupCustomerCareNote
+                        key={item.id}
+                        callback={item.callback}
+                        open={item.open}
+                        item={item.data}
+                        alert={props.alert}
+                        confirm={props.confirm}
+                        openModal={props.openModal}
+                        history={props.history}
+                        onClose={() => handleClose(item)}
+                    />
+                </When>
+                
             </Choose>
         </For>
     );

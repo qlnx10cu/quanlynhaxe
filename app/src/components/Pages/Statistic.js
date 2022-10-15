@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { POPUP_NAME } from "../../actions/Modal";
-import DataTable from "../Warrper/DataTable";
-import lib from "../../lib";
-import utils from "../../lib/utils";
 import { ButtonDelete, ButtonEdit, ButtonShow, ButtonUpload, TabPage } from "../Styles";
 import { DivFlexRow, Input, Link } from "../../styles";
-import moment from "moment";
-import { withRouter } from "react-router-dom";
+import lib from "../../lib";
+import utils from "../../lib/utils";
+import DataTable from "../Warrper/DataTable";
 import StatisticApi from "../../API/StatisticApi";
 import BillLeApi from "../../API/BillLeApi";
 import BillSuaChuaAPI from "../../API/BillSuaChuaAPI";
+
 const twoDay = 2 * 1000 * 3600 * 24;
 
 const Statistic = (props) => {
@@ -146,9 +147,7 @@ const Statistic = (props) => {
                     <th>Tổng tiền</th>
                     <th>Ngày thanh toán</th>
                     <th>Loại hóa đơn</th>
-                    <th>
-                        <i className="fas fa-info"></i>
-                    </th>
+                    <th>Xem | Cập nhập | Xóa</th>
                 </DataTable.Header>
                 <DataTable.Body
                     render={(item, index) => {

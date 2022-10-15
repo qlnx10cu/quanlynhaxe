@@ -8,7 +8,6 @@ import { HOST } from "../Config";
 import LoadingComponent from "./LoadingComponent";
 import { connect } from "react-redux";
 import { alert, error, errorHttp, success, setLoading, addLoading, confirm, confirmError } from "../actions/App";
-import CaiDat from "./CaiDat";
 import CSKH from "./CSKH";
 import { closeModal, openModal } from "../actions/Modal";
 import ModalManager from "./ModalManager";
@@ -22,6 +21,7 @@ const HistoryCall = React.lazy(() => import("./Pages/HistoryCall"));
 const BanLe = React.lazy(() => import("./BanLe"));
 const ChamCong = React.lazy(() => import("./Pages/ChamCong"));
 const Statistic = React.lazy(() => import("./Pages/Statistic"));
+const Setting = React.lazy(() => import("./Pages/Setting"));
 const StoreOutside = React.lazy(() => import("./Pages/StoreOutside"));
 
 const BaseContainer = styled.div`
@@ -98,7 +98,7 @@ const Home = (props) => {
                 {props.info != null && <Route path="/cuocgoi" component={LoadingComponent(HistoryCall, props)} />}
                 {props.info != null && <Route path="/thongke" component={LoadingComponent(Statistic, props)} />}
                 {props.info != null && <Route path="/cuahangngoai" component={LoadingComponent(StoreOutside, props)} />}
-                {props.info != null && <Route path="/caidat" component={LoadingComponent(CaiDat, props)} />}
+                {props.info != null && <Route path="/caidat" component={LoadingComponent(Setting, props)} />}
             </BaseContainer>
         </Router>
     );

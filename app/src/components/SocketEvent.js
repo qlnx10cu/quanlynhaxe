@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { updateLiftTable } from "../actions/AppInfo";
-import { getListStaff } from "../actions/Staffs";
+import * as actions from "../actions";
 
 const SocketEvent = (props) => {
     useEffect(() => {
@@ -76,6 +76,7 @@ const SocketEvent = (props) => {
 
     useEffect(() => {
         props.getListStaff();
+        props.getListSalary();
     }, []);
 
     return <div style={{ display: "none" }}></div>;
@@ -85,9 +86,10 @@ const mapState = (state) => ({
     info: state.Authenticate.info,
 });
 
-const mapDispatch = (dispatch) => ({
-    updateLiftTable: (data) => dispatch(updateLiftTable(data)),
-    getListStaff: () => dispatch(getListStaff()),
-});
+const mapDispatch = {
+    updateLiftTable: (data) => updateLiftTable(data),
+    getListStaff: () => actions.StaffAction.getListStaff(),
+    getListSalary: () => actions.SalaryAction.getListSalary(),
+};
 
 export default connect(mapState, mapDispatch)(withRouter(SocketEvent));

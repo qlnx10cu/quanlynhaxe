@@ -81,7 +81,7 @@ const ChiTietThongKe = (props) => {
 };
 
 const mapState = (state) => ({
-    staffs: state.Staffs.data,
+    staffs: state.Staff.data,
 });
 
 export default connect(mapState, null)(ChiTietThongKe);

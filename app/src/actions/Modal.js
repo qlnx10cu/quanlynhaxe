@@ -3,6 +3,8 @@ import * as type from "./action-types";
 export const POPUP_NAME = {
     POPUP_STAFFS: "POPUP_STAFFS",
     POPUP_PRODUCTS: "POPUP_PRODUCTS",
+    POPUP_SALARIES: "POPUP_SALARIES",
+
 };
 
 export function openModal(name, data, callback) {

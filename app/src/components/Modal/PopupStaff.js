@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { DivFlexRow, DivFlexColumn, Input, Select } from "../../styles";
 import { connect } from "react-redux";
 import ModalWrapper from "../Warrper/ModalWrapper";
-import { addStaff, updateStaff } from "../../actions/Staffs";
+import * as actions from "../../actions";
 import lib from "../../lib";
 
 const PopupStaff = (props) => {
@@ -141,7 +141,7 @@ const PopupStaff = (props) => {
 };
 
 const mapDispatch = {
-    addStaff: (data) => addStaff(data),
-    updateStaff: (ma, data) => updateStaff(ma, data),
+    addStaff: (data) => actions.StaffAction.addStaff(data),
+    updateStaff: (ma, data) => actions.StaffAction.updateStaff(ma, data),
 };
 export default connect(null, mapDispatch)(PopupStaff);

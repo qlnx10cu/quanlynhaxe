@@ -12,7 +12,7 @@ const PopupBillTienCong = (props) => {
     const searchTenTienCong = (values) => {
         setTenTienCong(values);
         let item = null;
-        item = props.listGiaDichVu.find(function (e) {
+        item = props.salaries.find(function (e) {
             return e.ten.toLowerCase() === values.toLowerCase();
         });
 
@@ -79,7 +79,7 @@ const PopupBillTienCong = (props) => {
                             }}
                         />
                         <datalist id="tien_cong_1">
-                            {props.listGiaDichVu.map((item, index) => (
+                            {props.salaries.map((item, index) => (
                                 <option key={index} value={item.ten}>
                                     {item.ten} - {item.tien}
                                 </option>
@@ -102,6 +102,7 @@ const PopupBillTienCong = (props) => {
 const mapState = (state) => ({
     token: state.Authenticate.token,
     listBillProduct: state.Product.listBillProduct,
+    salaries: state.Salary.data,
 });
 
 const mapDispatch = (dispatch) => ({

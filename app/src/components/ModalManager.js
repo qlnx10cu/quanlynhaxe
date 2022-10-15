@@ -5,6 +5,7 @@ import { POPUP_NAME } from "../actions/Modal";
 import PopupPhuTung from "./Modal/PopupPhuTung";
 import PopupStaff from "./Modal/PopupStaff";
 import useIsMounted from "../lib/useIsMounted";
+import PopupSalary from "./Modal/PopupSalary";
 
 /* eslint-disable no-undef */
 
@@ -44,6 +45,16 @@ const ModalManager = (props) => {
                 </When>
                 <When condition={item.name == POPUP_NAME.POPUP_PRODUCTS}>
                     <PopupPhuTung
+                        key={item.id}
+                        callback={item.callback}
+                        open={item.open}
+                        item={item.data}
+                        alert={props.alert}
+                        onClose={() => handleClose(item)}
+                    />
+                </When>
+                <When condition={item.name == POPUP_NAME.POPUP_SALARIES}>
+                    <PopupSalary
                         key={item.id}
                         callback={item.callback}
                         open={item.open}

@@ -3,14 +3,17 @@ import Authenticate from "./Authenticate";
 import Product from "./Product";
 import AppInfo from "./AppInfo";
 import Modal from "./Modal";
-import Staffs from "./Staffs";
+import Staff from "./StaffReducer";
+import Salary from "./SalaryReducer";
+
 import App from "./App";
 
 export default combineReducers({
     Authenticate,
     Product,
     Modal,
-    Staffs,
+    Staff,
+    Salary,
     AppInfo,
     App,
 });

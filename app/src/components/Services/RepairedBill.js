@@ -24,7 +24,6 @@ import { GetlistCustomer } from "../../API/Customer";
 import { withRouter } from "react-router-dom";
 import PopupBillCHN from "./PopupBillCHN";
 import { GetListCuaHangNgoai } from "../../API/CuaHangNgoai";
-import { GetListSalary } from "../../API/Salary";
 import {
     deleteBillProduct,
     addBillProduct,
@@ -255,7 +254,6 @@ const RepairedBill = (props) => {
 
     let [searchValue, setSearchValue] = useState("");
     let [mDataList, setDataList] = useState([]);
-    let [listGiaDichVu, setListGiaDichVu] = useState([]);
     let [isShowingConfirm, setShowingConfirm] = useState(false);
 
     var connectSocket = false;
@@ -342,7 +340,7 @@ const RepairedBill = (props) => {
             }
         }
 
-        props.setLoading(true, 4);
+        props.setLoading(true, 3);
         try {
             listNhanVienSuaChua = props.staffs.filter((e) => utils.searchName(e.chucvu, "Sửa Chữa"));
             setListNhanVienSuaChua(listNhanVienSuaChua);
@@ -361,14 +359,6 @@ const RepairedBill = (props) => {
             await GetListCuaHangNgoai(props.token)
                 .then((res) => {
                     setCuaHangNgoai(res.data);
-                    props.addLoading();
-                })
-                .catch((err) => {
-                    props.errorHttp(err, "Lỗi kết nối đến server\nVui lòng kiểm tra đường mạng");
-                });
-            await GetListSalary(props.token)
-                .then((respose) => {
-                    setListGiaDichVu(respose.data);
                     props.addLoading();
                 })
                 .catch((err) => {
@@ -1477,7 +1467,6 @@ const RepairedBill = (props) => {
                         alert={(mess) => props.alert(mess)}
                         addItemToProduct={(item) => addItemToProduct(item)}
                         isShowing={isShowTienCong}
-                        listGiaDichVu={listGiaDichVu}
                         onCloseClick={() => {
                             setShowTienCong(false);
                         }}
@@ -1530,7 +1519,7 @@ const mapState = (state) => ({
     listBillProduct: state.Product.listBillProduct,
     listProduct: state.Product.listProduct,
     isLoading: state.App.isLoading,
-    staffs: state.Staffs.data,
+    staffs: state.Staff.data,
     info: state.Authenticate.info,
 });
 const mapDispatch = (dispatch) => ({

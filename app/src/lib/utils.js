@@ -42,5 +42,25 @@ module.exports = {
         if (!search || search == "") return true;
         return this.viToEn(ten).includes(this.viToEn(search));
     },
-
+    copyText: function (text) {
+        try {
+            navigator.clipboard.writeText(text);
+        } catch (ex) {}
+    },
+    getTrangThaiChamSoc: function (e) {
+        switch (e) {
+            case -1:
+                return "Tất cả";
+            case 0:
+                return "Chưa chăm sóc";
+            case 1:
+                return "Đang chăm sóc";
+            case 2:
+                return "Thành công";
+            case 3:
+                return "Thất bại";
+            default:
+                return "Không biết";
+        }
+    },
 };

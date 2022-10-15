@@ -5,7 +5,7 @@ import { CancleButton, CloseButton, DivFlexRow, Modal, ModalContent } from "../.
 import { ButtonUpload } from "../Styles";
 import useIsMounted from "../../lib/useIsMounted";
 
-const ModalWrapper = ({ title, open, onClose, submit, titleSubmit, callback, alertMsg, children }) => {
+const ModalWrapper = ({ title, open, onClose, submit, isLoading, titleSubmit, callback, alertMsg, children }) => {
     const [isUpload, setUpload] = useState(false);
     const isMounted = useIsMounted();
 
@@ -42,11 +42,11 @@ const ModalWrapper = ({ title, open, onClose, submit, titleSubmit, callback, ale
                     <CloseButton onClick={onClose}>&times;</CloseButton>
                     <h2 style={{ display: "flex", justifyContent: "center" }}>{title}</h2>
                 </div>
-                {children}
+                <If condition={!isLoading}>{children}</If>
                 <DivFlexRow style={{ marginTop: 50, marginBottom: 5, justifyContent: "flex-end", alignItems: "center" }}>
                     <DivFlexRow></DivFlexRow>
                     <CancleButton onClick={onClose}>Hủy</CancleButton>
-                    <If condition={submit}>
+                    <If condition={submit && !isLoading}>
                         <DivFlexRow></DivFlexRow>
                         <ButtonUpload isUpload={isUpload} onClick={() => handleCallback()}>
                             {titleSubmit || "Đồng ý"}

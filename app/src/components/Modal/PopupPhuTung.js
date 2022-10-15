@@ -69,6 +69,7 @@ const RenderTableDetailHoaDon = ({ chitiet }) => {
 /* eslint-disable camelcase */
 
 const PopupPhuTung = (props) => {
+    const useIsMounted = lib.useIsMounted();
     let [isLoading, setLoading] = useState(false);
     let mChiTiet = lib.handleInput([]);
     let mLichSu = lib.handleInput([]);
@@ -102,11 +103,13 @@ const PopupPhuTung = (props) => {
         setLoading(true);
         GetDetailPhuTung(props.token, item.maphutung)
             .then((res) => {
+                if (!useIsMounted()) return;
                 setLoading(false);
                 mChiTiet.setValue(res.data.chitiet);
                 mLichSu.setValue(res.data.lichsu);
             })
             .catch((err) => {
+                if (!useIsMounted()) return;
                 setLoading(false);
                 props.alert("Không lấy được chi tiết: ");
             });

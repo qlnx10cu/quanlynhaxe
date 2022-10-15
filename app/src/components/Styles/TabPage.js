@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Tab, TabContent } from "../../styles";
 
-const TabPage = ({ children }) => {
+const TabPage = ({ children, onChange }) => {
     let [activePage, setActive] = useState(0);
 
     children = children || [];
@@ -11,7 +11,16 @@ const TabPage = ({ children }) => {
             <Tab>
                 {children.map((item, idx) => {
                     return (
-                        <button key={idx} className={activePage === idx ? "active" : ""} onClick={() => setActive(idx)}>
+                        <button
+                            key={idx}
+                            className={activePage === idx ? "active" : ""}
+                            onClick={() => {
+                                setActive(idx);
+                                if (onChange) {
+                                    onChange(idx);
+                                }
+                            }}
+                        >
                             {item.props.title}
                         </button>
                     );

@@ -114,15 +114,15 @@ const RenderBillChan = ({ data }) => {
                     <DivFlexRow>
                         <DivFlexColumn>
                             <label>Yêu Cầu khách hàng: </label>
-                            <Textarea readOnly autocomplete="off" value={data.yeucaukhachhang} />
+                            <Textarea readOnly autocomplete="off" value={data.yeucaukhachhang || ""} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Tư vấn sửa chữa: </label>
-                            <Textarea readOnly value={data.tuvansuachua} />
+                            <Textarea readOnly value={data.tuvansuachua || ""} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Kiểm tra lần tới: </label>
-                            <Textarea readOnly value={data.kiemtralantoi} />
+                            <Textarea readOnly value={data.kiemtralantoi || ""} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Ngày Hẹn: </label>
@@ -137,7 +137,7 @@ const RenderBillChan = ({ data }) => {
                             </DivFlexColumn>
                             <DivFlexColumn style={{ marginLeft: 20 }}>
                                 <label>Lý do thay đổi: </label>
-                                <Textarea readOnly autocomplete="off" value={data.lydo} cols={53} />
+                                <Textarea readOnly autocomplete="off" value={data.lydo || ""} cols={53} />
                             </DivFlexColumn>
                         </DivFlexRow>
                     </If>

@@ -11,6 +11,9 @@ export default class ApiObject {
     get(key) {
         return APIUtils.get(this.name + "/" + this.key + "/" + key);
     }
+    getChitiet(key) {
+        return APIUtils.get(this.name + "/" + this.key + "/" + key + "/chitiet");
+    }
     add(data) {
         return APIUtils.post(this.name, data);
     }

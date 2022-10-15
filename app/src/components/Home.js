@@ -21,7 +21,7 @@ const Services = React.lazy(() => import("./Services/Services"));
 const RepairedBill = React.lazy(() => import("./Services/RepairedBill"));
 const BanLe = React.lazy(() => import("./BanLe"));
 const ChamCong = React.lazy(() => import("./Pages/ChamCong"));
-const ThongKe = React.lazy(() => import("./ThongKe/index"));
+const Statistic = React.lazy(() => import("./Pages/Statistic"));
 const StoreOutside = React.lazy(() => import("./Pages/StoreOutside"));
 
 const BaseContainer = styled.div`
@@ -96,7 +96,7 @@ const Home = (props) => {
                     <Route path="/chamcong" component={LoadingComponent(ChamCong, props)} />
                 )}
                 {props.info != null && <Route path="/cuocgoi" component={LoadingComponent(CuocGoi, props)} />}
-                {props.info != null && <Route path="/thongke" component={LoadingComponent(ThongKe, props)} />}
+                {props.info != null && <Route path="/thongke" component={LoadingComponent(Statistic, props)} />}
                 {props.info != null && <Route path="/cuahangngoai" component={LoadingComponent(StoreOutside, props)} />}
                 {props.info != null && <Route path="/caidat" component={LoadingComponent(CaiDat, props)} />}
             </BaseContainer>

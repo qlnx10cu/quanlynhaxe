@@ -7,6 +7,9 @@ import PopupPhuTung from "./Modal/PopupPhuTung";
 import PopupStaff from "./Modal/PopupStaff";
 import PopupSalary from "./Modal/PopupSalary";
 import PopupStoreOutside from "./Modal/PopupStoreOutside";
+import PopupConfirmBill from "./Modal/PopupConfirmBill";
+import PopupBill from "./Modal/PopupBill";
+import PopupCustomerHistory from "./Modal/PopupCustomerHistory";
 
 /* eslint-disable no-undef */
 
@@ -71,6 +74,41 @@ const ModalManager = (props) => {
                         open={item.open}
                         item={item.data}
                         alert={props.alert}
+                        onClose={() => handleClose(item)}
+                    />
+                </When>
+                <When condition={item.name == POPUP_NAME.POPUP_COMFIRM_BILL}>
+                    <PopupConfirmBill
+                        key={item.id}
+                        callback={item.callback}
+                        open={item.open}
+                        item={item.data}
+                        alert={props.alert}
+                        history={props.history}
+                        onClose={() => handleClose(item)}
+                    />
+                </When>
+                <When condition={item.name == POPUP_NAME.POPUP_BILL}>
+                    <PopupBill
+                        key={item.id}
+                        callback={item.callback}
+                        open={item.open}
+                        item={item.data}
+                        alert={props.alert}
+                        history={props.history}
+                        onClose={() => handleClose(item)}
+                    />
+                </When>
+                <When condition={item.name == POPUP_NAME.POPUP_CUSTOMER_HISTORY}>
+                    <PopupCustomerHistory
+                        key={item.id}
+                        callback={item.callback}
+                        open={item.open}
+                        item={item.data}
+                        alert={props.alert}
+                        comfirm={props.comfirm}
+                        openModal={props.openModal}
+                        history={props.history}
                         onClose={() => handleClose(item)}
                     />
                 </When>

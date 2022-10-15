@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { DivFlexRow, Button, Input, Table, Select, Tab } from "../../styles";
 import moment from "moment";
 import { GetCuocGoiTheoNgay } from "../../API/CuocGoi";
-// import ChiTietThongKe from './ChiTietThongKe'
 import { connect } from "react-redux";
 import { alert, success } from "../../actions/App";
 import _ from "lodash";

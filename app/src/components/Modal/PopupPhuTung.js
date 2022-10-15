@@ -173,14 +173,7 @@ const PopupPhuTung = (props) => {
     };
 
     return (
-        <ModalWrapper
-            open={props.open}
-            title={"Phụ tùng"}
-            callback={props.callback}
-            onClose={props.onClose}
-            submit={handleButton}
-            titleSubmit={isUpdate ? "Cập nhật" : "Thêm"}
-        >
+        <ModalWrapper open={props.open} title={"Phụ tùng"} callback={props.callback} onClose={props.onClose}>
             <DivFlexRow>
                 <DivFlexColumn style={{ flex: 1 }}>
                     <label>Mã phụ tùng </label>

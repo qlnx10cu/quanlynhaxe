@@ -1,4 +1,5 @@
 import * as type from "./action-types";
+import ProductApi from "../API/ProductApi";
 import APIUtils from "../API/APIUtils";
 
 export const getListProduct = () => (dispatch) => {
@@ -7,7 +8,7 @@ export const getListProduct = () => (dispatch) => {
         data: true,
     });
 
-    return APIUtils.get("/item")
+    return ProductApi.getList()
         .then((res) => {
             dispatch({
                 type: type.PRODUCTS.GET_LIST_PRODUCTS,
@@ -31,7 +32,7 @@ export const getListProduct = () => (dispatch) => {
 };
 
 export const addProduct = (data) => (dispatch) => {
-    return APIUtils.post("/itempart", data).then((res) => {
+    return ProductApi.add(data).then(() => {
         dispatch({
             type: type.PRODUCTS.ADD_PRODUCTS,
             data: data,
@@ -39,8 +40,8 @@ export const addProduct = (data) => (dispatch) => {
     });
 };
 
-export const updateProduct = (data, maphutung) => (dispatch) => {
-    return APIUtils.put("/itempart/maphutung/" + maphutung, data).then((res) => {
+export const updateProduct = (maphutung, data) => (dispatch) => {
+    return ProductApi.update(maphutung, data).then(() => {
         dispatch({
             type: type.PRODUCTS.UPDATE_PRODUCTS,
             data: data,
@@ -50,15 +51,13 @@ export const updateProduct = (data, maphutung) => (dispatch) => {
 };
 
 export const deleteProduct = (maphutung) => (dispatch) => {
-    return APIUtils.delete("/itempart/maphutung/" + maphutung).then((res) => {
+    return ProductApi.delete(maphutung).then(() => {
         dispatch({
             type: type.PRODUCTS.DELETE_PRODUCTS,
             maphutung: maphutung,
         });
     });
 };
-
-import { GetAllProduct } from "../API/Product";
 
 export const REQUEST_LIST_PRODUCT = "REQUEST_LIST_PRODUCT";
 export const REQUEST_LIST_PRODUCT_SUCCESS = "REQUEST_LIST_PRODUCT_SUCCESS";
@@ -78,11 +77,11 @@ export const getAllProduct = (token) => (dispatch) => {
         type: REQUEST_LIST_PRODUCT,
     });
 
-    return GetAllProduct(token)
-        .then((response) => {
+    return ProductApi.getList(token)
+        .then((data) => {
             dispatch({
                 type: REQUEST_LIST_PRODUCT_SUCCESS,
-                data: response.data,
+                data: data,
             });
         })
         .catch((error) => {

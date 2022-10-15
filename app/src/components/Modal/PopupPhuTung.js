@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { DivFlexRow, DivFlexColumn, Input } from "../../styles";
-import { GetDetailPhuTung } from "../../API/PhuTungAPI";
 import moment from "moment";
 import DataTable from "../Warrper/DataTable";
 import ModalWrapper from "../Warrper/ModalWrapper";
+import ProductApi from "../../API/ProductApi";
 import lib from "../../lib";
 import utils from "../../lib/utils";
 import { addProduct, updateProduct } from "../../actions/Product";
@@ -101,17 +101,19 @@ const PopupPhuTung = (props) => {
         mColor.setValue(item.mamau);
         mNote.setValue(item.ghichu);
         setLoading(true);
-        GetDetailPhuTung(props.token, item.maphutung)
-            .then((res) => {
+        ProductApi.get(item.maphutung)
+            .then((data) => {
                 if (!useIsMounted()) return;
-                setLoading(false);
-                mChiTiet.setValue(res.data.chitiet);
-                mLichSu.setValue(res.data.lichsu);
+                mChiTiet.setValue(data.chitiet);
+                mLichSu.setValue(data.lichsu);
             })
-            .catch((err) => {
+            .catch(() => {
+                if (!useIsMounted()) return;
+                props.alert("Không lấy được chi tiết: ");
+            })
+            .finally(() => {
                 if (!useIsMounted()) return;
                 setLoading(false);
-                props.alert("Không lấy được chi tiết: ");
             });
     }, [item]);
 
@@ -135,7 +137,7 @@ const PopupPhuTung = (props) => {
             mamau: mColor.value,
         };
 
-        return props.updateProduct(data, item.maphutung).then((res) => {
+        return props.updateProduct(item.maphutung, data).then((res) => {
             props.alert("Update thành công.");
         });
     };
@@ -246,6 +248,6 @@ const PopupPhuTung = (props) => {
 
 const mapDispatch = {
     addProduct: (data) => addProduct(data),
-    updateProduct: (data, maphutung) => updateProduct(data, maphutung),
+    updateProduct: (maphutung, data) => updateProduct(maphutung, data),
 };
 export default connect(null, mapDispatch)(PopupPhuTung);

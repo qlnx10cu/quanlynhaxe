@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { DivFlexRow, ButtonChooseFile, Button, DivFlexColumn } from "../../styles";
 import { connect } from "react-redux";
-import Loading from "../Loading";
-import { GetFileExportProduct, ImportMuBH } from "../../API/Product";
-import XLSX from "xlsx";
+import { DivFlexRow, ButtonChooseFile, DivFlexColumn } from "../../styles";
 import { deleteProduct, getListProduct } from "../../actions/Product";
-import moment from "moment";
-import { DelAllPhuTung } from "../../API/PhuTungAPI";
-import DataTable from "../Warrper/DataTable";
 import { ButtonDelete, ButtonEdit, ButtonUpload } from "../Styles";
-import utils from "../../lib/utils";
 import { POPUP_NAME } from "../../actions/Modal";
+import XLSX from "xlsx";
+import moment from "moment";
+import lib from "../../lib";
+import utils from "../../lib/utils";
+import DataTable from "../Warrper/DataTable";
+import ProductApi from "../../API/ProductApi";
+import StatisticApi from "../../API/StatisticApi";
 
 function stringToDate(_date, _format, _delimiter) {
     var formatLowerCase = _format.toLowerCase();
@@ -27,7 +27,7 @@ function stringToDate(_date, _format, _delimiter) {
 
 /* eslint-disable camelcase */
 
-function readFile(file, token, props) {
+function readFile(file, props) {
     return new Promise((resolve, reject) => {
         let reader = new FileReader();
         // console.log('aaa')
@@ -78,7 +78,7 @@ function readFile(file, token, props) {
                     }
                 }
             }
-            return ImportMuBH(token, dataSend)
+            return ProductApi.import(dataSend)
                 .then(() => {
                     props.alert("Thêm thành công");
                     window.location.href = "/products";
@@ -100,8 +100,9 @@ function readFile(file, token, props) {
 /* eslint-enable camelcase */
 
 const Products = (props) => {
-    let [isLoading, setLoading] = useState(false);
-    let [mArrPhuTung, setArrPhuTung] = useState([]);
+    const [isLoading, setLoading] = useState(false);
+    const [mArrPhuTung, setArrPhuTung] = useState([]);
+    const useIsMounted = lib.useIsMounted();
 
     useEffect(() => {
         props.getListProduct();
@@ -135,7 +136,7 @@ const Products = (props) => {
         var files = e.target.files;
         setLoading(true);
         try {
-            await readFile(files[0], props.token, props);
+            await readFile(files[0], props);
             props.getListProduct();
             setLoading(false);
         } catch (err) {
@@ -144,35 +145,41 @@ const Products = (props) => {
     };
     const handleExportFile = (e) => {
         setLoading(true);
-        GetFileExportProduct(props.token)
-            .then((response) => {
-                setLoading(false);
-                const url = window.URL.createObjectURL(new Blob([response.data]));
+        StatisticApi.getFileExportProduct()
+            .then((data) => {
+                if (!useIsMounted()) return;
+                const url = window.URL.createObjectURL(new Blob([data]));
                 const link = document.createElement("a");
                 link.href = url;
                 link.setAttribute("download", "Danh sách thống kê kho.xlsx");
                 document.body.appendChild(link);
                 link.click();
             })
-            .catch((err) => {
-                setLoading(false);
+            .catch(() => {
                 props.error("Không thể xuất file");
+            })
+            .finally(() => {
+                if (!useIsMounted()) return;
+                setLoading(false);
             });
     };
     const handleXoaHetPhutung = () => {
-        setLoading(true);
         props.confirm("Bạn chắc muốn hủy", () => {
-            DelAllPhuTung(props.token)
+            setLoading(true);
+            ProductApi.deleteAll()
                 .then((res) => {
-                    setLoading(false);
+                    if (!useIsMounted()) return;
                     props.alert("Xóa thành công.");
                     setTimeout(() => {
                         window.location.reload();
                     }, 1000);
                 })
                 .catch((err) => {
-                    setLoading(false);
                     props.error("Không xóa được. @@");
+                })
+                .finally(() => {
+                    if (!useIsMounted()) return;
+                    setLoading(false);
                 });
         });
     };
@@ -243,7 +250,6 @@ const Products = (props) => {
 
 const mapState = (state) => ({
     listPhuTung: state.Product.data,
-    token: state.Authenticate.token,
     isLoading: state.App.isLoading,
 });
 const mapDispatch = {

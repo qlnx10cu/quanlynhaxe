@@ -24,7 +24,7 @@ export default class APIUtils {
         token = tk;
     }
 
-    static request(method = "GET", url = "", data = {}) {
+    static request(method = "GET", url = "", data = {}, config = {}) {
         let fullUrl = HOST + url;
 
         let headers = {};
@@ -34,7 +34,7 @@ export default class APIUtils {
         return new Promise((resolve, reject) => {
             try {
                 axios
-                    .request({ method: method, url: fullUrl, data, headers })
+                    .request({ method: method, url: fullUrl, data, headers, ...config })
                     .then((res) => {
                         if (!res || !res.data) {
                             reject({ error: -1, message: "Không có wifi" });

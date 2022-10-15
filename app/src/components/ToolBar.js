@@ -4,7 +4,6 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { logout } from "../actions/Authenticate";
-import { getAllProduct } from "../actions/Product";
 import NavBar from "./NavBar";
 
 const ToolBarItem = styled.div`
@@ -255,12 +254,7 @@ const mapState = (state) => ({
     token: state.Authenticate.token,
 });
 const mapDispatch = (dispatch) => ({
-    logout: () => {
-        dispatch(logout());
-    },
-    getAllProduct: (token) => {
-        dispatch(getAllProduct(token));
-    },
+    logout: () => dispatch(logout()),
 });
 
 export default connect(mapState, mapDispatch)(withRouter(ToolBar));

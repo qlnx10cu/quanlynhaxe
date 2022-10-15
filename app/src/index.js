@@ -11,6 +11,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { PersistGate } from "redux-persist/integration/react";
 import Loading from "./components/Loading";
+import APIUtils from "./API/APIUtils";
 
 // Config persist
 const persistConfig = {
@@ -23,6 +24,7 @@ const persistConfig = {
                 resolve({});
                 return;
             }
+            APIUtils.setToken(e.Authenticate.token);
             resolve(e);
         });
     },

@@ -7,9 +7,13 @@ class StatisticApi extends ApiObject {
         super(name);
     }
 
-    getBillByDate = (start, end) => {
+    getFileExportProduct() {
+        return APIUtils.request("GET", "/statistic/layfile", {}, { responseType: "blob" });
+    }
+
+    getBillByDate(start, end) {
         return APIUtils.get(`/statistic/bill?end=${end}&start=${start}&trangthai=1`);
-    };
+    }
 
     exportBill(start, end) {
         window.open(`${HOST}/statistic/bill/export?start=${start}&end=${end}&trangthai=1`, "_blank");

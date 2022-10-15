@@ -23,7 +23,6 @@ import { UpdateBill, SaveBill, ThanhToan, HuyThanhToan, GetBillSuaChuaByMaHoaDon
 import { GetlistCustomer } from "../../API/Customer";
 import { withRouter } from "react-router-dom";
 import PopupBillCHN from "./PopupBillCHN";
-import { GetListCuaHangNgoai } from "../../API/CuaHangNgoai";
 import {
     deleteBillProduct,
     addBillProduct,
@@ -228,7 +227,6 @@ const RepairedBill = (props) => {
 
     let [listBienSo, setListBienSo] = useState([]);
     let [listBienSoCurrent, setListBienSoCurrent] = useState([]);
-    let [listCuaHangNgoai, setCuaHangNgoai] = useState([]);
     let [listNhanVienSuaChua, setListNhanVienSuaChua] = useState([]);
     let [maban, setMaban] = useState(null);
     let [isUpdateBill, setUpdateBill] = useState(0);
@@ -257,6 +255,14 @@ const RepairedBill = (props) => {
     let [isShowingConfirm, setShowingConfirm] = useState(false);
 
     var connectSocket = false;
+
+    useEffect(() => {
+        const list = props.staffs.filter((e) => utils.searchName(e.chucvu, "Sửa Chữa"));
+        if (list && list.length != 0) {
+            setNhanVienSuaChua(list, mMaNVSuaChua.value);
+        }
+        setListNhanVienSuaChua(list);
+    }, [props.staffs, mMaNVSuaChua.value]);
 
     const getQueryParams = (url) => {
         let queryParams = {};
@@ -340,11 +346,8 @@ const RepairedBill = (props) => {
             }
         }
 
-        props.setLoading(true, 3);
+        props.setLoading(true, 2);
         try {
-            listNhanVienSuaChua = props.staffs.filter((e) => utils.searchName(e.chucvu, "Sửa Chữa"));
-            setListNhanVienSuaChua(listNhanVienSuaChua);
-
             await props.getAllProduct(props.token);
 
             await GetlistCustomer(props.token)
@@ -355,14 +358,6 @@ const RepairedBill = (props) => {
                 })
                 .catch((err) => {
                     props.errorHttp(err, "Không thể lấy danh sách khách hàng\nLỗi kết nối đến server\nVui lòng kiểm tra đường mạng");
-                });
-            await GetListCuaHangNgoai(props.token)
-                .then((res) => {
-                    setCuaHangNgoai(res.data);
-                    props.addLoading();
-                })
-                .catch((err) => {
-                    props.errorHttp(err, "Lỗi kết nối đến server\nVui lòng kiểm tra đường mạng");
                 });
         } catch (ex) {
             props.alert("Lỗi kết nối đến server\nVui lòng kiểm tra đường mạng");
@@ -484,7 +479,7 @@ const RepairedBill = (props) => {
         GetBillSuaChuaByMaHoaDon(props.token, mahoadon)
             .then((res) => {
                 searchBienSoXe(res.data.biensoxe);
-                searchNhanVienSuaChua(res.data.manvsuachua);
+                mMaNVSuaChua.setValue(res.data.manvsuachua);
                 showChiTietPhutung(res.data.chitiet);
                 props.setListBillProduct(res.data.chitiet);
                 mLoaiXe.setValue(res.data.loaixe);
@@ -651,6 +646,7 @@ const RepairedBill = (props) => {
         else props.deleteItemBillProduct(item.key);
         setUpdated(false);
     };
+
     const getData = () => {
         if (
             (!biensoxe || biensoxe == "" || biensoxe == undefined) &&
@@ -1022,9 +1018,7 @@ const RepairedBill = (props) => {
                                 list="nv_suachua"
                                 name="nv_suachua"
                                 value={mMaNVSuaChua.value}
-                                onChange={(e) => {
-                                    searchNhanVienSuaChua(e.target.value);
-                                }}
+                                onChange={(e) => mMaNVSuaChua.setValue(e.target.value)}
                             />
                             <datalist id="nv_suachua">
                                 {listNhanVienSuaChua.map((item, index) => (
@@ -1475,7 +1469,6 @@ const RepairedBill = (props) => {
                         alert={(mess) => props.alert(mess)}
                         addItemToProduct={(item) => addItemToProduct(item)}
                         isShowing={isShowCuaHangNgoai}
-                        listCuaHangNgoai={listCuaHangNgoai}
                         onCloseClick={() => {
                             setShowCuaHangNgoai(false);
                         }}

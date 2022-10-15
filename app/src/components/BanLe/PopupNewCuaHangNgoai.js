@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Modal, ModalContent, DivFlexColumn, Input, DivFlexRow, Button, DelButton } from "../../styles";
 import { connect } from "react-redux";
-import { getAllProduct } from "../../actions/Product";
+import InputList from "../Styles/InputList";
+
 const PopupNewCuaHangNgoai = (props) => {
     let [nhacungcap, setNhaCungCap] = useState("");
     let [tenphutung, setTenPhuTung] = useState("");
@@ -12,7 +13,7 @@ const PopupNewCuaHangNgoai = (props) => {
     const searchTenPhuTung = (values) => {
         setTenPhuTung(values);
         let item = null;
-        item = props.listCuaHangNgoai.find(function (e) {
+        item = props.storeOutsides.find(function (e) {
             return e.tenphutung.toLowerCase() === values.toLowerCase();
         });
 
@@ -80,22 +81,17 @@ const PopupNewCuaHangNgoai = (props) => {
                     </DivFlexColumn>
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Tên phụ tùng: </label>
-                        <Input
+                        <InputList
                             list="phu_tung"
                             name="phu_tung"
                             value={tenphutung}
-                            onChange={(e) => {
-                                searchTenPhuTung(e.target.value);
-                            }}
+                            onChange={(e) => searchTenPhuTung(e.target.value)}
+                            listRender={props.storeOutsides.map((item, index) => (
+                                <option key={index} value={item.tenphutung}>
+                                    {item.dongia}
+                                </option>
+                            ))}
                         />
-                        <datalist id="phu_tung">
-                            {props.listCuaHangNgoai &&
-                                props.listCuaHangNgoai.map((item, index) => (
-                                    <option key={index} value={item.tenphutung}>
-                                        {item.dongia}
-                                    </option>
-                                ))}
-                        </datalist>
                     </DivFlexColumn>
                 </DivFlexRow>
 
@@ -146,13 +142,7 @@ const PopupNewCuaHangNgoai = (props) => {
 };
 
 const mapState = (state) => ({
-    token: state.Authenticate.token,
+    storeOutsides: state.StoreOutside.data,
 });
 
-const mapDispatch = (dispatch) => ({
-    getAllProduct: (token) => {
-        dispatch(getAllProduct(token));
-    },
-});
-
-export default connect(mapState, mapDispatch)(PopupNewCuaHangNgoai);
+export default connect(mapState, null)(PopupNewCuaHangNgoai);

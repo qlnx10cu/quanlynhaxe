@@ -20,7 +20,6 @@ import PopupNewCuaHangNgoai from "./PopupNewCuaHangNgoai";
 import { SaveBillBanLe, UpdateBillBanLe, GetBillBanLeByMaHoaDon, CheckUpdateBill } from "../../API/Bill";
 import { GetlistCustomer } from "../../API/Customer";
 import { connect } from "react-redux";
-import { GetListCuaHangNgoai } from "../../API/CuaHangNgoai";
 import ChiTietThongKe from "../ThongKe/ChiTietThongKe";
 import Loading from "../Loading";
 import moment from "moment";
@@ -244,7 +243,7 @@ const BanLe = (props) => {
 
         let isMouted = true;
 
-        props.setLoading(true, 2);
+        props.setLoading(true, 1);
         clearAll();
 
         var queryParams = getQueryParams(window.location.href);
@@ -279,14 +278,9 @@ const BanLe = (props) => {
             loaiCurrent = 1;
         }
         if (loaiCurrent != 0) {
-            props.setLoading(true, 3);
+            props.setLoading(true, 2);
         }
 
-        GetListCuaHangNgoai(props.token).then((res) => {
-            if (!isMouted) return;
-            setCuaHangNgoai(res.data);
-            props.addLoading();
-        });
         GetlistCustomer(props.token)
             .then((res) => {
                 if (!isMouted) return;
@@ -1089,7 +1083,6 @@ const BanLe = (props) => {
                         alert={(mess) => props.alert(mess)}
                         isShowing={isShowCuaHangNgoai}
                         onCloseClick={() => setNewCuaHangNgoai(false)}
-                        listCuaHangNgoai={listCuaHangNgoai}
                         addItemToHangNgoai={(item) => addItemToProduct(item)}
                     />
                     <ConfirmHoaDon

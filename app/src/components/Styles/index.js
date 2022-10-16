@@ -8,6 +8,22 @@ import ButtonView from "./ButtonView";
 import LabelOverflow from "./LabelOverflow";
 import IconCircle from "./IconCircle";
 import InputValue from "./InputValue";
+import InputGioiTinh from "./InputGioiTinh";
+import InputCity from "./InputCity";
 import TabPage from "./TabPage";
 
-export { ButtonUpload, ButtonChatZalo, ButtonCall, ButtonView, ButtonEdit, ButtonShow, ButtonDelete, IconCircle, LabelOverflow, InputValue, TabPage };
+export {
+    ButtonUpload,
+    ButtonChatZalo,
+    ButtonCall,
+    ButtonView,
+    ButtonEdit,
+    ButtonShow,
+    ButtonDelete,
+    IconCircle,
+    LabelOverflow,
+    InputGioiTinh,
+    InputCity,
+    InputValue,
+    TabPage,
+};

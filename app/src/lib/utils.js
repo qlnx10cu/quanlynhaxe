@@ -1,10 +1,11 @@
 module.exports = {
     parseInt: function (val, def, max) {
         try {
-            val = parseInt(val) || def || 0;
-            if (max !== undefined && max != null && val > max) return max;
-            if (val < 0) return 0;
-            return val;
+            const res = parseInt(val) || def || 0;
+            if (max !== undefined && max != null && res > max) return max;
+            if (res < 0) return 0;
+            if (String(res).trim() != String(val).trim()) return 0;
+            return res;
         } catch (ex) {}
 
         return def || 0;
@@ -46,6 +47,16 @@ module.exports = {
         try {
             navigator.clipboard.writeText(text);
         } catch (ex) {}
+    },
+    getGioiTinh: function (gt) {
+        gt = this.parseInt(gt);
+        switch (gt) {
+            case 1:
+                return "Nữ";
+            case 0:
+                return "Nam";
+        }
+        return "";
     },
     getTrangThaiChamSoc: function (e) {
         switch (e) {

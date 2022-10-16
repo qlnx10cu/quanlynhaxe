@@ -232,10 +232,10 @@ const DivFlexRow = styled.div`
 const Select = styled.select`
     border-radius: 3px;
     border: 1px solid rgba(0, 0, 0, 0.8);
-    height: 38px;
+    height: 36px;
     padding: 8px 20px;
     margin: 8px 0;
-    font-size: 16px;
+    font-size: 14px;
     background: white;
     width: ${(props) => props.width || "200px"};
     min-width: 100px;

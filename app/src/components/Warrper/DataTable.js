@@ -92,9 +92,17 @@ const DataTable = (props) => {
         tachList(data, e);
     };
 
+    const handleSearch = () => {
+        if (props.onSearch) {
+            props.onSearch(search);
+        } else {
+            tachList(data, maxSizePage);
+        }
+    };
+
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
-            tachList(data, maxSizePage);
+            handleSearch();
         }
     };
 
@@ -110,7 +118,7 @@ const DataTable = (props) => {
                 </If>
             </DivFlexRow>
             <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center", height: 50 }}>
-                <If condition={props.searchData}>
+                <If condition={props.searchData || props.onSearch}>
                     <DivFlexRow style={{ alignItems: "center" }}>
                         <label style={{ marginLeft: 10 }}>Search: </label>
                         <Input
@@ -120,12 +128,12 @@ const DataTable = (props) => {
                             style={{ marginLeft: 10 }}
                             onChange={(e) => setSearch(e.target.value)}
                         />
-                        <Button style={{ marginLeft: 10 }} onClick={() => tachList(data, maxSizePage)}>
+                        <Button style={{ marginLeft: 10 }} onClick={() => handleSearch()}>
                             Tìm kếm
                         </Button>
                     </DivFlexRow>
                 </If>
-                <If condition={!props.searchData}>
+                <If condition={!props.searchData && !props.onSearch}>
                     <DivFlexRow></DivFlexRow>
                 </If>
                 <DivFlexRow style={{ alignItems: " center", justifyContent: "flex-end", marginTop: 5, marginBottom: 10 }}>

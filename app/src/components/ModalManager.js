@@ -13,7 +13,17 @@ import PopupCustomerHistory from "./Modal/PopupCustomerHistory";
 import PopupCustomerCareNote from "./Modal/PopupCustomerCareNote";
 import PopupCustomer from "./Modal/PopupCustomer";
 
-/* eslint-disable no-undef */
+const ArrayModal = {};
+
+ArrayModal[POPUP_NAME.POPUP_STAFFS] = <PopupStaff />;
+ArrayModal[POPUP_NAME.POPUP_PRODUCTS] = <PopupPhuTung />;
+ArrayModal[POPUP_NAME.POPUP_SALARIES] = <PopupSalary />;
+ArrayModal[POPUP_NAME.POPUP_STORE_OUTSIDES] = <PopupStoreOutside />;
+ArrayModal[POPUP_NAME.POPUP_COMFIRM_BILL] = <PopupConfirmBill />;
+ArrayModal[POPUP_NAME.POPUP_BILL] = <PopupBill />;
+ArrayModal[POPUP_NAME.POPUP_CUSTOMER_CARE_NOTE] = <PopupCustomerCareNote />;
+ArrayModal[POPUP_NAME.POPUP_CUSTOMER_HISTORY] = <PopupCustomerHistory />;
+ArrayModal[POPUP_NAME.POPUP_CUSTOMER] = <PopupCustomer />;
 
 const ModalManager = (props) => {
     const isMounted = useIsMounted();
@@ -37,115 +47,28 @@ const ModalManager = (props) => {
     };
 
     return (
-        <For each="item" of={props.Modal}>
-            <Choose>
-                <When condition={item.name == POPUP_NAME.POPUP_STAFFS}>
-                    <PopupStaff
-                        key={item.id}
-                        callback={item.callback}
-                        open={item.open}
-                        item={item.data}
-                        alert={props.alert}
-                        onClose={() => handleClose(item)}
-                    />
-                </When>
-                <When condition={item.name == POPUP_NAME.POPUP_PRODUCTS}>
-                    <PopupPhuTung
-                        key={item.id}
-                        callback={item.callback}
-                        open={item.open}
-                        item={item.data}
-                        alert={props.alert}
-                        onClose={() => handleClose(item)}
-                    />
-                </When>
-                <When condition={item.name == POPUP_NAME.POPUP_SALARIES}>
-                    <PopupSalary
-                        key={item.id}
-                        callback={item.callback}
-                        open={item.open}
-                        item={item.data}
-                        alert={props.alert}
-                        onClose={() => handleClose(item)}
-                    />
-                </When>
-                <When condition={item.name == POPUP_NAME.POPUP_STORE_OUTSIDES}>
-                    <PopupStoreOutside
-                        key={item.id}
-                        callback={item.callback}
-                        open={item.open}
-                        item={item.data}
-                        alert={props.alert}
-                        onClose={() => handleClose(item)}
-                    />
-                </When>
-                <When condition={item.name == POPUP_NAME.POPUP_COMFIRM_BILL}>
-                    <PopupConfirmBill
-                        key={item.id}
-                        callback={item.callback}
-                        open={item.open}
-                        item={item.data}
-                        alert={props.alert}
-                        history={props.history}
-                        onClose={() => handleClose(item)}
-                    />
-                </When>
-                <When condition={item.name == POPUP_NAME.POPUP_BILL}>
-                    <PopupBill
-                        key={item.id}
-                        callback={item.callback}
-                        open={item.open}
-                        item={item.data}
-                        alert={props.alert}
-                        history={props.history}
-                        onClose={() => handleClose(item)}
-                    />
-                </When>
-                <When condition={item.name == POPUP_NAME.POPUP_CUSTOMER_HISTORY}>
-                    <PopupCustomerHistory
-                        key={item.id}
-                        callback={item.callback}
-                        open={item.open}
-                        item={item.data}
-                        alert={props.alert}
-                        confirm={props.confirm}
-                        openModal={props.openModal}
-                        history={props.history}
-                        onClose={() => handleClose(item)}
-                    />
-                </When>
-                <When condition={item.name == POPUP_NAME.POPUP_CUSTOMER_CARE_NOTE}>
-                    <PopupCustomerCareNote
-                        key={item.id}
-                        callback={item.callback}
-                        open={item.open}
-                        item={item.data}
-                        alert={props.alert}
-                        confirm={props.confirm}
-                        openModal={props.openModal}
-                        history={props.history}
-                        onClose={() => handleClose(item)}
-                    />
-                </When>
-                <When condition={item.name == POPUP_NAME.POPUP_CUSTOMER}>
-                    <PopupCustomer
-                        key={item.id}
-                        callback={item.callback}
-                        open={item.open}
-                        item={item.data}
-                        alert={props.alert}
-                        confirm={props.confirm}
-                        openModal={props.openModal}
-                        history={props.history}
-                        onClose={() => handleClose(item)}
-                    />
-                </When>
-            </Choose>
-        </For>
+        <For
+            of={props.Modal}
+            body={(item, index) => {
+                return (
+                    <If key={index} condition={ArrayModal[item.name]}>
+                        {React.cloneElement(ArrayModal[item.name], {
+                            key: item.id,
+                            callback: item.callback,
+                            open: item.open,
+                            item: item.data,
+                            alert: props.alert,
+                            confirm: props.confirm,
+                            history: props.history,
+                            openModal: props.openModal,
+                            onClose: () => handleClose(item),
+                        })}
+                    </If>
+                );
+            }}
+        ></For>
     );
 };
-
-/* eslint-enable no-undef */
 
 const mapState = (state) => ({
     Modal: state.Modal,

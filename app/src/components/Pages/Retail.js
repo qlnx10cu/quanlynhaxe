@@ -202,7 +202,7 @@ const Retail = (props) => {
                             <Input autocomplete="off" {...mDiaChi} width="400px" readOnly={loai != 0} />
                         </DivFlexColumn>
                     </DivFlexRow>
-                    <If condition={true || (loai == 2 && mLyDo.value) || loai == 1}>
+                    <If condition={(loai == 2 && mLyDo.value) || loai == 1}>
                         <DivFlexRow style={{ alignItems: "center" }}>
                             <DivFlexColumn>
                                 <label>Lý do thay đổi: </label>

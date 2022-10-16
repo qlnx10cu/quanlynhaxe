@@ -9,8 +9,11 @@ import ButtonChooseFile from "./ButtonChooseFile";
 import LabelOverflow from "./LabelOverflow";
 import IconCircle from "./IconCircle";
 import InputValue from "./InputValue";
+import InputNumber from "./InputNumber";
 import InputGioiTinh from "./InputGioiTinh";
 import InputCity from "./InputCity";
+import InputList from "./InputList";
+import CellText from "./CellText";
 import TabPage from "./TabPage";
 
 export {
@@ -21,10 +24,14 @@ export {
     ButtonEdit,
     ButtonShow,
     ButtonDelete,
+    ButtonChooseFile,
     IconCircle,
     LabelOverflow,
     InputGioiTinh,
     InputCity,
+    InputList,
     InputValue,
+    InputNumber,
+    CellText,
     TabPage,
 };

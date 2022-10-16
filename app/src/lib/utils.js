@@ -1,14 +1,26 @@
 module.exports = {
     parseInt: function (val, def, max) {
         try {
-            const res = parseInt(val) || def || 0;
+            def = def || 0;
+            const res = parseInt(val) || def;
             if (max !== undefined && max != null && res > max) return max;
-            if (res < 0) return 0;
-            if (String(res).trim() != String(val).trim()) return 0;
+            if (res < 0) return def || 0;
+            if (String(res).trim() != String(val).trim()) return def;
             return res;
         } catch (ex) {}
 
-        return def || 0;
+        return def;
+    },
+    parseFloat: function (val, def, max) {
+        try {
+            def = def || 0;
+            const res = parseInt(val) || def;
+            if (max !== undefined && max != null && res > max) return max;
+            if (res < 0) return def;
+            return res;
+        } catch (ex) {}
+
+        return def;
     },
     formatVND: function (tien) {
         return this.parseInt(tien).toLocaleString("vi-VI", {

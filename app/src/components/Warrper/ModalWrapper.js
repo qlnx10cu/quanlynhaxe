@@ -15,7 +15,8 @@ const ModalWrapper = ({ title, open, onClose, submit, isLoading, titleSubmit, ca
 
         setUpload(true);
 
-        submit()
+        Promise.resolve()
+            .then(() => submit())
             .then((data) => {
                 if (!isMounted()) return;
                 setUpload(false);

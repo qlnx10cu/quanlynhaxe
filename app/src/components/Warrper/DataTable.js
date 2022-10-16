@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Table, DivFlexRow, Input, Button, Select } from "../../styles";
+import { Table, DivFlexRow, Button, Select } from "../../styles";
 import _ from "lodash";
+import { InputList } from "../Styles";
 
 /* eslint-disable react/display-name */
 
@@ -10,7 +11,7 @@ const DataTable = (props) => {
     const [data, setData] = useState([]);
     const [search, setSearch] = useState("");
     const [maxSizePage, setMaxSizePage] = useState(10);
-    const [maxPage, setMaxPage] = useState(0);
+    const [maxPage, setMaxPage] = useState(1);
     const [page, setPage] = useState(0);
     const [isLoading, setLoading] = useState(false);
 
@@ -73,6 +74,15 @@ const DataTable = (props) => {
     };
 
     const tachList = (list, size) => {
+        if (props.noPage) {
+            if (props.setData) {
+                props.setData(list);
+            }
+            setRows([list]);
+            setMaxPage(1);
+            setPage(0);
+            return;
+        }
         list = list || [];
         if (props.searchData) {
             list = list.filter((e) => e && props.searchData(search, e, list));
@@ -94,7 +104,7 @@ const DataTable = (props) => {
 
     const handleSearch = () => {
         if (props.onSearch) {
-            props.onSearch(search);
+            props.onSearch(search, setSearch);
         } else {
             tachList(data, maxSizePage);
         }
@@ -121,14 +131,17 @@ const DataTable = (props) => {
                 <If condition={props.searchData || props.onSearch}>
                     <DivFlexRow style={{ alignItems: "center" }}>
                         <label style={{ marginLeft: 10 }}>Search: </label>
-                        <Input
-                            type="text"
-                            onKeyPress={handleKeyPress}
-                            value={search}
+                        <InputList
+                            onEnter={() => handleSearch(true)}
                             style={{ marginLeft: 10 }}
+                            value={search}
+                            data={props.dataSearch}
+                            limitList={props.limitList}
+                            searchData={props.searchData}
+                            render={props.renderSearch}
                             onChange={(e) => setSearch(e.target.value)}
                         />
-                        <Button style={{ marginLeft: 10 }} onClick={() => handleSearch()}>
+                        <Button style={{ marginLeft: 10 }} onClick={() => handleSearch(false)}>
                             Tìm kếm
                         </Button>
                     </DivFlexRow>
@@ -136,63 +149,67 @@ const DataTable = (props) => {
                 <If condition={!props.searchData && !props.onSearch}>
                     <DivFlexRow></DivFlexRow>
                 </If>
-                <DivFlexRow style={{ alignItems: " center", justifyContent: "flex-end", marginTop: 5, marginBottom: 10 }}>
-                    <label>Số hàng </label>
-                    <Select style={{ marginLeft: 10 }} width={100} value={maxSizePage} onChange={(e) => handleChangeSoHang(e.target.value)}>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="250">250</option>
-                        <option value="500">500</option>
-                        <option value="1000">1000</option>
-                        <option value="2000">2000</option>
-                    </Select>
-                    <Button style={{ marginLeft: 35 }} onClick={handlePrevPage}>
-                        <i className="fas fa-angle-left"></i>
-                    </Button>
-                    <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between", marginLeft: 10 }}>
-                        <div>
-                            {page + 1}/{maxPage > 1 ? maxPage : 1}
-                        </div>
+                <If condition={!props.noPage}>
+                    <DivFlexRow style={{ alignItems: " center", justifyContent: "flex-end", marginTop: 5, marginBottom: 10 }}>
+                        <label>Số hàng </label>
+                        <Select style={{ marginLeft: 10 }} width={100} value={maxSizePage} onChange={(e) => handleChangeSoHang(e.target.value)}>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="250">250</option>
+                            <option value="500">500</option>
+                            <option value="1000">1000</option>
+                            <option value="2000">2000</option>
+                        </Select>
+                        <Button style={{ marginLeft: 35 }} onClick={handlePrevPage}>
+                            <i className="fas fa-angle-left"></i>
+                        </Button>
+                        <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between", marginLeft: 10 }}>
+                            <div>
+                                {page + 1}/{maxPage > 1 ? maxPage : 1}
+                            </div>
+                        </DivFlexRow>
+                        <Button style={{ marginLeft: 15 }} onClick={handleNextPage}>
+                            <i className="fas fa-angle-right"></i>
+                        </Button>
                     </DivFlexRow>
-                    <Button style={{ marginLeft: 15 }} onClick={handleNextPage}>
-                        <i className="fas fa-angle-right"></i>
-                    </Button>
-                </DivFlexRow>
+                </If>
             </DivFlexRow>
             <Table>
                 {props.children[0]}
                 {React.cloneElement(props.children[1], { rows: rows[page] || [], page, maxSizePage, isLoading })}
             </Table>
-            <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center", height: 50 }}>
-                <DivFlexRow style={{ alignItems: "center" }}>
-                    {data.length != 0 && (
-                        <label style={{ marginLeft: 10 }}>
-                            Show {page * maxSizePage + 1} - {maxPageEnd < data.length ? maxPageEnd : data.length} / {data.length}
-                        </label>
-                    )}
-                </DivFlexRow>
-                <DivFlexRow style={{ alignItems: "center", justifyContent: "flex-end", marginTop: 5, marginBottom: 5 }}>
-                    <Button onClick={handleStartPage}>
-                        <i className="fas fa-angle-double-left"></i>
-                    </Button>
-                    <Button style={{ marginLeft: 15 }} onClick={handlePrevPage}>
-                        <i className="fas fa-angle-left"></i>
-                    </Button>
-                    <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between", marginLeft: 10 }}>
-                        <div>
-                            {page + 1}/{maxPage > 1 ? maxPage : 1}
-                        </div>
+            <If condition={!props.noPage}>
+                <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center", height: 50 }}>
+                    <DivFlexRow style={{ alignItems: "center" }}>
+                        {data.length != 0 && (
+                            <label style={{ marginLeft: 10 }}>
+                                Show {page * maxSizePage + 1} - {maxPageEnd < data.length ? maxPageEnd : data.length} / {data.length}
+                            </label>
+                        )}
                     </DivFlexRow>
-                    <Button style={{ marginLeft: 15 }} onClick={handleNextPage}>
-                        <i className="fas fa-angle-right"></i>
-                    </Button>
-                    <Button style={{ marginLeft: 15 }} onClick={handleEndPage}>
-                        <i className="fas fa-angle-double-right"></i>
-                    </Button>
+                    <DivFlexRow style={{ alignItems: "center", justifyContent: "flex-end", marginTop: 5, marginBottom: 5 }}>
+                        <Button onClick={handleStartPage}>
+                            <i className="fas fa-angle-double-left"></i>
+                        </Button>
+                        <Button style={{ marginLeft: 15 }} onClick={handlePrevPage}>
+                            <i className="fas fa-angle-left"></i>
+                        </Button>
+                        <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between", marginLeft: 10 }}>
+                            <div>
+                                {page + 1}/{maxPage > 1 ? maxPage : 1}
+                            </div>
+                        </DivFlexRow>
+                        <Button style={{ marginLeft: 15 }} onClick={handleNextPage}>
+                            <i className="fas fa-angle-right"></i>
+                        </Button>
+                        <Button style={{ marginLeft: 15 }} onClick={handleEndPage}>
+                            <i className="fas fa-angle-double-right"></i>
+                        </Button>
+                    </DivFlexRow>
                 </DivFlexRow>
-            </DivFlexRow>
+            </If>
         </React.Fragment>
     );
 };

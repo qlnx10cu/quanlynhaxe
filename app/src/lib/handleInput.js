@@ -1,4 +1,5 @@
 import { useState } from "react";
+import utils from "./utils";
 
 export default function (init, callback) {
     let [value, setValueState] = useState(init);
@@ -19,16 +20,9 @@ export default function (init, callback) {
         if (init === null || init === undefined) {
             _setValue(val);
         } else if (typeof init === "number" && Number.isInteger(init)) {
-            try {
-                _setValue(parseInt(val));
-            } catch (error) {
-                _setValue(0);
-            }
+            _setValue(utils.parseInt(val));
         } else if (typeof init === "number" && !Number.isInteger(init)) {
-            try {
-                _setValue(parseFloat(val));
-            } catch (error) {}
-            _setValue(0);
+            _setValue(utils.parseFloat(val));
         } else {
             _setValue(val);
         }

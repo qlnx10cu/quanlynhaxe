@@ -92,7 +92,7 @@ const ListToolBar = [
         img: "/resources/icon/repairPrice.svg",
         Roles: ["Admin", "Dịch Vụ", "Văn Phòng", "CSKH"],
         onClick: (history, setIndex) => {
-            if (history.location.pathname !== "/repairPrice") history.push("/repairPrice");
+            if (history.location.pathname !== "/salary") history.push("/salary");
             setIndex(3);
             document.title = "Tiền Công";
         },

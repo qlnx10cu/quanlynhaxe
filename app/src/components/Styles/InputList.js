@@ -19,11 +19,13 @@ const InputList = ({
     render,
 }) => {
     const [dataList, setDataList] = useState([]);
-    const [idList, setIdList] = useState("");
+    const [idList, setIdList] = useState();
 
     useEffect(() => {
-        setIdList(list || String(Math.random()) + name);
-    }, [list]);
+        if (render) {
+            setIdList(list || String(Math.random()) + name);
+        }
+    }, [list, render]);
 
     useEffect(() => {
         hanldeDataList();
@@ -65,6 +67,7 @@ const InputList = ({
     };
 
     const hanldeDataList = () => {
+        if (!render) return;
         let dataFilter = data || [];
         if (searchData) {
             dataFilter = data.filter((item) => item && searchData(arr.value, item, data));

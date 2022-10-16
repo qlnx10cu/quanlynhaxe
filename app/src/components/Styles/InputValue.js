@@ -3,14 +3,12 @@ import { Input } from "../../styles";
 
 const InputValue = ({ style, type, autocomplete, className, name, id, max, min, readOnly, disabled, value, onChange, onEnter }) => {
     let arr = {};
-    let properties = [];
 
     if (readOnly !== undefined) {
-        properties.push(properties);
+        arr.readOnly = readOnly;
     }
-
     if (disabled !== undefined) {
-        properties.push(disabled);
+        arr.disabled = disabled;
     }
     if (id !== undefined) {
         arr.id = id;
@@ -30,15 +28,12 @@ const InputValue = ({ style, type, autocomplete, className, name, id, max, min, 
     if (min !== undefined) {
         arr.min = min;
     }
-
     if (value !== undefined) {
         arr.value = value;
     }
-
     if (onChange !== undefined) {
         arr.onChange = onChange;
     }
-
     if (className !== undefined) {
         arr.className = className;
     }
@@ -51,7 +46,7 @@ const InputValue = ({ style, type, autocomplete, className, name, id, max, min, 
 
     return (
         <React.Fragment>
-            <Input style={{ ...style }} {...arr} {...properties} onKeyPress={handleKeyPress} />
+            <Input style={{ ...style }} {...arr} onKeyPress={handleKeyPress} />
         </React.Fragment>
     );
 };

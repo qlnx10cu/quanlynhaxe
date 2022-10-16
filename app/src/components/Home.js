@@ -11,8 +11,7 @@ import { alert, error, errorHttp, success, setLoading, addLoading, confirm, conf
 import { closeModal, openModal } from "../actions/Modal";
 import ModalManager from "./ModalManager";
 const Staffs = React.lazy(() => import("./Pages/Staffs"));
-const Customer = React.lazy(() => import("./Admin/Customer"));
-const Customer1 = React.lazy(() => import("./Pages/Customer"));
+const Customer = React.lazy(() => import("./Pages/Customer"));
 const Products = React.lazy(() => import("./Pages/Products"));
 const Salary = React.lazy(() => import("./Pages/Salary"));
 const Services = React.lazy(() => import("./Services/Services"));
@@ -53,7 +52,6 @@ const Home = (props) => {
                 {props.info != null && props.info.chucvu === "Admin" && <Route path="/staffs" component={LoadingComponent(Staffs, props)} />}
                 {props.info != null && <Route path="/salary" component={LoadingComponent(Salary, props)} />}
                 {props.info != null && <Route path="/customer" component={LoadingComponent(Customer, props)} />}
-                {props.info != null && <Route path="/customer1" component={LoadingComponent(Customer1, props)} />}
                 {props.info != null && (
                     <Route
                         path="/services/repairedbill"

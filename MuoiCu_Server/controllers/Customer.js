@@ -55,7 +55,6 @@ module.exports = {
             } else {
                 res.json({});
             }
-            res.json(resulft);
         } catch (error) {
             res.status(400).json({
                 error: {

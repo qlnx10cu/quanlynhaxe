@@ -8,7 +8,7 @@ import {
     Select,
     Table,
     DelButton,
-    ButtonChooseFile,
+    ButtonFile,
     Modal,
     ModalContent,
     CloseButton,
@@ -930,7 +930,7 @@ const BanLe = (props) => {
                             <label>Bảng giá phụ tùng: </label>
                             <Button onClick={() => setNewCuaHangNgoai(true)}> Thêm Của Hàng Ngoài </Button>
                             <DivFlexRow>
-                                <ButtonChooseFile>
+                                <ButtonFile>
                                     <input
                                         type="file"
                                         multiple
@@ -938,7 +938,7 @@ const BanLe = (props) => {
                                         onChange={(e) => handleChoseFile(e)}
                                     />
                                     Import +
-                                </ButtonChooseFile>
+                                </ButtonFile>
                                 <Button style={{ marginLeft: 15 }} onClick={() => setNewProduct(true)}>
                                     {" "}
                                     Thêm Phụ Tùng{" "}

@@ -1,7 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "../../styles";
 
-const InputList = ({ style, className, name, list, id, max, min, readOnly, disabled, value, onChange, onEnter, listRender }) => {
+const InputList = ({
+    style,
+    className,
+    name,
+    list,
+    data,
+    autocomplete,
+    limitList,
+    id,
+    readOnly,
+    disabled,
+    value,
+    onChange,
+    onEnter,
+    searchData,
+    render,
+}) => {
+    const [dataList, setDataList] = useState([]);
+    const [idList, setIdList] = useState("");
+
+    useEffect(() => {
+        setIdList(list || String(Math.random()) + name);
+    }, [list]);
+
+    useEffect(() => {
+        hanldeDataList();
+    }, [data]);
+
     let arr = {};
     let properties = [];
 
@@ -21,21 +48,12 @@ const InputList = ({ style, className, name, list, id, max, min, readOnly, disab
     if (list !== undefined) {
         arr.list = list;
     }
-    if (max !== undefined) {
-        arr.max = max;
+    if (autocomplete !== undefined) {
+        arr.autocomplete = autocomplete;
     }
-    if (min !== undefined) {
-        arr.min = min;
-    }
-
     if (value !== undefined) {
         arr.value = value;
     }
-
-    if (onChange !== undefined) {
-        arr.onChange = onChange;
-    }
-
     if (className !== undefined) {
         arr.className = className;
     }
@@ -46,11 +64,37 @@ const InputList = ({ style, className, name, list, id, max, min, readOnly, disab
         }
     };
 
+    const hanldeDataList = () => {
+        let dataFilter = data || [];
+        if (searchData) {
+            dataFilter = data.filter((item) => item && searchData(arr.value, item, data));
+        }
+        if (limitList) {
+            dataFilter = dataFilter.slice(0, limitList);
+        }
+        setDataList(dataFilter);
+    };
+
+    const hanldeChange = (e) => {
+        if (onChange) {
+            onChange(e);
+        }
+        hanldeDataList();
+    };
+
     return (
         <React.Fragment>
-            <Input style={{ ...style }} {...arr} {...properties} onKeyPress={handleKeyPress} />
-            <If condition={list && listRender}>
-                <datalist id={list}>{listRender}</datalist>
+            <Input
+                style={{ ...style }}
+                {...arr}
+                {...properties}
+                list={idList}
+                autocomplete="off"
+                onChange={hanldeChange}
+                onKeyPress={handleKeyPress}
+            />
+            <If condition={render}>
+                <datalist id={idList}>{dataList.map((item, index) => render(item, index))}</datalist>
             </If>
         </React.Fragment>
     );

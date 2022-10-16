@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { DivFlexRow, ButtonChooseFile, DivFlexColumn } from "../../styles";
+import { DivFlexRow, ButtonFile, DivFlexColumn } from "../../styles";
 import { deleteProduct, getListProduct } from "../../actions/Product";
 import { ButtonDelete, ButtonEdit, ButtonUpload } from "../Styles";
 import { POPUP_NAME } from "../../actions/Modal";
@@ -192,7 +192,7 @@ const Products = (props) => {
                     Xóa hết phụ tùng
                 </ButtonUpload>
                 <DivFlexRow>
-                    <ButtonChooseFile style={{ marginRight: 30 }}>
+                    <ButtonFile style={{ marginRight: 30 }}>
                         <input
                             disabled={isLoading}
                             readOnly={isLoading}
@@ -202,7 +202,7 @@ const Products = (props) => {
                             onChange={(e) => handleChoseFile(e)}
                         />
                         {isLoading ? "..." : "Import +"}
-                    </ButtonChooseFile>
+                    </ButtonFile>
                     <ButtonUpload isUpload={isLoading} onClick={(e) => handleExportFile(e)}>
                         Export file thống kê
                     </ButtonUpload>

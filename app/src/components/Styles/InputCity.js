@@ -72,13 +72,14 @@ const InputCity = (props) => {
         <React.Fragment>
             <InputList
                 {...props}
-                list="list_thanhpho"
-                name="list_thanhpho"
-                listRender={LIST_THANH_PHO.map((item, index) => (
-                    <option key={index} value={item}>
-                        {item}
-                    </option>
-                ))}
+                data={LIST_THANH_PHO}
+                render={(item, index) => {
+                    return (
+                        <option key={index} value={item}>
+                            {item}
+                        </option>
+                    );
+                }}
             />
         </React.Fragment>
     );

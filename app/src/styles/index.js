@@ -276,7 +276,7 @@ const ProductContainer = styled.div`
     }
 `;
 
-const ButtonChooseFile = styled.label`
+const ButtonFile = styled.label`
     border: 1px solid #ccc;
     border-radius: 3px;
     display: inline-block;
@@ -346,5 +346,5 @@ export {
     Link,
     CancleButton,
     ProductContainer,
-    ButtonChooseFile,
+    ButtonFile,
 };

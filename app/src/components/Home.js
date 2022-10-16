@@ -18,6 +18,7 @@ const Services = React.lazy(() => import("./Services/Services"));
 const RepairedBill = React.lazy(() => import("./Services/RepairedBill"));
 const HistoryCall = React.lazy(() => import("./Pages/HistoryCall"));
 const BanLe = React.lazy(() => import("./BanLe"));
+const Retail = React.lazy(() => import("./Pages/Retail"));
 const ChamCong = React.lazy(() => import("./Pages/ChamCong"));
 const Statistic = React.lazy(() => import("./Pages/Statistic"));
 const Setting = React.lazy(() => import("./Pages/Setting"));
@@ -89,6 +90,11 @@ const Home = (props) => {
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") && (
                     <Route path="/banle" component={LoadingComponent(BanLe, props)} />
                 )}
+
+                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") && (
+                    <Route path="/retail" component={LoadingComponent(Retail, props)} />
+                )}
+
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "CSKH") && (
                     <Route path="/chamsockhachhang" component={LoadingComponent(CustomerCare, props)} />
                 )}

@@ -89,15 +89,16 @@ const PopupBillCHN = (props) => {
                     <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                         <label>Tên phụ tùng: </label>
                         <InputList
-                            list="phu_tung"
-                            name="phu_tung"
                             value={tenphutung}
                             onChange={(e) => searchTenPhuTung(e.target.value)}
-                            listRender={props.storeOutsides.map((item, index) => (
-                                <option key={index} value={item.tenphutung}>
-                                    {item.dongia}
-                                </option>
-                            ))}
+                            data={props.storeOutsides}
+                            render={(item, index) => {
+                                return (
+                                    <option key={index} value={item.tenphutung}>
+                                        {item.dongia}
+                                    </option>
+                                );
+                            }}
                         />
                     </DivFlexColumn>
                 </DivFlexRow>

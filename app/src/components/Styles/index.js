@@ -5,6 +5,7 @@ import ButtonUpload from "./ButtonUpload";
 import ButtonChatZalo from "./ButtonChatZalo";
 import ButtonCall from "./ButtonCall";
 import ButtonView from "./ButtonView";
+import ButtonChooseFile from "./ButtonChooseFile";
 import LabelOverflow from "./LabelOverflow";
 import IconCircle from "./IconCircle";
 import InputValue from "./InputValue";

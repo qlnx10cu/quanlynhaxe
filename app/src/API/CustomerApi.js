@@ -16,6 +16,10 @@ class CustomerApi extends ApiObject {
 
         return APIUtils.get(`/customer?ma=${ma}&ten=${query}&sodienthoai=${vn}&biensoxe=${vn}&sokhung=${vn}&somay=${vn}`);
     }
+
+    getBySoDienThoai(sodienthoai) {
+        return APIUtils.get(`/customer/sodienthoai/${sodienthoai}`);
+    }
 }
 
 export default new CustomerApi("/customer", "ma");

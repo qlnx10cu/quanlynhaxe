@@ -24,7 +24,7 @@ const Setting = (props) => {
             return;
         }
         if (!info.accountsip) {
-            var res = await props.authenticate(info.username, "123456");
+            const res = await props.authenticate(info.username, "123456");
             if (!res || !res.accountsip) {
                 props.alert("Bạn không đủ quyền để sài trước năng này.");
                 return;

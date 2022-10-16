@@ -23,7 +23,7 @@ const ConfirmWarrper = (props) => {
             callback();
         }
     };
-    var message = [];
+    let message = [];
     if (props && props.confirm && props.confirm.message) {
         message = props.confirm.message.split("\n");
     }

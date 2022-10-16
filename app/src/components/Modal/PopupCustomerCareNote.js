@@ -21,7 +21,7 @@ const PopupCustomerCareNote = (props) => {
         if (!item || !item.ma) {
             return Promise.reject({ error: -1, message: "Not found data" });
         }
-        var data = {
+        const data = {
             ma: item.ma,
             ghichu: mNote.value,
             trangthai: mTrangThai.value || 0,

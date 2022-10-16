@@ -17,8 +17,9 @@ const AlertWarrper = (props) => {
     const onCloseClick = () => {
         props.setAlert(false, null, 0);
     };
-    var message = [];
-    var color = "#fefefe";
+    let message = [];
+    let color = "#fefefe";
+
     if (props && props.alert && props.alert.message) {
         message = props.alert.message.split("\n");
         color = props.alert.error == 2 ? "#00ff32" : props.alert.error == 1 ? "#ff4100" : "#fefefe";

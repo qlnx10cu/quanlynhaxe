@@ -12,7 +12,8 @@ const PopupConfirmBill = (props) => {
     const item = props.item || {};
 
     const UpdateHoaDon = (mahoadon, loai) => {
-        var date = new Date();
+        const date = new Date();
+    
         let url = "";
         if (loai == 0) {
             url = `/services/updatebill?mahoadon=${mahoadon}`;

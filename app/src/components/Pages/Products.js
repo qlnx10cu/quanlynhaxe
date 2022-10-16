@@ -13,15 +13,15 @@ import ProductApi from "../../API/ProductApi";
 import StatisticApi from "../../API/StatisticApi";
 
 function stringToDate(_date, _format, _delimiter) {
-    var formatLowerCase = _format.toLowerCase();
-    var formatItems = formatLowerCase.split(_delimiter);
-    var dateItems = _date.split(_delimiter);
-    var monthIndex = formatItems.indexOf("mm");
-    var dayIndex = formatItems.indexOf("dd");
-    var yearIndex = formatItems.indexOf("yyyy");
-    var month = parseInt(dateItems[monthIndex]);
-    month -= 1;
-    var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
+    const formatLowerCase = _format.toLowerCase();
+    const formatItems = formatLowerCase.split(_delimiter);
+    const dateItems = _date.split(_delimiter);
+    const monthIndex = formatItems.indexOf("mm");
+    const dayIndex = formatItems.indexOf("dd");
+    const yearIndex = formatItems.indexOf("yyyy");
+    const month = parseInt(dateItems[monthIndex]) - 1;
+    const formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
+
     return formatedDate;
 }
 
@@ -33,9 +33,9 @@ function readFile(file, props) {
         // console.log('aaa')
         reader.readAsArrayBuffer(file);
         reader.onload = function (e) {
-            var dataFile = new Uint8Array(e.target.result);
-            var workbook = XLSX.read(dataFile, { type: "array" });
-            var dataSend = {
+            const dataFile = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(dataFile, { type: "array" });
+            const dataSend = {
                 chitiet: [],
             };
             for (let k in workbook.SheetNames) {
@@ -71,7 +71,7 @@ function readFile(file, props) {
                         if (ws["G" + i] && ws["G" + i] !== null) data.giaban_head = ws["G" + i].v;
                         if (ws["H" + i] && ws["H" + i] !== null) data.giaban_le = ws["H" + i].v;
                         if (ws["I" + i] && ws["I" + i] !== null) {
-                            var date = stringToDate(ws["I" + i].v, "DD/MM/YYYY", "/");
+                            const date = stringToDate(ws["I" + i].v, "DD/MM/YYYY", "/");
                             data.ngaycapnhat = moment(date).format("MM/DD/YYYY");
                         }
                         dataSend.chitiet.push(data);
@@ -133,7 +133,7 @@ const Products = (props) => {
     };
 
     const handleChoseFile = async (e) => {
-        var files = e.target.files;
+        const files = e.target.files;
         setLoading(true);
         try {
             await readFile(files[0], props);

@@ -7,12 +7,12 @@ import _ from "lodash";
 const DataTable = (props) => {
     const [rows, setRows] = useState([]);
 
-    let [data, setData] = useState([]);
-    let [search, setSearch] = useState("");
-    let [maxSizePage, setMaxSizePage] = useState(10);
-    let [maxPage, setMaxPage] = useState(0);
-    let [page, setPage] = useState(0);
-    var [isLoading, setLoading] = useState(false);
+    const [data, setData] = useState([]);
+    const [search, setSearch] = useState("");
+    const [maxSizePage, setMaxSizePage] = useState(10);
+    const [maxPage, setMaxPage] = useState(0);
+    const [page, setPage] = useState(0);
+    const [isLoading, setLoading] = useState(false);
 
     useEffect(() => {
         if (!props.apiData) {

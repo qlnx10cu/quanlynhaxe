@@ -81,7 +81,9 @@ function readFile(file, props) {
             return ProductApi.import(dataSend)
                 .then(() => {
                     props.alert("Thêm thành công");
-                    window.location.href = "/products";
+                    setTimeout(() => {
+                        window.location.href = "/products";
+                    }, 1000);
                 })
                 .catch(() => {
                     props.error("Lỗi khi thêm");

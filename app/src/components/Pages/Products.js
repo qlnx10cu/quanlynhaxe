@@ -39,8 +39,8 @@ function readFile(file, props) {
                 chitiet: [],
             };
             for (let k in workbook.SheetNames) {
-                if (k != "0") continue;
-                if (k == "0") {
+                if (k != "1") continue;
+                if (k == "1") {
                     const wsname = workbook.SheetNames[k];
                     const ws = workbook.Sheets[wsname];
                     let K = ws["!ref"].split(":")[1];
@@ -67,9 +67,9 @@ function readFile(file, props) {
                             if (!data.soluongtonkho || data.soluongtonkho === undefined || data.soluongtonkho === "") data.soluongtonkho = 0;
                         }
                         if (ws["E" + i] && ws["E" + i] !== null) data.vitri = ws["E" + i].w;
-                        if (ws["F" + i] && ws["F" + i] !== null) data.giaban_le = ws["F" + i].v;
-                        if (ws["G" + i] && ws["G" + i] !== null) data.giaban_head = 0;
-                        if (ws["H" + i] && ws["H" + i] !== null) data.model = "";
+                        if (ws["F" + i] && ws["F" + i] !== null) data.model = ws["F" + i].v;
+                        if (ws["G" + i] && ws["G" + i] !== null) data.giaban_head = ws["G" + i].v;
+                        if (ws["H" + i] && ws["H" + i] !== null) data.giaban_le = ws["H" + i].v;
                         if (ws["I" + i] && ws["I" + i] !== null) {
                             const date = stringToDate(ws["I" + i].v, "DD/MM/YYYY", "/");
                             data.ngaycapnhat = moment(date).format("MM/DD/YYYY");
@@ -81,9 +81,7 @@ function readFile(file, props) {
             return ProductApi.import(dataSend)
                 .then(() => {
                     props.alert("Thêm thành công");
-                    setTimeout(() => {
-                        window.location.href = "/products";
-                    }, 1000);
+                    window.location.href = "/products";
                 })
                 .catch(() => {
                     props.error("Lỗi khi thêm");

@@ -385,7 +385,7 @@ const Retail = (props) => {
                     <Loading />
                 </When>
                 <Otherwise>
-                    <h1 style={{ textAlign: "center" }}> Hóa đơn</h1>
+                    <h1 style={{ textAlign: "center" }}> Hóa đơn {hoadon.mahoadon}</h1>
                     <DivFlexRow style={{ justifyContent: "space-between" }}>
                         <DivFlexColumn style={{ width: "120px" }}>
                             <label>Mã KH: </label>

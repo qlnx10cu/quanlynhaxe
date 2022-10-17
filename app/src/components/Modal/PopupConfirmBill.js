@@ -19,7 +19,7 @@ const PopupConfirmBill = (props) => {
             url = `/services/updatebill?mahoadon=${mahoadon}`;
         }
         if (loai == 1) {
-            url = `/banle?mahoadon=${mahoadon}`;
+            url = `/updateretail?mahoadon=${mahoadon}`;
         }
         props.history.push(url, { tokenTime: date.getTime(), mhdToken: mahoadon });
     };

@@ -76,7 +76,7 @@ const Statistic = (props) => {
         if (item.loaihoadon == 0) {
             url = `/services/showbill?mahoadon=${item.mahoadon}`;
         } else {
-            url = `/banle/showbill?mahoadon=${item.mahoadon}`;
+            url = `/showretail?mahoadon=${item.mahoadon}`;
         }
         if (url) {
             props.history.push(url);
@@ -84,6 +84,12 @@ const Statistic = (props) => {
     };
 
     const handleEditItem = (item) => {
+        if (item.loaihoadon == 1) {
+            props.confirm("Xác nhận", () => {
+                props.history.push(`/updateretail?mahoadon=${item.mahoadon}`);
+            });
+            return;
+        }
         props.openModal(POPUP_NAME.POPUP_COMFIRM_BILL, item);
     };
 

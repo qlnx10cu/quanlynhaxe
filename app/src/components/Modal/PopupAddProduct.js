@@ -9,7 +9,7 @@ import { InputNumber, InputValue } from "../Styles";
 
 const PopupAddProduct = (props) => {
     const mMaPhuTung = lib.handleInput("");
-    const mTenCongViec = lib.handleInput("");
+    const mTenPhuTung = lib.handleInput("");
     const mDonGia = lib.handleInput(0);
     const mSoLuong = lib.handleInput(1);
     const mTonKho = lib.handleInput(1);
@@ -23,13 +23,13 @@ const PopupAddProduct = (props) => {
         });
         if (product && product.maphutung.toLowerCase() === values.toLowerCase()) {
             mMaPhuTung.setValue(product.maphutung);
-            mTenCongViec.setValue(product.tentiengviet);
+            mTenPhuTung.setValue(product.tentiengviet);
             mDonGia.setValue(product.giaban_le);
             mTonKho.setValue(product.soluongtonkho);
             return;
         }
 
-        mTenCongViec.setValue("");
+        mTenPhuTung.setValue("");
         mDonGia.setValue(0);
         mTonKho.setValue(0);
         mSoLuong.setValue(1);
@@ -46,7 +46,7 @@ const PopupAddProduct = (props) => {
             return Promise.reject({ error: -1, message: "Không tìm thấy mã phụ tùng" });
         }
 
-        if (!mTenCongViec.value || mTenCongViec.value.length == 0) {
+        if (!mTenPhuTung.value || mTenPhuTung.value.length == 0) {
             return Promise.reject({ error: -1, message: "Phải có tên phụ tùng." });
         }
 
@@ -68,7 +68,7 @@ const PopupAddProduct = (props) => {
 
         const newData = {
             maphutung: mMaPhuTung.value,
-            tencongviec: mTenCongViec.value,
+            tenphutung: mTenPhuTung.value,
             nhacungcap: "Trung Trang",
             dongia: mDonGia.value,
             soluong: mSoLuong.value,
@@ -91,7 +91,7 @@ const PopupAddProduct = (props) => {
             <DivFlexRow>
                 <DivFlexColumn style={{ flex: 1 }}>
                     <label>Tên phụ tùng </label>
-                    <InputValue readOnly {...mTenCongViec} />
+                    <InputValue readOnly {...mTenPhuTung} />
                 </DivFlexColumn>
                 <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                     <label>Mã phụ tùng: </label>

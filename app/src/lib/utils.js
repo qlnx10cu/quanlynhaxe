@@ -39,6 +39,7 @@ module.exports = {
         if (!str) {
             return "";
         }
+        str = String(str);
         str = str.toLowerCase();
         str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
         str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
@@ -54,6 +55,9 @@ module.exports = {
     searchName: function (ten, search) {
         if (!search || search == "") return true;
         return this.viToEn(ten).includes(this.viToEn(search));
+    },
+    comrapeName: function (ten, search) {
+        return this.viToEn(ten) == this.viToEn(search);
     },
     copyText: function (text) {
         try {
@@ -85,5 +89,22 @@ module.exports = {
             default:
                 return "Không biết";
         }
+    },
+    getQuerys: function () {
+        const queryParams = {};
+        const url = window.location.href;
+        const tmp = url.substring(url.lastIndexOf("?") + 1, url.length);
+        if (tmp == "") return queryParams;
+        const params = tmp.split("&");
+        for (let i = 0; i < params.length; i++) {
+            const pair = params[i].split("=");
+            const value = pair.length == 0 ? "" : pair[1];
+            queryParams[pair[0]] = decodeURIComponent(value);
+        }
+        return queryParams;
+    },
+    getQueryParams: function (name) {
+        const queryParams = this.getQuerys();
+        return queryParams[name];
     },
 };

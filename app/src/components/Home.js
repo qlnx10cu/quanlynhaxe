@@ -95,6 +95,14 @@ const Home = (props) => {
                     <Route path="/retail" component={LoadingComponent(Retail, props)} />
                 )}
 
+                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") && (
+                    <Route path="/showretail" component={LoadingComponent(Retail, props)} />
+                )}
+
+                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") && (
+                    <Route path="/updateretail" component={LoadingComponent(Retail, props)} />
+                )}
+
                 {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "CSKH") && (
                     <Route path="/chamsockhachhang" component={LoadingComponent(CustomerCare, props)} />
                 )}

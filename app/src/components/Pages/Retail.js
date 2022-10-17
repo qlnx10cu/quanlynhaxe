@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { POPUP_NAME } from "../../actions/Modal";
-import { ButtonChooseFile, ButtonDelete, CellText, InputCity, InputGioiTinh } from "../Styles";
+import { ButtonChooseFile, ButtonDelete, CellDelete, CellMoney, CellText, InputCity, InputGioiTinh } from "../Styles";
 import { Button, DivFlexColumn, DivFlexRow, Input, Textarea } from "../../styles";
 import XLSX from "xlsx";
 import * as actions from "../../actions";
@@ -14,12 +14,14 @@ import files from "../../lib/files";
 import DataTable from "../Warrper/DataTable";
 import BillLeApi from "../../API/BillLeApi";
 import moment from "moment";
+import ButtonConfirm from "../Styles/ButtonConfirm";
 
-const oneDay = 1000 * 3600 * 24;
+const twoDay = 2 * 1000 * 3600 * 24;
 
 const Retail = (props) => {
+    const useIsMounted = lib.useIsMounted();
     const [isLoading, setLoading] = useState(false);
-    const loai = 0;
+    const [hoadon, setHoadon] = useState({});
     const mMaKh = lib.handleInput(0);
     const mCustomerName = lib.handleInput("");
     const mSoDienThoai = lib.handleInput("");
@@ -27,14 +29,57 @@ const Retail = (props) => {
     const mThanhPho = lib.handleInput("An Giang");
     const mGioiTinh = lib.handleInput(0);
     const mLyDo = lib.handleInput("");
+    let loai = 0;
+
+    if (window.location.href.includes("updateretail")) {
+        loai = 1;
+    } else if (window.location.href.includes("showretail")) {
+        loai = 2;
+    }
+    const mahoadon = utils.getQueryParams("mahoadon");
 
     useEffect(() => {
         // fecth to PopupAddProduct
-
         props.getListCustomer();
         props.getListProduct();
-        props.loadRetailItemProduct();
+
+        loadBill();
     }, []);
+
+    const loadBill = () => {
+        props.loadRetailItemProduct();
+        if (loai == 0) {
+            return;
+        }
+        setLoading(true);
+        BillLeApi.getChitiet(mahoadon)
+            .then((data) => {
+                if (!useIsMounted()) {
+                    return;
+                }
+                if (!data || data.mahoadon != mahoadon) {
+                    props.alert("Không tìm thấy mã hóa đơn");
+                    return;
+                }
+                setHoadon(data);
+                props.addRetailListItemProduct(data.chitiet);
+                setLoading(false);
+
+                mMaKh.setValue(data.makh);
+                mCustomerName.setValue(data.tenkh);
+                mSoDienThoai.setValue(data.sodienthoai);
+                mDiaChi.setValue(data.diachi);
+                mGioiTinh.setValue(data.gioitinh);
+                mThanhPho.setValue(data.thanhpho);
+                mLyDo.setValue(data.lydo);
+            })
+            .catch((err) => {
+                if (!useIsMounted()) {
+                    return;
+                }
+                props.alert("Có lỗi: " + err.message);
+            });
+    };
 
     const clearAll = () => {
         mMaKh.setValue("");
@@ -43,20 +88,21 @@ const Retail = (props) => {
         mDiaChi.setValue("");
         mGioiTinh.setValue(0);
         mThanhPho.setValue("An Giang");
+        mLyDo.setValue("");
         props.loadRetailItemProduct();
     };
 
-    const handleAddBill = () => {
+    const getData = () => {
         const products = props.Retail.products;
         if (products.length === 0) {
             props.alert("Chưa có sản phẩm nào.");
-            return;
+            return null;
         }
 
         const chitiet = products.map(function (item) {
             return {
                 maphutung: item.maphutung,
-                tenphutung: item.tencongviec,
+                tenphutung: item.tenphutung,
                 dongia: item.dongia,
                 soluong: item.soluong,
                 chietkhau: item.chietkhau,
@@ -70,15 +116,15 @@ const Retail = (props) => {
             const item = chitiet[i];
             if (item.dongia < 0) {
                 props.alert(" SP: " + item.tenphutung + " co don gia < 0");
-                return;
+                return null;
             }
             if (item.soluong < 0) {
                 props.alert(" SP: " + item.tenphutung + " co soluong < 0");
-                return;
+                return null;
             }
             if (item.chietkhau < 0 || item.chietkhau > 100) {
                 props.alert(" SP: " + item.tenphutung + " co chietkhau < 0% or > 100%");
-                return;
+                return null;
             }
             item.tongtien = utils.tinhTongTien(item.dongia, item.soluong, item.chietkhau);
 
@@ -87,12 +133,13 @@ const Retail = (props) => {
             });
             if (product && product.soluongtonkho && product.soluongtonkho < item.soluong) {
                 props.alert(" SP: " + item.tenphutung + " không còn đủ tồn khô");
+                return null;
             }
 
             tongtien += item.tongtien;
         }
 
-        let data = {
+        const data = {
             manv: props.info.ma,
             tenkh: mCustomerName.value,
             sodienthoai: mSoDienThoai.value,
@@ -103,17 +150,66 @@ const Retail = (props) => {
             tiencong: 0,
             tienpt: tongtien,
             chitiet: chitiet,
+            lydo: mLyDo.value,
         };
-        if (mMaKh.value) data.makh = mMaKh.value;
 
+        if (mMaKh.value) data.makh = mMaKh.value;
+        if (hoadon && hoadon.mahoadon) data.mahoadon = hoadon.mahoadon;
+
+        if (loai == 1) {
+            if (!hoadon || !hoadon.mahoadon) {
+                props.alert("Hóa đơn không hợp lệ");
+                return null;
+            }
+            if (!mLyDo.value || mLyDo.value.trim() == "") {
+                props.alert("Vui lòng nhập lý do");
+                return null;
+            }
+            if (utils.comrapeName(hoadon.lydo, mLyDo.value)) {
+                props.alert("Vui lòng nhập lý do khác hiện tại");
+                return null;
+            }
+        }
+
+        return data;
+    };
+
+    const handleAddBill = () => {
+        const data = getData();
+        if (!data) return;
+
+        setLoading(true);
         BillLeApi.add(data)
             .then((res) => {
                 clearAll();
                 props.openModal(POPUP_NAME.POPUP_BILL, { mahoadon: res.mahoadon, loaihoadon: 1 });
             })
             .catch((err) => {
-                props.error("Không thể thanh toán hóa đơn.\n" + err);
+                props.error("Không thể thanh toán hóa đơn.\n" + err.message);
+            })
+            .finally(() => {
+                setLoading(false);
             });
+    };
+
+    const handleUpdateBill = () => {
+        const data = getData();
+        if (!data) return;
+        setLoading(true);
+        BillLeApi.update(hoadon.mahoadon, data)
+            .then((res) => {
+                props.openModal(POPUP_NAME.POPUP_BILL, { mahoadon: res.mahoadon, loaihoadon: 1 });
+                setLoading(false);
+                loadBill();
+            })
+            .catch((err) => {
+                props.error("Không thể thanh toán hóa đơn.\n" + err.message);
+                setLoading(false);
+            });
+    };
+
+    const handleRenderUpdateBill = () => {
+        props.history.push("/updateretail?mahoadon?mahoadon=" + hoadon.mahoadon);
     };
 
     const handleChangeSDT = (value, enter) => {
@@ -263,7 +359,7 @@ const Retail = (props) => {
         }
 
         const newData = {
-            tencongviec: item.tentiengviet,
+            tenphutung: item.tentiengviet,
             maphutung: item.maphutung,
             dongia: utils.parseInt(item.giaban_le),
             soluong: 1,
@@ -402,9 +498,9 @@ const Retail = (props) => {
                                 return (
                                     <tr key={index}>
                                         <CellText>{index + 1}</CellText>
-                                        <CellText>{item.tencongviec}</CellText>
+                                        <CellText>{item.tenphutung}</CellText>
                                         <CellText>{item.maphutung}</CellText>
-                                        <CellText>{utils.formatVND(item.dongia)}</CellText>
+                                        <CellMoney>{item.dongia}</CellMoney>
                                         <CellText>
                                             <input
                                                 type="number"
@@ -425,11 +521,9 @@ const Retail = (props) => {
                                                 min="0"
                                             />
                                         </CellText>
-                                        <CellText>{utils.formatVND(item.tongtien)}</CellText>
+                                        <CellMoney>{item.tongtien}</CellMoney>
                                         <If condition={loai != 2}>
-                                            <CellText>
-                                                <ButtonDelete onClick={() => handleDeleteProduct(index)}></ButtonDelete>
-                                            </CellText>
+                                            <CellDelete onClick={() => handleDeleteProduct(index)}></CellDelete>
                                         </If>
                                     </tr>
                                 );
@@ -443,37 +537,14 @@ const Retail = (props) => {
                     <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: "space-between" }}>
                         <label></label>
                         <Choose>
-                            <When condition={loai == 1}>
-                                <Button
-                                    onClick={() => {
-                                        props.confirm("Bạn chắc muốn thay đổi hóa đơn ", () => {
-                                            // handleSaveBill();
-                                        });
-                                    }}
-                                >
-                                    Thay đổi
-                                </Button>
-                            </When>
                             <When condition={loai == 0}>
-                                <Button
-                                    onClick={() => {
-                                        props.confirm("Bạn muốn thanh toán", () => {
-                                            handleAddBill();
-                                        });
-                                    }}
-                                >
-                                    Thánh Toán
-                                </Button>
+                                <ButtonConfirm title={"Thanh toán"} titleConfirm={"Bạn muốn thanh toán hóa đơn"} onClick={handleAddBill} />
                             </When>
-                            {/* && moment().valueOf() - moment(ngaythanhtoan).valueOf() <= oneDay */}
-                            <When condition={loai == 2}>
-                                <Button
-                                    onClick={() => {
-                                        // setShowingConfirm(true);
-                                    }}
-                                >
-                                    Update
-                                </Button>
+                            <When condition={loai == 1 && moment().valueOf() - moment(hoadon.ngaythanhtoan).valueOf() <= twoDay}>
+                                <ButtonConfirm title={"Chỉnh sữa"} titleConfirm={"Bạn muốn chỉnh sữa hóa đơn"} onClick={handleUpdateBill} />
+                            </When>
+                            <When condition={loai == 2 && moment().valueOf() - moment(hoadon.ngaythanhtoan).valueOf() <= twoDay}>
+                                <ButtonConfirm title={"Thay đổi"} titleConfirm={"Xác nhận"} onClick={handleRenderUpdateBill} />
                             </When>
                         </Choose>
                     </DivFlexRow>

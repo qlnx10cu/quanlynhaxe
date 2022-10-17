@@ -14,6 +14,8 @@ import InputGioiTinh from "./InputGioiTinh";
 import InputCity from "./InputCity";
 import InputList from "./InputList";
 import CellText from "./CellText";
+import CellMoney from "./CellMoney";
+import CellDelete from "./CellDelete";
 import TabPage from "./TabPage";
 
 export {
@@ -33,5 +35,7 @@ export {
     InputValue,
     InputNumber,
     CellText,
+    CellMoney,
+    CellDelete,
     TabPage,
 };

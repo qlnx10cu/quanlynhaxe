@@ -35,6 +35,8 @@ class BillLe {
         let sql = "select * from hoadon where mahoadon= ? and trangthai!=2 and loaihoadon=1";
         var result = [];
         var res = await query(sql, param);
+        if (!res || !res[0])
+            return Promise.reject("Không tìm thấy mã hóa đơn");
         result = res[0];
         if (result && result.makh) {
             sql = "select * from khachhang where ma=?";

@@ -7,7 +7,7 @@ const initState = {
 };
 
 const checkHasItem = (sp, item) => {
-    if (sp.tencongviec.toLowerCase() == "" || sp.tencongviec.toLowerCase() != item.tencongviec.toLowerCase()) return false;
+    if (sp.tenphutung.toLowerCase() == "" || sp.tenphutung.toLowerCase() != item.tenphutung.toLowerCase()) return false;
     if (sp.maphutung == "" || sp.maphutung.toLowerCase() != item.maphutung.toLowerCase()) return false;
     if (sp.nhacungcap == "" || sp.nhacungcap != "Trung Trang" || sp.nhacungcap.toLowerCase() != item.nhacungcap.toLowerCase()) return false;
     if (!sp.dongia || sp.dongia < 0 || sp.dongia != item.dongia) return false;
@@ -58,7 +58,7 @@ export default (state = initState, action) => {
         }
         case type.RETAIL.ADD_RETAIL_LIST_ITEM_PRODUCT: {
             const newState = { ...state };
-            const data = action.data;
+            const data = action.data || [];
             data.forEach((item) => {
                 newState.products = addItem(newState.products, item);
             });

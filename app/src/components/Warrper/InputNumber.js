@@ -3,14 +3,12 @@ import { DelButton, Input } from "../../styles";
 
 const InputNumber = ({ style, className, name, list, id, max, min, readOnly, disabled, value, onChange, onEnter, listRender }) => {
     let arr = {};
-    let properties = [];
 
     if (readOnly !== undefined) {
-        properties.push(properties);
+        arr.readOnly = readOnly;
     }
-
     if (disabled !== undefined) {
-        properties.push(disabled);
+        arr.disabled = disabled;
     }
     if (id !== undefined) {
         arr.id = id;
@@ -27,15 +25,12 @@ const InputNumber = ({ style, className, name, list, id, max, min, readOnly, dis
     if (min !== undefined) {
         arr.min = min;
     }
-
     if (value !== undefined) {
         arr.value = value;
     }
-
     if (onChange !== undefined) {
         arr.onChange = onChange;
     }
-
     if (className !== undefined) {
         arr.className = className;
     }
@@ -48,7 +43,7 @@ const InputNumber = ({ style, className, name, list, id, max, min, readOnly, dis
 
     return (
         <React.Fragment>
-            <Input style={{ ...style }} {...arr} {...properties} onKeyPress={handleKeyPress} />
+            <Input style={{ ...style }} {...arr} onKeyPress={handleKeyPress} />
             <If condition={list && listRender}>
                 <datalist id={list}>{listRender}</datalist>
             </If>

@@ -50,7 +50,7 @@ const PopupAddStoreOutside = (props) => {
 
         const newData = {
             maphutung: "",
-            tencongviec: mTenPhuTung.value,
+            tenphutung: mTenPhuTung.value,
             nhacungcap: mNhaCungCap.value,
             dongia: mDonGia.value,
             soluong: mSoLuong.value,

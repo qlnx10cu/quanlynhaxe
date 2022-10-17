@@ -32,14 +32,11 @@ const InputList = ({
     }, [data]);
 
     let arr = {};
-    let properties = [];
-
     if (readOnly !== undefined) {
-        properties.push(properties);
+        arr.readOnly = readOnly;
     }
-
     if (disabled !== undefined) {
-        properties.push(disabled);
+        arr.disabled = disabled;
     }
     if (id !== undefined) {
         arr.id = id;
@@ -87,15 +84,7 @@ const InputList = ({
 
     return (
         <React.Fragment>
-            <Input
-                style={{ ...style }}
-                {...arr}
-                {...properties}
-                list={idList}
-                autocomplete="off"
-                onChange={hanldeChange}
-                onKeyPress={handleKeyPress}
-            />
+            <Input style={{ ...style }} {...arr} list={idList} autocomplete="off" onChange={hanldeChange} onKeyPress={handleKeyPress} />
             <If condition={render}>
                 <datalist id={idList}>{dataList.map((item, index) => render(item, index))}</datalist>
             </If>

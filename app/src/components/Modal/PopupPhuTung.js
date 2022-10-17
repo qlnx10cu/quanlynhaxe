@@ -8,7 +8,7 @@ import lib from "../../lib";
 import utils from "../../lib/utils";
 import { connect } from "react-redux";
 import { addProduct, updateProduct } from "../../actions/Product";
-import { TabPage } from "../Styles";
+import { InputNumber, TabPage } from "../Styles";
 
 const RenderTableDetail = ({ lichsu }) => {
     return (
@@ -16,6 +16,7 @@ const RenderTableDetail = ({ lichsu }) => {
             <DataTable.Header>
                 <th>STT</th>
                 <th>Ngày</th>
+                <th>Loại</th>
                 <th>Giá mới</th>
                 <th>Giá cũ</th>
                 <th>Số lượng trươc khi nhập</th>
@@ -28,11 +29,19 @@ const RenderTableDetail = ({ lichsu }) => {
                         <tr key={index}>
                             <td>{index + 1}</td>
                             <td>{moment(item.ngaycapnhat || new Date()).format("DD/MM/YYYY")}</td>
+                            <td>{item.loai == 0 ? "Import" : "Edit"}</td>
                             <td>{item.giaban_le}</td>
                             <td>{item.giaban_cu}</td>
-                            <td>{item.soluongtonkho}</td>
-                            <td>{item.soluongtruocdo}</td>
-                            <td>{item.soluongtonkho + item.soluongtruocdo}</td>
+                            <If condition={item.loai == 0}>
+                                <td>{item.soluongtruocdo}</td>
+                                <td>{item.soluongtonkho}</td>
+                                <td>{item.soluongtonkho + item.soluongtruocdo}</td>
+                            </If>
+                            <If condition={item.loai == 1}>
+                                <td>{item.soluongtruocdo}</td>
+                                <td>{item.soluongtonkho}</td>
+                                <td>{item.soluongtonkho}</td>
+                            </If>
                         </tr>
                     );
                 }}
@@ -90,30 +99,27 @@ const PopupPhuTung = (props) => {
         if (!item || !item.maphutung) {
             return;
         }
-        mMaPhuTung.setValue(item.maphutung);
-        mNameEng.setValue(item.tentienganh);
-        mNameVie.setValue(item.tentiengviet);
-        mGiaBanHead.setValue(item.giaban_head || 0);
-        mGiaBanLe.setValue(item.giaban_le || 0);
-        mViTri.setValue(item.vitri);
-        mSoLuongTonKho.setValue(item.soluongtonkho || 0);
-        mModel.setValue(item.model);
-        mColor.setValue(item.mamau);
-        mNote.setValue(item.ghichu);
         setLoading(true);
         ProductApi.get(item.maphutung)
             .then((data) => {
                 if (!useIsMounted()) return;
+                mMaPhuTung.setValue(data.maphutung);
+                mNameEng.setValue(data.tentienganh);
+                mNameVie.setValue(data.tentiengviet);
+                mGiaBanHead.setValue(data.giaban_head || 0);
+                mGiaBanLe.setValue(data.giaban_le || 0);
+                mViTri.setValue(data.vitri);
+                mModel.setValue(data.model);
+                mColor.setValue(data.mamau);
+                mNote.setValue(data.ghichu);
                 mChiTiet.setValue(data.chitiet);
                 mLichSu.setValue(data.lichsu);
+                mSoLuongTonKho.setValue(data.soluongtonkho || 0);
+                setLoading(false);
             })
             .catch(() => {
                 if (!useIsMounted()) return;
                 props.alert("Không lấy được chi tiết: ");
-            })
-            .finally(() => {
-                if (!useIsMounted()) return;
-                setLoading(false);
             });
     }, [item]);
 
@@ -173,7 +179,14 @@ const PopupPhuTung = (props) => {
     };
 
     return (
-        <ModalWrapper open={props.open} title={"Phụ tùng"} callback={props.callback} onClose={props.onClose}>
+        <ModalWrapper
+            open={props.open}
+            title={"Phụ tùng"}
+            isLoading={isLoading}
+            callback={props.callback}
+            onClose={props.onClose}
+            submit={handleButton}
+        >
             <DivFlexRow>
                 <DivFlexColumn style={{ flex: 1 }}>
                     <label>Mã phụ tùng </label>
@@ -192,15 +205,15 @@ const PopupPhuTung = (props) => {
             <DivFlexRow>
                 <DivFlexColumn style={{ flex: 1 }}>
                     <label>Giá nhập</label>
-                    <Input type="number" min={0} {...mGiaBanHead} readOnly={isUpdate} />
+                    <InputNumber min={0} {...mGiaBanHead} readOnly={isUpdate} />
                 </DivFlexColumn>
                 <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                     <label>Giá bán lẻ</label>
-                    <Input type="number" min={0} {...mGiaBanLe} readOnly={isUpdate} />
+                    <InputNumber min={0} {...mGiaBanLe} />
                 </DivFlexColumn>
                 <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
                     <label>Số lượng tồn kho </label>
-                    <Input type="number" min={0} {...mSoLuongTonKho} readOnly={isUpdate} />
+                    <InputNumber min={0} {...mSoLuongTonKho} />
                 </DivFlexColumn>
             </DivFlexRow>
 

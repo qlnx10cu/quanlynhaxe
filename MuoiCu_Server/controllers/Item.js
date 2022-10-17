@@ -15,7 +15,17 @@ module.exports = {
         return Abstract.add(Item, { ...req.body });
     },
     update: function (req, res) {
-        return Abstract.update(Item, req.body, req.params);
+        let timeindex = new Date().getTime();
+        const itemHistory = {
+            ...req.body,
+            maphutung: req.params.maphutung,
+            timeindex: timeindex,
+            loai: 1,
+            ngaycapnhap: new Date(),
+        }
+        return Abstract.add(ItemHistory, itemHistory)
+            .then(() => ItemHistory.addLichSuPhuTung(timeindex))
+            .then(() => Abstract.update(Item, req.body, req.params));
     },
     delete: function (req, res) {
         return Abstract.delete(Item, Object.assign(req.params, req.query));
@@ -29,11 +39,10 @@ module.exports = {
             ...req.body
         }
         let timeindex = new Date().getTime();
-        body.chitiet.map(e => {
+        body.chitiet.forEach(e => {
             e.timeindex = timeindex;
             e.loai = 0;
             e.ngaycapnhap = new Date();
-            return e;
         })
 
         return Abstract.addMutil(ItemHistory, body.chitiet)

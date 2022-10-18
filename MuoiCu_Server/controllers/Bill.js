@@ -57,7 +57,7 @@ module.exports = {
                 param['ngaysuachua'] = param["ngaythanhtoan"];
                 param["trangthai"] = 1;
                 let resulft = await Abstract.update(Bill, param, req.params);
-                
+
                 setTimeout(async function () {
                     try {
                         var kh = await Abstract.getOne(Customer, { ma: hoadon.makh });

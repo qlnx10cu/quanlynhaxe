@@ -24,7 +24,7 @@ module.exports = {
                 const chieukhau = ws["G" + i] ? parseFloat(ws["G" + i].v) : 0;
 
                 const newData = {
-                    tencongviec: ws["C" + i] ? ws["C" + i].v : "",
+                    tenphutung: ws["C" + i] ? ws["C" + i].v : "",
                     maphutung: ws["B" + i] ? ws["B" + i].v : "",
                     dongia: dongia,
                     soluong: soluong,

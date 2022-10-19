@@ -20,6 +20,10 @@ class CustomerApi extends ApiObject {
     getBySoDienThoai(sodienthoai) {
         return APIUtils.get(`/customer/sodienthoai/${sodienthoai}`);
     }
+
+    getByBienSoXe(biensoxe) {
+        return APIUtils.get(`/customer?biensoxe=${biensoxe}`);
+    }
 }
 
 export default new CustomerApi("/customer", "ma");

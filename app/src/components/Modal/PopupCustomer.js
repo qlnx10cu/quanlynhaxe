@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import ModalWrapper from "../Warrper/ModalWrapper";
 import * as actions from "../../actions";
 import lib from "../../lib";
-import { ButtonCall, ButtonChatZalo, InputCity, InputGioiTinh } from "../Styles";
+import { InputCity, InputGioiTinh } from "../Styles";
 
 const PopupCustomer = (props) => {
     const mCustomerName = lib.handleInput("");

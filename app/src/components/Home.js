@@ -17,7 +17,6 @@ const Salary = React.lazy(() => import("./Pages/Salary"));
 const Services = React.lazy(() => import("./Services/Services"));
 const RepairedBill = React.lazy(() => import("./Services/RepairedBill"));
 const HistoryCall = React.lazy(() => import("./Pages/HistoryCall"));
-const BanLe = React.lazy(() => import("./BanLe"));
 const Retail = React.lazy(() => import("./Pages/Retail"));
 const ChamCong = React.lazy(() => import("./Pages/ChamCong"));
 const Statistic = React.lazy(() => import("./Pages/Statistic"));
@@ -40,8 +39,14 @@ const Home = (props) => {
             <ToolBar />
             <SocketEvent {...props} socket={socket} />
             <ModalManager {...props} />
-            <BaseContainer>
-                {props.info != null && (
+            <If condition={props.info != null}>
+                <BaseContainer>
+                    <Route path="/salary" component={LoadingComponent(Salary, props)} />
+                    <Route path="/customer" component={LoadingComponent(Customer, props)} />
+                    <Route path="/cuocgoi" component={LoadingComponent(HistoryCall, props)} />
+                    <Route path="/thongke" component={LoadingComponent(Statistic, props)} />
+                    <Route path="/cuahangngoai" component={LoadingComponent(StoreOutside, props)} />
+                    <Route path="/caidat" component={LoadingComponent(Setting, props)} />
                     <Route
                         exact
                         path="/products"
@@ -49,35 +54,24 @@ const Home = (props) => {
                             <Products chucvu={props.info.chucvu} {...props} />
                         ))}
                     />
-                )}
-                {props.info != null && props.info.chucvu === "Admin" && <Route path="/staffs" component={LoadingComponent(Staffs, props)} />}
-                {props.info != null && <Route path="/salary" component={LoadingComponent(Salary, props)} />}
-                {props.info != null && <Route path="/customer" component={LoadingComponent(Customer, props)} />}
-                {props.info != null && (
                     <Route
                         path="/services/repairedbill"
                         component={LoadingComponent(() => (
                             <RepairedBill socket={socket} {...props} />
                         ))}
                     />
-                )}
-                {props.info != null && (
                     <Route
                         path="/services/updatebill"
                         component={LoadingComponent(() => (
                             <RepairedBill socket={socket} {...props} />
                         ))}
                     />
-                )}
-                {props.info != null && (
                     <Route
                         path="/services/showbill"
                         component={LoadingComponent(() => (
                             <RepairedBill socket={socket} {...props} />
                         ))}
                     />
-                )}
-                {props.info != null && (
                     <Route
                         exact
                         path="/services"
@@ -85,35 +79,25 @@ const Home = (props) => {
                             <Services socket={socket} {...props} />
                         ))}
                     />
-                )}
 
-                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") && (
-                    <Route path="/banle" component={LoadingComponent(BanLe, props)} />
-                )}
+                    <If condition={props.info.chucvu === "Admin"}>
+                        <Route path="/staffs" component={LoadingComponent(Staffs, props)} />
+                    </If>
 
-                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") && (
-                    <Route path="/retail" component={LoadingComponent(Retail, props)} />
-                )}
+                    <If condition={props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng"}>
+                        <Route path="/retail" component={LoadingComponent(Retail, props)} />
+                        <Route path="/showretail" component={LoadingComponent(Retail, props)} />
+                        <Route path="/updateretail" component={LoadingComponent(Retail, props)} />
+                    </If>
 
-                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") && (
-                    <Route path="/showretail" component={LoadingComponent(Retail, props)} />
-                )}
-
-                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Phụ Tùng") && (
-                    <Route path="/updateretail" component={LoadingComponent(Retail, props)} />
-                )}
-
-                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "CSKH") && (
-                    <Route path="/chamsockhachhang" component={LoadingComponent(CustomerCare, props)} />
-                )}
-                {props.info != null && (props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ" || props.info.chucvu === "Văn Phòng") && (
-                    <Route path="/chamcong" component={LoadingComponent(ChamCong, props)} />
-                )}
-                {props.info != null && <Route path="/cuocgoi" component={LoadingComponent(HistoryCall, props)} />}
-                {props.info != null && <Route path="/thongke" component={LoadingComponent(Statistic, props)} />}
-                {props.info != null && <Route path="/cuahangngoai" component={LoadingComponent(StoreOutside, props)} />}
-                {props.info != null && <Route path="/caidat" component={LoadingComponent(Setting, props)} />}
-            </BaseContainer>
+                    <If condition={props.info.chucvu === "Admin" || props.info.chucvu === "CSKH"}>
+                        <Route path="/chamsockhachhang" component={LoadingComponent(CustomerCare, props)} />
+                    </If>
+                    <If condition={props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ" || props.info.chucvu === "Văn Phòng"}>
+                        <Route path="/chamcong" component={LoadingComponent(ChamCong, props)} />
+                    </If>
+                </BaseContainer>
+            </If>
         </Router>
     );
 };

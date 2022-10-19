@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { POPUP_NAME } from "../../actions/Modal";
 import { DivFlexRow, DivFlexColumn, Input, Link } from "../../styles";
 import { ButtonCall, ButtonChatZalo, ButtonView, IconCircle, TabPage } from "../Styles";
-import { GetCustomerDetail } from "../../API/Customer";
+import CustomerApi from "../../API/CustomerApi";
 
 const RenderTableDetail = ({ onViewBill, list }) => {
     list = (list || []).sort((a, b) => {
@@ -222,10 +222,10 @@ const PopupCustomerHistory = (props) => {
 
     useEffect(() => {
         if (!item) return;
-        GetCustomerDetail(props.token, item.ma)
+        CustomerApi.getChitiet(item.ma)
             .then((res) => {
                 if (!useIsMounted()) return;
-                setData(res.data);
+                setData(res);
             })
             .catch((err) => {
                 if (!useIsMounted()) return;

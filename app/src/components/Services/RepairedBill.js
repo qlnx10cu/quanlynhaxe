@@ -15,12 +15,9 @@ import {
 } from "../../styles";
 import PopupAccessory from "./PopupAccessory";
 import PopupBillTienCong from "./PopupBillTienCong";
-import HistoryCustomer from "../Admin/HistoryCustomer";
 import lib from "../../lib";
 import { HOST } from "../../Config";
 import { connect } from "react-redux";
-import { UpdateBill, SaveBill, ThanhToan, HuyThanhToan, GetBillSuaChuaByMaHoaDon, CheckUpdateBill } from "../../API/Bill";
-import { GetlistCustomer } from "../../API/Customer";
 import { withRouter } from "react-router-dom";
 import PopupBillCHN from "./PopupBillCHN";
 import {
@@ -36,6 +33,9 @@ import moment from "moment";
 import Loading from "../Loading";
 import utils from "../../lib/utils";
 import { ButtonDelete } from "../Styles";
+import { POPUP_NAME } from "../../actions/Modal";
+import BillSuaChuaAPI from "../../API/BillSuaChuaAPI";
+import CustomerApi from "../../API/CustomerApi";
 
 const oneDay = 1000 * 3600 * 24;
 
@@ -131,82 +131,6 @@ const listLoaiXe = [
     "Khác",
 ];
 
-const ConfirmHoaDon = (props) => {
-    let [maBarcode, setMaBarcode] = useState("");
-
-    const UpdateHoaDon = (maHoaDon) => {
-        var date = new Date();
-        let url = `/services/updatebill?mahoadon=${maHoaDon}`;
-        props.history.push(url, { tokenTime: date.getTime(), mhdToken: maHoaDon });
-    };
-
-    const confirmBarCodeByServer = () => {
-        if (!maBarcode) {
-            props.alert("vui lòng nhập mã code");
-            return;
-        }
-
-        CheckUpdateBill(props.token, { ma: maBarcode, mahoadon: props.mahoadon })
-            .then((res) => {
-                if (res && res.data && res.data.error && res.data.error >= 1) {
-                    setMaBarcode("");
-                    UpdateHoaDon(props.mahoadon);
-                    props.onCloseClick();
-                } else {
-                    props.alert("Mã code không đúng, vui lòng nhập lại");
-                }
-            })
-            .catch((err) => {
-                props.errorHttp(err, "Lỗi : " + err.message);
-            });
-    };
-
-    const _handleKeyPress = (e) => {
-        if (e.key === "Enter") {
-            confirmBarCodeByServer();
-        }
-    };
-    return (
-        <Modal className={props.isShowing ? "active" : ""}>
-            <ModalContent style={{ width: "90%" }}>
-                <div style={{ paddingTop: 3, paddingBottom: 3 }}>
-                    <CloseButton
-                        onClick={() => {
-                            setMaBarcode("");
-                            props.onCloseClick();
-                        }}
-                    >
-                        &times;
-                    </CloseButton>
-                    <h2> </h2>
-                </div>
-                <h3 style={{ textAlign: "center" }}>HEAD TRUNG TRANG</h3>
-                <h4 style={{ textAlign: "center" }}>612/31B Trần Hưng Đạo, phường Bình Khánh, TP Long Xuyên, An Giang</h4>
-                <h5 style={{ textAlign: "center" }}> Bán hàng: 02963 603 828 - Phụ tùng: 02963 603 826 - Dịch vụ: 02963 957 669</h5>
-                <DivFlexRow style={{ alignItems: "center", textAlign: "center" }}>
-                    <label>Nhập barcode: </label>
-                    <Input
-                        type="password"
-                        autocomplete="off"
-                        value={maBarcode}
-                        onKeyPress={_handleKeyPress}
-                        style={{ marginLeft: 10 }}
-                        onChange={(e) => setMaBarcode(e.target.value)}
-                    />
-                    <Button
-                        style={{ marginLeft: 10 }}
-                        onClick={() => {
-                            confirmBarCodeByServer();
-                        }}
-                    >
-                        Thay đổi
-                    </Button>
-                </DivFlexRow>
-            </ModalContent>
-        </Modal>
-    );
-};
-
 const RepairedBill = (props) => {
     let mCustomerName = lib.handleInput("");
     let mPhone = lib.handleInput("");
@@ -216,7 +140,6 @@ const RepairedBill = (props) => {
     let mMaKH = lib.handleInput("");
     let mMaNVSuaChua = lib.handleInput("");
     let [biensoxe, setBienSoXe] = useState("");
-    let [isShowHistoryCustomer, setShowHistoryCustomer] = useState(false);
     let [isShowNewBill, setShowNewBill] = useState(false);
     let [isShowTienCong, setShowTienCong] = useState(false);
     let [isDisableEditInfo, setDisableEditInfo] = useState(false);
@@ -252,7 +175,6 @@ const RepairedBill = (props) => {
 
     let [searchValue, setSearchValue] = useState("");
     let [mDataList, setDataList] = useState([]);
-    let [isShowingConfirm, setShowingConfirm] = useState(false);
 
     var connectSocket = false;
 
@@ -350,10 +272,10 @@ const RepairedBill = (props) => {
         try {
             await props.getAllProduct(props.token);
 
-            await GetlistCustomer(props.token)
+            CustomerApi.getList()
                 .then((response) => {
-                    listBienSo = response.data;
-                    setListBienSo(response.data);
+                    listBienSo = response;
+                    setListBienSo(response);
                     props.addLoading();
                 })
                 .catch((err) => {
@@ -476,23 +398,23 @@ const RepairedBill = (props) => {
     };
 
     const showHoaDon = (mahoadon) => {
-        GetBillSuaChuaByMaHoaDon(props.token, mahoadon)
+        BillSuaChuaAPI.getChitiet(mahoadon)
             .then((res) => {
-                searchBienSoXe(res.data.biensoxe);
-                mMaNVSuaChua.setValue(res.data.manvsuachua);
-                showChiTietPhutung(res.data.chitiet);
-                props.setListBillProduct(res.data.chitiet);
-                mLoaiXe.setValue(res.data.loaixe);
-                mMaKH.setValue(res.data.ma);
-                ngaythanhtoan.setValue(res.data.ngaythanhtoan);
-                setTrangThai(res.data.trangthai);
-                setTuvan(res.data.tuvansuachua);
-                setYeuCau(res.data.yeucaukhachhang);
-                setKiemTraDinhKy(res.data.kiemtradinhky);
-                setKiemTraLanToi(res.data.kiemtralantoi);
-                setThoiGianHen(res.data.thoigianhen);
-                setSoKM(res.data.sokm);
-                setLydo(res.data.lydo);
+                searchBienSoXe(res.biensoxe);
+                mMaNVSuaChua.setValue(res.manvsuachua);
+                showChiTietPhutung(res.chitiet);
+                props.setListBillProduct(res.chitiet);
+                mLoaiXe.setValue(res.loaixe);
+                mMaKH.setValue(res.ma);
+                ngaythanhtoan.setValue(res.ngaythanhtoan);
+                setTrangThai(res.trangthai);
+                setTuvan(res.tuvansuachua);
+                setYeuCau(res.yeucaukhachhang);
+                setKiemTraDinhKy(res.kiemtradinhky);
+                setKiemTraLanToi(res.kiemtralantoi);
+                setThoiGianHen(res.thoigianhen);
+                setSoKM(res.sokm);
+                setLydo(res.lydo);
                 props.addLoading();
 
                 var message = getState("message");
@@ -512,11 +434,11 @@ const RepairedBill = (props) => {
         if (customer !== undefined) {
             updateCustomer(customer);
         } else if (values && (enter || values.length == 10)) {
-            GetlistCustomer(props.token, `biensoxe=${values}`)
+            CustomerApi.getByBienSoXe(values)
                 .then((response) => {
                     if (biensoxe != values) return;
-                    if (response.data && response.data[0] && response.data[0].biensoxe == values) {
-                        updateCustomer(response.data[0]);
+                    if (response && response[0] && response[0].biensoxe == values) {
+                        updateCustomer(response[0]);
                     } else {
                         resetCustomer(lbs, values);
                     }
@@ -605,11 +527,11 @@ const RepairedBill = (props) => {
             mess = "Vui lòng lưu ý trước khi lưu\n Vì hóa đơn này có " + length + " phụ tùng";
         }
         props.confirmError(mess, length == 0 ? 1 : 0, () => {
-            SaveBill(props.token, data)
+            BillSuaChuaAPI.add(data)
                 .then((Response) => {
                     props.deleteBillProduct();
-                    if (props.socket) props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.data.mahoadon, biensoxe: bsx });
-                    props.alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.data.mahoadon);
+                    if (props.socket) props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.mahoadon, biensoxe: bsx });
+                    props.alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.mahoadon);
                     props.history.push("/services");
                 })
                 .catch((err) => {
@@ -619,7 +541,7 @@ const RepairedBill = (props) => {
     };
     const HuyHoaDon = () => {
         props.confirmError("Bạn chắc muốn hủy hóa đơn " + mMaHoaDon, 2, () => {
-            HuyThanhToan(props.token, mMaHoaDon)
+            BillSuaChuaAPI.delete(mMaHoaDon)
                 .then((res) => {
                     if (props.socket) props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
                     setMaHoaDon("");
@@ -769,9 +691,9 @@ const RepairedBill = (props) => {
         }
 
         props.confirmError(mess, !data.tenkh || length == 0 ? 1 : 0, () => {
-            UpdateBill(props.token, data)
+            BillSuaChuaAPI.update(mMaHoaDon, data)
                 .then(() => {
-                    ThanhToan(props.token, mMaHoaDon)
+                    BillSuaChuaAPI.thanhToan(mMaHoaDon)
                         .then(() => {
                             if (props.socket) props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
                             setMaHoaDon("");
@@ -807,7 +729,7 @@ const RepairedBill = (props) => {
         }
         props.confirmError(mess, !data.tenkh || length == 0 ? 1 : 0, () => {
             data.mahoadon = mMaHoaDon;
-            UpdateBill(props.token, data)
+            BillSuaChuaAPI.update(data.mahoadon, data)
                 .then((res) => {
                     if (isUpdateBill == 4 || isUpdateBill == 3) {
                         setUpdated(true);
@@ -993,7 +915,7 @@ const RepairedBill = (props) => {
         return true;
     };
     const handleRedirectUpdate = () => {
-        setShowingConfirm(true);
+        props.openModal(POPUP_NAME.POPUP_COMFIRM_BILL, { mahoadon: mMaHoaDon, loaihoadon: 0 });
     };
 
     return (
@@ -1140,7 +1062,13 @@ const RepairedBill = (props) => {
                                 <option value="6">Lần 6</option>
                             </Select>
                         </DivFlexColumn>
-                        <Button disabled={!biensoxe} onClick={() => setShowHistoryCustomer(true)} style={{ marginLeft: 20, marginTop: 10 }}>
+                        <Button
+                            disabled={!biensoxe}
+                            onClick={() => {
+                                props.openModal(POPUP_NAME.POPUP_CUSTOMER_HISTORY, { ma: mMaKH.value });
+                            }}
+                            style={{ marginLeft: 20, marginTop: 10 }}
+                        >
                             Chi tiết
                         </Button>
                     </DivFlexRow>
@@ -1267,8 +1195,7 @@ const RepairedBill = (props) => {
                                         setUpdated(false);
                                     }}
                                 >
-                                    {" "}
-                                    Thêm Tiền Công{" "}
+                                    Thêm Tiền Công
                                 </Button>
                                 <Button
                                     onClick={() => {
@@ -1276,8 +1203,7 @@ const RepairedBill = (props) => {
                                         setUpdated(false);
                                     }}
                                 >
-                                    {" "}
-                                    Thêm của hàng ngoài{" "}
+                                    Thêm của hàng ngoài
                                 </Button>
                                 <Button
                                     onClick={() => {
@@ -1285,8 +1211,7 @@ const RepairedBill = (props) => {
                                         setUpdated(false);
                                     }}
                                 >
-                                    {" "}
-                                    Thêm mới{" "}
+                                    Thêm mới
                                 </Button>
                             </DivFlexRow>
                         </DivFlexRow>
@@ -1395,16 +1320,14 @@ const RepairedBill = (props) => {
                                             handleHuyBan();
                                         }}
                                     >
-                                        {" "}
-                                        Hủy bàn{" "}
+                                        Hủy bàn
                                     </CancleButton>
                                     <Button
                                         onClick={() => {
                                             handleSaveBill();
                                         }}
                                     >
-                                        {" "}
-                                        Lưu{" "}
+                                        Lưu
                                     </Button>
                                 </DivFlexRow>
                             ) : (
@@ -1414,8 +1337,7 @@ const RepairedBill = (props) => {
                                             UpdateHoaDon();
                                         }}
                                     >
-                                        {" "}
-                                        Update{" "}
+                                        Update
                                     </Button>
                                     {isUpdateBill != 3 && (
                                         <Button
@@ -1424,8 +1346,7 @@ const RepairedBill = (props) => {
                                                 thanhToanHoaDon();
                                             }}
                                         >
-                                            {" "}
-                                            Update và Thanh toán{" "}
+                                            Update và Thanh toán
                                         </Button>
                                     )}
                                     {isUpdateBill != 3 && (
@@ -1435,8 +1356,7 @@ const RepairedBill = (props) => {
                                                 HuyHoaDon();
                                             }}
                                         >
-                                            {" "}
-                                            Hủy{" "}
+                                            Hủy
                                         </DelButton>
                                     )}
                                 </DivFlexRow>
@@ -1451,8 +1371,7 @@ const RepairedBill = (props) => {
                                         handleRedirectUpdate();
                                     }}
                                 >
-                                    {" "}
-                                    Update{" "}
+                                    Update
                                 </Button>
                             )}
                         </DivFlexRow>
@@ -1481,26 +1400,6 @@ const RepairedBill = (props) => {
                         onCloseClick={() => {
                             setShowNewBill(false);
                         }}
-                    />
-
-                    <ConfirmHoaDon
-                        isShowing={isShowingConfirm}
-                        onCloseClick={() => setShowingConfirm(false)}
-                        mahoadon={mMaHoaDon}
-                        token={props.token}
-                        history={props.history}
-                        alert={(mess) => props.alert(mess)}
-                    />
-
-                    <HistoryCustomer
-                        alert={props.alert}
-                        error={props.error}
-                        confirm={props.confirm}
-                        isShowing={isShowHistoryCustomer}
-                        onCloseClick={() => {
-                            setShowHistoryCustomer(false);
-                        }}
-                        ma={mMaKH.value && mMaKH.value !== "" ? mMaKH.value : null}
                     />
                 </div>
             )}

@@ -1,3 +1,5 @@
+import moment from "moment";
+
 module.exports = {
     parseInt: function (val, def, max) {
         try {
@@ -28,12 +30,18 @@ module.exports = {
             currency: "VND",
         });
     },
+    formatNgayGio: function (ngay) {
+        return moment(ngay).format("hh:mm DD/MM/YYYY");
+    },
     tinhTongTien: function (dongia, soluong, chietkhau) {
         dongia = this.parseInt(dongia);
         soluong = this.parseInt(soluong);
         chietkhau = this.parseInt(chietkhau);
 
         return this.parseInt(Math.round((100 - chietkhau) * dongia * soluong) / 100);
+    },
+    formatTongTien: function (dongia, soluong, chietkhau) {
+        return this.formatVND(this.tinhTongTien(dongia, soluong, chietkhau));
     },
     viToEn: function (str) {
         if (!str) {

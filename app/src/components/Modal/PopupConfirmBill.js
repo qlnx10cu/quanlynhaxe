@@ -2,9 +2,9 @@ import React from "react";
 import { DivFlexRow, Button } from "../../styles";
 import { connect } from "react-redux";
 import { InputValue } from "../Styles";
-import { CheckUpdateBill } from "../../API/Bill";
 import lib from "../../lib";
 import ModalWrapper from "../Warrper/ModalWrapper";
+import BillApi from "../../API/BillApi";
 
 const PopupConfirmBill = (props) => {
     const useIsMounted = lib.useIsMounted();
@@ -13,7 +13,7 @@ const PopupConfirmBill = (props) => {
 
     const UpdateHoaDon = (mahoadon, loai) => {
         const date = new Date();
-    
+
         let url = "";
         if (loai == 0) {
             url = `/services/updatebill?mahoadon=${mahoadon}`;
@@ -30,11 +30,12 @@ const PopupConfirmBill = (props) => {
             return;
         }
 
-        return CheckUpdateBill(props.token, { ma: mBarCode.value, mahoadon: item.mahoadon }).then((res) => {
+        return BillApi.checkUpdateBill({ ma: mBarCode.value, mahoadon: item.mahoadon }).then((data) => {
             if (!useIsMounted()) return;
-            if (res && res.data && res.data.error && res.data.error >= 1) {
+            if (data && data.error && data.error >= 1) {
                 mBarCode.setValue("");
                 UpdateHoaDon(item.mahoadon, item.loaihoadon);
+                props.onClose();
             } else {
                 props.alert("Mã code không đúng, vui lòng nhập lại");
             }

@@ -9,6 +9,9 @@ class BillSuaChuaAPI extends ApiObject {
         return APIUtils.delete("/bill/" + this.key + "/" + key);
     }
 
+    thanhToan(mahoadon) {
+        return APIUtils.put(`/bill/mahoadon/${mahoadon}/thanhtoan`);
+    }
 }
 
 export default new BillSuaChuaAPI("/billsuachua", "mahoadon");

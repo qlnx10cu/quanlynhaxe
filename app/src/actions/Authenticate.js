@@ -1,4 +1,4 @@
-import { Login, GetInfo } from "../API/Authenticate";
+import AuthenticateApi from "../API/AuthenticateApi";
 
 export const REQUEST_AUTH = "REQUEST_AUTH";
 export const SUCCESS_AUTH = "SUCCESS_AUTH";
@@ -11,16 +11,16 @@ export const authenticate = (username, password) => (dispatch) => {
         type: REQUEST_AUTH,
     });
 
-    return Login(username, password)
+    return AuthenticateApi.login(username, password)
         .then((response) => {
-            GetInfo(response.data.token, username).then((res) => {
+            AuthenticateApi.getInfo(username).then((res) => {
                 dispatch({
                     type: GET_INFO_SUCCESS,
-                    data: res.data,
+                    data: res,
                 });
                 dispatch({
                     type: SUCCESS_AUTH,
-                    data: response.data,
+                    data: response,
                 });
             });
         })

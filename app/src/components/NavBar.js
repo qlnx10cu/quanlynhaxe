@@ -103,8 +103,6 @@ class NavBar extends React.Component {
     }
 
     componentDidMount() {
-        // this.props.getProfile(this.props.token);
-        // this.props.getListStore(this.props.token);
     }
 
     render() {
@@ -132,17 +130,6 @@ class NavBar extends React.Component {
 }
 
 /* eslint-enable no-invalid-this */
-
-// const mapState = (state) => ({
-//     userName: state.Profile.proDetail.Name,
-//     token: state.Authenticate.token,
-// })
-
-// const mapDispatch = (dispatch) => ({
-//     logout: () => { dispatch(logout()) },
-//     getProfile: (token) => { dispatch(getProfile(token)) },
-//     getListStore: (token) => {dispatch(CallAPIGetListStore(token))}
-// })
 
 // export default connect(mapState, mapDispatch)(NavBar);
 export default NavBar;

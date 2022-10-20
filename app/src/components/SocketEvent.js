@@ -26,7 +26,7 @@ const SocketEvent = (props) => {
                 props.updateLiftTable(data.liftTable);
                 if (props.history.location.pathname == `/services/repairedbill/${data.maban + 1}`) {
                     props.error("Bạn đã bị ai đó hủy bàn này");
-                    props.history.push("/services");
+                    props.history.push("/suachua");
                 }
             }
         });
@@ -35,7 +35,7 @@ const SocketEvent = (props) => {
             if (connected) {
                 try {
                     props.updateLiftTable(data.liftTable);
-                    if (props.history.location.pathname == "/services") {
+                    if (props.history.location.pathname == "/suachua") {
                         props.history.push(`/services/repairedbill/${data.maban + 1}`);
                     }
                 } catch (error) {}

@@ -103,8 +103,8 @@ const ListToolBar = [
         img: "/resources/icon/services.svg",
         Roles: ["Admin", "Dịch Vụ", "Phụ Tùng"],
         onClick: (history, setIndex) => {
-            if (history.location.pathname !== "/services") {
-                history.push("/services");
+            if (history.location.pathname !== "/suachua") {
+                history.push("/suachua");
             }
             setIndex(4);
             document.title = "Dịch vụ sửa chữa";

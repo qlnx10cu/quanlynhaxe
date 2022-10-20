@@ -327,6 +327,56 @@ const TabContent = styled.div`
     }
 `;
 
+const RepairWraper = styled.div`
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-around;
+    margin: 15px 0px;
+`;
+
+const RepairItem = styled.div`
+    max-width: 300px;
+    width: 20%;
+    height: 180px;
+    background-color: #e6e6e6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    position: relative;
+
+    img {
+        width: 100px;
+        height: 100px;
+    }
+
+    span {
+        margin-top: 10px;
+        font-size: 16px;
+        color: black;
+        font-weight: bold;
+    }
+
+    .STT {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-weight: bold;
+        font-size: 45px;
+        padding: 5px;
+    }
+
+    &.working {
+        background-color: #ff6666;
+    }
+
+    &.dangnhap {
+        background-color: #ff0066;
+    }
+`;
+
 export {
     WraperToolBar,
     DivFlexRow,
@@ -347,4 +397,6 @@ export {
     CancleButton,
     ProductContainer,
     ButtonFile,
+    RepairWraper,
+    RepairItem,
 };

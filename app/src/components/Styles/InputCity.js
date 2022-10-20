@@ -1,5 +1,5 @@
 import React from "react";
-import InputList from "./InputList";
+import { Select } from "../../styles";
 
 export const LIST_THANH_PHO = [
     "An Giang",
@@ -70,17 +70,13 @@ export const LIST_THANH_PHO = [
 const InputCity = (props) => {
     return (
         <React.Fragment>
-            <InputList
-                {...props}
-                data={LIST_THANH_PHO}
-                render={(item, index) => {
-                    return (
-                        <option key={index} value={item}>
-                            {item}
-                        </option>
-                    );
-                }}
-            />
+            <Select {...props}>
+                {LIST_THANH_PHO.map((item, index) => (
+                    <option key={index} value={item}>
+                        {item}
+                    </option>
+                ))}
+            </Select>
         </React.Fragment>
     );
 };

@@ -13,6 +13,7 @@ import InputNumber from "./InputNumber";
 import InputGioiTinh from "./InputGioiTinh";
 import InputCity from "./InputCity";
 import InputList from "./InputList";
+import InputLoaiXe from "./InputLoaiXe";
 import CellText from "./CellText";
 import CellMoney from "./CellMoney";
 import CellDelete from "./CellDelete";
@@ -31,6 +32,7 @@ export {
     LabelOverflow,
     InputGioiTinh,
     InputCity,
+    InputLoaiXe,
     InputList,
     InputValue,
     InputNumber,

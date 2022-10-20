@@ -32,78 +32,12 @@ import {
 import moment from "moment";
 import Loading from "../Loading";
 import utils from "../../lib/utils";
-import { ButtonDelete } from "../Styles";
+import { ButtonDelete, InputCity, InputGioiTinh, InputLoaiXe } from "../Styles";
 import { POPUP_NAME } from "../../actions/Modal";
 import BillSuaChuaAPI from "../../API/BillSuaChuaAPI";
 import CustomerApi from "../../API/CustomerApi";
 
 const oneDay = 1000 * 3600 * 24;
-
-const ListThanhPho = [
-    "An Giang",
-    "Bà Rịa - Vũng Tàu",
-    "Bắc Giang",
-    "Bắc Kạn",
-    "Bạc Liêu",
-    "Bắc Ninh",
-    "Bến Tre",
-    "Bình Định",
-    "Bình Dương",
-    "Bình Phước",
-    "Bình Thuận",
-    "Cà Mau",
-    "Cần Thơ",
-    "Cao Bằng",
-    "Đà Nẵng",
-    "Đắk Lắk",
-    "Đắk Nông",
-    "Điện Biên",
-    "Đồng Nai",
-    "Đồng Tháp",
-    "Gia Lai",
-    "Hà Giang",
-    "Hà Nam",
-    "Hà Nội",
-    "Hà Tĩnh",
-    "Hải Dương",
-    "Hải Phòng",
-    "Hậu Giang",
-    "Hồ Chí Minh",
-    "Hoà Bình",
-    "Hưng Yên",
-    "Khánh Hòa",
-    "Kiên Giang",
-    "Kon Tum",
-    "Lai Châu",
-    "Lâm Đồng",
-    "Lạng Sơn",
-    "Lào Cai",
-    "Long An",
-    "Nam Định",
-    "Nghệ An",
-    "Ninh Bình",
-    "Ninh Thuận",
-    "Phú Thọ",
-    "Phú Yên",
-    "Quảng Bình",
-    "Quảng Nam",
-    "Quảng Ngãi",
-    "Quảng Ninh",
-    "Quảng Trị",
-    "Sóc Trăng",
-    "Sơn La",
-    "Tây Ninh",
-    "Thái Bình",
-    "Thái Nguyên",
-    "Thanh Hóa",
-    "Thừa Thiên Huế",
-    "Tiền Giang",
-    "Trà Vinh",
-    "Tuyên Quang",
-    "Vĩnh Long",
-    "Vĩnh Phúc",
-    "Yên Bái",
-];
 
 const listLoaiXe = [
     "Airblade",
@@ -530,7 +464,7 @@ const RepairedBill = (props) => {
                     props.deleteBillProduct();
                     if (props.socket) props.socket.emit("bill", { maban: maban - 1, mahoadon: Response.mahoadon, biensoxe: bsx });
                     props.alert("Tạo Phiếu Sửa Chữa Thành Công - Mã Hóa Đơn:" + Response.mahoadon);
-                    props.history.push("/services");
+                    props.history.push("/suachua");
                 })
                 .catch((err) => {
                     props.errorHttp(err, "Không thể lưu phiếu sữa chưa: ");
@@ -544,7 +478,7 @@ const RepairedBill = (props) => {
                     if (props.socket) props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
                     setMaHoaDon("");
                     props.alert("Hủy hóa đơn " + mMaHoaDon + " thành công");
-                    props.history.push("/services");
+                    props.history.push("/suachua");
                 })
                 .catch((err) => {
                     props.errorHttp(err, "Hủy hóa đơn " + mMaHoaDon + " thất bại");
@@ -556,7 +490,7 @@ const RepairedBill = (props) => {
         props.confirmError("Bạn chắc muốn hủy bàn này", 2, () => {
             if (props.socket) props.socket.emit("release", { maban: maban - 1, mahoadon: "", biensoxe: "" });
             setMaHoaDon("");
-            props.history.push("/services");
+            props.history.push("/suachua");
         });
     };
 
@@ -697,7 +631,7 @@ const RepairedBill = (props) => {
                             setMaHoaDon("");
                             exportBill();
                             props.alert("Thanh toán hóa đơn " + mMaHoaDon + " thành công");
-                            props.history.push("/services");
+                            props.history.push("/suachua");
                         })
                         .catch((err) => {
                             props.errorHttp(err, "Không thể  thanh toán hóa đơn " + mMaHoaDon + "\nVui lòng kiểm lại đường mạng");
@@ -989,33 +923,17 @@ const RepairedBill = (props) => {
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Giới Tính: </label>
-                            <Select {...mGioiTinh} style={{ width: 100 }}>
-                                <option value="0">Nam</option>
-                                <option value="1">Nữ</option>
-                            </Select>
+                            <InputGioiTinh style={{ width: 100 }} {...mGioiTinh} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Thành Phố: </label>
-                            <Select readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mThanhPho}>
-                                {ListThanhPho.map((item, index) => (
-                                    <option key={index} value={item}>
-                                        {item}
-                                    </option>
-                                ))}
-                            </Select>
+                            <InputCity readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mThanhPho} />
                         </DivFlexColumn>
                     </DivFlexRow>
                     <DivFlexRow style={{ alignItems: "center" }}>
                         <DivFlexColumn>
                             <label>Loại xe: </label>
-                            <Input readOnly={showInfoBill} autocomplete="off" list="loai_xe" name="loai_xe" {...mLoaiXe} />
-                            <datalist id="loai_xe">
-                                {listLoaiXe.map((item, index) => (
-                                    <option key={index} value={item}>
-                                        {item}
-                                    </option>
-                                ))}
-                            </datalist>
+                            <InputLoaiXe readOnly={showInfoBill} autocomplete="off" {...mLoaiXe} />
                         </DivFlexColumn>
                         <DivFlexColumn style={{ marginLeft: 20 }}>
                             <label>Số khung: </label>

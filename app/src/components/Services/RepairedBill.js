@@ -400,7 +400,7 @@ const RepairedBill = (props) => {
     const showHoaDon = (mahoadon) => {
         BillSuaChuaAPI.getChitiet(mahoadon)
             .then((res) => {
-                searchBienSoXe(res.biensoxe);
+                searchBienSoXe(res.biensoxe, true);
                 mMaNVSuaChua.setValue(res.manvsuachua);
                 showChiTietPhutung(res.chitiet);
                 props.setListBillProduct(res.chitiet);
@@ -492,9 +492,7 @@ const RepairedBill = (props) => {
     const searchBienSoXe = (values, enter) => {
         biensoxe = values;
         setBienSoXe(values);
-        if (listBienSo && listBienSo.length != 0) {
-            setCustomer(listBienSo, values, enter);
-        }
+        setCustomer(listBienSo || [], values, enter);
     };
 
     const setNhanVienSuaChua = (lbs, values) => {

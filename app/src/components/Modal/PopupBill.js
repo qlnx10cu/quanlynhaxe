@@ -10,11 +10,13 @@ import BillLeApi from "../../API/BillLeApi";
 
 const PopupBill = (props) => {
     const useIsMounted = lib.useIsMounted();
+    const [isLoading, setLoading] = useState(false);
     const [data, setData] = useState(null);
     const item = props.item;
 
     useEffect(() => {
         if (!item) return;
+        setLoading(true);
         getBill(item.mahoadon, item.loaihoadon)
             .then((res) => {
                 if (!useIsMounted()) return;
@@ -23,6 +25,10 @@ const PopupBill = (props) => {
             .catch((err) => {
                 if (!useIsMounted()) return;
                 props.alert("Không lấy được chi tiết bill");
+            })
+            .finally(() => {
+                if (!useIsMounted()) return;
+                setLoading(false);
             });
     }, []);
 
@@ -41,6 +47,9 @@ const PopupBill = (props) => {
             <RenderChiTietNhanVien staff={props.staffs.find((e) => data && e.ma == data.manv)} />
             <h3 style={{ marginTop: 10 }}>Thông tin bill</h3>
             <Choose>
+                <When condition={isLoading}>
+                    <h3 style={{ textAlign: "center" }}>Đang lấy dữ liệu</h3>
+                </When>
                 <When condition={data && data.loaihoadon == 1}>
                     <RenderBillLe data={data} />
                 </When>

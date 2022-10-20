@@ -220,6 +220,7 @@ const Retail = (props) => {
 
         if (customer && customer.ma && customer.sodienthoai == value) {
             mMaKh.setValue(customer.ma);
+            mCustomerName.setValue(customer.ten);
             mDiaChi.setValue(customer.diachi);
             mGioiTinh.setValue(customer.gioitinh);
             mThanhPho.setValue(customer.thanhpho);

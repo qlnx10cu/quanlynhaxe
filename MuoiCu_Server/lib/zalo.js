@@ -104,7 +104,9 @@ module.exports = {
     sendZNS_suachua: function (body) {
         if (!body || !config.zalo.zns)
             return false;
-        var phone = utils.formatSDT(body.sodienthoai);
+
+        const phone = utils.formatSDT(body.sodienthoai);
+        const phoneSend = utils.formatSDTNew(body.sodienthoai);
         if (!phone) {
             logger.info("sendZNS_suachua: error phone : " + body.mahoadon);
             return false;
@@ -156,7 +158,7 @@ module.exports = {
             }
         }
 
-        var body = JSON.stringify({ phone: phone, template_id: template_id, template_data: template_data, tracking_id: body.mahoadon });
+        body = JSON.stringify({ phone: phoneSend, template_id: template_id, template_data: template_data, tracking_id: body.mahoadon });
 
         request.post({
             headers: {

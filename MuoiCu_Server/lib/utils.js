@@ -45,6 +45,25 @@ module.exports = {
         }
 
     },
+    formatSDTNew: function (sdt) {
+        try {
+            if (!sdt)
+                return "";
+            sdt = sdt + "";
+            if (sdt.startsWith("+84")) {
+                sdt = "84" + sdt.substring(3);
+            }
+            if (sdt.startsWith("0")) {
+                sdt = "84" + sdt.substring(1);
+            }
+            if (sdt.length != 11 || !sdt.startsWith("84"))
+                return "";
+            return sdt;
+        } catch (ex) {
+
+        }
+
+    },
     compareSDT: function (sdt1, sdt2) {
         try {
             if (!sdt1 || !sdt2)

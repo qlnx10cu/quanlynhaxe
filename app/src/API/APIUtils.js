@@ -1,7 +1,7 @@
 import axios from "axios";
 import { HOST } from "../Config";
 
-var token = "";
+let token = "";
 
 function serError(err) {
     if (err === null || err === undefined || err === "") {

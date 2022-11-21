@@ -25,7 +25,7 @@ const ButtonChooseFile = ({ data, isUpload, title, onChooseFile, setLoading }) =
         });
     };
     const handleChoseFile = (e) => {
-        var files = e.target.files;
+        const files = e.target.files;
         if (!files || !files[0] || !onChooseFile) {
             return;
         }

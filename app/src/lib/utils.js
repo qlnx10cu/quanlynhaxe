@@ -31,7 +31,7 @@ module.exports = {
         });
     },
     formatNgayGio: function (ngay) {
-        return moment(ngay).format("hh:mm DD/MM/YYYY");
+        return moment(ngay).format("HH:mm DD/MM/YYYY");
     },
     tinhTongTien: function (dongia, soluong, chietkhau) {
         dongia = this.parseInt(dongia);
@@ -71,6 +71,14 @@ module.exports = {
         try {
             navigator.clipboard.writeText(text);
         } catch (ex) {}
+    },
+    getState: function (name) {
+        if (!window.history || !window.history.state || !window.history.state.state || !window.history.state.state[name]) return null;
+        return window.history.state.state[name];
+    },
+    clearState: function (name) {
+        if (!window.history || !window.history.state || !window.history.state.state || !window.history.state.state[name]) return;
+        window.history.pushState(window.history.state.state, "", window.href);
     },
     getGioiTinh: function (gt) {
         gt = this.parseInt(gt);

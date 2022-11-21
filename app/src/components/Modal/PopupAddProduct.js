@@ -67,12 +67,17 @@ const PopupAddProduct = (props) => {
         }
 
         const newData = {
+            loaiphutung: "phutung",
             maphutung: mMaPhuTung.value,
             tenphutung: mTenPhuTung.value,
             nhacungcap: "Trung Trang",
             dongia: mDonGia.value,
             soluong: mSoLuong.value,
             chietkhau: mChietKhau.value,
+            tiencong: 0,
+            thanhtiencong: 0,
+            tienpt: utils.tinhTongTien(mDonGia.value, mSoLuong.value),
+            thanhtienpt: utils.tinhTongTien(mDonGia.value, mSoLuong.value),
             tongtien: utils.tinhTongTien(mDonGia.value, mSoLuong.value, mChietKhau.value),
         };
 

@@ -14,7 +14,7 @@ const CRepairItem = ({ setLoading, confirm, socket, history, stt, item }) => {
         });
     };
     const handleView = () => {
-        history.push(`/services/repairedbill/${stt}`);
+        history.push(`/repairedbill?maban=${stt}&mahoadon=${item.mahoadon}`);
     };
 
     const handleReCall = () => {

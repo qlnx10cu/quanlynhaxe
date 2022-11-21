@@ -17,6 +17,7 @@ const Salary = React.lazy(() => import("./Pages/Salary"));
 const Services = React.lazy(() => import("./Services/Services"));
 const SuaChua = React.lazy(() => import("./Pages/Services"));
 const RepairedBill = React.lazy(() => import("./Services/RepairedBill"));
+const RepairedBillNew = React.lazy(() => import("./Pages/RepairedBill"));
 const HistoryCall = React.lazy(() => import("./Pages/HistoryCall"));
 const Retail = React.lazy(() => import("./Pages/Retail"));
 const ChamCong = React.lazy(() => import("./Pages/ChamCong"));
@@ -49,6 +50,10 @@ const Home = (props) => {
                     <Route path="/cuahangngoai" component={LoadingComponent(StoreOutside, props)} />
                     <Route path="/caidat" component={LoadingComponent(Setting, props)} />
                     <Route path="/suachua" component={LoadingComponent(SuaChua, props, { socket: socket })} />
+
+                    <Route path="/repairedbill" component={LoadingComponent(RepairedBillNew, props, { socket: socket })} />
+                    <Route path="/showrepaired" component={LoadingComponent(RepairedBillNew, props, { socket: socket })} />
+                    <Route path="/updaterepaired" component={LoadingComponent(RepairedBillNew, props, { socket: socket })} />
 
                     <Route
                         exact

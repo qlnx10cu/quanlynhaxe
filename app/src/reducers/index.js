@@ -7,6 +7,7 @@ import Staff from "./StaffReducer";
 import Salary from "./SalaryReducer";
 import Customer from "./CustomerReducer";
 import StoreOutside from "./StoreOutsideReducer";
+import Repaired from "./RepairedReducer";
 import Retail from "./RetailReducer";
 import App from "./App";
 
@@ -18,6 +19,7 @@ export default combineReducers({
     Salary,
     Customer,
     StoreOutside,
+    Repaired,
     Retail,
     AppInfo,
     App,

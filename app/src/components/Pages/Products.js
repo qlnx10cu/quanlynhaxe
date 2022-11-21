@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { DivFlexRow, ButtonFile, DivFlexColumn } from "../../styles";
-import { deleteProduct, getListProduct } from "../../actions/Product";
+import * as actions from "../../actions";
 import { ButtonDelete, ButtonEdit, ButtonUpload } from "../Styles";
 import { POPUP_NAME } from "../../actions/Modal";
 import XLSX from "xlsx";
@@ -105,7 +105,9 @@ const Products = (props) => {
     const useIsMounted = lib.useIsMounted();
 
     useEffect(() => {
-        props.getListProduct();
+        if (!props.phuTungLoading) {
+            props.getListProduct();
+        }
     }, []);
     useEffect(() => {
         if (props.listPhuTung) {
@@ -249,10 +251,11 @@ const Products = (props) => {
 
 const mapState = (state) => ({
     listPhuTung: state.Product.data,
+    phuTungLoading: state.Product.isLoading,
     isLoading: state.App.isLoading,
 });
 const mapDispatch = {
-    getListProduct: () => getListProduct(),
-    deleteProduct: (maphutung) => deleteProduct(maphutung),
+    getListProduct: () => actions.ProductAction.getListProduct(),
+    deleteProduct: (maphutung) => actions.ProductAction.deleteProduct(maphutung),
 };
 export default connect(mapState, mapDispatch)(Products);

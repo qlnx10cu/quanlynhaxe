@@ -74,7 +74,7 @@ const Statistic = (props) => {
     const handleShowBill = (item) => {
         let url = "";
         if (item.loaihoadon == 0) {
-            url = `/services/showbill?mahoadon=${item.mahoadon}`;
+            url = `/showrepaired?mahoadon=${item.mahoadon}`;
         } else {
             url = `/showretail?mahoadon=${item.mahoadon}`;
         }
@@ -168,7 +168,7 @@ const Statistic = (props) => {
                                 <td>{item.tenkh}</td>
                                 <td>{item.biensoxe}</td>
                                 <td>{utils.formatVND(item.tongtien)}</td>
-                                <td>{moment(item.ngaythanhtoan).format("hh:mm DD/MM/YYYY")}</td>
+                                <td>{utils.formatNgayGio(item.ngaythanhtoan)}</td>
                                 <td>{item.loaihoadon === 0 ? "Sửa chữa" : "Bán lẻ"}</td>
                                 <td>
                                     <ButtonShow isUpload={isLoading} onClick={() => handleShowBill(item)} />

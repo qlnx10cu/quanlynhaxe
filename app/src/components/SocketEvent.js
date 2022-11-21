@@ -24,7 +24,7 @@ const SocketEvent = (props) => {
         props.socket.on("lifttableBill", (data) => {
             if (connected) {
                 props.updateLiftTable(data.liftTable);
-                if (props.history.location.pathname == `/services/repairedbill/${data.maban + 1}`) {
+                if (props.history.location.pathname.includes(`/repairedbill?maban=${data.maban + 1}`)) {
                     props.error("Bạn đã bị ai đó hủy bàn này");
                     props.history.push("/suachua");
                 }
@@ -36,7 +36,7 @@ const SocketEvent = (props) => {
                 try {
                     props.updateLiftTable(data.liftTable);
                     if (props.history.location.pathname == "/suachua") {
-                        props.history.push(`/services/repairedbill/${data.maban + 1}`);
+                        props.history.push(`/repairedbill?maban=${data.maban + 1}`);
                     }
                 } catch (error) {}
             }
@@ -78,6 +78,7 @@ const SocketEvent = (props) => {
         props.getListStaff();
         props.getListSalary();
         props.getListStoreOutside();
+        props.getListProduct();
     }, []);
 
     return <div style={{ display: "none" }}></div>;
@@ -92,6 +93,7 @@ const mapDispatch = {
     getListStaff: () => actions.StaffAction.getListStaff(),
     getListSalary: () => actions.SalaryAction.getListSalary(),
     getListStoreOutside: () => actions.StoreOutsideAction.getListStoreOutside(),
+    getListProduct: () => actions.ProductAction.getListProduct(),
 };
 
 export default connect(mapState, mapDispatch)(withRouter(SocketEvent));

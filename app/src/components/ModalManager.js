@@ -13,6 +13,7 @@ import PopupCustomerHistory from "./Modal/PopupCustomerHistory";
 import PopupCustomerCareNote from "./Modal/PopupCustomerCareNote";
 import PopupCustomer from "./Modal/PopupCustomer";
 import PopupAddStoreOutside from "./Modal/PopupAddStoreOutside";
+import PopupAddSalary from "./Modal/PopupAddSalary";
 import PopupAddProduct from "./Modal/PopupAddProduct";
 
 const ArrayModal = {};
@@ -27,6 +28,7 @@ ArrayModal[POPUP_NAME.POPUP_CUSTOMER_CARE_NOTE] = <PopupCustomerCareNote />;
 ArrayModal[POPUP_NAME.POPUP_CUSTOMER_HISTORY] = <PopupCustomerHistory />;
 ArrayModal[POPUP_NAME.POPUP_CUSTOMER] = <PopupCustomer />;
 ArrayModal[POPUP_NAME.POPUP_CUSTOMER_ADD_STORE_OUTSIDES] = <PopupAddStoreOutside />;
+ArrayModal[POPUP_NAME.POPUP_CUSTOMER_ADD_SALARIES] = <PopupAddSalary />;
 ArrayModal[POPUP_NAME.POPUP_CUSTOMER_ADD_PRODUCT] = <PopupAddProduct />;
 
 const ModalManager = (props) => {

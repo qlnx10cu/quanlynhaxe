@@ -17,6 +17,7 @@ import InputLoaiXe from "./InputLoaiXe";
 import CellText from "./CellText";
 import CellMoney from "./CellMoney";
 import CellDelete from "./CellDelete";
+import DivFragment from "./DivFragment";
 import TabPage from "./TabPage";
 
 export {
@@ -39,5 +40,6 @@ export {
     CellText,
     CellMoney,
     CellDelete,
+    DivFragment,
     TabPage,
 };

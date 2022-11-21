@@ -16,7 +16,7 @@ const PopupConfirmBill = (props) => {
 
         let url = "";
         if (loai == 0) {
-            url = `/services/updatebill?mahoadon=${mahoadon}`;
+            url = `/updaterepaired?mahoadon=${mahoadon}`;
         }
         if (loai == 1) {
             url = `/updateretail?mahoadon=${mahoadon}`;

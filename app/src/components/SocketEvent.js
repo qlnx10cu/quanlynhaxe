@@ -79,6 +79,14 @@ const SocketEvent = (props) => {
         props.getListSalary();
         props.getListStoreOutside();
         props.getListProduct();
+
+        const productInterval = setInterval(() => {
+            props.refeshListProduct();
+        }, 300000);
+
+        return () => {
+            clearInterval(productInterval);
+        };
     }, []);
 
     return <div style={{ display: "none" }}></div>;
@@ -94,6 +102,7 @@ const mapDispatch = {
     getListSalary: () => actions.SalaryAction.getListSalary(),
     getListStoreOutside: () => actions.StoreOutsideAction.getListStoreOutside(),
     getListProduct: () => actions.ProductAction.getListProduct(),
+    refeshListProduct: () => actions.ProductAction.refeshListProduct(),
 };
 
 export default connect(mapState, mapDispatch)(withRouter(SocketEvent));

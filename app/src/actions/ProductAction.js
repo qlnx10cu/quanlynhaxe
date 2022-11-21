@@ -30,6 +30,15 @@ export const getListProduct = () => (dispatch) => {
         });
 };
 
+export const refeshListProduct = () => (dispatch) => {
+    return ProductApi.getList().then((res) => {
+        dispatch({
+            type: type.PRODUCTS.GET_LIST_PRODUCTS,
+            data: res,
+        });
+    });
+};
+
 export const addProduct = (data) => (dispatch) => {
     return ProductApi.add(data).then(() => {
         dispatch({

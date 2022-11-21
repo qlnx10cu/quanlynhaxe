@@ -41,8 +41,6 @@ const Retail = (props) => {
     useEffect(() => {
         // fecth to PopupAddProduct
         props.getListCustomer();
-        props.getListProduct();
-
         loadBill();
     }, []);
 
@@ -377,7 +375,7 @@ const Retail = (props) => {
         props.addRetailListItemProduct(data);
     };
 
-    const checkLoading = isLoading || props.Product.isLoading || props.Salary.isLoading || props.Customer.isLoading;
+    const checkLoading = isLoading || props.Salary.isLoading || props.Customer.isLoading;
 
     return (
         <React.Fragment>
@@ -565,7 +563,6 @@ const mapState = (state) => ({
 
 const mapDispatch = {
     getListCustomer: (query) => actions.CustomerAction.getListCustomer(query),
-    getListProduct: () => actions.ProductAction.getListProduct(),
     loadRetailItemProduct: () => actions.RetailAction.loadRetailItemProduct(),
     addRetailItemProduct: (item) => actions.RetailAction.addRetailItemProduct(item),
     addRetailListItemProduct: (data) => actions.RetailAction.addRetailListItemProduct(data),

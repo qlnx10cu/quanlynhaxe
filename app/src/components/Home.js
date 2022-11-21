@@ -14,10 +14,8 @@ const Staffs = React.lazy(() => import("./Pages/Staffs"));
 const Customer = React.lazy(() => import("./Pages/Customer"));
 const Products = React.lazy(() => import("./Pages/Products"));
 const Salary = React.lazy(() => import("./Pages/Salary"));
-const Services = React.lazy(() => import("./Services/Services"));
 const SuaChua = React.lazy(() => import("./Pages/Services"));
-const RepairedBill = React.lazy(() => import("./Services/RepairedBill"));
-const RepairedBillNew = React.lazy(() => import("./Pages/RepairedBill"));
+const RepairedBill = React.lazy(() => import("./Pages/RepairedBill"));
 const HistoryCall = React.lazy(() => import("./Pages/HistoryCall"));
 const Retail = React.lazy(() => import("./Pages/Retail"));
 const ChamCong = React.lazy(() => import("./Pages/ChamCong"));
@@ -49,44 +47,12 @@ const Home = (props) => {
                     <Route path="/thongke" component={LoadingComponent(Statistic, props)} />
                     <Route path="/cuahangngoai" component={LoadingComponent(StoreOutside, props)} />
                     <Route path="/caidat" component={LoadingComponent(Setting, props)} />
+                    <Route path="/products" component={LoadingComponent(Products, props)} />
+
                     <Route path="/suachua" component={LoadingComponent(SuaChua, props, { socket: socket })} />
-
-                    <Route path="/repairedbill" component={LoadingComponent(RepairedBillNew, props, { socket: socket })} />
-                    <Route path="/showrepaired" component={LoadingComponent(RepairedBillNew, props, { socket: socket })} />
-                    <Route path="/updaterepaired" component={LoadingComponent(RepairedBillNew, props, { socket: socket })} />
-
-                    <Route
-                        exact
-                        path="/products"
-                        component={LoadingComponent(() => (
-                            <Products chucvu={props.info.chucvu} {...props} />
-                        ))}
-                    />
-                    <Route
-                        path="/services/repairedbill"
-                        component={LoadingComponent(() => (
-                            <RepairedBill socket={socket} {...props} />
-                        ))}
-                    />
-                    <Route
-                        path="/services/updatebill"
-                        component={LoadingComponent(() => (
-                            <RepairedBill socket={socket} {...props} />
-                        ))}
-                    />
-                    <Route
-                        path="/services/showbill"
-                        component={LoadingComponent(() => (
-                            <RepairedBill socket={socket} {...props} />
-                        ))}
-                    />
-                    <Route
-                        exact
-                        path="/services"
-                        component={LoadingComponent(() => (
-                            <Services socket={socket} {...props} />
-                        ))}
-                    />
+                    <Route path="/repairedbill" component={LoadingComponent(RepairedBill, props, { socket: socket })} />
+                    <Route path="/showrepaired" component={LoadingComponent(RepairedBill, props, { socket: socket })} />
+                    <Route path="/updaterepaired" component={LoadingComponent(RepairedBill, props, { socket: socket })} />
 
                     <If condition={props.info.chucvu === "Admin"}>
                         <Route path="/staffs" component={LoadingComponent(Staffs, props)} />
@@ -104,6 +70,7 @@ const Home = (props) => {
                     <If condition={props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ" || props.info.chucvu === "Văn Phòng"}>
                         <Route path="/chamcong" component={LoadingComponent(ChamCong, props)} />
                     </If>
+
                 </BaseContainer>
             </If>
         </Router>

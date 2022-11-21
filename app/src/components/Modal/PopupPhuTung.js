@@ -7,7 +7,7 @@ import ProductApi from "../../API/ProductApi";
 import lib from "../../lib";
 import utils from "../../lib/utils";
 import { connect } from "react-redux";
-import { addProduct, updateProduct } from "../../actions/Product";
+import * as actions from "../../actions";
 import { InputNumber, TabPage } from "../Styles";
 
 const RenderTableDetail = ({ lichsu }) => {
@@ -253,7 +253,7 @@ const PopupPhuTung = (props) => {
 /* eslint-enable camelcase */
 
 const mapDispatch = {
-    addProduct: (data) => addProduct(data),
-    updateProduct: (maphutung, data) => updateProduct(maphutung, data),
+    addProduct: (data) => actions.ProductAction.addProduct(data),
+    updateProduct: (maphutung, data) => actions.ProductAction.updateProduct(maphutung, data),
 };
 export default connect(null, mapDispatch)(PopupPhuTung);

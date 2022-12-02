@@ -41,6 +41,7 @@ const Retail = (props) => {
     useEffect(() => {
         // fecth to PopupAddProduct
         props.getListCustomer();
+        props.refeshListProduct();
         loadBill();
     }, []);
 
@@ -375,12 +376,10 @@ const Retail = (props) => {
         props.addRetailListItemProduct(data);
     };
 
-    const checkLoading = isLoading || props.Salary.isLoading || props.Customer.isLoading;
-
     return (
         <React.Fragment>
             <Choose>
-                <When condition={checkLoading}>
+                <When condition={refeshListProduct}>
                     <Loading />
                 </When>
                 <Otherwise>
@@ -563,6 +562,7 @@ const mapState = (state) => ({
 
 const mapDispatch = {
     getListCustomer: (query) => actions.CustomerAction.getListCustomer(query),
+    refeshListProduct: () => actions.ProductAction.refeshListProduct(),
     loadRetailItemProduct: () => actions.RetailAction.loadRetailItemProduct(),
     addRetailItemProduct: (item) => actions.RetailAction.addRetailItemProduct(item),
     addRetailListItemProduct: (data) => actions.RetailAction.addRetailListItemProduct(data),

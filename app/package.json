@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "private": true,
   "dependencies": {
     "@rescripts/cli": "0.0.10",
@@ -35,6 +35,8 @@
   },
   "homepage": "./",
   "main": "src/index.js",
+  "description": "Web Trung Trang",
+  "author": "thaonk",
   "eslintConfig": {
     "extends": "react-app"
   },

@@ -106,6 +106,7 @@ const Retail = (props) => {
                 soluong: item.soluong,
                 chietkhau: item.chietkhau,
                 nhacungcap: item.nhacungcap,
+                loaiphutung: item.loaiphutung,
             };
         });
 

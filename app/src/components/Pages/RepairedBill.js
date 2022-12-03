@@ -289,6 +289,7 @@ const RepairedBill = (props) => {
                 loaiphutung: props.Repaired.products[i].loaiphutung,
                 tenphutungvacongviec: props.Repaired.products[i].tenphutung,
                 maphutung: props.Repaired.products[i].maphutung,
+                nhacungcap: props.Repaired.products[i].nhacungcap,
                 soluongphutung: props.Repaired.products[i].soluong,
                 tiencong: props.Repaired.products[i].tiencong,
                 tienpt: props.Repaired.products[i].tienpt,

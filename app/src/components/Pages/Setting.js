@@ -13,6 +13,11 @@ const Setting = (props) => {
         }
     }, [props.info]);
 
+    const handleDowloadTrungTrang = () => {
+        let url = `${HOST}/dowload/SetupTrungTrang.msi`;
+        window.open(url);
+    };
+
     const handleDowloadMicroSip = () => {
         let url = `${HOST}/dowload/MicroSIPFileSetup.msi`;
         window.open(url);
@@ -37,6 +42,11 @@ const Setting = (props) => {
     return (
         <div>
             <h1 style={{ textAlign: "center" }}> Cài Đặt</h1>
+            <DivFlexRow style={{ marginTop: 15, justifyContent: "space-between", alignItems: "center" }}>
+                <DivFlexColumn>
+                    <Button onClick={() => handleDowloadTrungTrang()}>Download TrungTrang</Button>
+                </DivFlexColumn>
+            </DivFlexRow>
             <DivFlexRow style={{ marginTop: 15, justifyContent: "space-between", alignItems: "center" }}>
                 <DivFlexColumn>
                     <Button onClick={() => handleDowloadMicroSip()}>Download MicroSip</Button>

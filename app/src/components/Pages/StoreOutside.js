@@ -37,7 +37,7 @@ const StoreOutside = (props) => {
             title="Danh sách cửa hàng ngoài"
             data={props.storeOutsides}
             addItem={() => addItem()}
-            searchData={(search, e) => utils.searchName(e.ten, search)}
+            searchData={(search, e) => utils.searchName(e.tenphutung, search)}
         >
             <DataTable.Header>
                 <th>Tên phụ tùng</th>

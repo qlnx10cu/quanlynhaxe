@@ -77,7 +77,6 @@ module.exports = {
             var dschamcong = chamcong.filter(e => { return e.ngay === str; })
             dt = dt.map(e => {
                 var resulft = { ma: e.ma, ten: e.ten };
-
                 var cc = dschamcong.find(obj => {
                     return obj.manv == e.ma;
                 })
@@ -87,7 +86,7 @@ module.exports = {
                 if (!kt)
                     resulft.tiencong = 0
                 else
-                    resulft.tiencong = kt.tiencong;
+                    resulft.tiencong = (1 - (1.0*kt.chietkhau)/100) * kt.tiencong;
                 if (!cc) {
                     resulft.ghichu = '';
                     resulft.vskp = 0;
@@ -107,17 +106,17 @@ module.exports = {
         var now = new Date();
         let res = {};
         if (now > praram) {
-            var sql = " Insert into chamcong(manv,ngay,vskp,vsbd,ghichu)  " +
-                " select ma as manv,ngay,vskp,vsbd,ghichu from ( " +
-                " select nv.ma,? as ngay,0 as vskp,0 as vsbd,null  as ghichu from nhanvien nv WHERE nv.chucvu='Sửa Chữa' ) nv " +
-                " WHERE NOT EXISTS ( " +
-                " SELECT * FROM chamcong cc WHERE DATEDIFF(cc.ngay,?) = 0 and cc.manv= nv.ma)"
-            res = await query(sql, [praram, praram]);
+            // var sql = " Insert into chamcong(manv,ngay,vskp,vsbd,ghichu)  " +
+            //     " select ma as manv,ngay,vskp,vsbd,ghichu from ( " +
+            //     " select nv.ma,? as ngay,0 as vskp,0 as vsbd,null  as ghichu from nhanvien nv WHERE nv.chucvu='Sửa Chữa' ) nv " +
+            //     " WHERE NOT EXISTS ( " +
+            //     " SELECT * FROM chamcong cc WHERE DATEDIFF(cc.ngay,?) = 0 and cc.manv= nv.ma)"
+            // res = await query(sql, [praram, praram]);
         }
         sql = " select nvtt.manv,nvtt.ten,nvtt.ngay,nvtt.tiencong,cc.vsbd,cc.vskp,cc.ghichu from " +
             "  (select nv.ma as manv,nv.ten,IFNULL(ct.ntt,?) as ngay,IFNULL(ct.tiencong,0) as tiencong from    " +
             " (select nv.ma,nv.ten from nhanvien nv where nv.chucvu='Sửa Chữa' and nv.isdelete = 0) nv LEFT JOIN  " +
-            " (select cthd.manvsuachua as manv,CAST(hd.ngaythanhtoan as DATE) as ntt, SUM(cthd.tiencong) as tiencong  " +
+            " (select cthd.manvsuachua as manv,CAST(hd.ngaythanhtoan as DATE) as ntt, SUM((100-cthd.chietkhau)*cthd.tiencong/100) as tiencong  " +
             " from chitiethoadonsuachua cthd LEFT JOIN hoadon hd on cthd.mahoadon=hd.mahoadon  " +
             " WHERE DATEDIFF(hd.ngaythanhtoan,?)=0 and hd.trangthai =1  " +
             " group by cthd.manvsuachua,ntt) ct " +

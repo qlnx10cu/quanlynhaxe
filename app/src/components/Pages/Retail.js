@@ -379,7 +379,7 @@ const Retail = (props) => {
     return (
         <React.Fragment>
             <Choose>
-                <When condition={refeshListProduct}>
+                <When condition={isLoading}>
                     <Loading />
                 </When>
                 <Otherwise>

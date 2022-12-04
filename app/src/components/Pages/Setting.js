@@ -44,7 +44,7 @@ const Setting = (props) => {
             <h1 style={{ textAlign: "center" }}> Cài Đặt</h1>
             <DivFlexRow style={{ marginTop: 15, justifyContent: "space-between", alignItems: "center" }}>
                 <DivFlexColumn>
-                    <Button onClick={() => handleDowloadTrungTrang()}>Download TrungTrang</Button>
+                    <Button onClick={() => handleDowloadTrungTrang()}>Download TrungTrang 1.0.2</Button>
                 </DivFlexColumn>
             </DivFlexRow>
             <DivFlexRow style={{ marginTop: 15, justifyContent: "space-between", alignItems: "center" }}>

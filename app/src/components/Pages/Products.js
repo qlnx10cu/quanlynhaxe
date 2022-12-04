@@ -171,10 +171,7 @@ const Products = (props) => {
             ProductApi.deleteAll()
                 .then((res) => {
                     if (!useIsMounted()) return;
-                    props.alert("Xóa thành công.");
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
+                    props.alert("Xóa thành công\n. Vui lòng F5 lại chương trình");
                 })
                 .catch((err) => {
                     props.error("Không xóa được. @@");

@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import { Button, DivFlexRow, RepairItem, RepairWraper } from "../../styles";
 import { connect } from "react-redux";
 import Loading from "../Loading";
+import StatisticApi from "../../API/StatisticApi";
 
 const CRepairItem = ({ setLoading, confirm, socket, history, stt, item }) => {
     const handleSelect = () => {
@@ -80,6 +81,9 @@ const Services = (props) => {
             props.alert("Update thành công");
         });
     };
+    const handleXuatBanTreo = () => {
+        StatisticApi.exportBanTreo();
+    };
 
     const ColumnItem = Array(4).fill();
     const RowItem = Array(12).fill();
@@ -97,6 +101,9 @@ const Services = (props) => {
                             Update
                         </Button>
                     </If>
+                    <Button onClick={handleXuatBanTreo} style={{ marginLeft: 20, marginTop: 10 }}>
+                        Xuất bàn treo
+                    </Button>
                     {RowItem.map((e, row) => (
                         <RepairWraper key={row}>
                             {ColumnItem.map((v, column) => {

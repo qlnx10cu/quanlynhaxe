@@ -21,6 +21,12 @@ module.exports = {
         let res = await query(sql, param);
         return res;
     },
+    getBanTreo: async function () {
+        var sql = "select mahoadon,makh,tenkh,biensoxe,tongtien,ngaythanhtoan,loaihoadon,ngaysuachua from hoadon where mahoadon in (select mahoadon from bannang where trangthai=2 and mahoadon != '')";
+        sql = sql + " ORDER BY ngaythanhtoan desc";
+        let res = await query(sql, []);
+        return res;
+    },
     getEmployee: async function (praram) {
         var sql = "select cthd.manvsuachua,nv.ten,SUM(cthd.tiencong) as tiencong,  CAST(hd.ngaythanhtoan AS date) as ngaythanhtoan from  hoadon hd, chitiethoadonsuachua cthd , nhanvien nv " +
             " where hd.mahoadon=cthd.mahoadon and hd.trangthai=1 AND nv.ma=cthd.manvsuachua and nv.isdelete = 0";

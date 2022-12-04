@@ -27,7 +27,7 @@ module.exports = {
             for (var i in dsHoaDon) {
                 var hd = null;
                 if (req.query.loaihoadon == 0 && dsHoaDon[i].loaihoadon == 0) {
-                    hd = await billchan.getChitietThanhToan(dsHoaDon[i].mahoadon)
+                    hd = await billchan.getChitietThanhToan(dsHoaDon[i].mahoadon, 1)
                 }
                 if (req.query.loaihoadon == 1 && dsHoaDon[i].loaihoadon == 1) {
                     hd = await BillLe.getChitietThanhToan(dsHoaDon[i].mahoadon)
@@ -513,5 +513,25 @@ module.exports = {
 
     inportItem: async function (req, res, next) {
         return res.json({});
-    }
+    },
+    getBanTreo: async function (req, res, next) {
+        try {
+            let dsHoaDon = await Statistic.getBanTreo(req.query);
+            var resulft = [];
+            for (var i in dsHoaDon) {
+                var hd = await billchan.getChitietThanhToan(dsHoaDon[i].mahoadon, 0);
+                if (hd != null) {
+                    resulft.push(hd);
+                }
+            }
+
+            res.json(resulft);
+        } catch (error) {
+            res.status(400).json({
+                error: {
+                    message: error.message
+                }
+            })
+        }
+    },
 };

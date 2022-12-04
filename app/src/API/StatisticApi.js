@@ -26,6 +26,10 @@ class StatisticApi extends ApiObject {
     exportBillEmployee(start, end) {
         window.open(`${HOST}/statistic/bill/employee/export?start=${start}&end=${end}&trangthai=1`, "_blank");
     }
+
+    exportBanTreo() {
+        window.open(`${HOST_SHEME}/exportbantreo`, "_blank");
+    }
 }
 
 export default new StatisticApi("/statistic");

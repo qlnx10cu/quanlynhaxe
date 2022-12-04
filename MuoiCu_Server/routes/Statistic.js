@@ -10,6 +10,7 @@ router.get('/chamcong/employee/execl', Statistic.getBangCongEmployeeExecl);
 
 router.get('/execl', Statistic.getExeclBangCongEmployee);
 router.get('/bill/employee/export', Statistic.getExeclBillEmployee);
+router.get('/bantreo', Statistic.getBanTreo);
 
 router.get('/layfile/', Statistic.getTonKhoItem);
 

@@ -61,9 +61,9 @@ class BillChan {
         return result;
     }
 
-    static async getChitietThanhToan(param) {
+    static async getChitietThanhToan(param, trangthai) {
         try {
-            let sql = "select * from hoadon where mahoadon= ? and trangthai =1  and loaihoadon=0";
+            let sql = `select * from hoadon where mahoadon= ? and trangthai = ${trangthai}  and loaihoadon=0`;
             var result = [];
             var res = await query(sql, param);
             if (!res || res.length == 0) {

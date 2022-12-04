@@ -226,7 +226,6 @@ module.exports = {
     },
     exportBill: async function (req, res) {
         var ws_data = await BillSuachua.getChitiet(req.params.mahoadon);
-     
         ws_data['tongtienpt'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.thanhtienpt, 0);
         ws_data['tongtiencong'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.thanhtiencong, 0);
         ws_data['tongtongtien'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.tongtien, 0);

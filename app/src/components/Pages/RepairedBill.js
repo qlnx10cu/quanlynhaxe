@@ -16,6 +16,7 @@ import DataTable from "../Warrper/DataTable";
 const oneDay = 1000 * 3600 * 24;
 
 const RepairedBill = (props) => {
+    const useIsMounted = lib.useIsMounted();
     const [hoadon, setHoadon] = useState({});
     const [listBienSo, setListBienSo] = useState([]);
     const [listBienSoCurrent, setListBienSoCurrent] = useState([]);
@@ -73,6 +74,7 @@ const RepairedBill = (props) => {
     useEffect(() => {
         CustomerApi.getList()
             .then((response) => {
+                if (!useIsMounted()) return;
                 setListBienSo(response);
             })
             .catch((err) => {
@@ -134,8 +136,8 @@ const RepairedBill = (props) => {
 
         BillSuaChuaAPI.getChitiet(mahoadon)
             .then((res) => {
+                if (!useIsMounted()) return;
                 setHoadon(res);
-
                 mMaNVSuaChua.setValue(res.manvsuachua);
                 props.addRepairedListItemProduct(res.chitiet);
                 mLoaiXe.setValue(res.loaixe);
@@ -184,6 +186,7 @@ const RepairedBill = (props) => {
         } else if (values && (enter || values.length == 10)) {
             CustomerApi.getByBienSoXe(values)
                 .then((response) => {
+                    if (!useIsMounted()) return;
                     if (mBienSoXe.value != values) return;
                     if (response && response[0] && response[0].biensoxe == values) {
                         updateCustomer(response[0]);
@@ -192,6 +195,7 @@ const RepairedBill = (props) => {
                     }
                 })
                 .catch((err) => {
+                    if (!useIsMounted()) return;
                     if (mBienSoXe.value != values) return;
                     resetCustomer(lbs, values);
                 });

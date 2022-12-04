@@ -110,6 +110,7 @@ export default (state = initState, action) => {
             const newState = { ...state };
             const data = convertProductOld(action.data || []);
 
+            newState.products = [];
             data.forEach((item) => {
                 newState.products = addItem(newState.products, item);
             });

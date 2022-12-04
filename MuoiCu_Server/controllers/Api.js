@@ -90,7 +90,7 @@ module.exports = {
 
 					switch (body.event_name) {
 						case 'user_received_message': {
-							if (!body.recipient || body.message)
+							if (!body.recipient || !body.message)
 								break;
 							if (body.message.tracking_id) {
 								var hoadon = await Abstract.getOne(Bill, { mahoadon: body.message.tracking_id });

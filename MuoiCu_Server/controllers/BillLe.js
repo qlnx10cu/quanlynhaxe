@@ -111,7 +111,7 @@ module.exports = {
         data['ngaysuachua'] = new Date();
         data["trangthai"] = 2;
         return BillLe.tangSoLuongPhuTungByMaHD(param.mahoadon)
-            .then(() => Abstract.update(Bill, data,  param));
+            .then(() => Abstract.update(Bill, data, param));
     },
     export: async function (req, res) {
         try {
@@ -173,7 +173,8 @@ module.exports = {
         }
         var chitiet = ws_data.chitiet;
         for (var i = 0; i < chitiet.length; i++) {
-            chitiet[i].tongtien = parseInt(chitiet[i].dongia) * parseInt(chitiet[i].soluong)
+            chitiet[i].tongtien =
+                parseInt(parseInt(chitiet[i].dongia) * parseInt(chitiet[i].soluong) * (1.0 - chitiet[i].chietkhau / 100) / 100) * 100
         }
         ws_data['tongtien'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.tongtien, 0);
         ws_data['layout'] = false;

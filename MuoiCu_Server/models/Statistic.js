@@ -65,7 +65,7 @@ module.exports = {
         var nv = await query(sql);
         var nhanvien = [];
 
-        sql = "select cthd.manvsuachua as manv,CAST(hd.ngaythanhtoan as DATE) as ntt, SUM(cthd.tiencong) as tiencong  " +
+        sql = "select cthd.manvsuachua as manv,CAST(hd.ngaythanhtoan as DATE) as ntt, SUM(IFNULL(cthd.thanhtiencong,0)) as tiencong  " +
             " from chitiethoadonsuachua cthd LEFT JOIN hoadon hd on cthd.mahoadon=hd.mahoadon  " +
             " WHERE DATEDIFF(hd.ngaythanhtoan,?) >=0 and DATEDIFF(?,hd.ngaythanhtoan)>=0 and hd.trangthai =1  " +
             " group by cthd.manvsuachua,ntt order by ntt ASC";
@@ -91,8 +91,9 @@ module.exports = {
                 })
                 if (!kt)
                     resulft.tiencong = 0
-                else
-                    resulft.tiencong = (1 - (1.0*kt.chietkhau)/100) * kt.tiencong;
+                else {
+                    resulft.tiencong = kt.tiencong;
+                }
                 if (!cc) {
                     resulft.ghichu = '';
                     resulft.vskp = 0;

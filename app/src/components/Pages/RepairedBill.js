@@ -501,7 +501,7 @@ const RepairedBill = (props) => {
     const handleChangeChieuKhau = (e, index) => {
         const item = props.Repaired.products[index];
 
-        item.chietkhau = utils.parseInt(e.target.value);
+        item.chietkhau = utils.parseChietKhau(e.target.value);
         props.updateRepairedItemProduct(item, index);
     };
 

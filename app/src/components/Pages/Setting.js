@@ -14,7 +14,7 @@ const Setting = (props) => {
     }, [props.info]);
 
     const handleDowloadTrungTrang = () => {
-        let url = `${HOST}/dowload/SetupTrungTrang_1.0.3.msi`;
+        let url = `${HOST}/dowload/SetupTrungTrang_1.0.4.msi`;
         window.open(url);
     };
 
@@ -44,7 +44,7 @@ const Setting = (props) => {
             <h1 style={{ textAlign: "center" }}> Cài Đặt</h1>
             <DivFlexRow style={{ marginTop: 15, justifyContent: "space-between", alignItems: "center" }}>
                 <DivFlexColumn>
-                    <Button onClick={() => handleDowloadTrungTrang()}>Download TrungTrang 1.0.3</Button>
+                    <Button onClick={() => handleDowloadTrungTrang()}>Download TrungTrang 1.0.4</Button>
                 </DivFlexColumn>
             </DivFlexRow>
             <DivFlexRow style={{ marginTop: 15, justifyContent: "space-between", alignItems: "center" }}>

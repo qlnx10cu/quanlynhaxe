@@ -7,7 +7,7 @@ module.exports = {
             const res = parseInt(val) || def;
             if (max !== undefined && max != null && res > max) return max;
             if (res < 0) return def || 0;
-            if (String(res).trim() != String(val).trim()) return def;
+            if (!String(val).includes(".") && String(res).trim() != String(val).trim()) return def;
             return res;
         } catch (ex) {}
 
@@ -18,6 +18,16 @@ module.exports = {
             def = def || 0;
             const res = parseInt(val) || def;
             if (max !== undefined && max != null && res > max) return max;
+            if (res < 0) return def;
+            return res;
+        } catch (ex) {}
+
+        return def;
+    },
+    parseChietKhau: function (val, def) {
+        try {
+            def = def || 0;
+            const res = parseFloat(val) || def;
             if (res < 0) return def;
             return res;
         } catch (ex) {}
@@ -36,9 +46,10 @@ module.exports = {
     tinhTongTien: function (dongia, soluong, chietkhau) {
         dongia = this.parseInt(dongia);
         soluong = this.parseInt(soluong);
-        chietkhau = this.parseInt(chietkhau);
+        chietkhau = this.parseChietKhau(chietkhau);
 
-        return this.parseInt(Math.round((100 - chietkhau) * dongia * soluong) / 100);
+        const value = ((100 - chietkhau) * dongia * soluong) / 100;
+        return this.parseInt(this.parseInt(value / 100) * 100);
     },
     formatTongTien: function (dongia, soluong, chietkhau) {
         return this.formatVND(this.tinhTongTien(dongia, soluong, chietkhau));

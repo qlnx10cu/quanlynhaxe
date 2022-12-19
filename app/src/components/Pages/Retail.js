@@ -318,7 +318,8 @@ const Retail = (props) => {
 
     const handleChangeChieuKhau = (e, index) => {
         const item = props.Retail.products[index];
-        item.chietkhau = utils.parseInt(e.target.value);
+        item.chietkhau = utils.parseChietKhau(e.target.value);
+
         props.updateRetailItemProduct(item, index);
     };
 

@@ -18,6 +18,7 @@ const RenderTableBill = ({ list }) => {
                         <th>Đơn giá</th>
                         <th>SL</th>
                         <th>Chiết khấu</th>
+                        <th>Số tiền chiết khấu</th>
                         <th>Tiền phụ tùng</th>
                         <th>Tiền công</th>
                         <th>
@@ -34,6 +35,7 @@ const RenderTableBill = ({ list }) => {
                                 <td style={{ textAlign: "right" }}>{utils.formatVND(item.dongia)}</td>
                                 <td style={{ textAlign: "right" }}>{item.soluongphutung}</td>
                                 <td style={{ textAlign: "right" }}>{item.chietkhau}%</td>
+                                <td style={{ textAlign: "right" }}>{utils.formatVND(item.tienchietkhau)}</td>
                                 <td style={{ textAlign: "right" }}>{utils.formatVND(item.tienpt)}</td>
                                 <td style={{ textAlign: "right" }}>{utils.formatVND(item.tiencong)}</td>
                                 <td style={{ textAlign: "right" }}>{utils.formatVND(item.tongtien)}</td>

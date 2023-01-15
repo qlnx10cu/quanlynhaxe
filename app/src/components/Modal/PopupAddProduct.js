@@ -13,7 +13,6 @@ const PopupAddProduct = (props) => {
     const mDonGia = lib.handleInput(0);
     const mSoLuong = lib.handleInput(1);
     const mTonKho = lib.handleInput(1);
-    const mChietKhau = lib.handleInput(0);
 
     const searchMaPhuTung = (values) => {
         mMaPhuTung.setValue(values);
@@ -36,8 +35,6 @@ const PopupAddProduct = (props) => {
     };
 
     const handleSubmit = () => {
-        if (!mChietKhau.value) mChietKhau.value = 0;
-
         if (!mMaPhuTung.value || mMaPhuTung.value.length == 0) {
             return Promise.reject({ error: -1, message: "Chưa nhập mã phụ tùng." });
         }
@@ -58,10 +55,6 @@ const PopupAddProduct = (props) => {
             return Promise.reject({ error: -1, message: "Đợn gía phải >= 0" });
         }
 
-        if (mChietKhau.value < 0 || mChietKhau.value > 100) {
-            return Promise.reject({ error: -1, message: "Chiết khấu không hợp lệ" });
-        }
-
         if (!mTonKho.value || mTonKho.value < mSoLuong.value) {
             return Promise.reject({ error: -1, message: "Số lượng tồn kho không đủ" });
         }
@@ -73,12 +66,14 @@ const PopupAddProduct = (props) => {
             nhacungcap: "Trung Trang",
             dongia: mDonGia.value,
             soluong: mSoLuong.value,
-            chietkhau: mChietKhau.value,
+            chietkhau: 0,
+            tienchietkhau: 0,
+            tiencongchietkhau: 0,
             tiencong: 0,
             thanhtiencong: 0,
             tienpt: utils.tinhTongTien(mDonGia.value, mSoLuong.value),
             thanhtienpt: utils.tinhTongTien(mDonGia.value, mSoLuong.value),
-            tongtien: utils.tinhTongTien(mDonGia.value, mSoLuong.value, mChietKhau.value),
+            tongtien: utils.tinhTongTien(mDonGia.value, mSoLuong.value, 0),
         };
 
         return newData;
@@ -128,15 +123,10 @@ const PopupAddProduct = (props) => {
                 </DivFlexColumn>
             </DivFlexRow>
 
-            <DivFlexColumn>
-                <label>Chiết khấu: </label>
-                <InputNumber min={0} max={100} {...mChietKhau} />
-            </DivFlexColumn>
-
             <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: "flex-end" }}>
                 <label>
                     Tổng tiền:
-                    <span style={{ fontWeight: "bold" }}>{utils.formatVND(utils.tinhTongTien(mDonGia.value, mSoLuong.value, mChietKhau.value))}</span>
+                    <span style={{ fontWeight: "bold" }}>{utils.formatTongTien(mDonGia.value, mSoLuong.value, 0)}</span>
                 </label>
             </DivFlexRow>
         </ModalWrapper>

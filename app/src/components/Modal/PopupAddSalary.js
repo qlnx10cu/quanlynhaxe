@@ -41,6 +41,8 @@ const PopupAddSalary = (props) => {
             dongia: mDonGia.value,
             soluong: 1,
             chietkhau: 0,
+            tienchietkhau: 0,
+            tiencongchietkhau: 0,
             tiencong: mDonGia.value,
             thanhtiencong: mDonGia.value,
             tienpt: 0,
@@ -62,7 +64,7 @@ const PopupAddSalary = (props) => {
         >
             <DivFlexRow>
                 <DivFlexColumn style={{ flex: 1 }}>
-                    <label>Đơn giá:  </label>
+                    <label>Đơn giá: </label>
                     <InputNumber min={0} {...mDonGia} />
                 </DivFlexColumn>
                 <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>

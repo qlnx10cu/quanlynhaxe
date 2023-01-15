@@ -301,6 +301,8 @@ const RepairedBill = (props) => {
                 thanhtienpt: props.Repaired.products[i].thanhtienpt,
                 dongia: props.Repaired.products[i].dongia,
                 chietkhau: props.Repaired.products[i].chietkhau,
+                tienchietkhau: props.Repaired.products[i].tienchietkhau,
+                tiencongchietkhau: props.Repaired.products[i].tiencongchietkhau,
                 tongtien: props.Repaired.products[i].tongtien,
                 manvsuachua: mMaNVSuaChua.value,
             };
@@ -320,6 +322,14 @@ const RepairedBill = (props) => {
             }
             if (item.chietkhau < 0 || item.chietkhau > 100) {
                 props.alert("Phụ tùng :" + item.tenphutung + " có chiết kháu không hợp lệ");
+                return null;
+            }
+            if (item.tienchietkhau < 0) {
+                props.alert("Phụ tùng :" + item.tenphutung + " có tiền chiết kháu không hợp lệ");
+                return null;
+            }
+            if (item.tiencongchietkhau < 0) {
+                props.alert("Phụ tùng :" + item.tenphutung + " có tiền công chiết kháu không hợp lệ");
                 return null;
             }
             if (item.tiencong < 0) {
@@ -502,13 +512,34 @@ const RepairedBill = (props) => {
         const item = props.Repaired.products[index];
 
         item.chietkhau = utils.parseChietKhau(e.target.value);
+        if (item.loaiphutung != "tiencong") {
+            item.tienchietkhau = utils.tinhTienChietKhau(item.dongia, item.chietkhau);
+        }
+        item.tiencongchietkhau = utils.tinhTienChietKhau(item.tiencong, item.chietkhau);
+
+        props.updateRepairedItemProduct(item, index);
+    };
+
+    const handleChangeTienChietKhau = (e, index) => {
+        const item = props.Repaired.products[index];
+        if (item.loaiphutung == "tiencong") {
+            return;
+        }
+
+        item.tienchietkhau = utils.parseInt(e.target.value);
+        item.chietkhau = utils.tinhChietKhau(item.dongia, item.tienchietkhau);
+        item.tiencongchietkhau = utils.tinhTienChietKhau(item.tiencong, item.chietkhau);
         props.updateRepairedItemProduct(item, index);
     };
 
     const handleChangeTienCong = (e, index) => {
         const item = props.Repaired.products[index];
+        if (item.loaiphutung == "tiencong") {
+            return;
+        }
 
         item.tiencong = utils.parseInt(e.target.value);
+        item.tiencongchietkhau = utils.tinhTienChietKhau(item.tiencong, item.chietkhau);
         props.updateRepairedItemProduct(item, index);
     };
 
@@ -540,6 +571,8 @@ const RepairedBill = (props) => {
             dongia: giaban,
             soluong: 1,
             chietkhau: 0,
+            tienchietkhau: 0,
+            tiencongchietkhau: 0,
             tiencong: 0,
             thanhtiencong: 0,
             tienpt: giaban,
@@ -816,6 +849,7 @@ const RepairedBill = (props) => {
                         <th>Đơn giá</th>
                         <th style={{ width: 100 }}>SL</th>
                         <th style={{ width: 100 }}>Chiết khấu (%)</th>
+                        <th style={{ width: 100 }}>Số tiền chiết khấu</th>
                         <th>Tiền phụ tùng</th>
                         <th>Tiền công</th>
                         <th>
@@ -857,16 +891,25 @@ const RepairedBill = (props) => {
                                             min="0"
                                         />
                                     </CellText>
+                                    <CellText>
+                                        <input
+                                            style={{ width: 150, textAlign: "right" }}
+                                            readOnly={showInfoBill || item.loaiphutung == "tiencong"}
+                                            type="number"
+                                            onChange={(e) => handleChangeTienChietKhau(e, index)}
+                                            value={item.tienchietkhau || 0}
+                                            min={0}
+                                        />
+                                    </CellText>
                                     <CellMoney>{item.tienpt}</CellMoney>
                                     <CellText>
                                         <input
                                             style={{ width: 150, textAlign: "right" }}
                                             readOnly={showInfoBill || item.loaiphutung == "tiencong"}
                                             type="number"
-                                            max={100}
                                             onChange={(e) => handleChangeTienCong(e, index)}
                                             value={item.tiencong}
-                                            min="0"
+                                            min={0}
                                         />
                                     </CellText>
                                     <CellMoney>{item.tongtien}</CellMoney>

@@ -12,7 +12,6 @@ const PopupAddStoreOutside = (props) => {
     const mTenPhuTung = lib.handleInput("");
     const mDonGia = lib.handleInput(0);
     const mSoLuong = lib.handleInput(1);
-    const mChietKhau = lib.handleInput(0);
 
     const searchTenPhuTung = (values) => {
         mTenPhuTung.setValue(values);
@@ -30,7 +29,6 @@ const PopupAddStoreOutside = (props) => {
     };
 
     const handleSubmit = () => {
-        if (!mChietKhau.value) mChietKhau.value = 0;
 
         if (!mTenPhuTung.value || mTenPhuTung.value.length == 0) {
             return Promise.reject({ error: -1, message: "Phải có tên phụ tùng." });
@@ -44,10 +42,6 @@ const PopupAddStoreOutside = (props) => {
             return Promise.reject({ error: -1, message: "Đợn gía phải > 0" });
         }
 
-        if (mChietKhau.value < 0 || mChietKhau.value > 100) {
-            return Promise.reject({ error: -1, message: "Chiết khấu không hợp lệ" });
-        }
-
         const newData = {
             loaiphutung: "cuahangngoai",
             maphutung: "",
@@ -55,12 +49,14 @@ const PopupAddStoreOutside = (props) => {
             nhacungcap: mNhaCungCap.value,
             dongia: mDonGia.value,
             soluong: mSoLuong.value,
-            chietkhau: mChietKhau.value,
+            chietkhau: 0,
+            tienchietkhau: 0,
+            tiencongchietkhau: 0,
             tiencong: 0,
             thanhtiencong: 0,
             tienpt: utils.tinhTongTien(mDonGia.value, mSoLuong.value),
             thanhtienpt: utils.tinhTongTien(mDonGia.value, mSoLuong.value),
-            tongtien: utils.tinhTongTien(mDonGia.value, mSoLuong.value, mChietKhau.value),
+            tongtien: utils.tinhTongTien(mDonGia.value, mSoLuong.value, 0),
         };
 
         return newData;
@@ -103,13 +99,6 @@ const PopupAddStoreOutside = (props) => {
                     <InputNumber min={0} {...mDonGia} />
                 </DivFlexColumn>
                 <DivFlexColumn style={{ flex: 1, marginLeft: 15 }}>
-                    <label>Chiết khấu: </label>
-                    <InputNumber min={0} max={100} {...mChietKhau} />
-                </DivFlexColumn>
-            </DivFlexRow>
-
-            <DivFlexRow>
-                <DivFlexColumn style={{ flex: 1 }}>
                     <label>Số lượng: </label>
                     <InputNumber min={1} {...mSoLuong} />
                 </DivFlexColumn>
@@ -118,7 +107,7 @@ const PopupAddStoreOutside = (props) => {
             <DivFlexRow style={{ marginTop: 10, fontSize: 20, justifyContent: "flex-end" }}>
                 <label>
                     Tổng tiền:
-                    <span style={{ fontWeight: "bold" }}>{utils.formatVND(utils.tinhTongTien(mDonGia.value, mSoLuong.value, mChietKhau.value))}</span>
+                    <span style={{ fontWeight: "bold" }}>{utils.formatTongTien(mDonGia.value, mSoLuong.value, 0)}</span>
                 </label>
             </DivFlexRow>
         </ModalWrapper>

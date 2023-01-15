@@ -21,15 +21,17 @@ module.exports = {
                     continue;
                 const dongia = utils.parseInt(ws["D" + i].v);
                 const soluong = utils.parseInt(ws["E" + i].v);
-                const chieukhau = ws["G" + i] ? parseFloat(ws["G" + i].v) : 0;
+                const chieukhau = utils.parseChietKhau(ws["G" + i] ? parseFloat(ws["G" + i].v) : 0);
+                const tienchietkhau = utils.tinhTienChietKhau(dongia, chieukhau);
 
                 const newData = {
                     tenphutung: ws["C" + i] ? ws["C" + i].v : "",
                     maphutung: ws["B" + i] ? ws["B" + i].v : "",
                     dongia: dongia,
                     soluong: soluong,
-                    chietkhau: chieukhau * 100,
-                    tongtien: (dongia - dongia * chieukhau) * soluong,
+                    chietkhau: chieukhau,
+                    tienchieukhau: tienchietkhau,
+                    tongtien: (dongia - tienchietkhau) * soluong,
                     nhacungcap: "Trung Trang",
                 };
                 data.push(newData);

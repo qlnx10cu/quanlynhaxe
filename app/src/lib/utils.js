@@ -27,8 +27,10 @@ module.exports = {
     parseChietKhau: function (val, def) {
         try {
             def = def || 0;
-            const res = parseFloat(val) || def;
+            let res = parseFloat(val) || def;
             if (res < 0) return def;
+            res = (Number(Math.round(res * 100)) * 1.0) / 100;
+            if (res > 100) return 100;
             return res;
         } catch (ex) {}
 
@@ -48,8 +50,35 @@ module.exports = {
         soluong = this.parseInt(soluong);
         chietkhau = this.parseChietKhau(chietkhau);
 
-        const value = ((100 - chietkhau) * dongia * soluong) / 100;
-        return this.parseInt(this.parseInt(value / 100) * 100);
+        const tienchietkhau = this.tinhTienChietKhau(dongia, chietkhau);
+        const thanhtien = this.parseInt(dongia - tienchietkhau);
+
+        return this.parseInt(thanhtien * soluong);
+    },
+    tinhChietKhau: function (dongia, tienchietkhau) {
+        dongia = this.parseInt(dongia);
+        tienchietkhau = this.parseInt(tienchietkhau);
+
+        let chietkhau = this.parseChietKhau((tienchietkhau * 100.0) / dongia);
+        if (tienchietkhau == this.tinhTienChietKhau(dongia, chietkhau)) {
+            return chietkhau;
+        }
+        chietkhau = Number(chietkhau) * 1.0;
+        for (let l = -1.0; l <= 1.0; l = l + 0.01) {
+            let chietkhauNew = this.parseChietKhau(chietkhau + l);
+            if (tienchietkhau == this.tinhTienChietKhau(dongia, chietkhauNew)) {
+                return chietkhauNew;
+            }
+        }
+        return 0;
+    },
+    tinhTienChietKhau: function (dongia, chietkhau) {
+        dongia = this.parseInt(dongia);
+        chietkhau = this.parseChietKhau(chietkhau);
+
+        const value = (1.0 * Number(chietkhau) * dongia) / 100;
+
+        return this.parseInt(Math.round((Number(value) * 1.0) / 100) * 100);
     },
     formatTongTien: function (dongia, soluong, chietkhau) {
         return this.formatVND(this.tinhTongTien(dongia, soluong, chietkhau));

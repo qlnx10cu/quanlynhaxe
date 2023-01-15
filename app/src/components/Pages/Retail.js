@@ -105,6 +105,7 @@ const Retail = (props) => {
                 dongia: item.dongia,
                 soluong: item.soluong,
                 chietkhau: item.chietkhau,
+                tienchietkhau: item.tienchietkhau,
                 nhacungcap: item.nhacungcap,
                 loaiphutung: item.loaiphutung,
             };
@@ -124,6 +125,14 @@ const Retail = (props) => {
             }
             if (item.chietkhau < 0 || item.chietkhau > 100) {
                 props.alert(" SP: " + item.tenphutung + " co chietkhau < 0% or > 100%");
+                return null;
+            }
+            if (item.tienchietkhau < 0) {
+                props.alert(" SP: " + item.tenphutung + " co tiền chietkhau < 0");
+                return null;
+            }
+            if ((item.tienchietkhau * 100.0) / 100 != item.tienchietkhau) {
+                props.alert(" SP: " + item.tenphutung + " co tiền tienchietkhau không phù hợp");
                 return null;
             }
             item.tongtien = utils.tinhTongTien(item.dongia, item.soluong, item.chietkhau);
@@ -319,6 +328,7 @@ const Retail = (props) => {
     const handleChangeChieuKhau = (e, index) => {
         const item = props.Retail.products[index];
         item.chietkhau = utils.parseChietKhau(e.target.value);
+        item.tienchietkhau = utils.tinhTienChietKhau(item.dongia, item.chietkhau);
 
         props.updateRetailItemProduct(item, index);
     };
@@ -366,6 +376,7 @@ const Retail = (props) => {
             dongia: utils.parseInt(item.giaban_le),
             soluong: 1,
             chietkhau: 0,
+            tienchietkhau: 0,
             tongtien: utils.parseInt(item.giaban_le),
             nhacungcap: "Trung Trang",
         };

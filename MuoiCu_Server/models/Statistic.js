@@ -123,7 +123,7 @@ module.exports = {
         sql = " select nvtt.manv,nvtt.ten,nvtt.ngay,nvtt.tiencong,cc.vsbd,cc.vskp,cc.ghichu from " +
             "  (select nv.ma as manv,nv.ten,IFNULL(ct.ntt,?) as ngay,IFNULL(ct.tiencong,0) as tiencong from    " +
             " (select nv.ma,nv.ten from nhanvien nv where nv.chucvu='Sửa Chữa' and nv.isdelete = 0) nv LEFT JOIN  " +
-            " (select cthd.manvsuachua as manv,CAST(hd.ngaythanhtoan as DATE) as ntt, SUM((100-cthd.chietkhau)*cthd.tiencong/100) as tiencong  " +
+            " (select cthd.manvsuachua as manv,CAST(hd.ngaythanhtoan as DATE) as ntt, SUM(cthd.tiencong-cthd.tiencongchietkhau) as tiencong  " +
             " from chitiethoadonsuachua cthd LEFT JOIN hoadon hd on cthd.mahoadon=hd.mahoadon  " +
             " WHERE DATEDIFF(hd.ngaythanhtoan,?)=0 and hd.trangthai =1  " +
             " group by cthd.manvsuachua,ntt) ct " +

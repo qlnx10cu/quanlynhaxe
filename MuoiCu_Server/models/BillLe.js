@@ -6,24 +6,24 @@ class BillLe {
     }
     static getColmun(param) {
         if (param) {
-            let tmp = ['mahoadon', 'maphutung', 'tenphutung', 'dongia', 'soluong', 'ghichu', 'chietkhau', 'nhacungcap','loaiphutung'];
+            let tmp = ['mahoadon', 'maphutung', 'tenphutung', 'dongia', 'soluong', 'ghichu', 'chietkhau', 'tienchietkhau', 'nhacungcap', 'loaiphutung'];
             return tmp.filter(e => Object.keys(param).includes(e));
         }
-        return "`mahoadon`,`maphutung`,`tenphutung`,`dongia`,`soluong`,`ghichu`,`chietkhau`,`nhacungcap`,`loaiphutung`";
+        return "`mahoadon`,`maphutung`,`tenphutung`,`dongia`,`soluong`,`ghichu`,`chietkhau`,`tienchietkhau`,`nhacungcap`,`loaiphutung`";
     }
     static getLike(k) {
         return false;
     }
     static getSelect(tb) {
-        return `${tb}.maphutung,${tb}.tenphutung,${tb}.dongia,${tb}.soluong,${tb}.ghichu,${tb}.chietkhau,${tb}.nhacungcap,${tb}.loaiphutung`;
+        return `${tb}.maphutung,${tb}.tenphutung,${tb}.dongia,${tb}.soluong,${tb}.ghichu,${tb}.chietkhau,${tb}.tienchietkhau,${tb}.nhacungcap,${tb}.loaiphutung`;
     }
     static getParam(param) {
-        let tmp = ['maphutung', 'tenphutung', 'dongia', 'soluong', 'ghichu', 'chietkhau', 'nhacungcap','loaiphutung'];
+        let tmp = ['maphutung', 'tenphutung', 'dongia', 'soluong', 'ghichu', 'chietkhau', 'tienchietkhau', 'nhacungcap', 'loaiphutung'];
         let arr = Object.keys(param).filter(e => tmp.includes(e)).map(e => param[e])
         return arr;
     }
     static getArrayParam(param) {
-        let tmp = ['maphutung', 'tenphutung', 'dongia', 'soluong', 'ghichu', 'chietkhau', 'nhacungcap','loaiphutung'];
+        let tmp = ['maphutung', 'tenphutung', 'dongia', 'soluong', 'ghichu', 'chietkhau', 'tienchietkhau', 'nhacungcap', 'loaiphutung'];
         let obj = {};
         let arr = Object.keys(param).filter(e => tmp.includes(e));
         arr.forEach(e => {

@@ -142,87 +142,87 @@
     }
 
     .row-0 {
-      top: calc(623px + 0 * 26px + 2px );
+      top: calc(620px + 0 * 26px + 2px );
     }
 
     .row-1 {
-      top: calc(623px + 1 * 26px + 2px);
+      top: calc(620px + 1 * 26px + 2px);
     }
 
     .row-2 {
-      top: calc(623px + 2 * 26px + 2px);
+      top: calc(620px + 2 * 26px + 2px);
     }
 
     .row-3 {
-      top: calc(623px + 3 * 26px + 2px);
+      top: calc(620px + 3 * 26px + 2px);
     }
 
     .row-4 {
-      top: calc(623px + 4 * 26px + 2px);
+      top: calc(620px + 4 * 26px + 2px);
     }
 
     .row-5 {
-      top: calc(623px + 5 * 26px + 2px);
+      top: calc(620px + 5 * 26px + 2px);
     }
 
     .row-6 {
-      top: calc(623px + 6 * 26px + 2px);
+      top: calc(620px + 6 * 26px + 2px);
     }
 
     .row-7 {
-      top: calc(623px + 7 * 26px + 2px);
+      top: calc(620px + 7 * 26px + 2px);
     }
 
     .row-8 {
-      top: calc(623px + 8 * 26px + 2px);
+      top: calc(620px + 8 * 26px + 2px);
     }
 
     .row-9 {
-      top: calc(623px + 9 * 26px + 2px);
+      top: calc(620px + 9 * 26px + 2px);
     }
 
     .row-10 {
-      top: calc(623px + 10 * 26px + 2px);
+      top: calc(620px + 10 * 26px + 2px);
     }
 
     .row-11 {
-      top: calc(623px + 11 * 26px + 2px);
+      top: calc(620px + 11 * 26px + 2px);
     }
 
     .row-12 {
-      top: calc(623px + 12 * 26px + 2px);
+      top: calc(620px + 12 * 26px + 2px);
     }
 
     .row-13 {
-      top: calc(623px + 13 * 26px + 2px);
+      top: calc(620px + 13 * 26px + 2px);
     }
 
     .row-14 {
-      top: calc(623px + 14 * 26px + 2px);
+      top: calc(620px + 14 * 26px + 2px);
     }
 
     .row-15 {
-      top: calc(623px + 15 * 26px + 2px);
+      top: calc(620px + 15 * 26px + 2px);
     }
 
     .row-16 {
-      top: calc(623px + 16 * 26px + 2px);
+      top: calc(620px + 16 * 26px + 2px);
     }
 
     .row-17 {
-      top: calc(623px + 17 * 26px + 2px);
+      top: calc(620px + 17 * 26px + 2px);
     }
 
     .row-18 {
-      top: calc(623px + 18 * 26px + 2px);
+      top: calc(620px + 18 * 26px + 2px);
     }
 
     .row-19 {
-      top: calc(623px + 19 * 26px + 2px);
+      top: calc(620px + 19 * 26px + 2px);
     }
 
     .row-20 {
-      top: calc(623px + 20 * 26px + 2px);
+      top: calc(620px + 20 * 26px + 2px);
     }
 
     .ten {
@@ -244,18 +244,26 @@
     }
 
     .sl {
-      left: 508px;
-      width: 26px;
+      left: 500px;
+      width: 22px;
     }
 
     .chietkhau {
-      left: 550px;
-      width: 60px;
+      left: 532px;
+      width: 48px;
+      font-size: 12px;
+    }
+
+    .tienchietkhau {
+      left: 580px;
+      width: 75px;
+      font-size: 13px;
     }
 
     .tienpt {
-      left: 625px;
-      width: 94px;
+      left: 670px;
+      width: 86px;
+      font-size: 14px;
     }
 
     .tiencong {
@@ -321,6 +329,7 @@
   <div class="cell overflow flex dongia row-{{@index}}">{{dongia}}</div>
   <div class="cell overflow flex sl row-{{@index}}">{{soluongphutung}}</div>
   <div class="cell overflow flex chietkhau row-{{@index}}">{{chietkhau}} %</div>
+  <div class="cell overflow flex tienchietkhau row-{{@index}}">{{tienchietkhau}}</div>
   <div class="cell overflow flex tienpt row-{{@index}}">{{tienpt}}</div>
   <div class="cell overflow flex tiencong row-{{@index}}">{{tiencong}}</div>
   <div class="cell overflow flex tong row-{{@index}}">{{tongtien}}</div>
@@ -342,6 +351,7 @@
         list[i].innerHTML = parseInt(list[i].innerHTML).toLocaleString('vi-VI', { style: 'currency', currency: 'VND' })
       }
     }
+    format_momey("tienchietkhau");
     format_momey("dongia");
     format_momey("tienpt");
     format_momey("tiencong");

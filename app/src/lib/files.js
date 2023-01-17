@@ -30,7 +30,7 @@ module.exports = {
                     dongia: dongia,
                     soluong: soluong,
                     chietkhau: chieukhau,
-                    tienchieukhau: tienchietkhau,
+                    tienchietkhau: tienchietkhau,
                     tongtien: (dongia - tienchietkhau) * soluong,
                     nhacungcap: "Trung Trang",
                 };

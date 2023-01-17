@@ -29,7 +29,7 @@ const RenderTableBill = ({ list }) => {
                                 <td style={{ textAlign: "right" }}>{item.soluong}</td>
                                 <td style={{ textAlign: "right" }}>{item.chietkhau}%</td>
                                 <td style={{ textAlign: "right" }}>{item.nhacungcap ? item.nhacungcap : "Trung Trang"}</td>
-                                <td style={{ textAlign: "right" }}>{utils.formatTongTien(item.dongia, item.soluong, item.tienchietkhau)}</td>
+                                <td style={{ textAlign: "right" }}>{utils.formatTongTien(item.dongia, item.soluong, item.chietkhau)}</td>
                             </tr>
                         ))}
                 </tbody>

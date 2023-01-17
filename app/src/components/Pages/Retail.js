@@ -128,10 +128,10 @@ const Retail = (props) => {
                 return null;
             }
             if (item.tienchietkhau < 0) {
-                props.alert(" SP: " + item.tenphutung + " co tiền chietkhau < 0");
+                props.alert(" SP: " + item.tenphutung + " co tiền tienchietkhau < 0");
                 return null;
             }
-            if ((item.tienchietkhau * 100.0) / 100 != item.tienchietkhau) {
+            if (utils.parseInt((item.tienchietkhau * 100.0) / 100) != item.tienchietkhau) {
                 props.alert(" SP: " + item.tenphutung + " co tiền tienchietkhau không phù hợp");
                 return null;
             }

@@ -131,7 +131,7 @@ const Retail = (props) => {
                 props.alert(" SP: " + item.tenphutung + " co tiền tienchietkhau < 0");
                 return null;
             }
-            if (utils.parseInt((item.tienchietkhau * 100.0) / 100) != item.tienchietkhau) {
+            if (utils.parseInt((item.tienchietkhau * 10.0) / 10) != item.tienchietkhau) {
                 props.alert(" SP: " + item.tenphutung + " co tiền tienchietkhau không phù hợp");
                 return null;
             }

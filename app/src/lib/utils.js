@@ -78,7 +78,7 @@ module.exports = {
 
         const value = (1.0 * Number(chietkhau) * dongia) / 100;
 
-        return this.parseInt(Math.round((Number(value) * 1.0) / 100) * 100);
+        return this.parseInt(Math.round((Number(value) * 1.0) / 10) * 10);
     },
     formatTongTien: function (dongia, soluong, chietkhau) {
         return this.formatVND(this.tinhTongTien(dongia, soluong, chietkhau));

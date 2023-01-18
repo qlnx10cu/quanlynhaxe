@@ -29,7 +29,7 @@ module.exports = {
             def = def || 0;
             let res = parseFloat(val) || def;
             if (res < 0) return def;
-            res = (Number(Math.round(res * 100)) * 1.0) / 100;
+            res = (Number(Math.round(res * 1000)) * 1.0) / 1000;
             if (res > 100) return 100;
             return res;
         } catch (ex) {}
@@ -64,7 +64,7 @@ module.exports = {
             return chietkhau;
         }
         chietkhau = Number(chietkhau) * 1.0;
-        for (let l = -1.0; l <= 1.0; l = l + 0.01) {
+        for (let l = -1.0; l <= 1.0; l = l + 0.001) {
             let chietkhauNew = this.parseChietKhau(chietkhau + l);
             if (tienchietkhau == this.tinhTienChietKhau(dongia, chietkhauNew)) {
                 return chietkhauNew;

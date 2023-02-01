@@ -161,7 +161,7 @@ module.exports = {
         }
         sql = sql + " ) as A "
 
-        sql = sql + " left join khachhang kh on kh.ma=A.makh and A.biensoxe=kh.biensoxe and A.makh != ''"
+        sql = sql + " left join khachhang kh on kh.ma=A.makh and NVL(kh.biensoxe,'') = NVL(A.biensoxe,'') and A.makh != ''"
         sql = sql + " left join nhanvien nv on nv.ma=A.manvsuachua and A.manvsuachua != ''"
 
         let res = await query(sql, param);

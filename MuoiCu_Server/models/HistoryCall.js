@@ -1,8 +1,9 @@
-const query = require('../lib/db')
+const query = require('../lib/db');
+const Customer = require('./Customer');
 
 class HistosipryCall {
     static getNameTable() {
-        return "lichsucuocgoi";
+        return "quanlytrungtrang.lichsucuocgoi";
     }
     static getColmun(param) {
         if (param) {
@@ -50,7 +51,7 @@ class HistosipryCall {
         var param = [];
         var sql = "select A.*,B.sodienthoai, B.zaloid, B.biensoxe from (";
 
-        sql = sql + "select * from lichsucuocgoi where 1=1 ";
+        sql = sql + `select * from ${HistosipryCall.getNameTable()} where 1=1 `;
 
         if (praram.start) {
             param.push(praram.start);
@@ -61,7 +62,7 @@ class HistosipryCall {
             sql = sql + "AND DATEDIFF(?,starttime) >= 0 ";
         }
         sql = sql + " and direction != 'pbx2agent') A";
-        sql = sql + " left join khachhang B on B.ma = A.makh";
+        sql = sql + ` left join ${Customer.getNameTable()} B on B.ma = A.makh`;
         sql = sql + " ORDER BY A.starttime desc";
 
         let res = await query(sql, param);

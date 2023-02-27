@@ -1,4 +1,5 @@
-const query = require('../lib/db')
+const query = require('../lib/db');
+const Customer = require('./Customer');
 
 class BillChan {
     static getNameTable() {
@@ -44,7 +45,7 @@ class BillChan {
         var res = await query(sql, param);
         if (!res || res.length == 0)
             return null;
-        sql = "select * from khachhang where ma = ?";
+        sql = "select * from " + Customer.getNameTable() + " where ma = ?";
         var resKH = await query(sql, [res[0].makh]);
 
 
@@ -72,7 +73,7 @@ class BillChan {
             if (!res || res.length == 0) {
                 return null;
             }
-            sql = "select * from khachhang where ma = ?";
+            sql = "select * from " + Customer.getNameTable() + " where ma = ?";
             var resKH = await query(sql, [res[0].makh]);
 
 

@@ -31,6 +31,7 @@
     "passport-local": "^1.0.0",
     "puppeteer": "^1.14.0",
     "request": "^2.88.2",
+    "screenshot-desktop": "^0.0.0-development",
     "socket.io": "^2.2.0",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^3.8.0",

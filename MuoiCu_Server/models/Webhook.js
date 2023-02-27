@@ -2,7 +2,7 @@ const query = require('../lib/db')
 
 class Webhook {
     static getNameTable() {
-        return "webhook";
+        return "quanlytrungtrang.webhook";
     }
     static getColmun(param) {
         if (param) {

@@ -3,6 +3,7 @@ const moment = require('moment')
 
 const Abstract = require("../models/Abstract");
 const ChamCong = require("../models/ChamCong");
+const Customer = require('./Customer');
 const XLSX = require('xlsx');
 
 module.exports = {
@@ -161,7 +162,7 @@ module.exports = {
         }
         sql = sql + " ) as A "
 
-        sql = sql + " left join khachhang kh on kh.ma=A.makh and NVL(kh.biensoxe,'') = NVL(A.biensoxe,'') and A.makh != ''"
+        sql = sql + " left join " + Customer.getNameTable() + " kh on kh.ma=A.makh and IFNULL(kh.biensoxe,'') = IFNULL(A.biensoxe,'') and A.makh != ''"
         sql = sql + " left join nhanvien nv on nv.ma=A.manvsuachua and A.manvsuachua != ''"
 
         let res = await query(sql, param);

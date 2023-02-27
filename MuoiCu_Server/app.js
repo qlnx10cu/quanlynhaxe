@@ -29,6 +29,7 @@ require('dotenv').config({
 
 const emitter = new EventEmitter()
 emitter.setMaxListeners(0)
+process.setMaxListeners(0);
 
 const config = require('./config');
 

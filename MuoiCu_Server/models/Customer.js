@@ -1,10 +1,10 @@
 const query = require('../lib/db')
 const utils = require('../lib/utils')
-const Abstract = require('./Abstract')
+const Abstract = require('./Abstract');
 
 class Customer {
     static getNameTable() {
-        return "khachhang";
+        return "quanlytrungtrang.khachhang";
     }
     static getColmun(param) {
         if (param) {
@@ -26,12 +26,12 @@ class Customer {
         return res;
     }
     static async getHistoryCall(param) {
-        let sql = "SELECT * FROM lichsucuocgoi where makh=? order by starttime DESC";
+        let sql = "SELECT * FROM quanlytrungtrang.lichsucuocgoi where makh=? order by starttime DESC";
         var res = await query(sql, [param]);
         return res;
     }
     static async getHistoryCSKH(param) {
-        let sql = "SELECT * FROM chamsoc where makh=? order by ngayhen DESC";
+        let sql = "SELECT * FROM quanlytrungtrang.chamsoc where makh=? order by ngayhen DESC";
         var res = await query(sql, [param]);
         return res;
     }

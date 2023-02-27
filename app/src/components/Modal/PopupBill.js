@@ -7,6 +7,7 @@ import RenderBillChan from "../ThongKe/RenderBillChan";
 import RenderChiTietNhanVien from "../ThongKe/RenderChiTietNhanVien";
 import BillSuaChuaAPI from "../../API/BillSuaChuaAPI";
 import BillLeApi from "../../API/BillLeApi";
+import { DIA_CHI } from "../../Config";
 
 const PopupBill = (props) => {
     const useIsMounted = lib.useIsMounted();
@@ -42,7 +43,7 @@ const PopupBill = (props) => {
     return (
         <ModalWrapper open={props.open} title={""} callback={props.callback} onClose={props.onClose}>
             <h3 style={{ textAlign: "center" }}>HEAD TRUNG TRANG</h3>
-            <h4 style={{ textAlign: "center" }}>613A/31 Trần Hưng Đạo, phường Bình Khánh, TP Long Xuyên, An Giang</h4>
+            <h4 style={{ textAlign: "center" }}>{DIA_CHI}</h4>
             <h5 style={{ textAlign: "center" }}> Bán hàng: 02963 603 828 - Phụ tùng: 02963 603 826 - Dịch vụ: 02963 957 669</h5>
             <RenderChiTietNhanVien staff={props.staffs.find((e) => data && e.ma == data.manv)} />
             <h3 style={{ marginTop: 10 }}>Thông tin bill</h3>

@@ -12,6 +12,7 @@ var exec = require('child_process').exec;
 const utils = require("../lib/utils");
 const { UV_FS_O_FILEMAP } = require("constants");
 const ChamSoc = require("../models/ChamSoc");
+const config = require('../config');
 
 module.exports = {
 
@@ -39,8 +40,9 @@ module.exports = {
                 return;
             }
 
-            var mhd = await Option.incrementAndGet("masuachua") + '';
-            var mahoadon = 'DV-' + mhd.padStart(8, '0');;
+            var prefix = config.typeserver == 0 ? 'DV' : 'MX';
+            var mhd = await Option.incrementAndGet(prefix + "-" + "masuachua") + '';
+            var mahoadon = prefix + '-' + mhd.padStart(8, '0');
             let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
 
             if (hoaDon) {
@@ -204,7 +206,7 @@ module.exports = {
                 ]
             });
             const page = await browser.newPage();
-            await page.goto(`http://localhost:8080/billsuachua/mahoadon/${req.params.mahoadon}/exportbill`, {
+            await page.goto(`http://localhost:${config.port}/billsuachua/mahoadon/${req.params.mahoadon}/exportbill`, {
                 waitUntil: 'networkidle0'
             });
             var buffer = await page.pdf({

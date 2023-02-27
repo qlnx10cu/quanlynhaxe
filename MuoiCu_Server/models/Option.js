@@ -2,7 +2,7 @@ const query = require('../lib/db')
 
 class Option {
     static getNameTable() {
-        return "caidat";
+        return "quanlytrungtrang.caidat";
     }
     static getColmun(param) {
         if (param) {
@@ -32,7 +32,7 @@ class Option {
         return obj;
     }
     static async getValue(key) {
-        var sql = "select caidat.key,caidat.value from caidat where caidat.key=?";
+        var sql = `select caidat.key,caidat.value from ${Option.getNameTable()} where caidat.key=?`;
         let res = await query(sql, [key]);
         if (res && res[0] && res[0].value) {
             return res[0].value;
@@ -41,18 +41,19 @@ class Option {
     }
     static async getValueInt(key) {
         try {
-            var sql = "select caidat.key,caidat.value from caidat where caidat.key=?";
+            var sql = `select caidat.key,caidat.value from ${Option.getNameTable()} where caidat.key=?`;
             let res = await query(sql, [key]);
             if (res && res[0] && res[0].value) {
                 return parseInt(res[0].value);
             }
         } catch (error) {
+            console.log('err:', error);
         }
         return 0;
     }
     static async getValueJson(key) {
         try {
-            var sql = "select caidat.key,caidat.value from caidat where caidat.key=?";
+            var sql = `select caidat.key,caidat.value from ${Option.getNameTable()} where caidat.key=?`;
             let res = await query(sql, [key]);
             if (res && res[0] && res[0].value) {
                 return JSON.parse(res[0].value);
@@ -64,7 +65,7 @@ class Option {
     }
     static async setValue(key, value) {
         try {
-            var sql = "update caidat set value = ? where `key` = ?";
+            var sql = "update " + Option.getNameTable() + " set value = ? where `key` = ?";
             let res = await query(sql, [value, key]);
             return res;
         } catch (ex) {

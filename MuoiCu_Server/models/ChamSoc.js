@@ -2,7 +2,7 @@ const query = require("../lib/db");
 
 class ChamSoc {
     static getNameTable() {
-        return "chamsoc";
+        return "quanlytrungtrang.chamsoc";
     }
     static getColmun(param) {
         if (param) {
@@ -37,7 +37,7 @@ class ChamSoc {
 
     static async bydate(praram) {
         var param = [];
-        var sql = "select * from chamsoc where 1=1 ";
+        var sql = `select * from ${ChamSoc.getNameTable()} where 1=1 `;
         if (praram.start) {
             param.push(praram.start);
             sql = sql + "AND DATEDIFF(ngayhen,?) >= 0 ";

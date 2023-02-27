@@ -1,4 +1,5 @@
-const query = require('../lib/db')
+const query = require('../lib/db');
+const Customer = require('./Customer');
 
 class BillLe {
     static getNameTable() {
@@ -39,7 +40,7 @@ class BillLe {
             return Promise.reject("Không tìm thấy mã hóa đơn");
         result = res[0];
         if (result && result.makh) {
-            sql = "select * from khachhang where ma=?";
+            sql = "select * from " + Customer.getNameTable() + " where ma=?";
             res = await query(sql, [result.makh]);
             if (res && res[0]) {
                 result.diachi = res[0].diachi;
@@ -65,7 +66,7 @@ class BillLe {
             }
             result = res[0];
             if (result && result.makh) {
-                sql = "select * from khachhang where ma=?";
+                sql = "select * from " + Customer.getNameTable() + " where ma=?";
                 res = await query(sql, [result.makh]);
                 if (res && res[0]) {
                     result.diachi = res[0].diachi;

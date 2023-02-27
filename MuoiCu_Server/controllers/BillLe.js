@@ -7,6 +7,7 @@ const Option = require("../models/Option");
 const Employee = require("../models/Employee");
 const Customer = require("../models/Customer");
 const email = require("../lib/email");
+const config = require("../config");
 
 module.exports = {
     getList: function (req, res) {
@@ -18,9 +19,10 @@ module.exports = {
     add: async function (req, res) {
         try {
 
+            var prefix = config.typeserver == 0 ? 'PT' : 'BL';
             var makh = await Customer.addOrUpdateBanLe(req.body);
-            var mhd = await Option.incrementAndGet("mabanle") + '';
-            var mahoadon = 'PT-' + mhd.padStart(8, '0');
+            var mhd = await Option.incrementAndGet(prefix + "-" + "mabanle") + '';
+            var mahoadon = prefix + "-" + mhd.padStart(8, '0');
             let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
 
             if (hoaDon) {
@@ -131,7 +133,7 @@ module.exports = {
                 ]
             });
             const page = await browser.newPage();
-            await page.goto(`http://localhost:8080/billle/mahoadon/${req.params.mahoadon}/exportbill`, {
+            await page.goto(`http://localhost:${config.port}/billle/mahoadon/${req.params.mahoadon}/exportbill`, {
                 waitUntil: 'networkidle0'
             });
             var buffer = await page.pdf({

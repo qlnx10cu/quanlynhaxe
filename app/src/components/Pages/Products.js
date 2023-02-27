@@ -187,9 +187,11 @@ const Products = (props) => {
         <DivFlexColumn>
             <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between" }}>
                 <DivFlexRow></DivFlexRow>
-                <ButtonUpload isUpload={isLoading} onClick={() => handleXoaHetPhutung()}>
-                    Xóa hết phụ tùng
-                </ButtonUpload>
+                <If condition={location.href.includes("delete")}>
+                    <ButtonUpload isUpload={isLoading} onClick={() => handleXoaHetPhutung()}>
+                        Xóa hết phụ tùng
+                    </ButtonUpload>
+                </If>
                 <DivFlexRow>
                     <ButtonFile style={{ marginRight: 30 }}>
                         <input

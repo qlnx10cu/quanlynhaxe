@@ -5,6 +5,7 @@ import { InputValue } from "../Styles";
 import lib from "../../lib";
 import ModalWrapper from "../Warrper/ModalWrapper";
 import BillApi from "../../API/BillApi";
+import { DIA_CHI } from "../../Config";
 
 const PopupConfirmBill = (props) => {
     const useIsMounted = lib.useIsMounted();
@@ -45,7 +46,7 @@ const PopupConfirmBill = (props) => {
     return (
         <ModalWrapper open={props.open} title={""} callback={props.callback} onClose={props.onClose} titleSubmit={"Thay đổi"}>
             <h3 style={{ textAlign: "center" }}>HEAD TRUNG TRANG</h3>
-            <h4 style={{ textAlign: "center" }}>613A/31 Trần Hưng Đạo, phường Bình Khánh, TP Long Xuyên, An Giang</h4>
+            <h4 style={{ textAlign: "center" }}>{DIA_CHI}</h4>
             <h5 style={{ textAlign: "center" }}> Bán hàng: 02963 603 828 - Phụ tùng: 02963 603 826 - Dịch vụ: 02963 957 669</h5>
             <DivFlexRow style={{ alignItems: "center", textAlign: "center" }}>
                 <label>Nhập barcode: </label>

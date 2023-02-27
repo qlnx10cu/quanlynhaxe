@@ -6,10 +6,11 @@ module.exports = {
     database: {
         username: process.env.DB_USER,
         password: process.env.DB_PASS,
-        database: process.env.DB_NAME,
+        database: process.env.PORT == '8080' ? 'quanlybinhkhanh' : 'quanlymyxuyen',
         host: process.env.HOST,
         limit: process.env.LIMIT
     },
+    typeserver: process.env.PORT == '8080' ? 0 : 1,
     email: {
         enable: parseBool(process.env.ENABLE_EMAIL),
         auth: {

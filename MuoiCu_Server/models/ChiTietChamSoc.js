@@ -1,6 +1,6 @@
 class ChiTietChamSoc {
     static getNameTable() {
-        return "chitietchamsoc";
+        return "quanlytrungtrang.chitietchamsoc";
     }
     static getColmun(param) {
         if (param) {

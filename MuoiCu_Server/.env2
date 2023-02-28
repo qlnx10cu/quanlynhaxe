@@ -1,0 +1,13 @@
+PORT=8081
+DB_USER=root
+DB_PASS=TrungTrang@Head123456!
+DB_NAME=quanlymyxuyen
+HOST=localhost
+LIMIT=50
+secret_key=secret_key
+expires_in=2h
+LOG=E:\data
+ENABLE_EMIAL=true
+ENABLE_ZNS=true
+ENABLE_ZCC=true
+PORT_APP=3000

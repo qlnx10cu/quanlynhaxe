@@ -5,5 +5,5 @@ export const HOST = window.host_url || (process.env.NODE_ENV == "production" ? u
 export const HOST_SHEME = "trungtrang://trungtrang.myddns.me";
 export const DIA_CHI =
     TYPE_SERVER == 1
-        ? "613A/31 Trần Hưng Đạo, phường Mỹ Xuyên, TP Long Xuyên, An Giang"
+        ? "Đường Hải Thượng Lãn Ông, Khóm Đông An 5, P. Mỹ Xuyên, TP. Long Xuyên, T. An Giang"
         : "613A/31 Trần Hưng Đạo, phường Bình Khánh, TP Long Xuyên, An Giang";

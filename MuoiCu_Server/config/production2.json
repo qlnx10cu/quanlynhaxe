@@ -1,0 +1,10 @@
+{
+    "uid": "app2",
+    "append": true,
+    "watch": true,
+    "script": "app2.js",
+    "sourceDir": "C:\\Users\\CPU11496-local\\Documents\\quanlynhaxe\\MuoiCu_Server",
+    "logFile": "C:\\Users\\CPU11496-local\\Documents\\quanlynhaxe\\MuoiCu_Server/logs2/forever.log",
+    "outFile": "C:\\Users\\CPU11496-local\\Documents\\quanlynhaxe\\MuoiCu_Server/logs2/out.log",
+    "errFile": "C:\\Users\\CPU11496-local\\Documents\\quanlynhaxe\\MuoiCu_Server/logs2/error.log"
+}

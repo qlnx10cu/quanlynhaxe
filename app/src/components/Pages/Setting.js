@@ -4,6 +4,8 @@ import { DivFlexColumn, DivFlexRow, Button } from "../../styles";
 import { HOST } from "../../Config";
 import { authenticate } from "../../actions/Authenticate";
 
+const trungTrangVersion = "2.1.1";
+
 const Setting = (props) => {
     let [info, setInfo] = useState(null);
 
@@ -14,7 +16,7 @@ const Setting = (props) => {
     }, [props.info]);
 
     const handleDowloadTrungTrang = () => {
-        let url = `${HOST}/dowload/SetupTrungTrang_2.0.1.msi`;
+        let url = `${HOST}/dowload/SetupTrungTrang_${trungTrangVersion}.msi`;
         window.open(url);
     };
 
@@ -44,7 +46,7 @@ const Setting = (props) => {
             <h1 style={{ textAlign: "center" }}> Cài Đặt</h1>
             <DivFlexRow style={{ marginTop: 15, justifyContent: "space-between", alignItems: "center" }}>
                 <DivFlexColumn>
-                    <Button onClick={() => handleDowloadTrungTrang()}>Download TrungTrang 2.0.1</Button>
+                    <Button onClick={() => handleDowloadTrungTrang()}>Download TrungTrang {trungTrangVersion}</Button>
                 </DivFlexColumn>
             </DivFlexRow>
             <DivFlexRow style={{ marginTop: 15, justifyContent: "space-between", alignItems: "center" }}>

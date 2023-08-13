@@ -39,6 +39,7 @@ const RepairedBill = (props) => {
     const mSoMay = lib.handleInput("");
     const mSoKm = lib.handleInput(0);
     const mNgayThanhToan = lib.handleInput("");
+    const mNgayDuKien = lib.handleInputDate("YYYY-MM-DD HH:mm:ss", moment().add(15, "minutes"));
 
     const [yeucau, setYeuCau] = useState("");
     const [tuvan, setTuvan] = useState("");
@@ -143,6 +144,7 @@ const RepairedBill = (props) => {
                 mLoaiXe.setValue(res.loaixe);
                 mMaKH.setValue(res.ma);
                 mNgayThanhToan.setValue(res.ngaythanhtoan);
+                mNgayDuKien.setValue(res.ngaydukien);
                 setTrangThai(res.trangthai);
                 setTuvan(res.tuvansuachua);
                 setYeuCau(res.yeucaukhachhang);
@@ -354,6 +356,7 @@ const RepairedBill = (props) => {
             somay: mSoMay.value,
             sokhung: mSoKhung.value,
             biensoxe: mBienSoXe.value,
+            ngaydukien: mNgayDuKien.value,
             makh: mMaKH.value && mMaKH.value != "" ? mMaKH.value : null,
             tongtien: tong,
             tienpt: tienpt,
@@ -633,6 +636,10 @@ const RepairedBill = (props) => {
                     <DivFlexColumn style={{ marginLeft: 20 }}>
                         <label>Tên nhân viên sửa chữa: </label>
                         <Input readOnly autocomplete="off" {...mTenNhanVien} />
+                    </DivFlexColumn>
+                    <DivFlexColumn style={{ marginLeft: 20 }}>
+                        <label>Thời gian dự kiến: </label>
+                        <Input type="datetime-local" readOnly={showInfoBill} {...mNgayDuKien} />
                     </DivFlexColumn>
                 </DivFlexRow>
                 <DivFlexRow style={{ alignItems: "center" }}>

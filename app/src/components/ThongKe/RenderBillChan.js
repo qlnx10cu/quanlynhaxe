@@ -128,6 +128,10 @@ const RenderBillChan = ({ data }) => {
                     <label>Ngày Hẹn: </label>
                     <Input readOnly value={data.ngayhen ? moment(data.ngayhen).format("DD/MM/YYYY") : "Không có"} />
                 </DivFlexColumn>
+                <DivFlexColumn style={{ marginLeft: 20 }}>
+                    <label>Số Km Lần tới: </label>
+                    <Input readOnly value={data.sokmhen} />
+                </DivFlexColumn>
             </DivFlexRow>
             <If condition={data.lydo}>
                 <DivFlexRow>

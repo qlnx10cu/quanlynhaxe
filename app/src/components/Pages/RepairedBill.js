@@ -48,6 +48,7 @@ const RepairedBill = (props) => {
     const [kiemtradinhky, setKiemTraDinhKy] = useState("0");
     const [kiemtralantoi, setKiemTraLanToi] = useState("");
     const [thoigianhen, setThoiGianHen] = useState("");
+    const [sokmhen, setSoKmHen] = useState("");
 
     const maban = utils.getQueryParams("maban");
     const mahoadon = utils.getQueryParams("mahoadon");
@@ -151,6 +152,7 @@ const RepairedBill = (props) => {
                 setKiemTraDinhKy(res.kiemtradinhky);
                 setKiemTraLanToi(res.kiemtralantoi);
                 setThoiGianHen(res.thoigianhen);
+                setSoKmHen(res.sokmhen);
                 mSoKm.setValue(res.sokm);
                 setLydo(res.lydo);
 
@@ -368,6 +370,7 @@ const RepairedBill = (props) => {
             lydo: lydo,
             kiemtradinhky: kiemtradinhky ? kiemtradinhky : "0",
             kiemtralantoi: kiemtralantoi,
+            sokmhen: sokmhen,
             thoigianhen: thoigianhen,
             sokm: mSoKm.value || 0,
         };
@@ -763,6 +766,16 @@ const RepairedBill = (props) => {
                             value={kiemtralantoi}
                             onChange={(e) => {
                                 setKiemTraLanToi(e.target.value);
+                            }}
+                        />
+                    </DivFlexColumn>
+                    <DivFlexColumn style={{ marginLeft: 20 }}>
+                        <label>Số km hẹn: </label>
+                        <Input
+                            readOnly={showInfoBill}
+                            value={sokmhen}
+                            onChange={(e) => {
+                                setSoKmHen(e.target.value);
                             }}
                         />
                     </DivFlexColumn>

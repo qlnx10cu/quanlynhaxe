@@ -23,8 +23,9 @@ const LiftTable = require('../controllers/LiftTable');
 module.exports = (app) => {
 
   app.use(function (req, res, next) {
+    req.start = Date.now();
     req.fullUrl = req.method + " " + req.protocol + '://' + req.get('host') + req.originalUrl;
-    logger.info(req.fullUrl);
+    logger.info(req.fullUrl +" with:"+ req.start);
     next();
   });
   LiftTable(app.io);

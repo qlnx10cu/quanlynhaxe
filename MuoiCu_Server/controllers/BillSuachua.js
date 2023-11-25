@@ -13,6 +13,7 @@ const utils = require("../lib/utils");
 const { UV_FS_O_FILEMAP } = require("constants");
 const ChamSoc = require("../models/ChamSoc");
 const config = require('../config');
+const logger = require("../lib/logger");
 
 module.exports = {
 
@@ -33,6 +34,8 @@ module.exports = {
                 return;
             }
 
+            logger.info("Id: "+req.start+" BillSuaChua.add addOrUpdateSuaChua: ");
+
             var makh = await Customer.addOrUpdateSuaChua(req.body);
 
             if (!makh) {
@@ -40,10 +43,14 @@ module.exports = {
                 return;
             }
 
+            logger.info("Id: "+req.start+" BillSuaChua.add incrementAndGet ");
+
             var prefix = config.typeserver == 0 ? 'DV' : 'MX';
             var mhd = await Option.incrementAndGet(prefix + "-" + "masuachua") + '';
             var mahoadon = prefix + '-' + mhd.padStart(8, '0');
             let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
+
+            logger.info("Id: "+req.start+" BillSuaChua.add Bill.getOne ");
 
             if (hoaDon) {
                 librespone.error(req, res, "Hóa đơn đã tồn tại vui lòng thủ lại.");
@@ -68,10 +75,14 @@ module.exports = {
                 detailbill[k]['mahoadon'] = mahoadon;
             }
 
+            logger.info("Id: "+req.start+" BillSuaChua.add Bill.bodybill ");
             let resulft = await Abstract.add(Bill, bodybill);
             if (detailbill.length != 0)
                 resulft = await Abstract.addMutil(BillSuachua, detailbill);
+
+            logger.info("Id: "+req.start+" BillSuaChua.add Bill.giamSoLuongPhuTung ");
             await BillSuachua.giamSoLuongPhuTung(mahoadon);
+            logger.info("Id: "+req.start+" BillSuaChua.add done ");
 
             res.json({ "mahoadon": mahoadon });
         } catch (error) {
@@ -89,6 +100,8 @@ module.exports = {
                 librespone.error(req, res, "Không tồn tại mã hóa đơn");
                 return;
             }
+
+            logger.info("Id: "+req.start+" BillSuaChua.update Customer.addOrUpdateSuaChua ");
 
             var makh = await Customer.addOrUpdateSuaChua(req.body);
 
@@ -117,12 +130,15 @@ module.exports = {
             data.updatetime = new Date();
             var makh = req.body.makh;
 
+            logger.info("Id: "+req.start+" BillSuaChua.update Bill.getOne ");
+
             let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
             if (hoaDon) {
                 if (hoaDon.trangthai == 1 && !conlai.lydo) {
                     librespone.error(req, res, "Vui lòng nhập lý do hay đổi hóa đơn.");
                     return;
                 }
+                logger.info("Id: "+req.start+" BillSuaChua.update Customer.getOne ");
                 if (!makh && data.biensoxe) {
                     let r = await Abstract.getOne(Customer, { biensoxe: data.biensoxe });
                     if (r && r.biensoxe == data.biensoxe) {
@@ -132,6 +148,7 @@ module.exports = {
                     }
                 }
 
+                logger.info("Id: "+req.start+" BillSuaChua.update Customer.add ");
                 if (!makh) {
                     let r = await Abstract.add(Customer, data);
                     makh = r.insertId;
@@ -140,6 +157,8 @@ module.exports = {
                         return;
                     }
                 } else {
+                    logger.info("Id: "+req.start+" BillSuaChua.update Customer.update ");
+
                     let r = await Abstract.update(Customer, data, { ma: makh, biensoxe: data.biensoxe });
                     if (!r || r == null) {
                         librespone.error(req, res, "Kiểm tra lại thông tin khách hàng");
@@ -147,6 +166,7 @@ module.exports = {
                     }
                 }
 
+                logger.info("Id: "+req.start+" BillSuaChua.update sendMail");
                 if (hoaDon.trangthai == 1) {
                     email.sendMail(req, res, "Update hóa đơn sữa chữa", "Hệ thống vừa update hoá đơn với mã " + mahoadon + "\nLý do:\n" + conlai.lydo);
                 }
@@ -159,26 +179,38 @@ module.exports = {
                     detailbill[k]['mahoadon'] = mahoadon;
                 }
                 var paramHoaDon = { mahoadon: mahoadon };
+                logger.info("Id: "+req.start+" BillSuaChua.update tangSoLuongPhuTung");
+
                 await BillSuachua.tangSoLuongPhuTung(mahoadon);
+                logger.info("Id: "+req.start+" BillSuaChua.update Bill.Abstract.update");
+                
                 let resulft = await Abstract.update(Bill, bodybill, paramHoaDon);
+
+                logger.info("Id: "+req.start+" BillSuaChua.update BillSuachua.deleteMahoaDon");
+
                 await BillSuachua.deleteMahoaDon(mahoadon);
                 if (detailbill.length != 0)
                     resulft = await Abstract.addMutil(BillSuachua, detailbill);
+                logger.info("Id: "+req.start+" BillSuaChua.update BillSuachua.giamSoLuongPhuTung");
                 await BillSuachua.giamSoLuongPhuTung(mahoadon);
 
                 if (hoaDon.trangthai == 1) {
                     var chamsoc = { ...bodybill };
                     delete chamsoc['trangthai'];
                     delete chamsoc['ma'];
+                    logger.info("Id: "+req.start+" BillSuaChua.update ChamSoc.update");
                     await Abstract.update(ChamSoc, bodybill, { mahoadon: mahoadon });
                 }
-
+                logger.info("Id: "+req.start+" BillSuaChua.update done");
                 res.json({ "mahoadon": mahoadon });
             } else {
+                logger.info("Id: "+req.start+" BillSuaChua.update Không update được hóa đơn ");
+
                 librespone.error(req, res, 'Không update được hóa đơn');
             }
 
         } catch (error) {
+            logger.info("Id: "+req.start+" BillSuaChua.update error ");
             librespone.error(req, res, error.message);
         }
     },
@@ -186,7 +218,10 @@ module.exports = {
         if (req.params.ma) {
             return "Không tồn tại mã hóa đơn";
         }
-        return BillSuachua.delete(req.params.ma);
+        logger.info("Id: "+req.start+" BillSuaChua.delete first");
+        var res = BillSuachua.delete(req.params.ma);
+        logger.info("Id: "+req.start+" BillSuaChua.delete done");
+        return res;
     },
     export: async function (req, res) {
         try {

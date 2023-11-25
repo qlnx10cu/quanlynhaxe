@@ -8,6 +8,7 @@ const librespone = require("../lib/respone");
 const Customer = require("../models/Customer");
 const zalo = require("../lib/zalo");
 const utils = require("../lib/utils");
+const logger = require("../lib/logger");
 
 module.exports = {
     getList: function (req, res) {
@@ -30,37 +31,51 @@ module.exports = {
         try {
             var data = {};
 
+            logger.info("Id: "+req.start+" Bill.delete Bill.getOne ");
+
             let hoadon = await Abstract.getOne(Bill, req.params);
             if (hoadon && hoadon.trangthai != 2) {
                 data['ngaysuachua'] = new Date();
                 data["trangthai"] = 2;
+                logger.info("Id: "+req.start+" Bill.delete Bill.update ");
                 let resulft = await Abstract.update(Bill, data, req.params);
+                logger.info("Id: "+req.start+" Bill.delete BillSuachua.tangSoLuongPhuTung ");
                 await BillSuachua.tangSoLuongPhuTung(req.params.mahoadon);
+                logger.info("Id: "+req.start+" Bill.delete ChamSoc.delete ");
                 await Abstract.delete(ChamSoc, { mahoadon: req.params.mahoadon });
+                logger.info("Id: "+req.start+" Bill.delete done ");
                 res.json(resulft);
             } else {
+                logger.info("Id: "+req.start+" Bill.delete error ");
                 librespone.error(req, res, 'Không thể xóa hóa đơn');
             }
 
 
 
         } catch (error) {
+            logger.info("Id: "+req.start+" Bill.delete error first ");
             librespone.error(req, res, error.message);
         }
     },
     thanhtoan: async function (req, res, next) {
         try {
+            logger.info("Id: "+req.start+" Bill.thanhtoan Abstract.getOne ");
             let hoadon = await Abstract.getOne(Bill, req.params);
             if (hoadon && hoadon.trangthai == 0) {
                 var param = [];
                 param["ngaythanhtoan"] = new Date();
                 param['ngaysuachua'] = param["ngaythanhtoan"];
                 param["trangthai"] = 1;
+                logger.info("Id: "+req.start+" Bill.thanhtoan Abstract.update ");
+
                 let resulft = await Abstract.update(Bill, param, req.params);
+                logger.info("Id: "+req.start+" Bill.thanhtoan setTimeout ");
 
                 setTimeout(async function () {
                     try {
+                        logger.info("Id: "+req.start+" Bill.thanhtoan setTimeout.getOne ");
                         var kh = await Abstract.getOne(Customer, { ma: hoadon.makh });
+                        logger.info("Id: "+req.start+" Bill.thanhtoan setTimeout.return ");
                         if (kh == null) return;
                         hoadon.sodienthoai = kh.sodienthoai;
                         hoadon.zaloid = kh.zaloid;
@@ -69,20 +84,34 @@ module.exports = {
                             if (hoadon.thoigianhen > 0) {
                                 var chamsoc = { ...hoadon };
                                 chamsoc.trangthai = 0;
+                                logger.info("Id: "+req.start+" Bill.thanhtoan setTimeout.ChamSoc ");
                                 await Abstract.add(ChamSoc, chamsoc);
+                                logger.info("Id: "+req.start+" Bill.thanhtoan setTimeout.ChamSoc.done ");
                             }
-                        } catch (ex) { }
+                        } catch (ex) { 
+                            logger.info("Id: "+req.start+" Bill.thanhtoan setTimeout.ChamSoc.error ");
+                        }
 
                         try {
+                            logger.info("Id: "+req.start+" Bill.thanhtoan setTimeout.sendZNS_suachua ");
                             zalo.sendZNS_suachua(hoadon);
-                        } catch (ex) { }
-                    } catch (ex) { }
+                            logger.info("Id: "+req.start+" Bill.thanhtoan setTimeout.sendZNS_suachua.done ");
+                        } catch (ex) { 
+                            logger.info("Id: "+req.start+" Bill.thanhtoan setTimeout.sendZNS_suachua.error ");
+                        }
+                    } catch (ex) {
+                        logger.info("Id: "+req.start+" Bill.thanhtoan setTimeout.error ");
+                     }
                 });
+                logger.info("Id: "+req.start+" Bill.thanhtoan done ");
                 res.json(resulft);
             }
-            else
+            else {
+                logger.info("Id: "+req.start+" Bill.thanhtoan no.error ");
                 librespone.error(req, res, 'Không thanh toán hóa đơn');
+            }
         } catch (error) {
+            logger.info("Id: "+req.start+" Bill.thanhtoan errorno.error ");
             librespone.error(req, res, error.message);
         }
     },

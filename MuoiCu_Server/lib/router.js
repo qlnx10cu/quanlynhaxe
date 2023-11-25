@@ -25,13 +25,15 @@ function process(req, res, callback, queue) {
                 })
         }
 
-        return taskqueue.push(() => callback(req, res))
-            .then((value) => {
+        return taskqueue.push(req.start, () => callback(req, res))
+            .then(req.start, (value) => {
                 responeValue(req, res, value);
             })
-            .catch((error) => {
+            .catch(req.start, (error) => {
                 return librespone.error(req, res, error);
-            })
+            }).finally(req.start,()=>{
+
+            });
     } catch (error) {
         return librespone.error(req, res, error);
     }

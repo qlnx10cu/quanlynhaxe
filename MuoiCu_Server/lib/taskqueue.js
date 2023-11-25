@@ -14,15 +14,13 @@ class TaskQueue {
         return this.then(task);
     }
 
-    then(id, task) {
-        logger.info("Id: "+id+" TaskQueue.then with:" + this.index);
+    then(task) {
         if (task)
             this.queue = this.queue.then(task);
         
         return this;
     }
-    catch(id, task) {
-        logger.info("Id: "+id+" TaskQueue.catch with:" + this.index);
+    catch(task) {
         if (task)
             this.queue = this.queue.catch(task);
         return this;

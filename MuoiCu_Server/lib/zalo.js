@@ -12,6 +12,7 @@ module.exports = {
     init: async function () {
 
 
+        logger.info("Init Zalo: ");
         this.updateAccessToken();
 
 

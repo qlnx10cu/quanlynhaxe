@@ -133,7 +133,7 @@ class BillLe {
     }
 
     static async giamSoLuongPhuTungByMaHD(mahoadon) {
-        var sql = "update phutung pt left join  ( select maphutung, soluong, mahoadon from chitiethoadonle where mahoadon = ?) ct on pt.maphutung=ct.maphutung " +
+        var sql = "update phutung pt INNER join  ( select maphutung, soluong, mahoadon from chitiethoadonle where mahoadon = ?) ct on pt.maphutung=ct.maphutung " +
             " set pt.soluongtonkho=pt.soluongtonkho - ct.soluong " +
             " where mahoadon=? AND ct.maphutung IS NOT NULL AND ct.maphutung !='' ";
         var res = await query(sql, [mahoadon, mahoadon]);
@@ -141,7 +141,7 @@ class BillLe {
     }
 
     static async tangSoLuongPhuTungByMaHD(mahoadon) {
-        var sql = "update phutung pt left join  ( select maphutung, soluong, mahoadon from chitiethoadonle where mahoadon = ?) ct on pt.maphutung=ct.maphutung " +
+        var sql = "update phutung pt INNER join  ( select maphutung, soluong, mahoadon from chitiethoadonle where mahoadon = ?) ct on pt.maphutung=ct.maphutung " +
             " set pt.soluongtonkho=pt.soluongtonkho + ct.soluong " +
             " where mahoadon=? AND ct.maphutung IS NOT NULL AND ct.maphutung !='' ";
         var res = await query(sql, [mahoadon, mahoadon]);

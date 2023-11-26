@@ -44,26 +44,23 @@ class Router {
         this.router = router;
     }
 
-    get(url, callback, queue) {
-        queue == queue || false;
+    get(url, callback, queue = false) {
         this.router.get(url, (req, res) => {
             process(req, res, callback, queue);
         });
     }
-    post(url, callback, queue) {
+    post(url, callback, queue = true) {
         queue = queue || true;
         this.router.post(url, (req, res) => {
             process(req, res, callback, queue);
         });
     }
-    put(url, callback, queue) {
-        queue = queue || true;
+    put(url, callback, queue = true) {
         this.router.put(url, (req, res) => {
             process(req, res, callback, queue);
         });
     }
-    delete(url, callback, queue) {
-        queue = queue || true;
+    delete(url, callback, queue = true) {
         this.router.delete(url, (req, res) => {
             process(req, res, callback, queue);
         });

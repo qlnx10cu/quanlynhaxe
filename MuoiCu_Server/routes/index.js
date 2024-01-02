@@ -14,9 +14,9 @@ const BillSuaChuaRouter = require('./BillSuachua');
 const StatisticRouter = require('./Statistic');
 const ChamCongRouter = require('./ChamCong');
 const CuaHangNgoaiRouter = require('./CuaHangNgoai');
+const SettingRouter = require('./Setting');
 
 
-const screenshot = require('screenshot-desktop')
 const createError = require('http-errors');
 const logger = require("../lib/logger");
 const LiftTable = require('../controllers/LiftTable');
@@ -46,20 +46,7 @@ module.exports = (app) => {
   app.use('/chamcong', ChamCongRouter);
   app.use('/cuahangngoai', CuaHangNgoaiRouter);
 
-  app.get('/capture', function (req, res) {
-    if (req.query.token != 'thaonk') {
-      res.send({ 'status': 404 });
-      return;
-    }
-    screenshot({ format: 'png' }).then((img) => {
-      res.setHeader('Content-Type', 'image/png');
-      res.send(img);
-    }).catch((err) => {
-      res.send({ 'status': 404, err: String(err) });
-    })
-  });
-
-
+  app.use('/setting', SettingRouter);
 
   app.use(function (req, res, next) {
     next(createError(404));

@@ -322,13 +322,14 @@ const Retail = (props) => {
     const handleChangeSL = (e, index) => {
         const item = props.Retail.products[index];
         item.soluong = utils.parseInt(e.target.value);
+        item.tienchietkhau = utils.tinhTienChietKhau(item.dongia, item.chietkhau, item.soluong);
         props.updateRetailItemProduct(item, index);
     };
 
     const handleChangeChieuKhau = (e, index) => {
         const item = props.Retail.products[index];
         item.chietkhau = utils.parseChietKhau(e.target.value);
-        item.tienchietkhau = utils.tinhTienChietKhau(item.dongia, item.chietkhau);
+        item.tienchietkhau = utils.tinhTienChietKhau(item.dongia, item.chietkhau, item.soluong);
 
         props.updateRetailItemProduct(item, index);
     };

@@ -511,6 +511,7 @@ const RepairedBill = (props) => {
         const item = props.Repaired.products[index];
 
         item.soluong = utils.parseInt(e.target.value);
+        item.tienchietkhau = utils.tinhTienChietKhau(item.dongia, item.chietkhau, item.soluong);
         props.updateRepairedItemProduct(item, index);
     };
 
@@ -519,9 +520,9 @@ const RepairedBill = (props) => {
 
         item.chietkhau = utils.parseChietKhau(e.target.value);
         if (item.loaiphutung != "tiencong") {
-            item.tienchietkhau = utils.tinhTienChietKhau(item.dongia, item.chietkhau);
+            item.tienchietkhau = utils.tinhTienChietKhau(item.dongia, item.chietkhau, item.soluong);
         }
-        item.tiencongchietkhau = utils.tinhTienChietKhau(item.tiencong, item.chietkhau);
+        item.tiencongchietkhau = utils.tinhTienChietKhau(item.tiencong, item.chietkhau, 1);
 
         props.updateRepairedItemProduct(item, index);
     };
@@ -533,8 +534,8 @@ const RepairedBill = (props) => {
         }
 
         item.tienchietkhau = utils.parseInt(e.target.value);
-        item.chietkhau = utils.tinhChietKhau(item.dongia, item.tienchietkhau);
-        item.tiencongchietkhau = utils.tinhTienChietKhau(item.tiencong, item.chietkhau);
+        item.chietkhau = utils.tinhChietKhau(item.dongia, item.tienchietkhau, item.soluong);
+        item.tiencongchietkhau = utils.tinhTienChietKhau(item.tiencong, item.chietkhau, item.soluong);
         props.updateRepairedItemProduct(item, index);
     };
 
@@ -545,7 +546,7 @@ const RepairedBill = (props) => {
         }
 
         item.tiencong = utils.parseInt(e.target.value);
-        item.tiencongchietkhau = utils.tinhTienChietKhau(item.tiencong, item.chietkhau);
+        item.tiencongchietkhau = utils.tinhTienChietKhau(item.tiencong, item.chietkhau, item.soluong);
         props.updateRepairedItemProduct(item, index);
     };
 

@@ -4,7 +4,7 @@ import { DivFlexColumn, DivFlexRow, Button } from "../../styles";
 import { HOST } from "../../Config";
 import { authenticate } from "../../actions/Authenticate";
 
-const trungTrangVersion = "2.1.1";
+const trungTrangVersion = "2.1.2";
 
 const Setting = (props) => {
     let [info, setInfo] = useState(null);

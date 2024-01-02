@@ -46,7 +46,7 @@ const PopupBill = (props) => {
             <h4 style={{ textAlign: "center" }}>{DIA_CHI}</h4>
             <h5 style={{ textAlign: "center" }}> Bán hàng: 02963 603 828 - Phụ tùng: 02963 603 826 - Dịch vụ: 02963 957 669</h5>
             <RenderChiTietNhanVien staff={props.staffs.find((e) => data && e.ma == data.manv)} />
-            <h3 style={{ marginTop: 10 }}>Thông tin bill</h3>
+            <h3 style={{ marginTop: 10 }}>Thông tin bill {data && data.mahoadon}</h3>
             <Choose>
                 <When condition={isLoading}>
                     <h3 style={{ textAlign: "center" }}>Đang lấy dữ liệu</h3>

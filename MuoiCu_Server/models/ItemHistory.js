@@ -37,10 +37,10 @@ class ItemHistory {
     }
 
     static async addLichSuPhuTung(timeindex) {
-        var sql = "update lichsuphutung lspt left join  phutung pt on lspt.maphutung=lspt.maphutung and lspt.timeindex = ?" +
-            " set lspt.soluongtruocdo=pt.soluongtonkho, lspt.giaban_cu = pt.giaban_le " +
+        var sql = "update lichsuphutung lspt left join phutung pt on lspt.maphutung = pt.maphutung" +
+            " set lspt.soluongtruocdo = pt.soluongtonkho, lspt.giaban_cu = pt.giaban_le " +
             " where pt.maphutung IS NOT NULL AND pt.maphutung !='' and lspt.timeindex = ?";
-        var res = await query(sql, [timeindex, timeindex]);
+        var res = await query(sql, [timeindex]);
         return res;
 
     }

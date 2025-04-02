@@ -49,7 +49,6 @@ module.exports = {
         "jsx-control-statements/jsx-when-require-condition": 2,
         "key-spacing": [2, { singleLine: { beforeColon: false, afterColon: true }, multiLine: { beforeColon: false, afterColon: true } }],
         "keyword-spacing": 2,
-        "linebreak-style": [2, "windows"],
         "lines-around-comment": [2, { allowBlockStart: true, allowObjectStart: true, beforeBlockComment: true, beforeLineComment: false }],
         "max-len": [2, 150, { tabWidth: 2, comments: 150, ignoreUrls: true, ignoreStrings: true, ignoreTemplateLiterals: true, ignoreRegExpLiterals: true }],
         "newline-after-var": 0,
@@ -185,5 +184,6 @@ module.exports = {
         "react/self-closing-comp": [0, { component: false, html: true }],
         "react/sort-comp": 0,
         "react/jsx-wrap-multilines": [2, { declaration: false, assignment: false, return: true }],
+        "linebreak-style": [0, "windows"]
     },
 };

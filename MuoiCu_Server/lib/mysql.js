@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const config = require('../config');
 const pool = mysql.createPool({
     connectionLimit: config.database.limit,
@@ -7,8 +7,8 @@ const pool = mysql.createPool({
     // user: 'wxce9ubz69vjtzw8',
     password: config.database.password,
     database: config.database.database,
-    port: 3306,
-    dateStrings: true
+    port: config.database.port || 3306,
+    dateStrings: true,
 })
 
 // const pool = mysql.createPool({

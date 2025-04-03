@@ -112,7 +112,7 @@ const ListToolBar = [
     },
     {
         index: 5,
-        title: "Bán Lẻ",
+        title: "Phụ Tùng",
         img: "/resources/icon/banle.svg",
         Roles: ["Admin", "Phụ Tùng"],
         onClick: (history, setIndex) => {

@@ -1,0 +1,2 @@
+-- db quanlymyxuyen, quanlybinhkhanh
+ALTER TABLE lichsuphutung CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -19,7 +19,7 @@ module.exports = {
     add: async function (req, res) {
         try {
 
-            var prefix = config.typeserver == 0 ? 'PT' : 'BL';
+            var prefix = config.typeserver === 0 ? 'PT' : 'BL';
             var makh = await Customer.addOrUpdateBanLe(req.body);
             var mhd = await Option.incrementAndGet(prefix + "-" + "mabanle") + '';
             var mahoadon = prefix + "-" + mhd.padStart(8, '0');

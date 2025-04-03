@@ -8,10 +8,10 @@ class Customer {
     }
     static getColmun(param) {
         if (param) {
-            let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay', 'gioitinh', 'thanhpho', 'updatetime', 'zaloid', 'tenzalo'];
+            let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay', 'gioitinh', 'thanhpho', 'updatetime', 'zaloid', 'tenzalo', 'loaikhachhang'];
             return tmp.filter(e => Object.keys(param).includes(e));
         }
-        return "`ten`,`sodienthoai`,diachi`,`biensoxe`,`loaixe,`sokhung`,`somay`,`gioitinh`,`thanhpho`,`updatetime`,`zaloid`,`tenzalo`";
+        return "`ten`,`sodienthoai`,diachi`,`biensoxe`,`loaixe,`sokhung`,`somay`,`gioitinh`,`thanhpho`,`updatetime`,`zaloid`,`tenzalo`, `loaikhachhang`";
     }
     static getLike(k) {
         let tmp = ['ten', 'sodienthoai', 'biensoxe', 'sokhung', 'somay', 'zaloid', 'tenzalo'];
@@ -86,6 +86,7 @@ class Customer {
             data.gioitinh = body.gioitinh;
             data.thanhpho = body.thanhpho;
             data.ten = body.tenkh;
+            data.loaikhachhang = body.loaikhachhang;
             data.updatetime = new Date();
 
             var makh = body.makh;

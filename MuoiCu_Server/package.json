@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon app.js",
+    "predev": "./build_app.sh",
+    "prestart": "./build_app.sh",
+    "dev": "nodemon app.js",
+    "start": "node app.js",
     "server2": "node app2.js"
   },
   "dependencies": {

@@ -150,7 +150,7 @@ module.exports = {
     },
     getBillByEmployee: async function (praram) {
         var param = [];
-        var sql = "select A.*,nv.ten as tennvsuachua, kh.gioitinh,kh.sodienthoai,kh.diachi,kh.thanhpho,kh.loaixe,kh.sokhung,kh.somay from ("
+        var sql = "select A.*,nv.ten as tennvsuachua, kh.gioitinh,kh.sodienthoai,kh.diachi,kh.thanhpho,kh.loaixe,kh.sokhung,kh.somay,kh.loaikhachhang from ("
         sql = sql + "select manvsuachua,makh,tenkh,biensoxe,tongtien, tienpt,tiencong,sokm,yeucaukhachhang,tuvansuachua,kiemtralantoi,ngayhen from hoadon where trangthai=1 ";
         if (praram.start) {
             param.push(praram.start);
@@ -167,11 +167,27 @@ module.exports = {
 
         let res = await query(sql, param);
         let i = 1;
-        res = res.map(e => [
-            i++, e.makh, e.tenkh, e.gioitinh, e.sodienthoai, '',
-            e.diachi, e.thanhpho, e.biensoxe, e.loaixe, e.sokhung, e.somay, e.sokm,
-            e.tiencong, e.tienpt, e.tongtien, e.tennvsuachua, e.tuvansuachua, e.kiemtralantoi, e.ngayhen || ''
-        ]);
+        res = res.map(e => {
+            let loaikhachhang = '';
+            switch (e.loaikhachhang) {
+                case "LE":
+                    loaikhachhang = 'Khách Lẻ';
+                    break;
+                case "SI":
+                    loaikhachhang = 'Khách Sỉ';
+                    break;
+                case "THO_NGOAI":
+                    loaikhachhang = 'Thợ Ngoài';
+                    break;
+                    default:
+                        break;
+            }
+            return [
+                i++, e.makh, e.tenkh, loaikhachhang, e.gioitinh, e.sodienthoai, '',
+                e.diachi, e.thanhpho, e.biensoxe, e.loaixe, e.sokhung, e.somay, e.sokm,
+                e.tiencong, e.tienpt, e.tongtien, e.tennvsuachua, e.tuvansuachua, e.kiemtralantoi, e.ngayhen || ''
+            ]
+        });
         return res;
     },
 };

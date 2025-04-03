@@ -15,6 +15,7 @@ import DataTable from "../Warrper/DataTable";
 import BillLeApi from "../../API/BillLeApi";
 import moment from "moment";
 import ButtonConfirm from "../Styles/ButtonConfirm";
+import InputLoaiKhachHang from "../Styles/InputLoaiKhachHang";
 
 const twoDay = 2 * 1000 * 3600 * 24;
 
@@ -28,6 +29,7 @@ const Retail = (props) => {
     const mDiaChi = lib.handleInput("");
     const mThanhPho = lib.handleInput("An Giang");
     const mGioiTinh = lib.handleInput(0);
+    const mLoaiKhachHang = lib.handleInput("LE");
     const mLyDo = lib.handleInput("");
     let loai = 0;
 
@@ -88,6 +90,7 @@ const Retail = (props) => {
         mGioiTinh.setValue(0);
         mThanhPho.setValue("An Giang");
         mLyDo.setValue("");
+        mLoaiKhachHang.setValue("LE");
         props.loadRetailItemProduct();
     };
 
@@ -160,6 +163,7 @@ const Retail = (props) => {
             tienpt: tongtien,
             chitiet: chitiet,
             lydo: mLyDo.value,
+            loaikhachhang: mLoaiKhachHang.value,
         };
 
         if (mMaKh.value) data.makh = mMaKh.value;
@@ -233,6 +237,7 @@ const Retail = (props) => {
             mDiaChi.setValue(customer.diachi);
             mGioiTinh.setValue(customer.gioitinh);
             mThanhPho.setValue(customer.thanhpho);
+            mLoaiKhachHang.setValue(customer.loaikhachhang);
             return;
         }
 
@@ -254,6 +259,7 @@ const Retail = (props) => {
                     mDiaChi.setValue(data.diachi);
                     mGioiTinh.setValue(data.gioitinh);
                     mThanhPho.setValue(data.thanhpho);
+                    mLoaiKhachHang.setValue(data.loaikhachhang);
                 }
             })
             .finally(() => {
@@ -284,6 +290,7 @@ const Retail = (props) => {
             mDiaChi.setValue(customer.diachi);
             mGioiTinh.setValue(customer.gioitinh);
             mThanhPho.setValue(customer.thanhpho);
+            mLoaiKhachHang.setValue(customer.loaikhachhang);
             return;
         }
 
@@ -292,6 +299,7 @@ const Retail = (props) => {
         mDiaChi.setValue("");
         mGioiTinh.setValue(0);
         mThanhPho.setValue("An Giang");
+        mLoaiKhachHang.setValue("LE");
         if (!enter) {
             return;
         }
@@ -305,6 +313,7 @@ const Retail = (props) => {
                     mDiaChi.setValue(data.diachi);
                     mGioiTinh.setValue(data.gioitinh);
                     mThanhPho.setValue(data.thanhpho);
+                    mLoaiKhachHang.setValue(data.loaikhachhang);
                 }
             })
             .finally(() => {
@@ -398,7 +407,7 @@ const Retail = (props) => {
                 </When>
                 <Otherwise>
                     <h1 style={{ textAlign: "center" }}> Hóa đơn {hoadon.mahoadon}</h1>
-                    <DivFlexRow style={{ justifyContent: "space-between" }}>
+                    <DivFlexRow style={{ justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
                         <DivFlexColumn style={{ width: "120px" }}>
                             <label>Mã KH: </label>
                             <InputList
@@ -418,11 +427,15 @@ const Retail = (props) => {
                                 }}
                             />
                         </DivFlexColumn>
-                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                        <DivFlexColumn>
                             <label>Tên khách hàng: </label>
                             <Input autocomplete="off" {...mCustomerName} readOnly={loai != 0} />
                         </DivFlexColumn>
-                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                        <DivFlexColumn>
+                            <label>Loại khách hàng: </label>
+                            <InputLoaiKhachHang readOnly={loai != 0} disabled={loai != 0} {...mLoaiKhachHang} />
+                        </DivFlexColumn>
+                        <DivFlexColumn style={{ width: "200px" }}>
                             <label>Số điện thoại: </label>
                             <InputList
                                 readOnly={loai != 0}
@@ -441,15 +454,15 @@ const Retail = (props) => {
                                 }}
                             />
                         </DivFlexColumn>
-                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                        <DivFlexColumn>
                             <label>Giới Tính: </label>
                             <InputGioiTinh style={{ width: 100 }} readOnly={loai != 0} disabled={loai != 0} {...mGioiTinh} />
                         </DivFlexColumn>
-                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                        <DivFlexColumn>
                             <label>Thành Phố: </label>
                             <InputCity readOnly={loai != 0} disabled={loai != 0} autocomplete="off" {...mThanhPho} />
                         </DivFlexColumn>
-                        <DivFlexColumn style={{ marginLeft: 20 }}>
+                        <DivFlexColumn>
                             <label>Địa chỉ: </label>
                             <Input autocomplete="off" {...mDiaChi} width="400px" readOnly={loai != 0} />
                         </DivFlexColumn>
@@ -549,13 +562,13 @@ const Retail = (props) => {
                     <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: "space-between" }}>
                         <label></label>
                         <Choose>
-                            <When condition={loai == 0}>
+                            <When condition={loai === 0}>
                                 <ButtonConfirm title={"Thanh toán"} titleConfirm={"Bạn muốn thanh toán hóa đơn"} onClick={handleAddBill} />
                             </When>
-                            <When condition={loai == 1 && moment().valueOf() - moment(hoadon.ngaythanhtoan).valueOf() <= twoDay}>
+                            <When condition={loai === 1 && moment().valueOf() - moment(hoadon.ngaythanhtoan).valueOf() <= twoDay}>
                                 <ButtonConfirm title={"Chỉnh sữa"} titleConfirm={"Bạn muốn chỉnh sữa hóa đơn"} onClick={handleUpdateBill} />
                             </When>
-                            <When condition={loai == 2 && moment().valueOf() - moment(hoadon.ngaythanhtoan).valueOf() <= twoDay}>
+                            <When condition={loai === 2 && moment().valueOf() - moment(hoadon.ngaythanhtoan).valueOf() <= twoDay}>
                                 <ButtonConfirm title={"Thay đổi"} titleConfirm={"Xác nhận"} onClick={handleRenderUpdateBill} />
                             </When>
                         </Choose>

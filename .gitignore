@@ -1,3 +1,6 @@
 MuoiCu_Server/node_modules/
 MuoiCu_Server/lib/log/
 app/node_modules/
+app/.env
+MuoiCu_Server/.env
+MuoiCu_Server/.env2

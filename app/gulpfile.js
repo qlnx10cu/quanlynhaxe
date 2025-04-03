@@ -39,6 +39,7 @@ const ncp = require("ncp");
 const eslint = require("gulp-eslint");
 const nodemon = require("gulp-nodemon");
 const browserSync = require("browser-sync");
+require("dotenv").config();
 
 /* eslint-disable import/extensions */
 const PKG = require("./package.json");
@@ -82,6 +83,7 @@ function bundle(options) {
         .transform(
             envify({
                 NODE_ENV: process.env.NODE_ENV,
+                API_HOST: process.env.API_HOST,
                 _: "purge",
             })
         );
@@ -112,6 +114,11 @@ function bundle(options) {
 
     return rebundle();
 }
+
+gulp.task("env", (done) => {
+    console.log("Loaded ENV Variable:", process.env.API_HOST);
+    done();
+});
 
 gulp.task("clean", (done) => {
     del(OUTPUT_DIR + "/resources", { force: true });
@@ -208,10 +215,10 @@ gulp.task("nodemon", function (done) {
     });
 });
 
-gulp.task("prod", gulp.series("env:prod", "clean", "lint", "bundle", "html", "css", "resources"));
+gulp.task("prod", gulp.series("env", "env:prod", "clean", "lint", "bundle", "html", "css", "resources"));
 
-gulp.task("dev", gulp.series("env:dev", "clean", "lint", "bundle", "html", "css", "resources"));
+gulp.task("dev", gulp.series("env", "env:dev", "clean", "lint", "bundle", "html", "css", "resources"));
 
-gulp.task("live", gulp.series("env:dev", "clean", "lint", "bundle:watch", "html", "css", "resources", "watch", "nodemon", "openbrowser"));
+gulp.task("live", gulp.series("env", "env:dev", "clean", "lint", "bundle:watch", "html", "css", "resources", "watch", "nodemon", "openbrowser"));
 
 gulp.task("default", gulp.series("prod"));

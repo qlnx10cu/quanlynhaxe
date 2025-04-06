@@ -37,12 +37,12 @@ module.exports = {
             var bodybill = conlai;
             var detailbill = chitiet;
             bodybill['makh'] = makh;
-            bodybill['trangthai'] = 1;
+            bodybill['trangthai'] = bodybill['trangthai'] === 0 ? 0 : 1;
             bodybill['loaihoadon'] = 1;
             bodybill['mahoadon'] = mahoadon;
-            bodybill['ngaythanhtoan'] = new Date();
-            bodybill['ngaysuachua'] = bodybill['ngaythanhtoan'];
-            bodybill['ngayban'] = bodybill['ngaythanhtoan'];
+            bodybill['ngaythanhtoan'] = bodybill['trangthai'] === 0 ? null : new Date();
+            bodybill['ngaysuachua'] = new Date();
+            bodybill['ngayban'] = new Date();
             for (var k in detailbill) {
                 detailbill[k]['mahoadon'] = mahoadon;
             }
@@ -74,24 +74,25 @@ module.exports = {
             let resulft = await AbstractTwo.getList(Bill, BillLe, { mahoadon: req.body.mahoadon });
             let hoaDon = await Abstract.getOne(Bill, { mahoadon: mahoadon });
             if (resulft && hoaDon) {
-                if (hoaDon.trangthai == 1 && !conlai.lydo) {
+                if (hoaDon.trangthai === 1 && !conlai.lydo) {
                     librespone.error(req, res, "Vui lòng nhập lý do hay đổi hóa đơn.");
                 }
                 var bodybill = conlai;
                 bodybill['ngaysuachua'] = new Date();
+                bodybill['ngaythanhtoan'] = bodybill['trangthai'] === 1 ? new Date() : hoaDon.ngaythanhtoan;
                 var detailbill = chitiet;
                 for (var k in detailbill) {
                     detailbill[k]['mahoadon'] = mahoadon;
                 }
                 var paramHoaDon = { mahoadon: mahoadon };
-                if (hoaDon.trangthai == 1) {
+                if (hoaDon.trangthai === 1) {
                     email.sendMail(req, res, "Update hóa đơn bán lẻ", "Hệ thống vừa update hoá đơn với mã " + mahoadon + "\nLý do:\n" + conlai.lydo);
                 }
-                let resulft1 = await Abstract.update(Bill, bodybill, paramHoaDon);
+                await Abstract.update(Bill, bodybill, paramHoaDon);
                 await BillLe.deleteMahoaDon(mahoadon);
                 await BillLe.tangSoLuongPhuTung(resulft);
-                if (detailbill.length != 0) {
-                    resulft1 = await Abstract.addMutil(BillLe, detailbill);
+                if (detailbill.length !== 0) {
+                    await Abstract.addMutil(BillLe, detailbill);
                     await BillLe.giamSoLuongPhuTung(detailbill);
                 }
                 res.json({ "mahoadon": mahoadon });

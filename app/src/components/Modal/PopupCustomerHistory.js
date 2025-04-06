@@ -238,7 +238,7 @@ const PopupCustomerHistory = (props) => {
     };
 
     return (
-        <ModalWrapper open={props.open} isLoading={!mData} title={"Lịch sữ khách hàng"} callback={props.callback} onClose={props.onClose}>
+        <ModalWrapper open={props.open} isLoading={!mData} title={"Lịch sử khách hàng"} callback={props.callback} onClose={props.onClose}>
             <DivFlexRow style={{ marginTop: 10, width: "100%", justifyContent: "space-between" }}>
                 <DivFlexColumn style={{ fontSize: 14, marginBottom: 2 }}>
                     Tên Khách Hàng

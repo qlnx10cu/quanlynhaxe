@@ -4,13 +4,15 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { POPUP_NAME } from "../../actions/Modal";
 import { ButtonDelete, ButtonEdit, ButtonShow, ButtonUpload, TabPage } from "../Styles";
-import { DivFlexRow, Input, Link } from "../../styles";
+import { DivFlexColumn, DivFlexRow, Input, Link } from "../../styles";
 import lib from "../../lib";
 import utils from "../../lib/utils";
 import DataTable from "../Warrper/DataTable";
 import StatisticApi from "../../API/StatisticApi";
 import BillLeApi from "../../API/BillLeApi";
 import BillSuaChuaAPI from "../../API/BillSuaChuaAPI";
+import InputLoaiKhachHang from "../Styles/InputLoaiKhachHang";
+import InputTrangThaiBill from "../Styles/InputTrangThaiBill";
 
 const twoDay = 2 * 1000 * 3600 * 24;
 
@@ -20,15 +22,16 @@ const Statistic = (props) => {
     const [billes, setBilles] = useState([]);
     const mDateStart = lib.handleInputDate("YYYY-MM-DD");
     const mDateEnd = lib.handleInputDate("YYYY-MM-DD");
+    const mTrangThaiBill = lib.handleInput(null);
     const useIsMounted = lib.useIsMounted();
 
     useEffect(() => {
         handleLayDanhSach();
-    }, []);
+    }, [mDateStart.value, mDateEnd.value, mTrangThaiBill.value]);
 
     const handleLayDanhSach = () => {
         setLoading(true);
-        StatisticApi.getBillByDate(mDateStart.value, mDateEnd.value)
+        StatisticApi.getBillByDate(mDateStart.value, mDateEnd.value, mTrangThaiBill.value)
             .then((data) => {
                 if (!useIsMounted()) return;
                 setBilles([...data]);
@@ -84,8 +87,8 @@ const Statistic = (props) => {
     };
 
     const handleEditItem = (item) => {
-        if (item.loaihoadon == 1) {
-            props.confirm("Xác nhận", () => {
+        if (item.loaihoadon === 1) {
+            props.confirm(`Bạn muốn sửa hoá đơn ${item.mahoadon}?`, () => {
                 props.history.push(`/updateretail?mahoadon=${item.mahoadon}`);
             });
             return;
@@ -108,15 +111,41 @@ const Statistic = (props) => {
         });
     };
 
+    const getTrangThaiBill = (item) => {
+        switch (item.trangthai) {
+            case 0:
+                return <span style={{ color: "orange" }}>Chưa thanh toán</span>;
+            case 1:
+                return utils.formatNgayGio(item.ngaythanhtoan);
+            case 2:
+                return (
+                    <DivFlexColumn>
+                        <span style={{ color: "red" }}>Đã hủy</span>
+                        {item.lydo && <span style={{ color: "red" }}>({item.lydo})</span>}
+                    </DivFlexColumn>
+                );
+            default:
+                return "--";
+        }
+    };
+
     return (
         <React.Fragment>
             <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center" }}>
-                <DivFlexRow style={{ alignItems: "center" }}>
-                    <h3>Danh sách bill.</h3>
-                    <label style={{ marginLeft: 10 }}>Bắt đầu từ </label>
-                    <Input type="date" style={{ marginLeft: 10 }} {...mDateStart} />
-                    <label style={{ marginLeft: 10 }}>Kết thúc</label>
-                    <Input type="date" style={{ marginLeft: 10 }} {...mDateEnd} />
+                <DivFlexRow style={{ alignItems: "flex-start", gap: 10, flexWrap: "wrap" }}>
+                    <h3 style={{ margin: 0 }}>Danh sách bill.</h3>
+                    <DivFlexColumn>
+                        <label style={{ marginLeft: 10 }}>Bắt đầu từ </label>
+                        <Input type="date" style={{ marginLeft: 10 }} {...mDateStart} />
+                    </DivFlexColumn>
+                    <DivFlexColumn>
+                        <label style={{ marginLeft: 10 }}>Kết thúc</label>
+                        <Input type="date" style={{ marginLeft: 10 }} {...mDateEnd} />
+                    </DivFlexColumn>
+                    <DivFlexColumn>
+                        <label>Trạng thái: </label>
+                        <InputTrangThaiBill {...mTrangThaiBill} />
+                    </DivFlexColumn>
                 </DivFlexRow>
                 <DivFlexRow>
                     <ButtonUpload isUpload={isLoading} onClick={handleExportEmployee}>
@@ -151,6 +180,7 @@ const Statistic = (props) => {
                     <th>Tên KH</th>
                     <th>Biển số xe</th>
                     <th>Tổng tiền</th>
+                    <th>Ngày tạo</th>
                     <th>Ngày thanh toán</th>
                     <th>Loại hóa đơn</th>
                     <th>Xem | Cập nhập | Xóa</th>
@@ -168,11 +198,12 @@ const Statistic = (props) => {
                                 <td>{item.tenkh}</td>
                                 <td>{item.biensoxe}</td>
                                 <td>{utils.formatVND(item.tongtien)}</td>
-                                <td>{utils.formatNgayGio(item.ngaythanhtoan)}</td>
+                                <td>{utils.formatNgayGio(item.ngayban)}</td>
+                                <td>{getTrangThaiBill(item)}</td>
                                 <td>{item.loaihoadon === 0 ? "Sửa chữa" : "Bán lẻ"}</td>
                                 <td>
                                     <ButtonShow isUpload={isLoading} onClick={() => handleShowBill(item)} />
-                                    <If condition={moment().valueOf() - moment(item.ngaythanhtoan).valueOf() <= twoDay}>
+                                    <If condition={!item.ngaythanhtoan || moment().valueOf() - moment(item.ngaythanhtoan).valueOf() <= twoDay}>
                                         <ButtonEdit style={{ marginLeft: 5 }} isUpload={isLoading} onClick={() => handleEditItem(item)} />
                                         <ButtonDelete style={{ marginLeft: 5 }} isUpload={isLoading} onClick={() => handleDeleteItem(item)} />
                                     </If>

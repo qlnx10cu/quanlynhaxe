@@ -94,7 +94,7 @@ const Retail = (props) => {
         props.loadRetailItemProduct();
     };
 
-    const getData = () => {
+    const getData = (trangthai) => {
         const products = props.Retail.products;
         if (products.length === 0) {
             props.alert("Chưa có sản phẩm nào.");
@@ -164,31 +164,34 @@ const Retail = (props) => {
             chitiet: chitiet,
             lydo: mLyDo.value,
             loaikhachhang: mLoaiKhachHang.value,
+            trangthai: trangthai === 0 ? 0 : 1,
         };
 
         if (mMaKh.value) data.makh = mMaKh.value;
         if (hoadon && hoadon.mahoadon) data.mahoadon = hoadon.mahoadon;
 
-        if (loai == 1) {
+        if (loai === 1) {
             if (!hoadon || !hoadon.mahoadon) {
                 props.alert("Hóa đơn không hợp lệ");
                 return null;
             }
-            if (!mLyDo.value || mLyDo.value.trim() == "") {
-                props.alert("Vui lòng nhập lý do");
-                return null;
-            }
-            if (utils.comrapeName(hoadon.lydo, mLyDo.value)) {
-                props.alert("Vui lòng nhập lý do khác hiện tại");
-                return null;
+            if (hoadon.trangthai !== 0) {
+                if (!mLyDo.value || mLyDo.value.trim() === "") {
+                    props.alert("Vui lòng nhập lý do");
+                    return null;
+                }
+                if (utils.comrapeName(hoadon.lydo, mLyDo.value)) {
+                    props.alert("Vui lòng nhập lý do khác hiện tại");
+                    return null;
+                }
             }
         }
 
         return data;
     };
 
-    const handleAddBill = () => {
-        const data = getData();
+    const handleAddBill = (trangthai) => {
+        const data = getData(trangthai);
         if (!data) return;
 
         setLoading(true);
@@ -205,8 +208,8 @@ const Retail = (props) => {
             });
     };
 
-    const handleUpdateBill = () => {
-        const data = getData();
+    const handleUpdateBill = (trangthai) => {
+        const data = getData(trangthai);
         if (!data) return;
         setLoading(true);
         BillLeApi.update(hoadon.mahoadon, data)
@@ -563,10 +566,24 @@ const Retail = (props) => {
                         <label></label>
                         <Choose>
                             <When condition={loai === 0}>
-                                <ButtonConfirm title={"Thanh toán"} titleConfirm={"Bạn muốn thanh toán hóa đơn"} onClick={handleAddBill} />
+                                <DivFlexRow style={{ gap: 10 }}>
+                                    <ButtonConfirm title={"Thanh toán"} titleConfirm={"Bạn muốn thanh toán hóa đơn?"} onClick={handleAddBill} />
+                                    <ButtonConfirm
+                                        title={"Tạo hoá đơn"}
+                                        titleConfirm={"Bạn muốn tạo hóa đơn chưa thanh toán?"}
+                                        onClick={() => handleAddBill(0)}
+                                    />
+                                </DivFlexRow>
                             </When>
                             <When condition={loai === 1 && moment().valueOf() - moment(hoadon.ngaythanhtoan).valueOf() <= twoDay}>
-                                <ButtonConfirm title={"Chỉnh sữa"} titleConfirm={"Bạn muốn chỉnh sữa hóa đơn"} onClick={handleUpdateBill} />
+                                <ButtonConfirm title={"Chỉnh sửa"} titleConfirm={"Bạn muốn chỉnh sửa hóa đơn"} onClick={handleUpdateBill} />
+                            </When>
+                            <When condition={loai === 1 && !hoadon.ngaythanhtoan}>
+                                <ButtonConfirm
+                                    title={"Thanh toán"}
+                                    titleConfirm={"Bạn muốn thanh toán hóa đơn?"}
+                                    onClick={() => handleUpdateBill(1)}
+                                />
                             </When>
                             <When condition={loai === 2 && moment().valueOf() - moment(hoadon.ngaythanhtoan).valueOf() <= twoDay}>
                                 <ButtonConfirm title={"Thay đổi"} titleConfirm={"Xác nhận"} onClick={handleRenderUpdateBill} />

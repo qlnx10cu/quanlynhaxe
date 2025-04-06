@@ -233,7 +233,7 @@ const Select = styled.select`
     border-radius: 3px;
     border: 1px solid rgba(0, 0, 0, 0.8);
     height: 36px;
-    padding: 8px 20px;
+    padding: 8px;
     margin: 8px 0;
     font-size: 14px;
     background: white;
@@ -248,7 +248,7 @@ const Select = styled.select`
 
 const Input = styled.input`
     width: ${(props) => props.width || "auto"};
-    padding: 8px 20px;
+    padding: 8px;
     margin: 8px 0;
 
     :disabled {
@@ -262,7 +262,7 @@ const Input = styled.input`
 
 const Textarea = styled.textarea`
     width: ${(props) => props.width || "auto"};
-    padding: 8px 20px;
+    padding: 8px;
     margin: 8px 0;
 `;
 
@@ -277,17 +277,28 @@ const ProductContainer = styled.div`
 `;
 
 const ButtonFile = styled.label`
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-    margin-top: 10px;
+    width: auto;
+    height: 38px;
+    outline: none;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: white;
-    background: #66ccff;
+    border: none;
+    font-size: 16px;
+    background-color: #66ccff;
+    cursor: pointer;
+    padding: 0 15px;
+    text-align: center;
 
     :hover {
         background-color: #99ddff;
+    }
+
+    i {
+        padding: 5px;
+        font-size: 14px;
     }
 
     input[type="file"] {

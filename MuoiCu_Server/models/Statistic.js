@@ -9,16 +9,20 @@ const XLSX = require('xlsx');
 module.exports = {
     getBill: async function (praram) {
         var param = [];
-        var sql = "select mahoadon,makh,tenkh,biensoxe,tongtien,ngaythanhtoan,loaihoadon,lydo,ngaysuachua from hoadon where trangthai=1 ";
+        var sql = "select mahoadon,makh,tenkh,biensoxe,tongtien,ngaythanhtoan,loaihoadon,lydo,ngaysuachua,trangthai,ngayban,lydo from hoadon where isdelete = 0 ";
         if (praram.start) {
             param.push(praram.start);
-            sql = sql + "AND DATEDIFF(ngaythanhtoan,?) >= 0 ";
+            sql = sql + "AND DATEDIFF(ngayban,?) >= 0 ";
         }
         if (praram.end) {
             param.push(praram.end);
-            sql = sql + "AND DATEDIFF(?,ngaythanhtoan) >= 0 ";
+            sql = sql + "AND DATEDIFF(?,ngayban) >= 0 ";
         }
-        sql = sql + " ORDER BY ngaythanhtoan desc";
+        if(praram.trangthai || praram.trangthai === 0) {
+            param.push(praram.trangthai);
+            sql = sql + " AND trangthai = ? ";
+        }
+        sql = sql + " ORDER BY ngayban desc";
         let res = await query(sql, param);
         return res;
     },

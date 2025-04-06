@@ -11,8 +11,8 @@ class StatisticApi extends ApiObject {
         return APIUtils.request("GET", "/statistic/layfile", {}, { responseType: "blob" });
     }
 
-    getBillByDate(start, end) {
-        return APIUtils.get(`/statistic/bill?end=${end}&start=${start}&trangthai=1`);
+    getBillByDate(start, end, trangthai) {
+        return APIUtils.get(`/statistic/bill?end=${end}&start=${start}${trangthai ? `&trangthai=${trangthai}` : ""}`);
     }
 
     exportBill(start, end) {

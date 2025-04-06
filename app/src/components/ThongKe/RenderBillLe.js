@@ -78,14 +78,10 @@ const RenderBillLe = ({ data }) => {
                     <label>Mã Hóa Đơn: </label>
                     <Input readOnly value={data.mahoadon} />
                 </DivFlexColumn>
-                <DivFlexColumn>
-                    <Button onClick={exportBill} style={{ marginLeft: 20, marginTop: 10 }}>
-                        Print
-                    </Button>
-                    <Button onClick={exportBillNew} style={{ marginLeft: 20, marginTop: 10 }}>
-                        Print New
-                    </Button>
-                </DivFlexColumn>
+                <DivFlexRow style={{ gap: 10, alignSelf: "end", marginLeft: 20, marginBottom: 10 }}>
+                    <Button onClick={exportBill}>Print</Button>
+                    <Button onClick={exportBillNew}>Print New</Button>
+                </DivFlexRow>
             </DivFlexRow>
             <If condition={data.lydo}>
                 <DivFlexRow>
@@ -110,7 +106,7 @@ const RenderBillLe = ({ data }) => {
             </DivFlexColumn>
             <DivFlexColumn style={{ marginTop: 10, alignItems: "right" }}>
                 <label>
-                    <i> *Quý khách vui lỏng đổi trả trong 24h, kể từ khi mua hàng</i>
+                    <i> *Quý khách vui lòng đổi trả trong 24h, kể từ khi mua hàng</i>
                 </label>
             </DivFlexColumn>
         </React.Fragment>

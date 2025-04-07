@@ -7,11 +7,14 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import moment from "moment";
 import utils from "../../lib/utils";
-import { InputCity, InputGioiTinh, InputLoaiXe, DivFragment, CellText, CellMoney, CellDelete, InputNumber } from "../Styles";
+import { InputCity, InputGioiTinh, InputLoaiXe, DivFragment, CellText, CellMoney, CellDelete, InputNumber, ButtonChooseFile } from "../Styles";
 import { POPUP_NAME } from "../../actions/Modal";
 import BillSuaChuaAPI from "../../API/BillSuaChuaAPI";
 import CustomerApi from "../../API/CustomerApi";
 import DataTable from "../Warrper/DataTable";
+import files from "../../lib/files";
+import XLSX from "xlsx";
+import Loading from "../Loading";
 
 const oneDay = 1000 * 3600 * 24;
 
@@ -23,6 +26,7 @@ const RepairedBill = (props) => {
     const [listNhanVienSuaChua, setListNhanVienSuaChua] = useState([]);
     const [isDisableEditInfo, setDisableEditInfo] = useState(false);
     const [showInfoBill, setShowInfoBill] = useState(false);
+    const [isLoading, setLoading] = useState(false);
 
     const mCustomerName = lib.handleInput("");
     const mPhone = lib.handleInput("");
@@ -609,381 +613,396 @@ const RepairedBill = (props) => {
         });
     };
 
+    const handleFileImport = (dataFile) => {
+        const data = files.parseFileRetail(XLSX.read(dataFile, { type: "array" }));
+        data.forEach((item) => {
+            props.addRepairedItemProduct(item);
+        });
+    };
+
     return (
-        <DivFragment>
-            <div>
-                <h1 style={{ textAlign: "center" }}>
-                    Phiếu sửa chữa
-                    <If condition={mahoadon}> (Mã Hóa Đơn: {mahoadon}) </If>
-                    <If condition={maban > 0}> (Bàn số: {maban}) </If>
-                </h1>
+        <Choose>
+            <When condition={isLoading}>
+                <Loading />
+            </When>
+            <Otherwise>
+                <DivFragment>
+                    <div>
+                        <h1 style={{ textAlign: "center" }}>
+                            Phiếu sửa chữa
+                            <If condition={mahoadon}> (Mã Hóa Đơn: {mahoadon}) </If>
+                            <If condition={maban > 0}> (Bàn số: {maban}) </If>
+                        </h1>
 
-                <DivFlexRow style={{ alignItems: "center" }}>
-                    <DivFlexColumn>
-                        <label>Nhân viên sửa chữa: </label>
-                        <Input
-                            readOnly={showInfoBill}
-                            autocomplete="off"
-                            list="nv_suachua"
-                            name="nv_suachua"
-                            value={mMaNVSuaChua.value}
-                            onChange={(e) => mMaNVSuaChua.setValue(e.target.value)}
-                        />
-                        <datalist id="nv_suachua">
-                            {listNhanVienSuaChua.map((item, index) => (
-                                <option key={index} value={item.ma}>
-                                    {item.ten}
-                                </option>
-                            ))}
-                        </datalist>
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Tên nhân viên sửa chữa: </label>
-                        <Input readOnly autocomplete="off" {...mTenNhanVien} />
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Thời gian dự kiến: </label>
-                        <Input type="datetime-local" readOnly={showInfoBill} {...mNgayDuKien} />
-                    </DivFlexColumn>
-                </DivFlexRow>
-                <DivFlexRow style={{ alignItems: "center" }}>
-                    <DivFlexColumn>
-                        <label>Biển số xe: </label>
-                        <Input
-                            readOnly={showInfoBill}
-                            autocomplete="off"
-                            list="bien_so"
-                            name="bien_so"
-                            onKeyPress={_handleKeyPressBSX}
-                            value={mBienSoXe.value || ""}
-                            onChange={(e) => {
-                                searchBienSoXe(e.target.value, false);
-                            }}
-                        />
-                        <datalist id="bien_so">
-                            {listBienSoCurrent.map((item, index) => (
-                                <option key={index} value={item.biensoxe}>
-                                    {item.ten}
-                                </option>
-                            ))}
-                        </datalist>
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Tên khách hàng: </label>
-                        <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mCustomerName} />
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Số điện thoại: </label>
-                        <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mPhone} pattern="[0-9]{10}" />
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Địa chỉ: </label>
-                        <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mAddress} />
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Giới Tính: </label>
-                        <InputGioiTinh style={{ width: 100 }} {...mGioiTinh} />
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Thành Phố: </label>
-                        <InputCity readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mThanhPho} />
-                    </DivFlexColumn>
-                </DivFlexRow>
-                <DivFlexRow style={{ alignItems: "center" }}>
-                    <DivFlexColumn>
-                        <label>Loại xe: </label>
-                        <InputLoaiXe readOnly={showInfoBill} autocomplete="off" {...mLoaiXe} />
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Số khung: </label>
-                        <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mSoKhung} />
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Số máy: </label>
-                        <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mSoMay} />
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Số km: </label>
-                        <InputNumber readOnly={showInfoBill} disabled={isDisableEditInfo} max={999999} min={0} {...mSoKm} />
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Kiểm tra định kỳ: </label>
-                        <Select
-                            readOnly={showInfoBill}
-                            disabled={isDisableEditInfo || showInfoBill}
-                            autocomplete="off"
-                            value={kiemtradinhky}
-                            onChange={(e) => {
-                                setKiemTraDinhKy(e.target.value);
-                            }}
-                        >
-                            <option value="0">Không có</option>
-                            <option value="1">Lần 1</option>
-                            <option value="2">Lần 2</option>
-                            <option value="3">Lần 3</option>
-                            <option value="4">Lần 4</option>
-                            <option value="5">Lần 5</option>
-                            <option value="6">Lần 6</option>
-                        </Select>
-                    </DivFlexColumn>
-                    <Button
-                        disabled={!mBienSoXe.value}
-                        onClick={() => {
-                            props.openModal(POPUP_NAME.POPUP_CUSTOMER_HISTORY, { ma: mMaKH.value });
-                        }}
-                        style={{ marginLeft: 20, marginTop: 10 }}
-                    >
-                        Chi tiết
-                    </Button>
-                </DivFlexRow>
-                <DivFlexRow style={{ alignItems: "center" }}>
-                    <DivFlexColumn>
-                        <label>Yêu cầu khách hàng: </label>
-                        <Textarea
-                            readOnly={showInfoBill}
-                            autocomplete="off"
-                            value={yeucau}
-                            onChange={(e) => {
-                                setYeuCau(e.target.value);
-                            }}
-                        />
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Tư vấn Sữa chữa: </label>
-                        <Textarea
-                            readOnly={showInfoBill}
-                            autocomplete="off"
-                            value={tuvan}
-                            onChange={(e) => {
-                                setTuvan(e.target.value);
-                            }}
-                        />
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Kiểm Tra Lần Tới: </label>
-                        <Textarea
-                            readOnly={showInfoBill}
-                            autocomplete="off"
-                            value={kiemtralantoi}
-                            onChange={(e) => {
-                                setKiemTraLanToi(e.target.value);
-                            }}
-                        />
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Số km hẹn: </label>
-                        <Input
-                            readOnly={showInfoBill}
-                            value={sokmhen}
-                            onChange={(e) => {
-                                setSoKmHen(e.target.value);
-                            }}
-                        />
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Thời Gian Hẹn: </label>
-                        <Select
-                            readOnly={showInfoBill}
-                            disabled={showInfoBill}
-                            autocomplete="off"
-                            value={thoigianhen}
-                            onChange={(e) => {
-                                setThoiGianHen(e.target.value);
-                            }}
-                        >
-                            <option value="0">Không hẹn</option>
-                            <option value="5">5 Ngày Sau</option>
-                            <option value="7">7 Ngày Sau</option>
-                            <option value="10">10 Ngày Sau</option>
-                            <option value="14">2 Tuần Sau</option>
-                            <option value="21">3 Tuần Sau</option>
-                            <option value="28">1 Tháng Sau</option>
-                            <option value="91">3 Tháng Sau</option>
-                            <option value="182">6 Tháng Sau</option>
-                            <option value="364">1 Năm Sau</option>
-                        </Select>
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
-                        <label>Ngày Hẹn: </label>
-                        <If condition={!thoigianhen || thoigianhen == "0"}>
-                            <Input readOnly autocomplete="off" value="" />
-                        </If>
-                        <If condition={thoigianhen && thoigianhen != "0"}>
-                            <Input
-                                readOnly
-                                autocomplete="off"
-                                value={moment(trangthai == 1 && mNgayThanhToan.value ? mNgayThanhToan.value : new Date())
-                                    .add(thoigianhen, "days")
-                                    .format("DD/MM/YYYY")}
-                            />
-                        </If>
-                    </DivFlexColumn>
-                </DivFlexRow>
-                <If condition={isUpdateBill == 3 || lydo}>
-                    <DivFlexRow style={{ alignItems: "center" }}>
-                        <DivFlexColumn>
-                            <label>Lý do thay đổi: </label>
-                            <Textarea
-                                readOnly={showInfoBill}
-                                autocomplete="off"
-                                value={lydo}
-                                onChange={(e) => {
-                                    setLydo(e.target.value);
-                                }}
-                            />
-                        </DivFlexColumn>
-                    </DivFlexRow>
-                </If>
-
-                <If condition={isUpdateBill < 4}>
-                    <DivFlexRow style={{ marginTop: 5, marginBottom: 5, alignItems: "center", justifyContent: "flex-end" }}>
-                        <DivFlexRow style={{ width: 480, alignItems: "center", justifyContent: "space-between" }}>
-                            <Button onClick={handleOpenSalary}>Thêm Tiền Công</Button>
-                            <Button onClick={handleOpenStoreOutside}>Thêm của hàng ngoài</Button>
-                            <Button onClick={handleOpenPopupProduct}>Thêm mới</Button>
+                        <DivFlexRow style={{ alignItems: "center" }}>
+                            <DivFlexColumn>
+                                <label>Nhân viên sửa chữa: </label>
+                                <Input
+                                    readOnly={showInfoBill}
+                                    autocomplete="off"
+                                    list="nv_suachua"
+                                    name="nv_suachua"
+                                    value={mMaNVSuaChua.value}
+                                    onChange={(e) => mMaNVSuaChua.setValue(e.target.value)}
+                                />
+                                <datalist id="nv_suachua">
+                                    {listNhanVienSuaChua.map((item, index) => (
+                                        <option key={index} value={item.ma}>
+                                            {item.ten}
+                                        </option>
+                                    ))}
+                                </datalist>
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Tên nhân viên sửa chữa: </label>
+                                <Input readOnly autocomplete="off" {...mTenNhanVien} />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Thời gian dự kiến: </label>
+                                <Input type="datetime-local" readOnly={showInfoBill} {...mNgayDuKien} />
+                            </DivFlexColumn>
                         </DivFlexRow>
-                    </DivFlexRow>
-                </If>
-
-                <DataTable
-                    noPage
-                    isLoading={props.isLoading}
-                    data={props.Repaired.products}
-                    onSearch={handleSearchItem}
-                    limitList={20}
-                    dataSearch={props.Product.data}
-                    searchData={(search, item) => utils.searchName(item.maphutung, search) || utils.searchName(item.tentiengviet, search)}
-                    renderSearch={(item, index) => {
-                        return (
-                            <option key={index} value={item.maphutung}>
-                                {item.tentiengviet} ({item.soluongtonkho})
-                            </option>
-                        );
-                    }}
-                >
-                    <DataTable.Header>
-                        <th style={{ width: 50 }}>STT</th>
-                        <th>
-                            Tên phụ tùng <br /> và công việc
-                        </th>
-                        <th>Mã phụ tùng</th>
-                        <th>Đơn giá</th>
-                        <th style={{ width: 100 }}>SL</th>
-                        <th style={{ width: 100 }}>Chiết khấu (%)</th>
-                        <th style={{ width: 100 }}>Số tiền chiết khấu</th>
-                        <th>Tiền phụ tùng</th>
-                        <th>Tiền công</th>
-                        <th>
-                            Tổng tiền công <br />+ phụ tùng
-                        </th>
-                        <If condition={!showInfoBill}>
-                            <th style={{ width: 100 }}>
-                                <i className="far fa-trash-alt"></i>
-                            </th>
+                        <DivFlexRow style={{ alignItems: "center" }}>
+                            <DivFlexColumn>
+                                <label>Biển số xe: </label>
+                                <Input
+                                    readOnly={showInfoBill}
+                                    autocomplete="off"
+                                    list="bien_so"
+                                    name="bien_so"
+                                    onKeyPress={_handleKeyPressBSX}
+                                    value={mBienSoXe.value || ""}
+                                    onChange={(e) => {
+                                        searchBienSoXe(e.target.value, false);
+                                    }}
+                                />
+                                <datalist id="bien_so">
+                                    {listBienSoCurrent.map((item, index) => (
+                                        <option key={index} value={item.biensoxe}>
+                                            {item.ten}
+                                        </option>
+                                    ))}
+                                </datalist>
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Tên khách hàng: </label>
+                                <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mCustomerName} />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Số điện thoại: </label>
+                                <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mPhone} pattern="[0-9]{10}" />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Địa chỉ: </label>
+                                <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mAddress} />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Giới Tính: </label>
+                                <InputGioiTinh style={{ width: 100 }} {...mGioiTinh} />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Thành Phố: </label>
+                                <InputCity readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mThanhPho} />
+                            </DivFlexColumn>
+                        </DivFlexRow>
+                        <DivFlexRow style={{ alignItems: "center" }}>
+                            <DivFlexColumn>
+                                <label>Loại xe: </label>
+                                <InputLoaiXe readOnly={showInfoBill} autocomplete="off" {...mLoaiXe} />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Số khung: </label>
+                                <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mSoKhung} />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Số máy: </label>
+                                <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mSoMay} />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Số km: </label>
+                                <InputNumber readOnly={showInfoBill} disabled={isDisableEditInfo} max={999999} min={0} {...mSoKm} />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Kiểm tra định kỳ: </label>
+                                <Select
+                                    readOnly={showInfoBill}
+                                    disabled={isDisableEditInfo || showInfoBill}
+                                    autocomplete="off"
+                                    value={kiemtradinhky}
+                                    onChange={(e) => {
+                                        setKiemTraDinhKy(e.target.value);
+                                    }}
+                                >
+                                    <option value="0">Không có</option>
+                                    <option value="1">Lần 1</option>
+                                    <option value="2">Lần 2</option>
+                                    <option value="3">Lần 3</option>
+                                    <option value="4">Lần 4</option>
+                                    <option value="5">Lần 5</option>
+                                    <option value="6">Lần 6</option>
+                                </Select>
+                            </DivFlexColumn>
+                            <Button
+                                disabled={!mBienSoXe.value}
+                                onClick={() => {
+                                    props.openModal(POPUP_NAME.POPUP_CUSTOMER_HISTORY, { ma: mMaKH.value });
+                                }}
+                                style={{ marginLeft: 20, marginTop: 10 }}
+                            >
+                                Chi tiết
+                            </Button>
+                        </DivFlexRow>
+                        <DivFlexRow style={{ alignItems: "center" }}>
+                            <DivFlexColumn>
+                                <label>Yêu cầu khách hàng: </label>
+                                <Textarea
+                                    readOnly={showInfoBill}
+                                    autocomplete="off"
+                                    value={yeucau}
+                                    onChange={(e) => {
+                                        setYeuCau(e.target.value);
+                                    }}
+                                />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Tư vấn Sữa chữa: </label>
+                                <Textarea
+                                    readOnly={showInfoBill}
+                                    autocomplete="off"
+                                    value={tuvan}
+                                    onChange={(e) => {
+                                        setTuvan(e.target.value);
+                                    }}
+                                />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Kiểm Tra Lần Tới: </label>
+                                <Textarea
+                                    readOnly={showInfoBill}
+                                    autocomplete="off"
+                                    value={kiemtralantoi}
+                                    onChange={(e) => {
+                                        setKiemTraLanToi(e.target.value);
+                                    }}
+                                />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Số km hẹn: </label>
+                                <Input
+                                    readOnly={showInfoBill}
+                                    value={sokmhen}
+                                    onChange={(e) => {
+                                        setSoKmHen(e.target.value);
+                                    }}
+                                />
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Thời Gian Hẹn: </label>
+                                <Select
+                                    readOnly={showInfoBill}
+                                    disabled={showInfoBill}
+                                    autocomplete="off"
+                                    value={thoigianhen}
+                                    onChange={(e) => {
+                                        setThoiGianHen(e.target.value);
+                                    }}
+                                >
+                                    <option value="0">Không hẹn</option>
+                                    <option value="5">5 Ngày Sau</option>
+                                    <option value="7">7 Ngày Sau</option>
+                                    <option value="10">10 Ngày Sau</option>
+                                    <option value="14">2 Tuần Sau</option>
+                                    <option value="21">3 Tuần Sau</option>
+                                    <option value="28">1 Tháng Sau</option>
+                                    <option value="91">3 Tháng Sau</option>
+                                    <option value="182">6 Tháng Sau</option>
+                                    <option value="364">1 Năm Sau</option>
+                                </Select>
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                                <label>Ngày Hẹn: </label>
+                                <If condition={!thoigianhen || thoigianhen == "0"}>
+                                    <Input readOnly autocomplete="off" value="" />
+                                </If>
+                                <If condition={thoigianhen && thoigianhen != "0"}>
+                                    <Input
+                                        readOnly
+                                        autocomplete="off"
+                                        value={moment(trangthai == 1 && mNgayThanhToan.value ? mNgayThanhToan.value : new Date())
+                                            .add(thoigianhen, "days")
+                                            .format("DD/MM/YYYY")}
+                                    />
+                                </If>
+                            </DivFlexColumn>
+                        </DivFlexRow>
+                        <If condition={isUpdateBill == 3 || lydo}>
+                            <DivFlexRow style={{ alignItems: "center" }}>
+                                <DivFlexColumn>
+                                    <label>Lý do thay đổi: </label>
+                                    <Textarea
+                                        readOnly={showInfoBill}
+                                        autocomplete="off"
+                                        value={lydo}
+                                        onChange={(e) => {
+                                            setLydo(e.target.value);
+                                        }}
+                                    />
+                                </DivFlexColumn>
+                            </DivFlexRow>
                         </If>
-                    </DataTable.Header>
-                    <DataTable.Body
-                        render={(item, index) => {
-                            return (
-                                <tr key={index}>
-                                    <CellText>{index + 1}</CellText>
-                                    <CellText>{item.tenphutung}</CellText>
-                                    <CellText>{item.maphutung}</CellText>
-                                    <CellMoney>{item.dongia}</CellMoney>
-                                    <CellText>
-                                        <input
-                                            style={{ maxWidth: 100, textAlign: "right" }}
-                                            readOnly={showInfoBill || item.loaiphutung == "tiencong"}
-                                            type="number"
-                                            max={1000}
-                                            onChange={(e) => handleChangeSL(e, index)}
-                                            value={item.soluong}
-                                            min="1"
-                                        />
-                                    </CellText>
-                                    <CellText>
-                                        <input
-                                            style={{ maxWidth: 100, textAlign: "right" }}
-                                            readOnly={showInfoBill}
-                                            type="number"
-                                            max={100}
-                                            onChange={(e) => handleChangeChieuKhau(e, index)}
-                                            value={item.chietkhau}
-                                            min="0"
-                                        />
-                                    </CellText>
-                                    <CellText>
-                                        <input
-                                            style={{ width: 150, textAlign: "right" }}
-                                            readOnly={showInfoBill || item.loaiphutung == "tiencong"}
-                                            type="number"
-                                            onChange={(e) => handleChangeTienChietKhau(e, index)}
-                                            value={item.tienchietkhau || 0}
-                                            min={0}
-                                        />
-                                    </CellText>
-                                    <CellMoney>{item.tienpt}</CellMoney>
-                                    <CellText>
-                                        <input
-                                            style={{ width: 150, textAlign: "right" }}
-                                            readOnly={showInfoBill || item.loaiphutung == "tiencong"}
-                                            type="number"
-                                            onChange={(e) => handleChangeTienCong(e, index)}
-                                            value={item.tiencong}
-                                            min={0}
-                                        />
-                                    </CellText>
-                                    <CellMoney>{item.tongtien}</CellMoney>
-                                    <If condition={!showInfoBill}>
-                                        <CellDelete onClick={() => props.deleteRepairedItemProduct(index)}></CellDelete>
-                                    </If>
-                                </tr>
-                            );
-                        }}
-                    ></DataTable.Body>
-                </DataTable>
 
-                <DivFlexRow style={{ marginTop: 15, marginBottom: 5, justifyContent: "end" }}>
-                    <DivFlexColumn style={{ marginTop: 10, marginRight: 20 }}>
-                        <h4 style={{ textAlign: "center" }}>Tiền PT: {utils.formatVND(props.Repaired.tongpt)} ,</h4>
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginTop: 10, marginRight: 20 }}>
-                        <h4 style={{ textAlign: "center" }}>Tiền Công : {utils.formatVND(props.Repaired.tongcong)} ,</h4>
-                    </DivFlexColumn>
-                    <DivFlexColumn style={{ marginTop: 10, marginRight: 5 }}>
-                        <h4 style={{ textAlign: "center" }}>Tổng Tiền : {utils.formatVND(props.Repaired.tongTien)}</h4>
-                    </DivFlexColumn>
-                </DivFlexRow>
+                        <If condition={isUpdateBill < 4}>
+                            <DivFlexRow style={{ marginTop: 5, marginBottom: 5, alignItems: "center", justifyContent: "flex-end" }}>
+                                <DivFlexRow style={{ alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                                    <ButtonChooseFile setLoading={setLoading} title={"Import"} onChooseFile={handleFileImport} />
+                                    <Button onClick={handleOpenSalary}>Thêm Tiền Công</Button>
+                                    <Button onClick={handleOpenStoreOutside}>Thêm của hàng ngoài</Button>
+                                    <Button onClick={handleOpenPopupProduct}>Thêm mới</Button>
+                                </DivFlexRow>
+                            </DivFlexRow>
+                        </If>
 
-                <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: "space-between" }}>
-                    <label></label>
-                    <DivFlexRow>
-                        <Choose>
-                            <When condition={isUpdateBill == 0}>
-                                <CancleButton onClick={handleHuyBan}>Hủy bàn</CancleButton>
-                                <Button onClick={handleSaveBill}>Lưu</Button>
-                            </When>
-                            <When condition={isUpdateBill == 4}>
-                                <If condition={moment().valueOf() - moment(mNgayThanhToan.value).valueOf() <= oneDay}>
-                                    <Button onClick={handleRedirectUpdate}>Update</Button>
+                        <DataTable
+                            noPage
+                            isLoading={props.isLoading}
+                            data={props.Repaired.products}
+                            onSearch={handleSearchItem}
+                            limitList={20}
+                            dataSearch={props.Product.data}
+                            searchData={(search, item) => utils.searchName(item.maphutung, search) || utils.searchName(item.tentiengviet, search)}
+                            renderSearch={(item, index) => {
+                                return (
+                                    <option key={index} value={item.maphutung}>
+                                        {item.tentiengviet} ({item.soluongtonkho})
+                                    </option>
+                                );
+                            }}
+                        >
+                            <DataTable.Header>
+                                <th style={{ width: 50 }}>STT</th>
+                                <th>
+                                    Tên phụ tùng <br /> và công việc
+                                </th>
+                                <th>Mã phụ tùng</th>
+                                <th>Đơn giá</th>
+                                <th style={{ width: 100 }}>SL</th>
+                                <th style={{ width: 100 }}>Chiết khấu (%)</th>
+                                <th style={{ width: 100 }}>Số tiền chiết khấu</th>
+                                <th>Tiền phụ tùng</th>
+                                <th>Tiền công</th>
+                                <th>
+                                    Tổng tiền công <br />+ phụ tùng
+                                </th>
+                                <If condition={!showInfoBill}>
+                                    <th style={{ width: 100 }}>
+                                        <i className="far fa-trash-alt"></i>
+                                    </th>
                                 </If>
-                            </When>
-                            <Otherwise>
-                                <Button onClick={handleUpdateBill}>Update</Button>
-                                <If condition={isUpdateBill != 3}>
-                                    <Button style={{ marginLeft: 15 }} onClick={handlePayBill}>
-                                        Update và Thanh toán
-                                    </Button>
-                                    <DelButton style={{ marginLeft: 15 }} onClick={handleDeleteBill}>
-                                        Hủy
-                                    </DelButton>
-                                </If>
-                            </Otherwise>
-                        </Choose>
-                    </DivFlexRow>
-                </DivFlexRow>
-            </div>
-        </DivFragment>
+                            </DataTable.Header>
+                            <DataTable.Body
+                                render={(item, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <CellText>{index + 1}</CellText>
+                                            <CellText>{item.tenphutung}</CellText>
+                                            <CellText>{item.maphutung}</CellText>
+                                            <CellMoney>{item.dongia}</CellMoney>
+                                            <CellText>
+                                                <input
+                                                    style={{ maxWidth: 100, textAlign: "right" }}
+                                                    readOnly={showInfoBill || item.loaiphutung == "tiencong"}
+                                                    type="number"
+                                                    max={1000}
+                                                    onChange={(e) => handleChangeSL(e, index)}
+                                                    value={item.soluong}
+                                                    min="1"
+                                                />
+                                            </CellText>
+                                            <CellText>
+                                                <input
+                                                    style={{ maxWidth: 100, textAlign: "right" }}
+                                                    readOnly={showInfoBill}
+                                                    type="number"
+                                                    max={100}
+                                                    onChange={(e) => handleChangeChieuKhau(e, index)}
+                                                    value={item.chietkhau}
+                                                    min="0"
+                                                />
+                                            </CellText>
+                                            <CellText>
+                                                <input
+                                                    style={{ width: 150, textAlign: "right" }}
+                                                    readOnly={showInfoBill || item.loaiphutung == "tiencong"}
+                                                    type="number"
+                                                    onChange={(e) => handleChangeTienChietKhau(e, index)}
+                                                    value={item.tienchietkhau || 0}
+                                                    min={0}
+                                                />
+                                            </CellText>
+                                            <CellMoney>{item.tienpt}</CellMoney>
+                                            <CellText>
+                                                <input
+                                                    style={{ width: 150, textAlign: "right" }}
+                                                    readOnly={showInfoBill || item.loaiphutung == "tiencong"}
+                                                    type="number"
+                                                    onChange={(e) => handleChangeTienCong(e, index)}
+                                                    value={item.tiencong}
+                                                    min={0}
+                                                />
+                                            </CellText>
+                                            <CellMoney>{item.tongtien}</CellMoney>
+                                            <If condition={!showInfoBill}>
+                                                <CellDelete onClick={() => props.deleteRepairedItemProduct(index)}></CellDelete>
+                                            </If>
+                                        </tr>
+                                    );
+                                }}
+                            ></DataTable.Body>
+                        </DataTable>
+
+                        <DivFlexRow style={{ marginTop: 15, marginBottom: 5, justifyContent: "end" }}>
+                            <DivFlexColumn style={{ marginTop: 10, marginRight: 20 }}>
+                                <h4 style={{ textAlign: "center" }}>Tiền PT: {utils.formatVND(props.Repaired.tongpt)} ,</h4>
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginTop: 10, marginRight: 20 }}>
+                                <h4 style={{ textAlign: "center" }}>Tiền Công : {utils.formatVND(props.Repaired.tongcong)} ,</h4>
+                            </DivFlexColumn>
+                            <DivFlexColumn style={{ marginTop: 10, marginRight: 5 }}>
+                                <h4 style={{ textAlign: "center" }}>Tổng Tiền : {utils.formatVND(props.Repaired.tongTien)}</h4>
+                            </DivFlexColumn>
+                        </DivFlexRow>
+
+                        <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: "space-between" }}>
+                            <label></label>
+                            <DivFlexRow>
+                                <Choose>
+                                    <When condition={isUpdateBill == 0}>
+                                        <CancleButton onClick={handleHuyBan}>Hủy bàn</CancleButton>
+                                        <Button onClick={handleSaveBill}>Lưu</Button>
+                                    </When>
+                                    <When condition={isUpdateBill == 4}>
+                                        <If condition={moment().valueOf() - moment(mNgayThanhToan.value).valueOf() <= oneDay}>
+                                            <Button onClick={handleRedirectUpdate}>Update</Button>
+                                        </If>
+                                    </When>
+                                    <Otherwise>
+                                        <Button onClick={handleUpdateBill}>Update</Button>
+                                        <If condition={isUpdateBill != 3}>
+                                            <Button style={{ marginLeft: 15 }} onClick={handlePayBill}>
+                                                Update và Thanh toán
+                                            </Button>
+                                            <DelButton style={{ marginLeft: 15 }} onClick={handleDeleteBill}>
+                                                Hủy
+                                            </DelButton>
+                                        </If>
+                                    </Otherwise>
+                                </Choose>
+                            </DivFlexRow>
+                        </DivFlexRow>
+                    </div>
+                </DivFragment>
+            </Otherwise>
+        </Choose>
     );
 };
 

@@ -11,6 +11,8 @@ const pool = mysql.createPool({
     dateStrings: true,
 })
 
+pool.setMaxListeners(50);
+
 // const pool = mysql.createPool({
 //     connectionLimit:100,
 //     host: 'localhost',

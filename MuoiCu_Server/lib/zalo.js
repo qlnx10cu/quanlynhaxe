@@ -32,7 +32,7 @@ module.exports = {
 
         var dateCurrent = moment().format('YYYY-MM-DD');
 
-        if (!access_token_now || !access_date || dateCurrent != access_date) {
+        if (!access_token_now || !access_date || dateCurrent !== access_date) {
             logger.info("Start Get Access Token: " + access_date);
 
             request.post({
@@ -100,6 +100,45 @@ module.exports = {
             }
         });
        
+    },
+
+    sendZNS_thanhtoan: function (body) {
+        if (!body || !config.zalo.zns)
+            return false;
+
+        const phone = utils.formatSDT(body.sodienthoai);
+        const phoneSend = utils.formatSDTNew(body.sodienthoai);
+        if (!phone) {
+            logger.info("sendZNS_thanhtoan: error phone : " + body.mahoadon);
+            return false;
+        }
+
+        var template_id = 422649;
+        var template_data = {
+            phone_number: phone,
+            name: body.tenkh,
+            price: body.tongtien,
+            order_code: body.mahoadon,
+        };
+
+        body = JSON.stringify({ phone: phoneSend, template_id: template_id, template_data: template_data, tracking_id: body.mahoadon });
+
+        request.post({
+            headers: {
+                'Content-Type': 'application/json',
+                'access_token': access_token
+            },
+            url: config.zalo.busDomain,
+            body: body
+        }, function (error, response, body) {
+            logger.info("sendZNS_thanhtoan: " + error + " body: " + body);
+            try {
+                JSON.parse(body);
+            } catch (ex) {
+                logger.error(ex)
+            }
+
+        });
     },
 
     sendZNS_suachua: function (body) {

@@ -59,7 +59,7 @@ const Customer = (props) => {
                 <th>Loại Xe</th>
                 <th>Số Khung</th>
                 <th>Số Máy</th>
-                <th style={{ width: 140 }}>Xem|Sữa|Chat|Gọi</th>
+                <th style={{ width: 140 }}>Xem|Sửa|Chat|Gọi</th>
                 <th style={{ width: 30 }}>Xóa</th>
             </DataTable.Header>
             <DataTable.Body

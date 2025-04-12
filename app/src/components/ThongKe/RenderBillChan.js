@@ -65,7 +65,7 @@ const RenderBillChan = ({ data }) => {
         <React.Fragment>
             <DivFlexRow>
                 <DivFlexColumn>
-                    <label>Nhân Viên Sữa Chữa: </label>
+                    <label>Nhân Viên Sửa Chữa: </label>
                     <Input readOnly autocomplete="off" value={data.tennvsuachua} />
                 </DivFlexColumn>
             </DivFlexRow>

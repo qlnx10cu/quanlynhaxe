@@ -47,7 +47,7 @@ const Staffs = (props) => {
                 <th>Email</th>
                 <th>Account Sip</th>
                 <th>Chức vụ</th>
-                <th>Sữa xóa</th>
+                <th>Sửa xóa</th>
             </DataTable.Header>
             <DataTable.Body
                 render={(item, index) => {

@@ -265,11 +265,11 @@ const RepairedBill = (props) => {
             return null;
         }
         if (!mMaNVSuaChua.value || mMaNVSuaChua.value == "") {
-            props.alert("Vui lòng điền nhân viên sữa chữa");
+            props.alert("Vui lòng điền nhân viên sửa chữa");
             return null;
         }
         if (!listNhanVienSuaChua.find((e) => e.ma == mMaNVSuaChua.value)) {
-            props.alert("Nhân viên sữa chữa không tồn tại");
+            props.alert("Nhân viên sửa chữa không tồn tại");
             return null;
         }
         if (isUpdateBill == 3) {
@@ -409,7 +409,7 @@ const RepairedBill = (props) => {
                     props.history.push("/suachua");
                 })
                 .catch((err) => {
-                    props.errorHttp(err, "Không thể lưu phiếu sữa chưa: ");
+                    props.errorHttp(err, "Không thể lưu phiếu sửa chưa: ");
                 });
         });
     };
@@ -765,7 +765,7 @@ const RepairedBill = (props) => {
                                 />
                             </DivFlexColumn>
                             <DivFlexColumn style={{ marginLeft: 20 }}>
-                                <label>Tư vấn Sữa chữa: </label>
+                                <label>Tư vấn Sửa chữa: </label>
                                 <Textarea
                                     readOnly={showInfoBill}
                                     autocomplete="off"

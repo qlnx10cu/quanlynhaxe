@@ -165,7 +165,7 @@ const Statistic = (props) => {
             <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center" }}></DivFlexRow>
             <TabPage onChange={setTab}>
                 <TabPage.Tab title="Tất cả" />
-                <TabPage.Tab title="Sữa chữa" />
+                <TabPage.Tab title="Sửa chữa" />
                 <TabPage.Tab title="Bán lẻ" />
             </TabPage>
 

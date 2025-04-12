@@ -25,9 +25,9 @@ const RenderTableDetail = ({ onViewBill, list }) => {
                     <th>STT</th>
                     <th>Ngày</th>
                     <th>Mã Hóa Đơn</th>
-                    <th>Nhân viên sữa chữa</th>
+                    <th>Nhân viên sửa chữa</th>
                     <th>Yêu cầu khách hàng</th>
-                    <th>Tư vấn sữa chữa</th>
+                    <th>Tư vấn sửa chữa</th>
                     <th>KTDK</th>
                     <th>Xem chi tiết</th>
                 </DataTable.Header>
@@ -290,7 +290,7 @@ const PopupCustomerHistory = (props) => {
                 </DivFlexColumn>
             </DivFlexRow>
             <TabPage>
-                <TabPage.Tab title="Sữa chữa">
+                <TabPage.Tab title="Sửa chữa">
                     <RenderTableDetail list={mData.chitiet} onViewBill={handleViewBill} />
                 </TabPage.Tab>
                 <TabPage.Tab title="Chăm sóc">

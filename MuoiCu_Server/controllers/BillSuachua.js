@@ -168,7 +168,7 @@ module.exports = {
 
                 logger.info("Id: "+req.start+" BillSuaChua.update sendMail");
                 if (hoaDon.trangthai == 1) {
-                    email.sendMail(req, res, "Update hóa đơn sữa chữa", "Hệ thống vừa update hoá đơn với mã " + mahoadon + "\nLý do:\n" + conlai.lydo);
+                    email.sendMail(req, res, "Update hóa đơn sửa chữa", "Hệ thống vừa update hoá đơn với mã " + mahoadon + "\nLý do:\n" + conlai.lydo);
                 }
                 var bodybill = conlai;
                 bodybill['ngaysuachua'] = new Date();

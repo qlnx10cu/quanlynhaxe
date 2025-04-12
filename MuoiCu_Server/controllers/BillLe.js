@@ -8,6 +8,8 @@ const Employee = require("../models/Employee");
 const Customer = require("../models/Customer");
 const email = require("../lib/email");
 const config = require("../config");
+const logger = require("../lib/logger");
+const zalo = require("../lib/zalo");
 
 module.exports = {
     getList: function (req, res) {
@@ -46,9 +48,25 @@ module.exports = {
             for (var k in detailbill) {
                 detailbill[k]['mahoadon'] = mahoadon;
             }
-            let resulft = await Abstract.add(Bill, bodybill);
-            resulft = await Abstract.addMutil(BillLe, detailbill);
+            await Abstract.add(Bill, bodybill);
+            await Abstract.addMutil(BillLe, detailbill);
             await BillLe.giamSoLuongPhuTung(detailbill);
+
+            if(bodybill['trangthai'] === 1) {
+                try {
+                    logger.info("Id: "+req.start+" Bill.banle setTimeout.sendZNS_thanhtoan ");
+                    zalo.sendZNS_thanhtoan({
+                        sodienthoai: bodybill.sodienthoai,
+                        mahoadon: mahoadon,
+                        tenkh: bodybill.tenkh,
+                        tongtien: bodybill.tongtien,
+                    });
+                    logger.info("Id: "+req.start+" Bill.banle setTimeout.sendZNS_thanhtoan.done ");
+                } catch (ex) {
+                    logger.info("Id: "+req.start+" Bill.banle setTimeout.sendZNS_thanhtoan.error ", ex);
+                }
+            }
+
             res.json({ "mahoadon": mahoadon });
         } catch (error) {
             librespone.error(req, res, error.message);
@@ -95,6 +113,22 @@ module.exports = {
                     await Abstract.addMutil(BillLe, detailbill);
                     await BillLe.giamSoLuongPhuTung(detailbill);
                 }
+
+                if (bodybill.trangthai === 1 && hoaDon.trangthai === 0) {
+                    try {
+                        logger.info("Id: "+req.start+" Bill.banle setTimeout.sendZNS_thanhtoan ");
+                        zalo.sendZNS_thanhtoan({
+                            sodienthoai: bodybill.sodienthoai,
+                            mahoadon: mahoadon,
+                            tenkh: bodybill.tenkh,
+                            tongtien: bodybill.tongtien,
+                        });
+                        logger.info("Id: "+req.start+" Bill.banle setTimeout.sendZNS_thanhtoan.done ");
+                    } catch (ex) {
+                        logger.info("Id: "+req.start+" Bill.banle setTimeout.sendZNS_thanhtoan.error ");
+                    }
+                }
+
                 res.json({ "mahoadon": mahoadon });
             } else {
                 librespone.error(req, res, 'Không update được hóa đơn');

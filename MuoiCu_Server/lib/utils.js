@@ -1,4 +1,5 @@
 var moment = require('moment');
+
 module.exports = {
 
     normalizeStr: function (value) {
@@ -76,5 +77,23 @@ module.exports = {
         } catch (error) {
 
         }
+    },
+    parseInt: function (val, def, max) {
+        try {
+            def = def || 0;
+            const res = parseInt(val) || def;
+            if (max !== undefined && max != null && res > max) return max;
+            if (res < 0) return def || 0;
+            if (!String(val).includes(".") && String(res).trim() != String(val).trim()) return def;
+            return res;
+        } catch (ex) {}
+
+        return def;
+    },
+    formatVND: function (tien) {
+        return this.parseInt(tien).toLocaleString("vi-VI", {
+            style: "currency",
+            currency: "VND",
+        });
     },
 }

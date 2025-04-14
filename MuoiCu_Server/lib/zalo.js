@@ -75,16 +75,18 @@ module.exports = {
 
     },
 
-    getMessageConversation: function(user_id) {
+    getMessageConversation: async function(user_id) {
 
         var url =`https://openapi.zalo.me/v2.0/oa/conversation?data=%7B%22offset%22%3A0%2C%22user_id%22%3A${user_id}%2C%22count%22%3A3%7D`;
-      
+
+        const access_token_now = await Option.getValue("access_token");
+
         return new Promise((resolve, reject)=>{
             try{
                 request.get({
                     headers: {
                         'Content-Type': 'application/json',
-                        'access_token': access_token
+                        'access_token': access_token_now || access_token
                     },
                     url: url
                 }, function (error, response, body) {
@@ -102,7 +104,7 @@ module.exports = {
        
     },
 
-    sendZNS_thanhtoan: function (body) {
+    sendZNS_thanhtoan: async function (body) {
         if (!body || !config.zalo.zns)
             return false;
 
@@ -123,10 +125,12 @@ module.exports = {
 
         body = JSON.stringify({ phone: phoneSend, template_id: template_id, template_data: template_data, tracking_id: body.mahoadon });
 
+        const access_token_now = await Option.getValue("access_token");
+
         request.post({
             headers: {
                 'Content-Type': 'application/json',
-                'access_token': access_token
+                'access_token': access_token_now || access_token
             },
             url: config.zalo.busDomain,
             body: body
@@ -141,7 +145,7 @@ module.exports = {
         });
     },
 
-    sendZNS_suachua: function (body) {
+    sendZNS_suachua: async function (body) {
         if (!body || !config.zalo.zns)
             return false;
 
@@ -200,10 +204,12 @@ module.exports = {
 
         body = JSON.stringify({ phone: phoneSend, template_id: template_id, template_data: template_data, tracking_id: body.mahoadon });
 
+        const access_token_now = await Option.getValue("access_token");
+
         request.post({
             headers: {
                 'Content-Type': 'application/json',
-                'access_token': access_token
+                'access_token': access_token_now || access_token
             },
             url: config.zalo.busDomain,
             body: body

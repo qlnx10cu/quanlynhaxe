@@ -115,11 +115,11 @@ module.exports = {
             return false;
         }
 
-        var template_id = 422649;
+        var template_id = 424649;
         var template_data = {
             phone_number: phone,
             name: body.tenkh,
-            price: body.tongtien,
+            price: utils.formatVND(body.tongtien),
             order_code: body.mahoadon,
         };
 

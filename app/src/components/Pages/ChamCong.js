@@ -123,7 +123,11 @@ const TabChamCong = (props) => {
                     {
                         <tr>
                             <td>Tổng</td>
-                            <td>{arr.reduce((a, b) => a + (b.tiencong || 0), 0).toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
+                            <td>
+                                {arr
+                                    .reduce((a, b) => a + parseInt(b.tiencong || 0, 10), 0)
+                                    .toLocaleString("vi-VI", { style: "currency", currency: "VND" })}
+                            </td>
                             <td></td>
                         </tr>
                     }

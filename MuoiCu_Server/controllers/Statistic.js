@@ -36,7 +36,7 @@ module.exports = {
                         chitiet: hd.chitiet.map(e => {
                             return {
                                 ...e,
-                                chietkhau: Math.round(parseFloat(e.chietkhau))
+                                chietkhau: Math.round(parseFloat(e.chietkhau)).toString()
                             }
                         })
                     }

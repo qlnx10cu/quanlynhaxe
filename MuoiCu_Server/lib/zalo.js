@@ -79,6 +79,7 @@ module.exports = {
 
         var url =`https://openapi.zalo.me/v2.0/oa/conversation?data=%7B%22offset%22%3A0%2C%22user_id%22%3A${user_id}%2C%22count%22%3A3%7D`;
 
+        this.updateAccessToken();
         const access_token_now = await Option.getValue("access_token");
 
         return new Promise((resolve, reject)=>{
@@ -125,6 +126,7 @@ module.exports = {
 
         body = JSON.stringify({ phone: phoneSend, template_id: template_id, template_data: template_data, tracking_id: body.mahoadon });
 
+        this.updateAccessToken();
         const access_token_now = await Option.getValue("access_token");
 
         request.post({
@@ -204,6 +206,7 @@ module.exports = {
 
         body = JSON.stringify({ phone: phoneSend, template_id: template_id, template_data: template_data, tracking_id: body.mahoadon });
 
+        this.updateAccessToken();
         const access_token_now = await Option.getValue("access_token");
 
         request.post({

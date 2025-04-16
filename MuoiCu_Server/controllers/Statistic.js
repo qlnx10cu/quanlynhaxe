@@ -31,6 +31,15 @@ module.exports = {
                 }
                 if (req.query.loaihoadon == 1 && dsHoaDon[i].loaihoadon == 1) {
                     hd = await BillLe.getChitietThanhToan(dsHoaDon[i].mahoadon)
+                    hd = {
+                        ...hd,
+                        chitiet: hd.chitiet.map(e => {
+                            return {
+                                ...e,
+                                chietkhau: Math.round(parseFloat(e.chietkhau))
+                            }
+                        })
+                    }
                 }
                 if (hd != null) {
                     resulft.push(hd);

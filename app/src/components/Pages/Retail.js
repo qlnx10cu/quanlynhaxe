@@ -562,8 +562,7 @@ const Retail = (props) => {
                     <DivFlexRow style={{ justifyContent: "flex-end" }}>
                         <h3>Tổng tiền: {utils.formatVND(props.Retail.tongTien)}</h3>
                     </DivFlexRow>
-                    <DivFlexRow style={{ marginTop: 25, marginBottom: 5, justifyContent: "space-between" }}>
-                        <label></label>
+                    <DivFlexRow style={{ marginTop: 25, marginBottom: 5, width: "100%", gap: 10, justifyContent: "flex-end" }}>
                         <Choose>
                             <When condition={loai === 0}>
                                 <DivFlexRow style={{ gap: 10 }}>
@@ -578,17 +577,13 @@ const Retail = (props) => {
                             <When condition={loai === 1 && moment().valueOf() - moment(hoadon.ngaythanhtoan).valueOf() <= twoDay}>
                                 <ButtonConfirm title={"Chỉnh sửa"} titleConfirm={"Bạn muốn chỉnh sửa hóa đơn"} onClick={handleUpdateBill} />
                             </When>
-                            <When condition={loai === 1 && !hoadon.ngaythanhtoan}>
-                                <ButtonConfirm
-                                    title={"Thanh toán"}
-                                    titleConfirm={"Bạn muốn thanh toán hóa đơn?"}
-                                    onClick={() => handleUpdateBill(1)}
-                                />
-                            </When>
                             <When condition={loai === 2 && moment().valueOf() - moment(hoadon.ngaythanhtoan).valueOf() <= twoDay}>
                                 <ButtonConfirm title={"Thay đổi"} titleConfirm={"Xác nhận"} onClick={handleRenderUpdateBill} />
                             </When>
                         </Choose>
+                        {loai === 1 && !hoadon.trangthai && (
+                            <ButtonConfirm title={"Thanh toán"} titleConfirm={"Bạn muốn thanh toán hóa đơn?"} onClick={() => handleUpdateBill(1)} />
+                        )}
                     </DivFlexRow>
                 </Otherwise>
             </Choose>

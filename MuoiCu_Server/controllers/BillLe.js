@@ -42,7 +42,7 @@ module.exports = {
             bodybill['trangthai'] = bodybill['trangthai'] === 0 ? 0 : 1;
             bodybill['loaihoadon'] = 1;
             bodybill['mahoadon'] = mahoadon;
-            bodybill['ngaythanhtoan'] = bodybill['trangthai'] === 0 ? null : new Date();
+            bodybill['ngaythanhtoan'] = new Date();
             bodybill['ngaysuachua'] = new Date();
             bodybill['ngayban'] = new Date();
             for (var k in detailbill) {

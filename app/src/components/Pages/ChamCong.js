@@ -32,12 +32,11 @@ const TabChamCong = (props) => {
     let [isLoading, setLoading] = useState(false);
     const fetchData = async () => {
         let tmp = moment(dateStart).format("YYYY-MM-DD");
-
         setLoading(true);
         try {
             let res = await axios.get(`${HOST}/chamcong/theongay/ngay/${tmp}`);
             setLoading(false);
-            await setArr(res.data);
+            await setArr(res?.data?.filter((item) => item.tiencong !== "0"));
         } catch (error) {}
     };
     const uploadData = async () => {
@@ -160,8 +159,8 @@ const TheoDoi = (props) => {
                 });
                 let tmp3 = tmp2.reduce((prev, cur) => {
                     if (prev[cur.ten]) {
-                        prev[cur.ten] += cur.tiencong + cur.vskp + cur.vsbd;
-                    } else prev[cur.ten] = cur.tiencong + cur.vskp + cur.vsbd;
+                        prev[cur.ten] += parseInt(cur.tiencong) + parseInt(cur.vskp) + parseInt(cur.vsbd);
+                    } else prev[cur.ten] = parseInt(cur.tiencong) + parseInt(cur.vskp) + parseInt(cur.vsbd);
                     return prev;
                 }, {});
                 setSum(tmp3);
@@ -182,43 +181,54 @@ const TheoDoi = (props) => {
             "_blank" // <- This is what makes it open in a new window.
         );
     };
+
+    const activeNV = nv.filter((item) => sum[item] !== 0);
+
     return (
         <div>
             <h1 style={{ textAlign: "center" }}>Theo dõi</h1>
             <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center" }}>
                 <DivFlexRow style={{ alignItems: "center" }}>
-                    <label style={{ marginLeft: 10 }}>Ngày bắt đầu: </label>
+                    <label style={{ margin: 10 }}>Ngày bắt đầu: </label>
                     <Input type="date" {...start} />
-                    <label style={{ marginLeft: 10 }}>Ngày kết thúc: </label>
+                    <label style={{ margin: 10 }}>Ngày kết thúc: </label>
                     <Input type="date" {...end} />
                 </DivFlexRow>
-                <Button onClick={exportData} style={{ marginLeft: 10 }}>
-                    Export
-                </Button>
-                <Button onClick={fetchData}>Lấy danh sách</Button>
+                <DivFlexRow style={{ alignItems: "center", gap: 10 }}>
+                    <Button onClick={exportData} style={{ marginLeft: 10 }}>
+                        Export
+                    </Button>
+                    <Button onClick={fetchData}>Lấy danh sách</Button>
+                </DivFlexRow>
             </DivFlexRow>
             <Table style={{ marginTop: 15 }}>
-                {nv.length > 0 && (
+                {activeNV.length > 0 && (
                     <tbody>
                         <tr>
-                            {nv.length > 0 && <th>Ngay</th>}
-                            {nv.map((e, i) => (
+                            {activeNV.length > 0 && <th>Ngày</th>}
+                            {activeNV.map((e, i) => (
                                 <th key={i}>{e}</th>
                             ))}
                         </tr>
                         {data.map((e, index) => (
                             <tr key={index}>
                                 <td>{e.ngay}</td>
-                                {e.data.map((el, i) => (
-                                    <td key={i}>
-                                        {(el.tiencong + el.vsbd + el.vskp || 0).toLocaleString("vi-VI", { style: "currency", currency: "VND" })}
-                                    </td>
-                                ))}
+                                {activeNV.map((ten) => {
+                                    const el = e.data.find((item) => item.ten === ten);
+                                    return (
+                                        <td key={el.manv}>
+                                            {(parseInt(el.tiencong) + parseInt(el.vsbd) + parseInt(el.vskp || 0)).toLocaleString("vi-VI", {
+                                                style: "currency",
+                                                currency: "VND",
+                                            })}
+                                        </td>
+                                    );
+                                })}
                             </tr>
                         ))}
                         <tr>
-                            {nv.length > 0 && <td>Tổng tiền</td>}
-                            {nv.map((e, i) => (
+                            {activeNV.length > 0 && <td>Tổng tiền</td>}
+                            {activeNV.map((e, i) => (
                                 <td key={i}>{sum[e].toLocaleString("vi-VI", { style: "currency", currency: "VND" })}</td>
                             ))}
                         </tr>
@@ -236,7 +246,7 @@ const ChamCong = (props) => {
                 <TabPage.Tab title={"Chấm công"}>
                     <TabChamCong {...props} />
                 </TabPage.Tab>
-                <TabPage.Tab title={"Theo dỗi"}>
+                <TabPage.Tab title={"Theo dõi"}>
                     <TheoDoi {...props} />
                 </TabPage.Tab>
             </TabPage>

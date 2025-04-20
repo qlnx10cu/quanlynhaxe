@@ -813,10 +813,12 @@ const RepairedBill = (props) => {
                                     <option value="10">10 Ngày Sau</option>
                                     <option value="14">2 Tuần Sau</option>
                                     <option value="21">3 Tuần Sau</option>
-                                    <option value="28">1 Tháng Sau</option>
-                                    <option value="91">3 Tháng Sau</option>
-                                    <option value="182">6 Tháng Sau</option>
-                                    <option value="364">1 Năm Sau</option>
+                                    <option value="30">1 Tháng Sau</option>
+                                    <option value="45">45 Ngày Sau</option>
+                                    <option value="60">2 Tháng Sau</option>
+                                    <option value="90">3 Tháng Sau</option>
+                                    <option value="180">6 Tháng Sau</option>
+                                    <option value="365">1 Năm Sau</option>
                                 </Select>
                             </DivFlexColumn>
                             <DivFlexColumn style={{ marginLeft: 20 }}>

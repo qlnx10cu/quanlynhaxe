@@ -181,21 +181,27 @@ module.exports = {
                     template_data['ngayhen'] = '10 ngày';
                     break;
                 case 14:
-                    template_data['ngayhen'] = '2 tuàn';
+                    template_data['ngayhen'] = '2 tuần';
                     break;
                 case 21:
-                    template_data['ngayhen'] = '3 tuàn';
+                    template_data['ngayhen'] = '3 tuần';
                     break;
-                case 28:
+                case 30:
                     template_data['ngayhen'] = '1 tháng';
                     break;
-                case 91:
+                case 45:
+                    template_data['ngayhen'] = '45 ngày';
+                    break;
+                case 60:
+                    template_data['ngayhen'] = '2 tháng';
+                    break;
+                case 90:
                     template_data['ngayhen'] = '3 tháng';
                     break;
-                case 182:
+                case 180:
                     template_data['ngayhen'] = '6 tháng';
                     break;
-                case 364:
+                case 365:
                     template_data['ngayhen'] = '1 năm';
                     break;
                 default:

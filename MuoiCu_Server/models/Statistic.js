@@ -12,17 +12,17 @@ module.exports = {
         var sql = "select mahoadon,makh,tenkh,biensoxe,tongtien,ngaythanhtoan,loaihoadon,lydo,ngaysuachua,trangthai,ngayban,lydo from hoadon where isdelete = 0 ";
         if (praram.start) {
             param.push(praram.start);
-            sql = sql + "AND DATEDIFF(ngayban,?) >= 0 ";
+            sql = sql + "AND DATEDIFF(ngaythanhtoan,?) >= 0 ";
         }
         if (praram.end) {
             param.push(praram.end);
-            sql = sql + "AND DATEDIFF(?,ngayban) >= 0 ";
+            sql = sql + "AND DATEDIFF(?,ngaythanhtoan) >= 0 ";
         }
         if(praram.trangthai || praram.trangthai === 0) {
             param.push(praram.trangthai);
             sql = sql + " AND trangthai = ? ";
         }
-        sql = sql + " ORDER BY ngayban desc";
+        sql = sql + " ORDER BY ngaythanhtoan desc";
         let res = await query(sql, param);
         return res;
     },

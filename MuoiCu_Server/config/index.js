@@ -11,7 +11,7 @@ module.exports = {
         host: process.env.HOST,
         limit: process.env.LIMIT
     },
-    typeserver: process.env.PORT == '8080' ? 0 : 1,
+    typeserver: 0,
     email: {
         enable: parseBool(process.env.ENABLE_EMAIL),
         auth: {

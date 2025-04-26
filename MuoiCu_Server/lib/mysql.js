@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
 const config = require('../config');
 const pool = mysql.createPool({
-    connectionLimit: config.database.limit,
+    connectionLimit: config.database.limit || 100,
     host: config.database.host,
     user: config.database.username,
     // user: 'wxce9ubz69vjtzw8',
@@ -9,6 +9,7 @@ const pool = mysql.createPool({
     database: config.database.database,
     port: config.database.port || 3306,
     dateStrings: true,
+    queueLimit: 50
 })
 
 pool.setMaxListeners(50);

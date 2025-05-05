@@ -6,6 +6,7 @@ function query(query, param) {
     return new Promise((resolve, reject) => {
         pool.getConnection((err, connection) => {
             if (err) return reject(err);
+            connection.setMaxListeners(50);
             connection.on('error', (error) => {
                 try {
                     connection.release();

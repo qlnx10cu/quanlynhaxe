@@ -1,6 +1,7 @@
 
 const Statistic = require("../models/Statistic");
 const XLSX = require('xlsx');
+const ExcelJS = require('exceljs');
 const librespone = require("../lib/respone");
 const BillLe = require("../models/BillLe");
 const billchan = require("../models/BillSuachua");
@@ -276,6 +277,39 @@ module.exports = {
             res.setHeader('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
             res.send(new Buffer(wbout));
+        } catch (error) {
+            res.status(400).json({
+                error: {
+                    message: error.message
+                }
+            })
+        }
+    },
+    getExportForTax: async function (req, res, next) {
+        try {
+            let rows = await Statistic.getExportForTax(req.query);
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Query Results');
+
+            const firstRow = rows[0] || {};
+
+            // Add column headers
+            worksheet.columns = Object.keys(firstRow).map(name => ({
+                header: name,
+                key: name,
+                width: 20,
+            }));
+
+            // Add rows to the worksheet
+            rows.forEach(row => {
+                worksheet.addRow(row);
+
+            });
+
+            res.setHeader('Content-disposition', 'attachment; filename=thongke-banle.xlsx');
+            res.setHeader('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            const buffer = await workbook.xlsx.writeBuffer();
+            res.send(Buffer.from(buffer));
         } catch (error) {
             res.status(400).json({
                 error: {

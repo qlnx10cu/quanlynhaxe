@@ -19,6 +19,10 @@ class StatisticApi extends ApiObject {
         window.open(`${HOST}/statistic/bill/export?start=${start}&end=${end}&trangthai=1`, "_blank");
     }
 
+    exportBillForTax(start, end) {
+        window.open(`${HOST}/statistic/tax/export?start=${start}&end=${end}`, "_blank");
+    }
+
     exportThongKe(start, end) {
         window.open(`${HOST_SHEME}/exportthongke?start=${start}&end=${end}`, "_blank");
     }

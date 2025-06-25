@@ -49,6 +49,10 @@ const Statistic = (props) => {
         StatisticApi.exportBill(mDateStart.value, mDateEnd.value);
     };
 
+    const handleExportBillForTax = () => {
+        StatisticApi.exportBillForTax(mDateStart.value, mDateEnd.value);
+    };
+
     const handleExportThongKe = () => {
         StatisticApi.exportThongKe(mDateStart.value, mDateEnd.value);
     };
@@ -153,6 +157,9 @@ const Statistic = (props) => {
                     </ButtonUpload>
                     <ButtonUpload isUpload={isLoading} onClick={handleExportBill} style={{ marginLeft: 10 }}>
                         Export
+                    </ButtonUpload>
+                    <ButtonUpload isUpload={isLoading} onClick={handleExportBillForTax} style={{ marginLeft: 10 }}>
+                        Export Bán lẻ
                     </ButtonUpload>
                     <ButtonUpload isUpload={isLoading} onClick={handleExportThongKe} style={{ marginLeft: 10 }}>
                         Export Thống kê

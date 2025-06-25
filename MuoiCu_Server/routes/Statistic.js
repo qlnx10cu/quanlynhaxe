@@ -4,6 +4,7 @@ const Statistic = require('../controllers/Statistic');
 router.get('/bill', Statistic.getBill);
 router.get('/bill/chitiet', Statistic.getBillChitiet);
 router.get('/bill/export', Statistic.getBillExport);
+router.get('/tax/export', Statistic.getExportForTax);
 router.get('/employee', Statistic.getEmployee);
 router.get('/chamcong/employee', Statistic.getBangCongEmployee);
 router.get('/chamcong/employee/execl', Statistic.getBangCongEmployeeExecl);

@@ -26,6 +26,37 @@ module.exports = {
         let res = await query(sql, param);
         return res;
     },
+    getExportForTax: async function (requestQuery) {
+        var params = [];
+        var sql = `select
+                       ROW_NUMBER() OVER (ORDER BY ngaythanhtoan desc) AS "STT",
+                       hoadon.mahoadon as "Mã Hoá Đơn",
+                       DATE_FORMAT(ngaythanhtoan, '%Y-%m-%d %H:%i:%s') as "Ngày Bán",
+                       tenkh as "Tên Khách Hàng",
+                       diachi as "Địa Chỉ",
+                       maphutung as "Mã Phụ Tùng",
+                       tenphutung as "Tên Phụ Tùng",
+                       soluong as "Số Lượng",
+                       dongia as "Đơn Giá",
+                       soluong*dongia as "Thành Tiền",
+                       tienchietkhau as "Chiết Khấu",
+                       ghichu as "Ghi Chú"
+
+                   from chitiethoadonle
+                            left join quanlybinhkhanh.hoadon on hoadon.mahoadon = chitiethoadonle.mahoadon
+                            left join quanlynhaxe.khachhang on hoadon.makh = khachhang.ma
+                   where true `;
+        if (requestQuery.start) {
+            params.push(requestQuery.start);
+            sql = sql + "AND DATEDIFF(ngaythanhtoan,?) >= 0 ";
+        }
+        if (requestQuery.end) {
+            params.push(requestQuery.end);
+            sql = sql + "AND DATEDIFF(?,ngaythanhtoan) >= 0 ";
+        }
+        sql = sql + " ORDER BY ngaythanhtoan desc";
+        return await query(sql, params, requestQuery);
+    },
     getBanTreo: async function () {
         var sql = "select mahoadon,makh,tenkh,biensoxe,tongtien,ngaythanhtoan,loaihoadon,ngaysuachua from hoadon where mahoadon in (select mahoadon from bannang where trangthai=2 and mahoadon != '')";
         sql = sql + " ORDER BY ngaythanhtoan desc";

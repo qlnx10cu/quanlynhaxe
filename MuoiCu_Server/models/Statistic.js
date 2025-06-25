@@ -45,7 +45,7 @@ module.exports = {
                    from chitiethoadonle
                             left join quanlybinhkhanh.hoadon on hoadon.mahoadon = chitiethoadonle.mahoadon
                             left join quanlynhaxe.khachhang on hoadon.makh = khachhang.ma
-                   where true `;
+                   where trangthai=1 `;
         if (requestQuery.start) {
             params.push(requestQuery.start);
             sql = sql + "AND DATEDIFF(ngaythanhtoan,?) >= 0 ";

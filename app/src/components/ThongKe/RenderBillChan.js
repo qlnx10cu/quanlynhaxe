@@ -54,9 +54,24 @@ const RenderBillChan = ({ data }) => {
             "_blank" // <- This is what makes it open in a new window.
         );
     };
+
     const exportBillExcel = () => {
         window.open(
             `${HOST_SHEME}/exportsuachua?mahoadon=${data.mahoadon}`,
+            "_blank" // <- This is what makes it open in a new window.
+        );
+    };
+
+    const exportExcelNew = () => {
+        window.open(
+            `${HOST}/billsuachua/mahoadon/${data.mahoadon}/exportExcelNew`,
+            "_blank" // <- This is what makes it open in a new window.
+        );
+    };
+
+    const printBillNew = () => {
+        window.open(
+            `${HOST}/billsuachua/mahoadon/${data.mahoadon}/exportExcelNew?print=true`,
             "_blank" // <- This is what makes it open in a new window.
         );
     };
@@ -104,12 +119,12 @@ const RenderBillChan = ({ data }) => {
                         <option value="6">Lần 6</option>
                     </Select>
                 </DivFlexColumn>
-                <Button onClick={exportBill} style={{ marginLeft: 20, marginTop: 10 }}>
-                    Export
-                </Button>
-                <Button onClick={exportBillExcel} style={{ marginLeft: 20, marginTop: 10 }}>
-                    Export Excel
-                </Button>
+                <DivFlexRow style={{ gap: 20, marginLeft: 20, alignItems: "flex-end", paddingBottom: 7 }}>
+                    <Button onClick={exportBill}>Export</Button>
+                    <Button onClick={exportBillExcel}>Export Excel</Button>
+                    <Button onClick={printBillNew}>In</Button>
+                    <Button onClick={exportExcelNew}>Xuất Excel</Button>
+                </DivFlexRow>
             </DivFlexRow>
             <DivFlexRow>
                 <DivFlexColumn>

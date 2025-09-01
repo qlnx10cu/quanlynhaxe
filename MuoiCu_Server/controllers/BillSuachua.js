@@ -5,6 +5,7 @@ const Customer = require("../models/Customer");
 const Option = require("../models/Option");
 const Abstract = require('../models/Abstract');
 const XLSX = require('xlsx');
+const ExcelJS = require('exceljs');
 const moment = require("moment");
 const librespone = require("../lib/respone");
 const email = require("../lib/email");
@@ -290,5 +291,167 @@ module.exports = {
 
         res.json({ "mahoadon": req.params.mahoadon });
 
+    },
+    exportExcelNew: async function (req, res) {
+        try {
+            // Get bill details
+            var ws_data = await BillSuachua.getChitiet(req.params.mahoadon);
+            if (ws_data == null) {
+                librespone.send(req, res, 'Khong tim thay mã hóa đơn ' + req.params.mahoadon);
+                return;
+            }
+
+            // Calculate totals
+            ws_data['tongtienpt'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.thanhtienpt, 0);
+            ws_data['tongtiencong'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.thanhtiencong, 0);
+            ws_data['tongtongtien'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.tongtien, 0);
+
+            // Load the template
+            const workbook = new ExcelJS.Workbook();
+            const templatePath = __dirname + '/../templates/Phieu_Sua_Chua.xlsx';
+            await workbook.xlsx.readFile(templatePath);
+            
+            // Get worksheet by name or index
+            let worksheet = null;
+            if (workbook.worksheets && workbook.worksheets.length > 0) {
+                worksheet = workbook.worksheets[0];
+            }
+
+            if (worksheet) {
+                console.log('ws_data-------', ws_data)
+                worksheet.getCell('AE1').value = ` STT: ${(ws_data.mahoadon || '')}`;
+                worksheet.getCell('A7').value = `Tên khách hàng: ${(ws_data.tenkh || '').toUpperCase()}`;
+                worksheet.getCell('J7').value = `Địa chỉ hiện tại: ${([ws_data.diachi || '', ws_data.thanhpho || ''].filter(Boolean)).join(', ').toUpperCase()}`;
+                worksheet.getCell('J9').value = `Số điện thoại: ${ws_data.sodienthoai || ''}`;
+                worksheet.getCell('J10').value = `Số khung: ${ws_data.sokhung || ''}`;
+                worksheet.getCell('J11').value = `Số Máy: ${ws_data.somay || ''}`;
+                worksheet.getCell('A10').value = `Tên xe: ${ws_data.loaixe || ''}`;
+                worksheet.getCell('A11').value = `Biển số: ${ws_data.biensoxe || ''}`;
+                worksheet.getCell('H11').value = `Số Km: ${ws_data.sokm || ''}`;
+                worksheet.getCell('X7').value = `Thời gian nhận xe: ${ws_data.ngaysuachua ? utils.formatDate(ws_data.ngaysuachua) : ''}`;
+                worksheet.getCell('X8').value = `Thời gian trả xe dự kiến: ${ws_data.ngaydukien ? utils.formatDate(ws_data.ngaydukien) : ''}`;
+                worksheet.getCell('X9').value = `Thời gian trả xe thực tế: ${ws_data.ngaythanhtoan ? utils.formatDate(ws_data.ngaythanhtoan) : ''}`;
+                worksheet.getCell('A13').value = ws_data.yeucaukhachhang || '';
+                worksheet.getCell('J13').value = ws_data.tuvansuachua || '';
+                worksheet.getCell('N44').value = ws_data.kiemtralantoi || '';
+                worksheet.getCell('AB44').value = ws_data.ngayhen ? moment(ws_data.ngayhen).format('DD/MM/YYYY') : '';
+                worksheet.getCell('AE44').value = ws_data.sokmhen || '';
+                worksheet.getCell('A43').value = '*Lý do khách hàng chưa đồng ý thay Phụ Tùng:';
+                worksheet.getCell('A46').value = '*Khung thời gian trong ngày thuận tiện nghe được điện thoại:';
+
+                let startRow = 19;
+                ws_data.chitiet.forEach((item, index) => {
+                    const cellIndex = startRow + index;
+                    worksheet.getCell(`B${cellIndex}`).value = item.tenphutungvacongviec || '';
+                    worksheet.getCell(`H${cellIndex}`).value = item.maphutung || '';
+                    worksheet.getCell(`L${cellIndex}`).value = item.dongia || '';
+                    worksheet.getCell(`O${cellIndex}`).value = item.soluongphutung || '';
+                    worksheet.getCell(`Q${cellIndex}`).value = item.thanhtienpt || '';
+                    worksheet.getCell(`Y${cellIndex}`).value = item.thanhtiencong || '';
+                    worksheet.getCell(`AD${cellIndex}`).value = item.tongtien || '';
+                });
+
+                // Fill in totals
+                worksheet.getCell('Q38').value = ws_data.tongtienpt || 0; // Tổng tiền PT
+                worksheet.getCell('Y38').value = ws_data.tongtiencong || 0; // Tổng tiền công
+                worksheet.getCell('AD38').value = ws_data.tongtongtien || 0; // Tổng cộng
+            }
+
+            // Check if print parameter is true to return PDF, otherwise return Excel
+            const isPrint = req.query.print === 'true';
+            
+            if (isPrint) {
+                // Use LibreOffice to convert Excel to PDF
+                const fs = require('fs');
+                const path = require('path');
+                const { exec } = require('child_process');
+                const util = require('util');
+                const execPromise = util.promisify(exec);
+                
+                // Save the workbook temporarily
+                const tempPath = path.join(__dirname, '/../temp/');
+                if (!fs.existsSync(tempPath)) {
+                    fs.mkdirSync(tempPath, { recursive: true });
+                }
+                const tempExcelFile = path.join(tempPath, `temp_${req.params.mahoadon}.xlsx`);
+                const tempPdfFile = path.join(tempPath, `temp_${req.params.mahoadon}.pdf`);
+                
+                // Write the Excel file
+                await workbook.xlsx.writeFile(tempExcelFile);
+                
+                // Convert to PDF using LibreOffice
+                // Note: LibreOffice must be installed on the system
+                // On macOS: /Applications/LibreOffice.app/Contents/MacOS/soffice
+                // On Linux: libreoffice or soffice
+                // On Windows: "C:\Program Files\LibreOffice\program\soffice.exe"
+                
+                let libreOfficeCmd;
+                const platform = process.platform;
+                
+                if (platform === 'darwin') {
+                    // macOS
+                    libreOfficeCmd = '/Applications/LibreOffice.app/Contents/MacOS/soffice';
+                } else if (platform === 'linux') {
+                    // Linux
+                    libreOfficeCmd = 'libreoffice';
+                } else if (platform === 'win32') {
+                    // Windows
+                    libreOfficeCmd = '"C:\\Program Files\\LibreOffice\\program\\soffice.exe"';
+                } else {
+                    throw new Error('Unsupported platform for LibreOffice conversion');
+                }
+                
+                // Build the conversion command
+                const convertCmd = `${libreOfficeCmd} --headless --convert-to pdf --outdir "${tempPath}" "${tempExcelFile}"`;
+                
+                try {
+                    // Execute the conversion
+                    await execPromise(convertCmd);
+                    
+                    // Read the generated PDF
+                    const pdfBuffer = fs.readFileSync(tempPdfFile);
+                    
+                    // Clean up temp files
+                    if (fs.existsSync(tempExcelFile)) {
+                        fs.unlinkSync(tempExcelFile);
+                    }
+                    if (fs.existsSync(tempPdfFile)) {
+                        fs.unlinkSync(tempPdfFile);
+                    }
+                    
+                    // Set response headers for PDF viewing in browser
+                    res.setHeader('Content-Type', 'application/pdf');
+                    res.setHeader('Content-Disposition', `inline; filename=PhieuSuaChua_${req.params.mahoadon}.pdf`);
+                    res.send(pdfBuffer);
+                    
+                } catch (conversionError) {
+                    // Clean up temp files on error
+                    if (fs.existsSync(tempExcelFile)) {
+                        fs.unlinkSync(tempExcelFile);
+                    }
+                    if (fs.existsSync(tempPdfFile)) {
+                        fs.unlinkSync(tempPdfFile);
+                    }
+                    
+                    // If LibreOffice fails, provide helpful error message
+                    throw new Error(`LibreOffice conversion failed: ${conversionError.message}. Please ensure LibreOffice is installed on the system.`);
+                }
+            } else {
+                // Return Excel file
+                const buffer = await workbook.xlsx.writeBuffer();
+                
+                // Set response headers for Excel download
+                res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                res.setHeader('Content-Disposition', `attachment; filename=PhieuSuaChua_${req.params.mahoadon}.xlsx`);
+                res.send(buffer);
+            }
+            
+        } catch (error) {
+            res.status(400).json({
+                error: {
+                    message: error.message
+                }
+            });
+        }
     },
 }

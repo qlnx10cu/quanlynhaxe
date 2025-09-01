@@ -10,6 +10,7 @@ router.get('/mahoadon/:mahoadon/chitiet', Bill.getChitiet);
 router.get("/mahoadon/:mahoadon/export", Bill.export);
 router.get("/mahoadon/:mahoadon/exportbill", Bill.exportBill);
 router.get("/mahoadon/:mahoadon/exportbillNew", Bill.exportBillNew);
+router.get("/mahoadon/:mahoadon/exportExcelNew", Bill.exportExcelNew);
 
 
 module.exports = router.router;

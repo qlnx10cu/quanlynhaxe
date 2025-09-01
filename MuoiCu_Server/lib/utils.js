@@ -1,4 +1,5 @@
 var moment = require('moment');
+require("moment/locale/vi");
 
 module.exports = {
 
@@ -96,4 +97,11 @@ module.exports = {
             currency: "VND",
         });
     },
+    formatDate: function (date) {
+        if (!date)
+            return "";
+
+        const formatDate = moment(date);
+        return formatDate.format("DD/MM/YYYY h:mm:ss A");
+    }
 }

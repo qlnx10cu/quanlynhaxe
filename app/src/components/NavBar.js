@@ -102,8 +102,7 @@ class NavBar extends React.Component {
         document.removeEventListener("click", this.handleClickOut);
     }
 
-    componentDidMount() {
-    }
+    componentDidMount() {}
 
     render() {
         return (

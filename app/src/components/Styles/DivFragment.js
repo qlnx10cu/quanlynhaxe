@@ -6,11 +6,9 @@ const DivFragment = ({ isLoading, children }) => {
     return (
         <React.Fragment>
             <If condition={isLoading}>
-                <Loading/>
+                <Loading />
             </If>
-            <If condition={!isLoading}>
-                {children}
-            </If>
+            <If condition={!isLoading}>{children}</If>
         </React.Fragment>
     );
 };

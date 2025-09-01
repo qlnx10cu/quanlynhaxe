@@ -18,8 +18,8 @@ const InputTrangThaiBill = ({ style, value, onChange, disabled, readOnly, id, na
 
     return (
         <React.Fragment>
-            <Select style={{ ...style }} {...arr} value={value || "LE"} onChange={onChange}>
-                <option value={null}>Tất cả</option>
+            <Select style={{ ...style }} {...arr} value={value !== null && value !== undefined ? value : ""} onChange={onChange}>
+                <option value="">Tất cả</option>
                 <option value={0}>Chưa thanh toán</option>
                 <option value={1}>Đã thanh toán</option>
                 <option value={2}>Đã huỷ</option>

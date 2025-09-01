@@ -20,7 +20,12 @@ export default function (init, callback) {
         if (init === null || init === undefined) {
             _setValue(val);
         } else if (typeof init === "number" && Number.isInteger(init)) {
-            _setValue(utils.parseInt(val));
+            // Handle empty string for select options that represent "all" or "none"
+            if (val === "" || val === null) {
+                _setValue(val);
+            } else {
+                _setValue(utils.parseInt(val));
+            }
         } else if (typeof init === "number" && !Number.isInteger(init)) {
             _setValue(utils.parseFloat(val));
         } else {
@@ -29,7 +34,7 @@ export default function (init, callback) {
     };
 
     return {
-        value: value || "",
+        value: value !== null && value !== undefined ? value : "",
         onChange: onChange,
         setValue: setValue,
     };

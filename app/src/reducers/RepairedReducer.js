@@ -84,7 +84,6 @@ const convertProductOld = (product) => {
 
         element.tenphutung = element.tenphutungvacongviec;
         element.soluong = element.soluongphutung;
-
     });
 
     return product;

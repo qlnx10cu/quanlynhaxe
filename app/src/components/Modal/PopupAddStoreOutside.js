@@ -29,7 +29,6 @@ const PopupAddStoreOutside = (props) => {
     };
 
     const handleSubmit = () => {
-
         if (!mTenPhuTung.value || mTenPhuTung.value.length == 0) {
             return Promise.reject({ error: -1, message: "Phải có tên phụ tùng." });
         }

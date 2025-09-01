@@ -17,21 +17,66 @@ import InputTrangThaiBill from "../Styles/InputTrangThaiBill";
 const twoDay = 2 * 1000 * 3600 * 24;
 
 const Statistic = (props) => {
-    const [tab, setTab] = useState(0);
+    // Get initial values from URL parameters
+    const urlParams = new URLSearchParams(props.location.search);
+    const getInitialDate = (param) => {
+        const value = urlParams.get(param);
+        return value || undefined;
+    };
+    const getInitialStatus = () => {
+        const value = urlParams.get("trangthai");
+        if (value !== null && value !== "") {
+            return parseInt(value);
+        }
+        return ""; // Default to empty string for "Tất cả"
+    };
+
+    const [tab, setTab] = useState(parseInt(urlParams.get("tab")) || 0);
     const [isLoading, setLoading] = useState(false);
     const [billes, setBilles] = useState([]);
-    const mDateStart = lib.handleInputDate("YYYY-MM-DD");
-    const mDateEnd = lib.handleInputDate("YYYY-MM-DD");
-    const mTrangThaiBill = lib.handleInput(null);
+    const mDateStart = lib.handleInputDate("YYYY-MM-DD", getInitialDate("dateStart"));
+    const mDateEnd = lib.handleInputDate("YYYY-MM-DD", getInitialDate("dateEnd"));
+    const mTrangThaiBill = lib.handleInput(getInitialStatus());
     const useIsMounted = lib.useIsMounted();
+
+    // Update URL when filters change
+    const updateUrlParams = () => {
+        const params = new URLSearchParams();
+        if (mDateStart.value && mDateStart.value !== "Invalid date") {
+            params.set("dateStart", mDateStart.value);
+        }
+        if (mDateEnd.value && mDateEnd.value !== "Invalid date") {
+            params.set("dateEnd", mDateEnd.value);
+        }
+        if (mTrangThaiBill.value !== null && mTrangThaiBill.value !== undefined && mTrangThaiBill.value !== "") {
+            params.set("trangthai", mTrangThaiBill.value.toString());
+        } else if (mTrangThaiBill.value === "") {
+            // Don't set the parameter for "Tất cả" - this will remove it from URL
+        }
+        if (tab !== 0) {
+            params.set("tab", tab.toString());
+        }
+
+        const newUrl = `${props.location.pathname}${params.toString() ? "?" + params.toString() : ""}`;
+        if (props.location.pathname + props.location.search !== newUrl) {
+            props.history.replace(newUrl);
+        }
+    };
 
     useEffect(() => {
         handleLayDanhSach();
+        updateUrlParams();
     }, [mDateStart.value, mDateEnd.value, mTrangThaiBill.value]);
+
+    useEffect(() => {
+        updateUrlParams();
+    }, [tab]);
 
     const handleLayDanhSach = () => {
         setLoading(true);
-        StatisticApi.getBillByDate(mDateStart.value, mDateEnd.value, mTrangThaiBill.value)
+        // Pass null instead of empty string for "Tất cả" to API
+        const trangThaiValue = mTrangThaiBill.value === "" ? null : mTrangThaiBill.value;
+        StatisticApi.getBillByDate(mDateStart.value, mDateEnd.value, trangThaiValue)
             .then((data) => {
                 if (!useIsMounted()) return;
                 setBilles([...data]);
@@ -170,7 +215,7 @@ const Statistic = (props) => {
                 </DivFlexRow>
             </DivFlexRow>
             <DivFlexRow style={{ justifyContent: "space-between", alignItems: "center" }}></DivFlexRow>
-            <TabPage onChange={setTab}>
+            <TabPage init={tab} onChange={setTab}>
                 <TabPage.Tab title="Tất cả" />
                 <TabPage.Tab title="Sửa chữa" />
                 <TabPage.Tab title="Bán lẻ" />

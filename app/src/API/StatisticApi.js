@@ -12,7 +12,7 @@ class StatisticApi extends ApiObject {
     }
 
     getBillByDate(start, end, trangthai) {
-        return APIUtils.get(`/statistic/bill?end=${end}&start=${start}${trangthai ? `&trangthai=${trangthai}` : ""}`);
+        return APIUtils.get(`/statistic/bill?end=${end}&start=${start}${trangthai !== null && trangthai !== undefined && trangthai !== "" ? `&trangthai=${trangthai}` : ""}`);
     }
 
     exportBill(start, end) {

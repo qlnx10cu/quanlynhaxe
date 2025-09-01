@@ -70,7 +70,6 @@ const Home = (props) => {
                     <If condition={props.info.chucvu === "Admin" || props.info.chucvu === "Dịch Vụ" || props.info.chucvu === "Văn Phòng"}>
                         <Route path="/chamcong" component={LoadingComponent(ChamCong, props)} />
                     </If>
-
                 </BaseContainer>
             </If>
         </Router>

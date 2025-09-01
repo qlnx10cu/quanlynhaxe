@@ -51,7 +51,7 @@ module.exports = {
         chietkhau = this.parseChietKhau(chietkhau);
 
         const tienchietkhau = this.tinhTienChietKhau(dongia, chietkhau, soluong);
-        const thanhtien = this.parseInt(dongia* soluong) - tienchietkhau;
+        const thanhtien = this.parseInt(dongia * soluong) - tienchietkhau;
 
         return this.parseInt(thanhtien);
     },
@@ -59,7 +59,7 @@ module.exports = {
         dongia = this.parseInt(dongia);
         tienchietkhau = this.parseInt(tienchietkhau);
 
-        let chietkhau = this.parseChietKhau((tienchietkhau * 100.0) / (dongia* soluong));
+        let chietkhau = this.parseChietKhau((tienchietkhau * 100.0) / (dongia * soluong));
         if (tienchietkhau == this.tinhTienChietKhau(dongia, chietkhau, soluong)) {
             return chietkhau;
         }

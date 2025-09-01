@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Tab, TabContent } from "../../styles";
 
-const TabPage = ({ children, onChange }) => {
-    let [activePage, setActive] = useState(0);
+const TabPage = ({ children, onChange, init = 0 }) => {
+    let [activePage, setActive] = useState(init);
 
     children = children || [];
 

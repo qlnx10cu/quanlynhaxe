@@ -140,7 +140,7 @@ const RepairedBill = (props) => {
 
     const exportBill = () => {
         window.open(
-            `${HOST}/billsuachua/mahoadon/${mahoadon}/export`,
+            `${HOST}/billsuachua/mahoadon/${mahoadon}/exportExcelNew?print=true`,
             "_blank" // <- This is what makes it open in a new window.
         );
     };

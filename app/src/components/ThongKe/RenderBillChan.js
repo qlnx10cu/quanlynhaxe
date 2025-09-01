@@ -3,6 +3,7 @@ import { DivFlexRow, DivFlexColumn, Table, Input, Button, Textarea, Select } fro
 import moment from "moment";
 import { HOST, HOST_SHEME } from "../../Config";
 import utils from "../../lib/utils";
+import { InputNumber } from "../Styles";
 
 const RenderTableBill = ({ list }) => {
     return (
@@ -84,30 +85,38 @@ const RenderBillChan = ({ data }) => {
                     <Input readOnly autocomplete="off" value={data.tennvsuachua} />
                 </DivFlexColumn>
             </DivFlexRow>
-            <DivFlexRow>
+            <DivFlexRow style={{ columnGap: 20, flexWrap: "wrap" }}>
                 <DivFlexColumn>
                     <label>Tên khách hàng: </label>
                     <Input readOnly autocomplete="off" value={data.tenkh} />
                 </DivFlexColumn>
-                <DivFlexColumn style={{ marginLeft: 20 }}>
+                <DivFlexColumn>
                     <label>Biển số xe: </label>
                     <Input readOnly value={data.biensoxe} />
                 </DivFlexColumn>
-                <DivFlexColumn style={{ marginLeft: 20 }}>
+                <DivFlexColumn>
                     <label>Số KM </label>
                     <Input readOnly value={data.sokm} />
                 </DivFlexColumn>
+                <DivFlexColumn>
+                    <label>ID Pin: </label>
+                    <Input readOnly value={data.id_pin} />
+                </DivFlexColumn>
+                <DivFlexColumn>
+                    <label>Sức khoẻ Pin: </label>
+                    <Input readOnly value={data.pin_health} />
+                </DivFlexColumn>
             </DivFlexRow>
-            <DivFlexRow style={{ marginTop: 10 }}>
+            <DivFlexRow style={{ columnGap: 20, flexWrap: "wrap", marginTop: 10 }}>
                 <DivFlexColumn>
                     <label>Ngày bán: </label>
                     <Input readOnly autocomplete="off" value={moment(data.ngayban).format("hh:mm DD/MM/YYYY")} />
                 </DivFlexColumn>
-                <DivFlexColumn style={{ marginLeft: 20 }}>
+                <DivFlexColumn>
                     <label>Ngày thanh toán: </label>
                     <Input readOnly value={moment(data.ngayban).format("hh:mm DD/MM/YYYY")} />
                 </DivFlexColumn>
-                <DivFlexColumn style={{ marginLeft: 20 }}>
+                <DivFlexColumn>
                     <label>Kiểm tra định kỳ: </label>
                     <Select disabled readOnly value={data.kiemtradinhky}>
                         <option value="0">Không có</option>
@@ -126,26 +135,46 @@ const RenderBillChan = ({ data }) => {
                     <Button onClick={exportExcelNew}>Xuất Excel</Button>
                 </DivFlexRow>
             </DivFlexRow>
-            <DivFlexRow>
+            <DivFlexRow style={{ columnGap: 20, flexWrap: "wrap" }}>
                 <DivFlexColumn>
                     <label>Yêu Cầu khách hàng: </label>
                     <Textarea readOnly autocomplete="off" value={data.yeucaukhachhang || ""} />
                 </DivFlexColumn>
-                <DivFlexColumn style={{ marginLeft: 20 }}>
+                <DivFlexColumn>
                     <label>Tư vấn sửa chữa: </label>
                     <Textarea readOnly value={data.tuvansuachua || ""} />
                 </DivFlexColumn>
-                <DivFlexColumn style={{ marginLeft: 20 }}>
+                <DivFlexColumn>
+                    <label>Lý do từ chối Sửa chữa: </label>
+                    <Textarea readOnly autocomplete="off" value={data.decline_reason} />
+                </DivFlexColumn>
+                <DivFlexColumn>
                     <label>Kiểm tra lần tới: </label>
                     <Textarea readOnly value={data.kiemtralantoi || ""} />
                 </DivFlexColumn>
-                <DivFlexColumn style={{ marginLeft: 20 }}>
+                <DivFlexColumn>
                     <label>Ngày Hẹn: </label>
                     <Input readOnly value={data.ngayhen ? moment(data.ngayhen).format("DD/MM/YYYY") : "Không có"} />
                 </DivFlexColumn>
-                <DivFlexColumn style={{ marginLeft: 20 }}>
+                <DivFlexColumn>
                     <label>Số Km Lần tới: </label>
                     <Input readOnly value={data.sokmhen} />
+                </DivFlexColumn>
+                <DivFlexColumn>
+                    <label>Mức nhiên liệu: </label>
+                    <Input readOnly value={data.fuel_level} />
+                </DivFlexColumn>
+                <DivFlexColumn>
+                    <label>Rửa xe: </label>
+                    <Input readOnly value={data.motorbike_wash} />
+                </DivFlexColumn>
+                <DivFlexColumn>
+                    <label>Thời gian thuận tiện: </label>
+                    <Input readOnly value={data.phone_accept} />
+                </DivFlexColumn>
+                <DivFlexColumn>
+                    <label>Lấy lại phụ tùng: </label>
+                    <Input readOnly value={data.old_parts_return_confirmed ? "Có" : "Không"} />
                 </DivFlexColumn>
             </DivFlexRow>
             <If condition={data.lydo}>
@@ -154,7 +183,7 @@ const RenderBillChan = ({ data }) => {
                         <label>Ngày thay đổi: </label>
                         <Input readOnly value={data.ngaysuachua} />
                     </DivFlexColumn>
-                    <DivFlexColumn style={{ marginLeft: 20 }}>
+                    <DivFlexColumn>
                         <label>Lý do thay đổi: </label>
                         <Textarea readOnly autocomplete="off" value={data.lydo || ""} cols={53} />
                     </DivFlexColumn>

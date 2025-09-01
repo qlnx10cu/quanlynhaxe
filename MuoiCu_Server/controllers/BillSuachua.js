@@ -129,6 +129,9 @@ module.exports = {
             data.ten = req.body.tenkh;
             data.manvsuachua = req.body.manvsuachua;
             data.updatetime = new Date();
+            data.id_pin = req.body.id_pin;
+            data.pin_health = req.body.pin_health;
+            data.vehicle_type = req.body.vehicle_type;
             var makh = req.body.makh;
 
             logger.info("Id: "+req.start+" BillSuaChua.update Bill.getOne ");
@@ -321,6 +324,10 @@ module.exports = {
                 console.log('ws_data-------', ws_data)
                 worksheet.getCell('AE1').value = ` STT: ${(ws_data.mahoadon || '')}`;
                 worksheet.getCell('A7').value = `Tên khách hàng: ${(ws_data.tenkh || '').toUpperCase()}`;
+                worksheet.getCell('A9').value = ws_data.vehicle_type ? `Loại xe: ${(ws_data.vehicle_type)}` : 'Loại xe:   Ga  /    Số   /   Côn tay   /  Xe Điện  /  Phân khối lớn';
+                worksheet.getCell('AC6').value = ` ${ws_data.fuel_level || ''}`;
+                worksheet.getCell('X10').value = `ID Pin ( Xe điện ): ${ws_data.id_pin || ''}`;
+                worksheet.getCell('X11').value = `Pin Health ( Xe điện ): ${ws_data.pin_health || ''}%`;
                 worksheet.getCell('J7').value = `Địa chỉ hiện tại: ${([ws_data.diachi || '', ws_data.thanhpho || ''].filter(Boolean)).join(', ').toUpperCase()}`;
                 worksheet.getCell('J9').value = `Số điện thoại: ${ws_data.sodienthoai || ''}`;
                 worksheet.getCell('J10').value = `Số khung: ${ws_data.sokhung || ''}`;
@@ -336,8 +343,26 @@ module.exports = {
                 worksheet.getCell('N44').value = ws_data.kiemtralantoi || '';
                 worksheet.getCell('AB44').value = ws_data.ngayhen ? moment(ws_data.ngayhen).format('DD/MM/YYYY') : '';
                 worksheet.getCell('AE44').value = ws_data.sokmhen || '';
-                worksheet.getCell('A43').value = '*Lý do khách hàng chưa đồng ý thay Phụ Tùng:';
-                worksheet.getCell('A46').value = '*Khung thời gian trong ngày thuận tiện nghe được điện thoại:';
+                worksheet.getCell('A43').value = `*Lý do khách hàng chưa đồng ý thay Phụ Tùng: ${ws_data.decline_reason || ''}`;
+                worksheet.getCell('A46').value = `*Khung thời gian trong ngày thuận tiện nghe được điện thoại: ${ws_data.phone_accept || ''}`;
+
+                if(ws_data.old_parts_return_confirmed){
+                    worksheet.getCell('J41').value = "";
+                }else {
+                    worksheet.getCell('H41').value = "";
+                }
+
+                switch (ws_data.motorbike_wash){
+                    case 'Trước sửa chữa':
+                        worksheet.getCell('AD13').value = 'X';
+                        break;
+                    case 'Sau sửa chữa':
+                        worksheet.getCell('AD14').value = 'X';
+                        break;
+                    default:
+                        worksheet.getCell('AD15').value = 'X';
+                        break;
+                }
 
                 let startRow = 19;
                 ws_data.chitiet.forEach((item, index) => {
@@ -349,6 +374,10 @@ module.exports = {
                     worksheet.getCell(`Q${cellIndex}`).value = item.thanhtienpt || '';
                     worksheet.getCell(`Y${cellIndex}`).value = item.thanhtiencong || '';
                     worksheet.getCell(`AD${cellIndex}`).value = item.tongtien || '';
+                    if(item.loaiphutung !== 'tiencong'){
+                        worksheet.getCell(`J${cellIndex}`).value = 'X';
+                        worksheet.getCell(`M${cellIndex}`).value = 'X';
+                    }
                 });
 
                 // Fill in totals

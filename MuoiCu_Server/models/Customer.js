@@ -8,13 +8,13 @@ class Customer {
     }
     static getColmun(param) {
         if (param) {
-            let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay', 'gioitinh', 'thanhpho', 'updatetime', 'zaloid', 'tenzalo', 'loaikhachhang'];
+            let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay', 'gioitinh', 'thanhpho', 'updatetime', 'zaloid', 'tenzalo', 'loaikhachhang', 'id_pin', 'pin_health', 'vehicle_type'];
             return tmp.filter(e => Object.keys(param).includes(e));
         }
-        return "`ten`,`sodienthoai`,diachi`,`biensoxe`,`loaixe,`sokhung`,`somay`,`gioitinh`,`thanhpho`,`updatetime`,`zaloid`,`tenzalo`, `loaikhachhang`";
+        return "`ten`,`sodienthoai`,diachi`,`biensoxe`,`loaixe,`sokhung`,`somay`,`gioitinh`,`thanhpho`,`updatetime`,`zaloid`,`tenzalo`, `loaikhachhang`, `id_pin`, `pin_health`, `vehicle_type`";
     }
     static getLike(k) {
-        let tmp = ['ten', 'sodienthoai', 'biensoxe', 'sokhung', 'somay', 'zaloid', 'tenzalo'];
+        let tmp = ['ten', 'sodienthoai', 'biensoxe', 'sokhung', 'somay', 'zaloid', 'tenzalo', 'loaikhachhang', 'id_pin', 'pin_health', 'vehicle_type'];
         return tmp.includes(k);
     }
     static getDuplicate() {
@@ -48,6 +48,10 @@ class Customer {
             data.biensoxe = utils.normalizeStr(body.biensoxe);
             data.somay = utils.normalizeStr(body.somay);
             data.sokhung = utils.normalizeStr(body.sokhung);
+            data.loaikhachhang = body.loaikhachhang;
+            data.id_pin = body.id_pin;
+            data.pin_health = body.pin_health;
+            data.vehicle_type = body.vehicle_type;
             data.updatetime = new Date();
 
             var makh = body.makh;
@@ -121,12 +125,12 @@ class Customer {
     }
 
     static getParam(param) {
-        let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay', 'gioitinh', 'thanhpho', 'updatetime', 'zaloid', 'tenzalo'];
+        let tmp = ['ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay', 'gioitinh', 'thanhpho', 'updatetime', 'zaloid', 'tenzalo', 'loaikhachhang', 'id_pin', 'pin_health', 'vehicle_type'];
         let arr = Object.keys(param).filter(e => tmp.includes(e)).map(e => param[e])
         return arr;
     }
     static getArrayParam(param) {
-        let tmp = ['ma', 'ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay', 'gioitinh', 'thanhpho', 'updatetime', 'zaloid', 'tenzalo'];
+        let tmp = ['ma', 'ten', 'sodienthoai', 'diachi', 'biensoxe', 'loaixe', 'sokhung', 'somay', 'gioitinh', 'thanhpho', 'updatetime', 'zaloid', 'tenzalo', 'loaikhachhang', 'id_pin', 'pin_health', 'vehicle_type'];
         let obj = {};
         let arr = Object.keys(param).filter(e => tmp.includes(e));
         arr.forEach(e => {

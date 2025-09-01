@@ -44,15 +44,23 @@ const RepairedBill = (props) => {
     const mSoKm = lib.handleInput(0);
     const mNgayThanhToan = lib.handleInput("");
     const mNgayDuKien = lib.handleInputDate("YYYY-MM-DD HH:mm:ss", moment().add(15, "minutes"));
+    const mIdPin = lib.handleInput("");
+    const mPinHealth = lib.handleInput(100);
+    const [vehicleType, setVehicleType] = useState("");
 
     const [yeucau, setYeuCau] = useState("");
     const [tuvan, setTuvan] = useState("");
+    const [declineReason, setDeclineReason] = useState("");
     const [lydo, setLydo] = useState("");
     const [trangthai, setTrangThai] = useState("0");
     const [kiemtradinhky, setKiemTraDinhKy] = useState("0");
     const [kiemtralantoi, setKiemTraLanToi] = useState("");
     const [thoigianhen, setThoiGianHen] = useState("");
     const [sokmhen, setSoKmHen] = useState("");
+    const [motorbikeWash, setMotorbikeWash] = useState("Không cần rửa xe");
+    const [fuelLevel, setFuelLevel] = useState("E");
+    const [phoneAccept, setPhoneAccept] = useState("");
+    const [oldPartsReturnConfirmed, setOldPartsReturnConfirmed] = useState(false);
 
     const maban = utils.getQueryParams("maban");
     const mahoadon = utils.getQueryParams("mahoadon");
@@ -153,6 +161,11 @@ const RepairedBill = (props) => {
                 setTrangThai(res.trangthai);
                 setTuvan(res.tuvansuachua);
                 setYeuCau(res.yeucaukhachhang);
+                setDeclineReason(res.decline_reason);
+                setMotorbikeWash(res.motorbike_wash || "Không cần rửa xe");
+                setFuelLevel(res.fuel_level || "E");
+                setPhoneAccept(res.phone_accept || "");
+                setOldPartsReturnConfirmed(res.old_parts_return_confirmed);
                 setKiemTraDinhKy(res.kiemtradinhky);
                 setKiemTraLanToi(res.kiemtralantoi);
                 setThoiGianHen(res.thoigianhen);
@@ -169,7 +182,10 @@ const RepairedBill = (props) => {
                 mMaKH.setValue(res.makh);
                 mSoKhung.setValue(res.sokhung);
                 mSoMay.setValue(res.somay);
+                mIdPin.setValue(res.id_pin);
+                mPinHealth.setValue(res.pin_health || 100);
                 mLoaiXe.setValue(res.loaixe);
+                setVehicleType(res.vehicle_type);
 
                 props.setLoading(false);
 
@@ -240,6 +256,8 @@ const RepairedBill = (props) => {
         mMaKH.setValue("");
         mSoKhung.setValue("");
         mSoMay.setValue("");
+        mIdPin.setValue("");
+        mPinHealth.setValue(100);
         mLoaiXe.setValue("");
         setDisableEditInfo(false);
     };
@@ -360,6 +378,10 @@ const RepairedBill = (props) => {
             gioitinh: mGioiTinh.value,
             loaixe: mLoaiXe.value,
             somay: mSoMay.value,
+            id_pin: mIdPin.value,
+            vehicle_type: vehicleType,
+            pin_health: mPinHealth.value,
+
             sokhung: mSoKhung.value,
             biensoxe: mBienSoXe.value,
             ngaydukien: mNgayDuKien.value,
@@ -370,6 +392,11 @@ const RepairedBill = (props) => {
             chitiet: listProduct,
             manv: props.info.ma,
             yeucaukhachhang: yeucau,
+            decline_reason: declineReason,
+            motorbike_wash: motorbikeWash,
+            fuel_level: fuelLevel,
+            phone_accept: phoneAccept,
+            old_parts_return_confirmed: oldPartsReturnConfirmed,
             tuvansuachua: tuvan,
             lydo: lydo,
             kiemtradinhky: kiemtradinhky ? kiemtradinhky : "0",
@@ -634,7 +661,7 @@ const RepairedBill = (props) => {
                             <If condition={maban > 0}> (Bàn số: {maban}) </If>
                         </h1>
 
-                        <DivFlexRow style={{ alignItems: "center" }}>
+                        <DivFlexRow style={{ alignItems: "center", columnGap: 20, flexWrap: "wrap" }}>
                             <DivFlexColumn>
                                 <label>Nhân viên sửa chữa: </label>
                                 <Input
@@ -653,16 +680,16 @@ const RepairedBill = (props) => {
                                     ))}
                                 </datalist>
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Tên nhân viên sửa chữa: </label>
                                 <Input readOnly autocomplete="off" {...mTenNhanVien} />
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Thời gian dự kiến: </label>
                                 <Input type="datetime-local" readOnly={showInfoBill} {...mNgayDuKien} />
                             </DivFlexColumn>
                         </DivFlexRow>
-                        <DivFlexRow style={{ alignItems: "center" }}>
+                        <DivFlexRow style={{ alignItems: "center", columnGap: 20, flexWrap: "wrap" }}>
                             <DivFlexColumn>
                                 <label>Biển số xe: </label>
                                 <Input
@@ -684,45 +711,82 @@ const RepairedBill = (props) => {
                                     ))}
                                 </datalist>
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Tên khách hàng: </label>
                                 <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mCustomerName} />
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Số điện thoại: </label>
                                 <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mPhone} pattern="[0-9]{10}" />
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Địa chỉ: </label>
                                 <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mAddress} />
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Giới Tính: </label>
                                 <InputGioiTinh style={{ width: 100 }} {...mGioiTinh} />
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Thành Phố: </label>
                                 <InputCity readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mThanhPho} />
                             </DivFlexColumn>
+                            <DivFlexColumn>
+                                <Button
+                                    disabled={!mBienSoXe.value}
+                                    onClick={() => {
+                                        props.openModal(POPUP_NAME.POPUP_CUSTOMER_HISTORY, { ma: mMaKH.value });
+                                    }}
+                                    style={{ marginLeft: 20, marginTop: 10 }}
+                                >
+                                    Chi tiết
+                                </Button>
+                            </DivFlexColumn>
                         </DivFlexRow>
-                        <DivFlexRow style={{ alignItems: "center" }}>
+                        <DivFlexRow style={{ alignItems: "center", columnGap: 20, flexWrap: "wrap" }}>
                             <DivFlexColumn>
                                 <label>Loại xe: </label>
+                                <Select
+                                    readOnly={showInfoBill}
+                                    disabled={isDisableEditInfo || showInfoBill}
+                                    autocomplete="off"
+                                    value={vehicleType}
+                                    onChange={(e) => {
+                                        setVehicleType(e.target.value);
+                                    }}
+                                >
+                                    <option value="Ga">Ga</option>
+                                    <option value="Số">Số</option>
+                                    <option value="Côn tay">Côn tay</option>
+                                    <option value="Xe Điện">Xe Điện</option>
+                                    <option value="Phân khối lớn">Phân khối lớn</option>
+                                </Select>
+                            </DivFlexColumn>
+                            <DivFlexColumn>
+                                <label>Tên xe: </label>
                                 <InputLoaiXe readOnly={showInfoBill} autocomplete="off" {...mLoaiXe} />
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Số khung: </label>
                                 <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mSoKhung} />
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Số máy: </label>
                                 <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mSoMay} />
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Số km: </label>
                                 <InputNumber readOnly={showInfoBill} disabled={isDisableEditInfo} max={999999} min={0} {...mSoKm} />
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
+                                <label>ID Pin: </label>
+                                <Input readOnly={showInfoBill} disabled={isDisableEditInfo} autocomplete="off" {...mIdPin} />
+                            </DivFlexColumn>
+                            <DivFlexColumn>
+                                <label>Sức khoẻ Pin: </label>
+                                <InputNumber readOnly={showInfoBill} disabled={isDisableEditInfo} max={100} min={0} {...mPinHealth} />
+                            </DivFlexColumn>
+                            <DivFlexColumn>
                                 <label>Kiểm tra định kỳ: </label>
                                 <Select
                                     readOnly={showInfoBill}
@@ -742,17 +806,8 @@ const RepairedBill = (props) => {
                                     <option value="6">Lần 6</option>
                                 </Select>
                             </DivFlexColumn>
-                            <Button
-                                disabled={!mBienSoXe.value}
-                                onClick={() => {
-                                    props.openModal(POPUP_NAME.POPUP_CUSTOMER_HISTORY, { ma: mMaKH.value });
-                                }}
-                                style={{ marginLeft: 20, marginTop: 10 }}
-                            >
-                                Chi tiết
-                            </Button>
                         </DivFlexRow>
-                        <DivFlexRow style={{ alignItems: "center" }}>
+                        <DivFlexRow style={{ alignItems: "center", flexWrap: "wrap", columnGap: 20, marginTop: 40 }}>
                             <DivFlexColumn>
                                 <label>Yêu cầu khách hàng: </label>
                                 <Textarea
@@ -764,7 +819,7 @@ const RepairedBill = (props) => {
                                     }}
                                 />
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Tư vấn Sửa chữa: </label>
                                 <Textarea
                                     readOnly={showInfoBill}
@@ -775,7 +830,18 @@ const RepairedBill = (props) => {
                                     }}
                                 />
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
+                                <label>Lý do từ chối Sửa chữa: </label>
+                                <Textarea
+                                    readOnly={showInfoBill}
+                                    autocomplete="off"
+                                    value={declineReason}
+                                    onChange={(e) => {
+                                        setDeclineReason(e.target.value);
+                                    }}
+                                />
+                            </DivFlexColumn>
+                            <DivFlexColumn>
                                 <label>Kiểm Tra Lần Tới: </label>
                                 <Textarea
                                     readOnly={showInfoBill}
@@ -786,7 +852,7 @@ const RepairedBill = (props) => {
                                     }}
                                 />
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Số km hẹn: </label>
                                 <Input
                                     readOnly={showInfoBill}
@@ -796,7 +862,7 @@ const RepairedBill = (props) => {
                                     }}
                                 />
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Thời Gian Hẹn: </label>
                                 <Select
                                     readOnly={showInfoBill}
@@ -821,7 +887,7 @@ const RepairedBill = (props) => {
                                     <option value="365">1 Năm Sau</option>
                                 </Select>
                             </DivFlexColumn>
-                            <DivFlexColumn style={{ marginLeft: 20 }}>
+                            <DivFlexColumn>
                                 <label>Ngày Hẹn: </label>
                                 <If condition={!thoigianhen || thoigianhen == "0"}>
                                     <Input readOnly autocomplete="off" value="" />
@@ -836,8 +902,64 @@ const RepairedBill = (props) => {
                                     />
                                 </If>
                             </DivFlexColumn>
+                            <DivFlexColumn>
+                                <label>Mức nhiên liệu: </label>
+                                <Select
+                                    readOnly={showInfoBill}
+                                    disabled={showInfoBill}
+                                    autocomplete="off"
+                                    value={fuelLevel}
+                                    onChange={(e) => {
+                                        setFuelLevel(e.target.value);
+                                    }}
+                                >
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                </Select>
+                            </DivFlexColumn>
+                            <DivFlexColumn>
+                                <label>Rửa xe: </label>
+                                <Select
+                                    readOnly={showInfoBill}
+                                    disabled={showInfoBill}
+                                    autocomplete="off"
+                                    value={motorbikeWash}
+                                    onChange={(e) => {
+                                        setMotorbikeWash(e.target.value);
+                                    }}
+                                >
+                                    <option value="Không cần rửa xe">Không cần rửa xe</option>
+                                    <option value="Trước sửa chữa">Trước sửa chữa</option>
+                                    <option value="Sau sửa chữa">Sau sửa chữa</option>
+                                </Select>
+                            </DivFlexColumn>
+                            <DivFlexColumn>
+                                <label>Thời gian thuận tiện: </label>
+                                <Input
+                                    readOnly={showInfoBill}
+                                    value={phoneAccept}
+                                    onChange={(e) => {
+                                        setPhoneAccept(e.target.value);
+                                    }}
+                                />
+                            </DivFlexColumn>
+                            <DivFlexColumn>
+                                <label>Lấy lại phụ tùng: </label>
+                                <Select
+                                    readOnly={showInfoBill}
+                                    disabled={showInfoBill}
+                                    autocomplete="off"
+                                    value={oldPartsReturnConfirmed ? "true" : "false"}
+                                    onChange={(e) => {
+                                        setOldPartsReturnConfirmed(e.target.value === "true");
+                                    }}
+                                >
+                                    <option value="false">Không</option>
+                                    <option value="true">Có</option>
+                                </Select>
+                            </DivFlexColumn>
                         </DivFlexRow>
-                        <If condition={isUpdateBill == 3 || lydo}>
+                        <If condition={isUpdateBill === 3 || lydo}>
                             <DivFlexRow style={{ alignItems: "center" }}>
                                 <DivFlexColumn>
                                     <label>Lý do thay đổi: </label>

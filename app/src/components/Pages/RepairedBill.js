@@ -378,24 +378,32 @@ const RepairedBill = (props) => {
             gioitinh: mGioiTinh.value,
             loaixe: mLoaiXe.value,
             somay: mSoMay.value,
+            // eslint-disable-next-line camelcase
             id_pin: mIdPin.value,
+            // eslint-disable-next-line camelcase
             vehicle_type: vehicleType,
+            // eslint-disable-next-line camelcase
             pin_health: mPinHealth.value,
 
             sokhung: mSoKhung.value,
             biensoxe: mBienSoXe.value,
             ngaydukien: mNgayDuKien.value,
-            makh: mMaKH.value && mMaKH.value != "" ? mMaKH.value : null,
+            makh: mMaKH.value && mMaKH.value !== "" ? mMaKH.value : null,
             tongtien: tong,
             tienpt: tienpt,
             tiencong: tiencong,
             chitiet: listProduct,
             manv: props.info.ma,
             yeucaukhachhang: yeucau,
+            // eslint-disable-next-line camelcase
             decline_reason: declineReason,
+            // eslint-disable-next-line camelcase
             motorbike_wash: motorbikeWash,
+            // eslint-disable-next-line camelcase
             fuel_level: fuelLevel,
+            // eslint-disable-next-line camelcase
             phone_accept: phoneAccept,
+            // eslint-disable-next-line camelcase
             old_parts_return_confirmed: oldPartsReturnConfirmed,
             tuvansuachua: tuvan,
             lydo: lydo,

@@ -321,7 +321,6 @@ module.exports = {
             }
 
             if (worksheet) {
-                console.log('ws_data-------', ws_data)
                 worksheet.getCell('AE1').value = ` STT: ${(ws_data.mahoadon || '')}`;
                 worksheet.getCell('A7').value = `Tên khách hàng: ${(ws_data.tenkh || '').toUpperCase()}`;
                 worksheet.getCell('A9').value = ws_data.vehicle_type ? `Loại xe: ${(ws_data.vehicle_type)}` : 'Loại xe:   Ga  /    Số   /   Côn tay   /  Xe Điện  /  Phân khối lớn';

@@ -344,6 +344,7 @@ module.exports = {
                 worksheet.getCell('AE44').value = ws_data.sokmhen || '';
                 worksheet.getCell('A43').value = `*Lý do khách hàng chưa đồng ý thay Phụ Tùng: ${ws_data.decline_reason || ''}`;
                 worksheet.getCell('A46').value = `*Khung thời gian trong ngày thuận tiện nghe được điện thoại: ${ws_data.phone_accept || ''}`;
+                worksheet.getCell('AA57').value = ws_data.tennvsuachua || '';
 
                 if(ws_data.old_parts_return_confirmed){
                     worksheet.getCell('J41').value = "";

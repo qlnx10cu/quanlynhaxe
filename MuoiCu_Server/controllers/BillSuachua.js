@@ -353,13 +353,13 @@ module.exports = {
 
                 switch (ws_data.motorbike_wash){
                     case 'Trước sửa chữa':
-                        worksheet.getCell('AD13').value = 'X';
+                        worksheet.getCell('AD13').value = 'V';
                         break;
                     case 'Sau sửa chữa':
-                        worksheet.getCell('AD14').value = 'X';
+                        worksheet.getCell('AD14').value = 'V';
                         break;
                     default:
-                        worksheet.getCell('AD15').value = 'X';
+                        worksheet.getCell('AD15').value = 'V';
                         break;
                 }
 
@@ -374,8 +374,8 @@ module.exports = {
                     worksheet.getCell(`Y${cellIndex}`).value = item.thanhtiencong || '';
                     worksheet.getCell(`AD${cellIndex}`).value = item.tongtien || '';
                     if(item.loaiphutung !== 'tiencong'){
-                        worksheet.getCell(`J${cellIndex}`).value = 'X';
-                        worksheet.getCell(`M${cellIndex}`).value = 'X';
+                        worksheet.getCell(`J${cellIndex}`).value = 'V';
+                        worksheet.getCell(`M${cellIndex}`).value = 'V';
                     }
                 });
 

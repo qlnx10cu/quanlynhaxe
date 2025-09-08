@@ -575,7 +575,11 @@ const Retail = (props) => {
                                 </DivFlexRow>
                             </When>
                             <When condition={loai === 1 && moment().valueOf() - moment(hoadon.ngaythanhtoan).valueOf() <= twoDay}>
-                                <ButtonConfirm title={"Chỉnh sửa"} titleConfirm={"Bạn muốn chỉnh sửa hóa đơn"} onClick={handleUpdateBill} />
+                                <ButtonConfirm
+                                    title={"Chỉnh sửa"}
+                                    titleConfirm={"Bạn muốn chỉnh sửa hóa đơn"}
+                                    onClick={() => handleUpdateBill(hoadon.trangthai || 0)}
+                                />
                             </When>
                             <When condition={loai === 2 && moment().valueOf() - moment(hoadon.ngaythanhtoan).valueOf() <= twoDay}>
                                 <ButtonConfirm title={"Thay đổi"} titleConfirm={"Xác nhận"} onClick={handleRenderUpdateBill} />

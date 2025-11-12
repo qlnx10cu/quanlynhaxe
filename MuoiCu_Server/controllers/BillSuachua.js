@@ -327,7 +327,7 @@ module.exports = {
 
                 if (worksheet) {
                     worksheet.getCell('AA4').value = `Số hóa đơn: ${(ws_data.mahoadon || '')}`;
-                    worksheet.getCell('E7').value = `${(ws_data.tenkh || '').toUpperCase()}`;
+                    worksheet.getCell('A7').value = `  Tên khách hàng: ${(ws_data.tenkh || '').toUpperCase()}`;
                     worksheet.getCell('A9').value = ws_data.vehicle_type ? `  Loại xe: ${(ws_data.vehicle_type)}` : '  Loại xe:   Ga  /    Số   /   Côn tay   /  Xe Điện  /  Phân khối lớn';
                     worksheet.getCell('AC6').value = ` ${ws_data.fuel_level || ''}`;
                     worksheet.getCell('AE6').value = '';

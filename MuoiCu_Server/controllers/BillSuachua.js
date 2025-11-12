@@ -314,79 +314,102 @@ module.exports = {
             const templatePath = __dirname + '/../templates/Phieu_Sua_Chua.xlsx';
             await workbook.xlsx.readFile(templatePath);
             
-            // Get worksheet by name or index
-            let worksheet = null;
-            if (workbook.worksheets && workbook.worksheets.length > 0) {
-                worksheet = workbook.worksheets[0];
-            }
+            const totalSheets = workbook.worksheets.length;
+            const DATA_ROWS_PER_SHEET = 20;
+            const requiredSheets = Math.ceil(ws_data.chitiet.length / DATA_ROWS_PER_SHEET);
 
-            if (worksheet) {
-                worksheet.getCell('AE5').value = ` STT: ${(ws_data.mahoadon || '')}`;
-                worksheet.getCell('A7').value = `Tên khách hàng: ${(ws_data.tenkh || '').toUpperCase()}`;
-                worksheet.getCell('A9').value = ws_data.vehicle_type ? `Loại xe: ${(ws_data.vehicle_type)}` : 'Loại xe:   Ga  /    Số   /   Côn tay   /  Xe Điện  /  Phân khối lớn';
-                worksheet.getCell('AC6').value = ` ${ws_data.fuel_level || ''}`;
-                worksheet.getCell('X10').value = `ID Pin ( Xe điện ): ${ws_data.id_pin || ''}`;
-                worksheet.getCell('X11').value = `Sức khỏe PIN (SOH): ${ws_data.pin_health || ''}%`;
-                worksheet.getCell('J7').value = `Địa chỉ hiện tại: ${([ws_data.diachi || '', ws_data.thanhpho || ''].filter(Boolean)).join(', ').toUpperCase()}`;
-                worksheet.getCell('J9').value = `Số điện thoại: ${ws_data.sodienthoai || ''}`;
-                worksheet.getCell('J10').value = `Số khung: ${ws_data.sokhung || ''}`;
-                worksheet.getCell('J11').value = `Số Máy: ${ws_data.somay || ''}`;
-                worksheet.getCell('A10').value = `Tên xe: ${ws_data.loaixe || ''}`;
-                worksheet.getCell('A11').value = `Biển số: ${ws_data.biensoxe || ''}`;
-                worksheet.getCell('I11').value = `${ws_data.sokm || ''}`;
-                worksheet.getCell('X7').value = `Thời gian nhận xe: ${ws_data.ngayban ? utils.formatDate(ws_data.ngayban) : ''}`;
-                worksheet.getCell('X8').value = `Thời gian trả xe dự kiến: ${ws_data.ngaydukien ? utils.formatDate(ws_data.ngaydukien) : ''}`;
-                worksheet.getCell('X9').value = `Thời gian trả xe thực tế: ${ws_data.ngaythanhtoan ? utils.formatDate(ws_data.ngaythanhtoan) : ''}`;
-                worksheet.getCell('A13').value = ws_data.yeucaukhachhang || '';
-                worksheet.getCell('J13').value = ws_data.tuvansuachua || '';
-                worksheet.getCell('N44').value = ws_data.kiemtralantoi || '';
-                worksheet.getCell('AB44').value = ws_data.ngayhen ? moment(ws_data.ngayhen).format('DD/MM/YYYY') : '';
-                worksheet.getCell('AE44').value = ws_data.sokmhen || '';
-                worksheet.getCell('G43').value = `${ws_data.decline_reason || ''}`;
-                worksheet.getCell('I46').value = `${ws_data.phone_accept || ''}`;
-                // worksheet.getCell('AA57').value = ws_data.tennvsuachua || '';
-
-                if(ws_data.old_parts_return_confirmed){
-                    worksheet.getCell('J41').value = "";
-                }else {
-                    worksheet.getCell('H41').value = "";
+            // fill data into multiple sheets if necessary
+            for (let sheetIndex = 0; sheetIndex < requiredSheets; sheetIndex++) {
+                let worksheet = null;
+                if (sheetIndex < totalSheets) {
+                    worksheet = workbook.worksheets[sheetIndex];
                 }
 
-                switch (ws_data.motorbike_wash){
-                    case 'Trước sửa chữa':
-                        worksheet.getCell('AD13').value = 'V';
-                        break;
-                    case 'Sau sửa chữa':
-                        worksheet.getCell('AD14').value = 'V';
-                        break;
-                    default:
-                        worksheet.getCell('AD15').value = 'V';
-                        break;
-                }
+                if (worksheet) {
+                    worksheet.getCell('AA4').value = `Số hóa đơn: ${(ws_data.mahoadon || '')}`;
+                    worksheet.getCell('E7').value = `${(ws_data.tenkh || '').toUpperCase()}`;
+                    worksheet.getCell('A9').value = ws_data.vehicle_type ? `  Loại xe: ${(ws_data.vehicle_type)}` : '  Loại xe:   Ga  /    Số   /   Côn tay   /  Xe Điện  /  Phân khối lớn';
+                    worksheet.getCell('AC6').value = ` ${ws_data.fuel_level || ''}`;
+                    worksheet.getCell('AE6').value = '';
+                    worksheet.getCell('X10').value = `  ID Pin ( Xe điện ) : ${ws_data.id_pin || ''}`;
+                    worksheet.getCell('X11').value = `  Sức khỏe PIN (SOH) : ${ws_data.pin_health || ''}%`;
+                    worksheet.getCell('J7').value = `  Địa chỉ hiện tại: ${([ws_data.diachi || '', ws_data.thanhpho || ''].filter(Boolean)).join(', ').toUpperCase()}`;
+                    worksheet.getCell('J9').value = `  Số điện thoại: ${ws_data.sodienthoai || ''}`;
+                    worksheet.getCell('J10').value = `  Số khung: ${ws_data.sokhung || ''}`;
+                    worksheet.getCell('J11').value = `  Số Máy: ${ws_data.somay || ''}`;
+                    worksheet.getCell('A10').value = `  Tên xe: ${ws_data.loaixe || ''}`;
+                    worksheet.getCell('A11').value = `  Biển số: ${ws_data.biensoxe || ''}`;
+                    worksheet.getCell('F11').value = `Số Km: ${ws_data.sokm || ''}`;
+                    worksheet.getCell('X7').value = `  Thời gian nhận xe: ${ws_data.ngayban ? utils.formatDate(ws_data.ngayban) : ''}`;
+                    worksheet.getCell('X8').value = `  Thời gian trả xe dự kiến: ${ws_data.ngaydukien ? utils.formatDate(ws_data.ngaydukien) : ''}`;
+                    worksheet.getCell('X9').value = `  Thời gian trả xe thực tế: ${ws_data.ngaythanhtoan ? utils.formatDate(ws_data.ngaythanhtoan) : ''}`;
+                    worksheet.getCell('A13').value = `  ${ws_data.yeucaukhachhang || ''}`;
+                    worksheet.getCell('J13').value = `  ${ws_data.tuvansuachua || ''}`;
+                    worksheet.getCell('N43').value = ws_data.kiemtralantoi || '';
+                    worksheet.getCell('AB43').value = ws_data.ngayhen ? moment(ws_data.ngayhen).format('DD/MM/YYYY') : '';
+                    worksheet.getCell('AE43').value = ws_data.sokmhen || '';
+                    worksheet.getCell('G42').value = `${ws_data.decline_reason || ''}`;
+                    worksheet.getCell('G46').value = `${ws_data.phone_accept || ''}`;
+                    worksheet.getCell('AB56').value = ws_data.tennvsuachua || '';
 
-                let startRow = 19;
-                ws_data.chitiet.forEach((item, index) => {
-                    const cellIndex = startRow + index;
-                    const discount = parseInt(item.chietkhau || 0);
-                    worksheet.getCell(`A${cellIndex}`).value = index + 1;
-                    worksheet.getCell(`B${cellIndex}`).value = item.tenphutungvacongviec || '';
-                    worksheet.getCell(`H${cellIndex}`).value = item.maphutung || '';
-                    worksheet.getCell(`L${cellIndex}`).value = item.dongia || '';
-                    worksheet.getCell(`O${cellIndex}`).value = item.soluongphutung || '';
-                    worksheet.getCell(`Q${cellIndex}`).value = item.thanhtienpt || '';
-                    worksheet.getCell(`Y${cellIndex}`).value = item.thanhtiencong || '';
-                    worksheet.getCell(`AB${cellIndex}`).value = discount ? `${discount}%`:'';
-                    worksheet.getCell(`AD${cellIndex}`).value = item.tongtien || '';
-                    if(item.loaiphutung !== 'tiencong'){
-                        worksheet.getCell(`J${cellIndex}`).value = 'V';
-                        worksheet.getCell(`M${cellIndex}`).value = 'V';
+                    if(ws_data.old_parts_return_confirmed){
+                        worksheet.getCell('J40').value = "";
+                    }else {
+                        worksheet.getCell('H40').value = "";
                     }
-                });
 
-                // Fill in totals
-                worksheet.getCell('Q38').value = ws_data.tongtienpt || 0; // Tổng tiền PT
-                worksheet.getCell('Y38').value = ws_data.tongtiencong || 0; // Tổng tiền công
-                worksheet.getCell('AD38').value = ws_data.tongtongtien || 0; // Tổng cộng
+                    switch (ws_data.motorbike_wash){
+                        case 'Trước sửa chữa':
+                            worksheet.getCell('AD13').value = 'V';
+                            break;
+                        case 'Sau sửa chữa':
+                            worksheet.getCell('AD14').value = 'V';
+                            break;
+                        default:
+                            worksheet.getCell('AD15').value = 'V';
+                            break;
+                    }
+
+                    let startRow = 19;
+                    const chitietRows = ws_data.chitiet.slice(sheetIndex * DATA_ROWS_PER_SHEET, (sheetIndex + 1) * DATA_ROWS_PER_SHEET);
+                    const isLastSheet = (sheetIndex === requiredSheets - 1);
+
+                    chitietRows.forEach((item, index) => {
+                        const cellIndex = startRow + index;
+                        const stt = index + 1 + sheetIndex * DATA_ROWS_PER_SHEET;
+
+                        const discount = parseInt(item.chietkhau || 0);
+                        worksheet.getCell(`A${cellIndex}`).value = stt;
+                        worksheet.getCell(`B${cellIndex}`).value = item.tenphutungvacongviec || '';
+                        worksheet.getCell(`G${cellIndex}`).value = item.maphutung || '';
+                        worksheet.getCell(`L${cellIndex}`).value = item.dongia || '';
+                        worksheet.getCell(`O${cellIndex}`).value = item.soluongphutung || '';
+                        worksheet.getCell(`Q${cellIndex}`).value = item.thanhtienpt || '';
+                        worksheet.getCell(`Y${cellIndex}`).value = item.thanhtiencong || '';
+                        worksheet.getCell(`AB${cellIndex}`).value = discount ? `${discount}%`:'';
+                        worksheet.getCell(`AD${cellIndex}`).value = item.tongtien || '';
+                        if(item.loaiphutung !== 'tiencong'){
+                            worksheet.getCell(`J${cellIndex}`).value = 'V';
+                            worksheet.getCell(`M${cellIndex}`).value = 'V';
+                        }
+                    });
+
+                    // Fill in totals
+                    // worksheet.getCell('Q38').value = ws_data.tongtienpt || 0; // Tổng tiền PT
+                    // worksheet.getCell('Y38').value = ws_data.tongtiencong || 0; // Tổng tiền công
+                    if(isLastSheet){
+                        worksheet.getCell('AD39').value = ws_data.tongtongtien || 0; // Tổng cộng
+                    }else {
+                        worksheet.getCell('A39').value = '';
+                    }
+                }
+
+                // delete extra sheets if any
+                if (sheetIndex === requiredSheets - 1 && totalSheets > requiredSheets) {
+                    for (let i = totalSheets - 1; i >= requiredSheets; i--) {
+                        workbook.removeWorksheet(workbook.worksheets[i].id);
+                    }
+                }
             }
 
             // Check if print parameter is true to return PDF, otherwise return Excel

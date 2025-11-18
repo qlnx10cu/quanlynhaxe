@@ -316,7 +316,7 @@ module.exports = {
             
             const totalSheets = workbook.worksheets.length;
             const DATA_ROWS_PER_SHEET = 20;
-            const requiredSheets = Math.ceil(ws_data.chitiet.length / DATA_ROWS_PER_SHEET);
+            const requiredSheets = Math.ceil(ws_data.chitiet.length / DATA_ROWS_PER_SHEET) ||  1;
 
             // fill data into multiple sheets if necessary
             for (let sheetIndex = 0; sheetIndex < requiredSheets; sheetIndex++) {
@@ -395,12 +395,17 @@ module.exports = {
                     });
 
                     // Fill in totals
-                    // worksheet.getCell('Q38').value = ws_data.tongtienpt || 0; // Tổng tiền PT
-                    // worksheet.getCell('Y38').value = ws_data.tongtiencong || 0; // Tổng tiền công
                     if(isLastSheet){
-                        worksheet.getCell('AD39').value = ws_data.tongtongtien || 0; // Tổng cộng
+                        const tongtienpt = ws_data.tongtienpt || 0;
+                        const tongtiencong = ws_data.tongtiencong || 0;
+                        const tongtongtien = ws_data.tongtongtien || 0;
+                        const tonggiamgia = tongtongtien - (tongtienpt + tongtiencong);
+                        worksheet.getCell('Q38').value = tongtienpt || ''; // Tổng tiền PT
+                        worksheet.getCell('Y38').value = tongtiencong || ''; // Tổng tiền công
+                        worksheet.getCell('AB38').value = tonggiamgia || ''; // Tổng giảm giá
+                        worksheet.getCell('AD38').value = tongtongtien || ''; // Tổng cộng
                     }else {
-                        worksheet.getCell('A39').value = '';
+                        worksheet.getCell('A38').value = '';
                     }
                 }
 

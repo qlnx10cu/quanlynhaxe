@@ -308,6 +308,8 @@ module.exports = {
             ws_data['tongtienpt'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.thanhtienpt, 0);
             ws_data['tongtiencong'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.thanhtiencong, 0);
             ws_data['tongtongtien'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.tongtien, 0);
+            ws_data['tongchietkhau'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.tienchietkhau, 0);
+            ws_data['tongtiencongchietkhau'] = ws_data.chitiet.reduce((prev, cur) => prev += cur.tiencongchietkhau, 0);
 
             // Load the template
             const workbook = new ExcelJS.Workbook();
@@ -315,7 +317,7 @@ module.exports = {
             await workbook.xlsx.readFile(templatePath);
             
             const totalSheets = workbook.worksheets.length;
-            const DATA_ROWS_PER_SHEET = 20;
+            const DATA_ROWS_PER_SHEET = 19;
             const requiredSheets = Math.ceil(ws_data.chitiet.length / DATA_ROWS_PER_SHEET) ||  1;
 
             // fill data into multiple sheets if necessary
@@ -399,7 +401,7 @@ module.exports = {
                         const tongtienpt = ws_data.tongtienpt || 0;
                         const tongtiencong = ws_data.tongtiencong || 0;
                         const tongtongtien = ws_data.tongtongtien || 0;
-                        const tonggiamgia = tongtongtien - (tongtienpt + tongtiencong);
+                        const tonggiamgia = (ws_data.tongchietkhau || 0) + (ws_data.tongtiencongchietkhau || 0);
                         worksheet.getCell('Q38').value = tongtienpt || ''; // Tổng tiền PT
                         worksheet.getCell('Y38').value = tongtiencong || ''; // Tổng tiền công
                         worksheet.getCell('AB38').value = tonggiamgia || ''; // Tổng giảm giá

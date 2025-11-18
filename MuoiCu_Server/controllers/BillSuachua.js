@@ -345,17 +345,17 @@ module.exports = {
                     worksheet.getCell('X9').value = `  Thời gian trả xe thực tế: ${ws_data.ngaythanhtoan ? utils.formatDate(ws_data.ngaythanhtoan) : ''}`;
                     worksheet.getCell('A13').value = `  ${ws_data.yeucaukhachhang || ''}`;
                     worksheet.getCell('J13').value = `  ${ws_data.tuvansuachua || ''}`;
-                    worksheet.getCell('N43').value = ws_data.kiemtralantoi || '';
-                    worksheet.getCell('AB43').value = ws_data.ngayhen ? moment(ws_data.ngayhen).format('DD/MM/YYYY') : '';
-                    worksheet.getCell('AE43').value = ws_data.sokmhen || '';
-                    worksheet.getCell('G42').value = `${ws_data.decline_reason || ''}`;
-                    worksheet.getCell('G46').value = `${ws_data.phone_accept || ''}`;
-                    worksheet.getCell('AB56').value = ws_data.tennvsuachua || '';
+                    worksheet.getCell('N42').value = ws_data.kiemtralantoi || '';
+                    worksheet.getCell('AB42').value = ws_data.ngayhen ? moment(ws_data.ngayhen).format('DD/MM/YYYY') : '';
+                    worksheet.getCell('AE42').value = ws_data.sokmhen || '';
+                    worksheet.getCell('G41').value = `${ws_data.decline_reason || ''}`;
+                    worksheet.getCell('G45').value = `${ws_data.phone_accept || ''}`;
+                    worksheet.getCell('AB55').value = ws_data.tennvsuachua || '';
 
                     if(ws_data.old_parts_return_confirmed){
-                        worksheet.getCell('J40').value = "";
+                        worksheet.getCell('J39').value = "";
                     }else {
-                        worksheet.getCell('H40').value = "";
+                        worksheet.getCell('H39').value = "";
                     }
 
                     switch (ws_data.motorbike_wash){
